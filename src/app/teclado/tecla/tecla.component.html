@@ -1,0 +1,57 @@
+<div class="keyboard-container">
+  <div class="row line">
+    <div class="col-lg-1 key-col-row1" *ngFor="let key of row">
+      <input type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)"/>
+    </div>
+    <div class="col-lg-1 key-col-icon">
+      <button class="btn button-icon">
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row line">
+    <div class="col-lg-1 icon-tab">
+      <button class="btn button-icon" >
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_tab</mat-icon>
+      </button>
+    </div>
+    <div class="col-lg-1 key-col-row2 row2" *ngFor="let key of pRow">
+      <input type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)"/>
+    </div>
+  </div>
+  <div class="row line">
+    <div class="col-lg-1 icon-caps-return" (click)="capsLock()">
+      <button class="btn button-icon">
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
+      </button>
+    </div>
+    <div class="col-lg-1 key-col-row3" *ngFor="let key of sRow">
+      <input type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)"/>
+    </div>
+    <div class="col-lg-1 icon-caps-return icon-return">
+      <button class="btn button-icon" (click)="getValue('\n')">
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row line">
+    <div class="col-lg-1 icon-arrow-up">
+      <button class="btn button-icon">
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_arrow_up</mat-icon>
+      </button>
+    </div>
+    <div class="col-lg-1 key-col-row4" *ngFor="let key of tRow">
+      <input type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)"/>
+    </div>
+    <div class="col-lg-1 icon-arrow-up icon-arrow-up-right">
+      <button class="btn button-icon">
+        <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_arrow_up</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row line">
+    <div class="col-lg-10 col-md-10 key-col-row5">
+      <input type="button" class="btn button-keyboard-row5" value=" " (click)="getValue($event)"/>
+    </div>
+  </div>
+</div>
