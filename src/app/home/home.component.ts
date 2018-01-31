@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-home',
@@ -6,8 +7,6 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/co
   styleUrls: ['../app.component.css']
 })
 export class HomeComponent implements OnInit  {
-  
-  public texto: string = '';
   public options: Object = {
     placeholderText: 'Digite aqui',
     height: 279,
@@ -18,9 +17,17 @@ export class HomeComponent implements OnInit  {
         'clearFormatting', '|', 'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo']
   };
 
-  constructor(){ }
+  public texto: string; 
 
-  ngOnInit() {}
+  constructor() { }
+
+  ngOnInit() {
+    this.texto = '';
+    }
+    this.texto += keyValue; // texto que vai no editor
+    console.log(keyValue);
+    console.log(this.texto);
+  }
 
   public getValue(keyValue: any) {
     if(keyValue === ' '){
@@ -33,6 +40,9 @@ export class HomeComponent implements OnInit  {
     this.texto += keyValue; // texto que vai no editor
     console.log(keyValue);
     console.log(this.texto);
+    //console.log(this.input.nativeElement);
+
   }
 
 }
+
