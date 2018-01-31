@@ -24,10 +24,6 @@ export class HomeComponent implements OnInit  {
   ngOnInit() {
     this.texto = '';
     }
-    this.texto += keyValue; // texto que vai no editor
-    console.log(keyValue);
-    console.log(this.texto);
-  }
 
   public getValue(keyValue: any) {
     if(keyValue === ' '){

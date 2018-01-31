@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { TeclaModel } from './tecla.model';
 import { TeclaService } from './tecla.service';
-import { LastValueDirective } from './tecla.directive';
 
 @Component({
   selector: 'app-tecla',
