@@ -11,14 +11,14 @@ import { LoginComponent } from './login/login.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { RecuperarSenhaComponent } from './recuperar-senha/recuperar-senha.component';
 import { HomeComponent } from './home/home.component';
-import { MatButtonModule } from "@angular/material/button";
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MenuComponent } from './menu/menu.component';
-import { MatCommonModule } from "@angular/material/core";
+import { MatCommonModule } from '@angular/material/core';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { TecladoComponent } from './teclado/teclado.component';
 import { TeclaComponent } from './teclado/tecla/tecla.component';
-
+import { TeclaService } from './teclado/tecla/tecla.service';
 
 @NgModule({
   declarations: [
@@ -29,7 +29,7 @@ import { TeclaComponent } from './teclado/tecla/tecla.component';
     HomeComponent,
     MenuComponent,
     TecladoComponent,
-    TeclaComponent
+    TeclaComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,8 +46,10 @@ import { TeclaComponent } from './teclado/tecla/tecla.component';
   ],
   exports: [ ],
   entryComponents: [ ],
-  providers: [ ],
-  schemas:[
+  providers: [
+    TeclaService,
+  ],
+  schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
   bootstrap: [AppComponent]

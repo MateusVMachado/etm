@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+
 
 @Component({
   selector: 'app-home',
@@ -6,16 +7,36 @@ import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/co
   styleUrls: ['../app.component.css']
 })
 export class HomeComponent implements OnInit  {
-  
-  public texto: string = '';
 
-  constructor(){ }
 
-  ngOnInit() {}
+  public options: Object = {
+    placeholderText: 'Insira seu texto aqui',
+    heightMin: 100,
+    heightMax: 1000//this.height
+  };
 
-  public getValue(keyValue: any){
-    this.texto += keyValue; 
-    console.log(this.texto)
+  public texto: string; 
+
+  constructor() { }
+
+  ngOnInit() {
+    this.texto = '';
+  }
+
+  public getValue(keyValue: any) {
+    if(keyValue === ' '){
+      keyValue = '&nbsp;';
+    } else if ( keyValue === '\n'){
+      keyValue = '<br>';
+    } else if ( keyValue === '\t'){
+      keyValue = '&nbsp;&nbsp;&nbsp;&nbsp;';
+    }
+    this.texto += keyValue; // texto que vai no editor
+    console.log(keyValue);
+    console.log(this.texto);
+    //console.log(this.input.nativeElement);
+
   }
 
 }
+
