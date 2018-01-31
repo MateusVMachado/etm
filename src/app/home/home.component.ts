@@ -7,12 +7,14 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
   styleUrls: ['../app.component.css']
 })
 export class HomeComponent implements OnInit  {
-
-
   public options: Object = {
-    placeholderText: 'Insira seu texto aqui',
-    heightMin: 100,
-    heightMax: 1000//this.height
+    placeholderText: 'Digite aqui',
+    height: 279,
+    toolbarButtons: ['bold', 'italic', 'underline', 'strikeThrough', '|', 'fontFamily',
+        'fontSize', 'color', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 
+        'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'embedly', 
+        'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'selectAll', 
+        'clearFormatting', '|', 'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo']
   };
 
   public texto: string; 
@@ -21,6 +23,10 @@ export class HomeComponent implements OnInit  {
 
   ngOnInit() {
     this.texto = '';
+    }
+    this.texto += keyValue; // texto que vai no editor
+    console.log(keyValue);
+    console.log(this.texto);
   }
 
   public getValue(keyValue: any) {
