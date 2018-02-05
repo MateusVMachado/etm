@@ -16,8 +16,8 @@ import 'rxjs/add/operator/delay';
 
 // TODO: move layouts into the framework
 @Component({
-  selector: 'app-sample-layout',
-  styleUrls: ['./sample.layout.scss'],
+  selector: 'app-main-page',
+  styleUrls: ['./main-page.component.scss'],
   template: `<nb-layout [center]="layout.id === 'center-column'" windowMode>
     <nb-layout-header fixed>
       <app-header [position]="sidebar.id === 'left' ? 'normal': 'inverse'"></app-header>
@@ -48,7 +48,7 @@ import 'rxjs/add/operator/delay';
       </nb-sidebar>
   </nb-layout>`,
 })
-export class SampleLayoutComponent implements OnDestroy {
+export class MainPageComponent implements OnDestroy {
 
   subMenu: NbMenuItem[] = [
     {

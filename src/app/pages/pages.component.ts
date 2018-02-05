@@ -5,10 +5,10 @@ import { MENU_ITEMS } from './pages-menu';
 @Component({
   selector: 'app-pages',
   template: `
-    <app-sample-layout>
+    <app-main-page>
       <nb-menu [items]="menu"></nb-menu>
       <router-outlet></router-outlet>
-    </app-sample-layout>
+    </app-main-page>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
