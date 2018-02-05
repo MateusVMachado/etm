@@ -1,57 +1,38 @@
-import { MatKeyboardModule } from '@ngx-material-keyboard/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+/**
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
+import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { ROUTES } from './app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { CoreModule } from './core.module';
 
 import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
-import { RecuperarSenhaComponent } from './recuperar-senha/recuperar-senha.component';
-import { HomeComponent } from './home/home.component';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MenuComponent } from './menu/menu.component';
-import { MatCommonModule } from '@angular/material/core';
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
-import { TecladoComponent } from './teclado/teclado.component';
-import { TeclaComponent } from './teclado/tecla/tecla.component';
-import { TeclaService } from './teclado/tecla/tecla.service';
+import { AppRoutingModule } from './app-routing.module';
+import { ThemeModule } from './theme.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { StateService } from './data/state.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    SignUpComponent,
-    RecuperarSenhaComponent,
-    HomeComponent,
-    MenuComponent,
-    TecladoComponent,
-    TeclaComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(ROUTES),
     BrowserAnimationsModule,
-    MatButtonModule,
-    MatCommonModule,
-    MatIconModule,
-    MatKeyboardModule,
-    FormsModule,
-    ReactiveFormsModule,
-    FroalaEditorModule.forRoot(), 
-    FroalaViewModule.forRoot()
+    HttpModule,
+    AppRoutingModule,
+
+    NgbModule.forRoot(),
+    ThemeModule.forRoot(),
+    CoreModule.forRoot(),
   ],
-  exports: [ ],
-  entryComponents: [ ],
+  bootstrap: [AppComponent],
   providers: [
-    TeclaService,
+    StateService,
+    { provide: APP_BASE_HREF, useValue: '/' },
   ],
-  schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
-  ],
-  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

@@ -1,6 +1,5 @@
 {
-  "compileOnSave": true,
-  "buildOnSave": true,
+  "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
@@ -15,10 +14,9 @@
     "lib": [
       "es2017",
       "dom"
+    ],
+    "plugins": [
+      { "name": "tslint-language-service"}
     ]
-  },
-  "exclude": [
-    "node_modules"
-  ]
+  }
 }
-
