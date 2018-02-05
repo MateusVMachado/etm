@@ -20,10 +20,9 @@ import {
 import {
   FooterComponent,
   HeaderComponent,
+  MainPageComponent
 } from './components';
-import {
-  SampleLayoutComponent,
-} from './layouts';
+
 import { DEFAULT_THEME } from './styles/theme.default';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
@@ -45,7 +44,7 @@ const NB_MODULES = [
 const COMPONENTS = [
   HeaderComponent,
   FooterComponent,
-  SampleLayoutComponent,
+  MainPageComponent,
 ];
 
 const NB_THEME_PROVIDERS = [

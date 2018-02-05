@@ -1,18 +1,18 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { MENU_ITEMS } from './pages-menu';
+import { MENU_ITEMS } from './sidebar-itens';
 
 @Component({
   selector: 'app-pages',
   template: `
-    <app-sample-layout>
+    <app-main-page>
       <nb-menu [items]="menu"></nb-menu>
       <router-outlet></router-outlet>
-    </app-sample-layout>
+    </app-main-page>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PagesComponent {
+export class SidebarComponent {
 
   menu = MENU_ITEMS;
 }
