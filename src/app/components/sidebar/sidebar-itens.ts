@@ -8,6 +8,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
+    title: 'Teclado',
+    icon: 'nb-home',
+    link: '/pages/teclado'
+  },
+  {
     title: 'Auth',
     icon: 'nb-locked',
     children: [

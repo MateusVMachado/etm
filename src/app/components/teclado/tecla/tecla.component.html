@@ -1,0 +1,51 @@
+<div class="keyboard-container" style="z-index: 0">
+  <div class="row line" *ngFor="let row of teclado.teclas" >
+    <!--ngFor-->
+    <div class="col-lg-1 key-col-row1" *ngFor="let key of row">
+      
+        <!--<button class="btn button-icon-special-left" *ngIf="key == '*tab'" >-->
+        <button class="btn button-icon" *ngIf="key == '*tab'" (click)="getValue('\t')">
+          <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_tab</mat-icon>
+        </button>
+        
+     
+        <!--<button class="btn button-icon-special-left" *ngIf="key == '*cpslck'" >-->
+        <button class="btn button-icon" *ngIf="key == '*cpslck'" (click)="capsLock()">  
+          <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
+        </button>
+           
+        
+        <input  *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn'" 
+         type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)"/>
+              
+     
+          <!--<button class="btn button-icon-special-right" *ngIf="key == '*bckspc'">-->
+          <button class="btn button-icon" *ngIf="key == '*bckspc'">  
+            <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+          </button>
+     
+
+          <!--<button class="btn button-icon-special-right" *ngIf="key == '*kbdrtrn'">-->
+          <button class="btn button-icon" *ngIf="key == '*kbdrtrn'" (click)="getValue('\n')">  
+            <mat-icon class="mat-icon material-icons key-col-icon-special" role="img" aria-hidden="true">keyboard_return</mat-icon>
+          </button>
+     
+    </div>
+  </div>  
+
+  
+  <div class="row line">
+    <div class="col-lg-10 col-md-10 key-col-row5">
+      <input title="SPACE" type="button" class="btn button-keyboard-row5" value=" " (click)="getValue($event)"/>
+    </div>
+  </div>
+
+  <!--
+  <div class="row line">
+    <div class="col-lg-10 col-md-10 key-col-row5">
+      <input text="TESTE" type="button" class="btn button-keyboard-row5" (click)="capsLock()"/>
+    </div>
+  </div>
+  -->
+
+</div>
