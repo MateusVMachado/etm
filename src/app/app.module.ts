@@ -15,6 +15,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { ThemeModule } from './theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from './data/state.service';
+import { AuthGuard } from './guards/auth-guard.service';
+import { NgxLoginComponent } from './components/login/login.component';
+import { AuthService } from './components/shared/auth.services';
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,8 +25,7 @@ import { StateService } from './data/state.service';
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
-    AppRoutingModule,
-
+    AppRoutingModule,      
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
@@ -31,7 +33,9 @@ import { StateService } from './data/state.service';
   bootstrap: [AppComponent],
   providers: [
     StateService,
-    { provide: APP_BASE_HREF, useValue: '/' },
+    AuthService,
+    AuthGuard,
+    { provide: APP_BASE_HREF, useValue: '/' }   
   ],
 })
 export class AppModule {

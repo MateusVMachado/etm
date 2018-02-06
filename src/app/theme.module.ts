@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -20,10 +20,11 @@ import {
 import {
   FooterComponent,
   HeaderComponent,
-  MainPageComponent
+  MainPageComponent,
 } from './components';
 
 import { DEFAULT_THEME } from './styles/theme.default';
+import { NgxLoginComponent } from './components/login/login.component';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
@@ -45,6 +46,7 @@ const COMPONENTS = [
   HeaderComponent,
   FooterComponent,
   MainPageComponent,
+  NgxLoginComponent, 
 ];
 
 const NB_THEME_PROVIDERS = [
@@ -62,6 +64,9 @@ const NB_THEME_PROVIDERS = [
   imports: [...BASE_MODULES, ...NB_MODULES],
   exports: [...BASE_MODULES, ...NB_MODULES, ...COMPONENTS],
   declarations: [...COMPONENTS],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class ThemeModule {
   static forRoot(): ModuleWithProviders {

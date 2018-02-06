@@ -36,7 +36,7 @@
     "@angular/platform-browser": "~5.1.0",
     "@angular/platform-browser-dynamic": "~5.1.0",
     "@angular/router": "~5.1.0",
-    "@nebular/auth": "2.0.0-rc.4",
+    "@nebular/auth": "^2.0.0-rc.4",
     "@nebular/theme": "2.0.0-rc.4",
     "@ng-bootstrap/ng-bootstrap": "1.0.0-beta.8",
     "bootstrap": "4.0.0-beta.2",
