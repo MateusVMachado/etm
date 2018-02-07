@@ -39,9 +39,9 @@ import 'rxjs/add/operator/delay';
       <nb-menu [items]="subMenu"></nb-menu>
     </nb-layout-column>
 
-    <nb-layout-footer fixed>
+    <!--<nb-layout-footer fixed>
       <app-footer></app-footer>
-    </nb-layout-footer>
+    </nb-layout-footer>-->
 
     <nb-sidebar class="settings-sidebar" tag="settings-sidebar" state="collapsed"
       fixed [right]="sidebar.id !== 'right'">
