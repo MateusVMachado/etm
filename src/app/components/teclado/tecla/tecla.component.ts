@@ -40,31 +40,31 @@ export class TeclaComponent implements OnInit {
     this.texto = '';
     this.teclado.teclas = [];
 
-      this.teclaService.loadData().subscribe((data) => {
-         this.teclado = <TeclaModel>(data);
-         console.log(this.teclado.teclas);
+    /*this.teclaService.loadData().subscribe((data) => {
+      if ( data ) {
+        this.teclado = <TeclaModel>(data);
+        console.log(this.teclado.teclas);
+      } else {
+        this.teclado = this.teclaService.loadTeclado("normal");
       }
-    );
-
-    this.teclaService.loadTeclado("normal");
+    });*/
+    this.teclado = this.teclaService.loadTeclado("normal");
   }
 
   public capsLock() {
-  /*  if (!(this.teclado.type === 'caps')) {
+    if (this.teclado.type === 'normal') {
       this.teclaService.loadTeclado('caps');
       console.log(this.teclado.type);
     }else {
       this.teclaService.loadTeclado('normal');
       console.log(this.teclado.type);
-    }*/
+    }
   }
 
   public getValue(event) {
-    console.log(event);
-    console.log(event.srcElement);
     if (event.srcElement) {
       this.onKeyPicked.emit(event.srcElement.value); // é o próprio valor
-    }else{
+    }else {
       this.onKeyPicked.emit(event);
     }
   }

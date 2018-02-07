@@ -5,10 +5,12 @@ import { TeclaComponent } from './tecla/tecla.component';
 
 import { CommonModule } from '@angular/common';
 import { TeclaService } from './tecla/tecla.service';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 @NgModule({
     imports: [
-        CommonModule
+        CommonModule,
+        EditorModule
     ],
     declarations: [
         TecladoComponent,

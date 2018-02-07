@@ -14,7 +14,7 @@ export class TecladoComponent implements OnInit {
   ngOnInit() {
   }
 
-  public getValue(keyValue: any):void {
+  public getValue(keyValue: any): void {
     this.key.emit(keyValue);
   }
 
