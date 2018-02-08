@@ -86,13 +86,23 @@ export class NgxLoginComponent {
     }
 
     login(): void {
+        this.service.authenticate(this.user).subscribe(
+          (res: any) => {
+              console.log(res);
+              if (res === 'OK!') {
+                this.router.navigate(['./pages/teclados']);
+              }
+          } ,  // changed
+       );
 
-        this.service.authenticate(this.user).subscribe((result: any) => {
-
-            if(result){
+/*
+        this.service.authenticate(this.user, this.hashedUser).subscribe((result: any) => {
+            console.log(result.json());
+            if (result) {
               this.router.navigate(['./pages/teclados']);
             }
         });
+ */       
     }
 
     navigateTo(path: string){
