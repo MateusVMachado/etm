@@ -4,10 +4,13 @@ import * as express from "express";
 import * as logger from "morgan"; // Para modo desenvolvimento apenas
 import * as path from "path";
 import * as errorHandler from "errorhandler"; // Para modo desenvolvimento apenas
+import * as helmet from 'helmet';
 
 import { IndexRoute } from "./routes/index";
-import { MongoAccessModel } from "./apis/mongoAcces.model";
-
+import { MongoAccessModel } from "./models/mongoAccess.model";
+import * as promise from 'promise';
+import { promisify } from "util";
+import { Login } from './apis/login.api';
 
 /**
  * The server.
@@ -20,6 +23,7 @@ export class Server {
 
   public mongoAccess: MongoAccessModel = new MongoAccessModel();
   public poolSize: number = 10;
+  public guard: Login = new Login();
 
   /**
    * Bootstrap the application.
@@ -43,6 +47,8 @@ export class Server {
     //create expressjs application
     this.app = express();
 
+    //promisify.
+
     //configure application
     this.config();
 
@@ -52,27 +58,43 @@ export class Server {
     //add api
     this.api();
 
-     // Cria pool de conexões 
-    this.connectDatabase(this.mongoAccess);
+    // Cria pool de conexões e configura acesso
+    this.createDatabaseAccess(this.mongoAccess, this.app);
   }
 
 
   /**
-   * Cria Objeto de acesso à Database
+   * Cria Acesso à Database
    *
    * @class Server
    * @method connectDatabase
    */
-  connectDatabase(mongoAccess: MongoAccessModel){
+  public createDatabaseAccess(mongoAccess: MongoAccessModel, app: express.Application){
+      // cria conexão e popula objeto de acesso
+      this.connectDatabase(mongoAccess, app);
+      // configura variaveis
+      this.app.locals.mongoAccess = this.mongoAccess;
+  }
+
+  /**
+   * Popula objeto de acesso à Database
+   *
+   * @class Server
+   * @method connectDatabase
+   */
+  public connectDatabase(mongoAccess: MongoAccessModel, app: express.Application){
     var mongodb = require('mongodb') , MongoClient = mongodb.MongoClient
 
     MongoClient.connect(process.env.MONGOHQ_URL|| 'mongodb://localhost:27017', {poolSize: this.poolSize},
          function(err, database) {
-          /////////////////////////////////  
-         // TORNAR AS BASES GENÉRICAS!! //
-        /////////////////////////////////
-             mongoAccess.database = database.db('keyboards_db');
-             mongoAccess.coll = mongoAccess.database.collection('keyboards')
+  
+             mongoAccess.database = database.db('etm-database');
+             /* 0 */ mongoAccess.coll.push(mongoAccess.database.collection('users'));
+             /* 1 */ mongoAccess.coll.push(mongoAccess.database.collection('keyboards'));
+             /* 2 */ mongoAccess.coll.push(mongoAccess.database.collection('configurations'));
+             /* 3 */ mongoAccess.coll.push(mongoAccess.database.collection('favorites'));
+             /* 4 */ mongoAccess.coll.push(mongoAccess.database.collection('passwords'));
+             /* 5 */ mongoAccess.coll.push(mongoAccess.database.collection('logs'));
         }) 
   }
 
@@ -129,6 +151,7 @@ export class Server {
 
       // Website you wish to allow to connect
       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      //res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.129:4200');
 
       // Request methods you wish to allow
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -144,6 +167,7 @@ export class Server {
       next();
     });
   
+    this.app.use(helmet()); // SECURITY MEASURES
 
   }
 
@@ -158,10 +182,9 @@ export class Server {
     let router: express.Router;
     router = express.Router();
 
-    //IndexRoute
-    IndexRoute.create(router, this.mongoAccess);
+    IndexRoute.create(router, this.app);
 
-    //use router middleware
     this.app.use(router);
+
   }
 }

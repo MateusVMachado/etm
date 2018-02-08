@@ -5,11 +5,11 @@
 export class MongoAccessModel {
 
     database: any;
-    coll: any;
+    coll: any[];
 
     constructor() {
         this.database = undefined;
-        this.coll = undefined;
+        this.coll = [];
     }
 }
 

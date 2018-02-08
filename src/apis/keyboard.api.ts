@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "../routes/route";
-import { KeyboardModel } from './keyboard.model';
-import { MongoAccessModel } from "./mongoAcces.model";
+import { KeyboardModel } from '../models/keyboard.model';
+//import { MongoAccessModel } from "../models/mongoAccess.model";
 
 
 export class Keyboard extends BaseRoute{
@@ -16,53 +16,46 @@ export class Keyboard extends BaseRoute{
     }
 
 
-    public keyboard_api(req: Request, res: Response, next: NextFunction, mongoAccess: MongoAccessModel) {
-        //set custom title
+    public keyboard_api(req: Request, res: Response, next: NextFunction) {    
         this.title = "Home | ETM - BackEnd";
-    
-        this.getInDatabase(this.teclado, res, mongoAccess);
-       
+
+        // DESCOMENTAR LINHA ABAIXO SE NAO FOR FAZER O TESTE ABAIXO!!
+        this.getInDatabase(this.teclado, res);
+
+                 /////////////////////////
+                // USADO PARA TESTES   //
+               /////////////////////////
+                //this.teclado = this.loadKeyboard('normal');
+                //this.insertIntoDatabase(this.teclado);
+            ///   FIM DOS TESTES   /// 
+           // COMENTAR AO TERMINAR //  
       }
 
 
-    getInDatabase(teclado: KeyboardModel, res: Response, mongoAccess: MongoAccessModel){
-        mongoAccess.coll.find({}).toArray(function(err, keyboard_list) {   
-            
-                teclado.teclas = keyboard_list[0].teclas
-                teclado.type = keyboard_list[0].type
-                res.send(teclado);
-        })
+    public getInDatabase(teclado: KeyboardModel, res: Response){    
+            res.locals.mongoAccess.coll[1].find({}).toArray(function(err, keyboard_list) {         
+                    teclado.teclas = keyboard_list[0].teclas
+                    teclado.type = keyboard_list[0].type                
+                    res.send(teclado);
+            })
      }
 
     
-
-
     insertIntoDatabase(teclado: KeyboardModel){
         var mongodb = require('mongodb') , MongoClient = mongodb.MongoClient
         const myAwesomeDB = '';
         MongoClient.connect(process.env.MONGOHQ_URL|| 'mongodb://localhost:27017',
              function(err, database) {  
-                var db = database.db('keyboards_db');
+                var db = database.db('etm-database');
                 db.collection('keyboards').insert(teclado, (err, result) => {
                     console.log("Keyboard inserido")
             })
         })
     }     
 
-    
-}
-
-
-
-
-
-
-/*
+    // FUNCAO PARA TESTES APENAS
     public loadKeyboard(type: string){
-        // 
-        // AQUI ENTRA O LOAD DO MONGO DB
-        //
-        //
+
         var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
         var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
         var sRow: string[] = ['*cpslck', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn'];
@@ -91,4 +84,12 @@ export class Keyboard extends BaseRoute{
         return this.teclado;
     
     }  
-*/
+
+
+
+
+}
+
+
+
+
