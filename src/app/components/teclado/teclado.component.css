@@ -1,12 +1,10 @@
 .box-teclado{
-    position: fixed; 
-    bottom: 3px; 
-    margin-right: 3px;
+    position: relative;
+    margin: auto;
+    max-height: 40%;
 }
 
 .teclado-container{
-    margin-right: 3%;
-    height: 60%;
     background-color: #eeeeee;
     padding: 14px 24px;
     border-radius: 2px;

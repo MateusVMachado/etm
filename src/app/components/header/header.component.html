@@ -2,7 +2,7 @@
      [class.left]="position === 'normal'"
      [class.right]="position === 'inverse'">
   <div class="logo-containter">
-    <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu"></i></a>
+    <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu" style="color: white;"></i></a>
     <div class="logo" (click)="goToHome()"><span>ETM</span></div>
   </div>
 </div>
@@ -13,6 +13,6 @@
   [class.right]="position === 'normal'"
   [class.left]="position === 'inverse'">
   <nb-action>
-    <nb-user [menu]="userMenu" name="Nick Jones" picture="../../../assets/images/nick.png"></nb-user>
+    <nb-user [menu]="userMenu" name="Nick Jones" picture="../../../assets/images/nick.png" style="color: white;"></nb-user>
   </nb-action>
 </nb-actions>

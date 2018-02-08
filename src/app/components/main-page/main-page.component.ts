@@ -23,11 +23,11 @@ import 'rxjs/add/operator/delay';
       <app-header [position]="sidebar.id === 'left' ? 'normal': 'inverse'"></app-header>
     </nb-layout-header>
 
-    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive [right]="sidebar.id === 'right'">
+    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive [right]="sidebar.id === 'right'" style="margin-top: 0;">
       <ng-content select="nb-menu"></ng-content>
     </nb-sidebar>
 
-    <nb-layout-column class="main-content">
+    <nb-layout-column class="main-content" style="padding: 1% 1% 1%">
       <ng-content select="router-outlet"></ng-content>
     </nb-layout-column>
 

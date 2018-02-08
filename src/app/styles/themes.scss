@@ -4,24 +4,31 @@
 @import '~@nebular/theme/styles/themes';
 
 // which themes you what to enable (empty to enable all)
-$nb-enabled-themes: (default, cosmic);
+$nb-enabled-themes: (default);
 
 $nb-themes: nb-register-theme((
  // app wise variables for each theme
   sidebar-header-gap: 2rem,
   sidebar-header-height: initial,
   layout-content-width: 1400px,
+  color-bg: #2b3643,
+  menu-font-size: 14px,
+  menu-icon-font-size: 30px,
+  header-height: 3.5rem,
+  sidebar-width: 12rem,
+  sidebar-bg: #364150,
+  header-shadow: 0 0 0 0,
+  menu-bg: #364150,
+  menu-fg: #ffffff,
+  menu-active-fg: #b4bcc8,
+  menu-item-separator: #3d4957,
+  menu-icon-active-color: #b4bcc8,
+  menu-icon-color: #ffffff,
+  menu-submenu-active-border-color:	#ffffff,
+  sidebar-height: 150%,
+  menu-submenu-item-border-radius: 0,
+  card-bg: #ffffff,
 
   font-main: Roboto,
   font-secondary: Exo,
 ), default, default);
-
-$nb-themes: nb-register-theme((
-  // app wise variables for each theme
-  sidebar-header-gap: 2rem,
-  sidebar-header-height: initial,
-  layout-content-width: 1400px,
-
-  font-main: Roboto,
-  font-secondary: Exo,
-), cosmic, cosmic);
