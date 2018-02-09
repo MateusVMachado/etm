@@ -19,6 +19,7 @@ import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
 import { AuthService } from './components/shared/auth.services';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,6 +39,7 @@ import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
   ],
   bootstrap: [AppComponent],
   providers: [
+    CookieService,
     StateService,
     AuthService,
     AuthGuard,
