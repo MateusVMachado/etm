@@ -7,6 +7,8 @@ import * as moment from 'moment';
 import { BackLogger } from "../apis/backLogger.api";
 import { Login } from '../apis/login.api';
 import { Auth } from '../apis/auth.api';
+import { Register } from '../apis/register.api';
+import { MongoConfig } from '../mongo.config';
 
 /**
  * / route
@@ -24,35 +26,22 @@ export class IndexRoute extends BaseRoute {
    * @static
    */
   public static create(router: Router, app: express.Application) {  
-    var newIndexRoute = new IndexRoute();
-    var backLogger = new BackLogger();
-    var keyboard = new Keyboard();
-    var login = new Login();
-    var auth = new Auth();
-    
+    let newIndexRoute = new IndexRoute();    let backLogger = new BackLogger();
+    let keyboard = new Keyboard();    let login = new Login();
+    let auth = new Auth();    let register = new Register();
+    let mongoC = new MongoConfig();
+
     console.log("[Server is UP and listening]\n");
 
+    // HOME
     //add home page route
     router.get("/", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       backLogger.logRequests(req);
       newIndexRoute.index(req, res, next);
     });
-
-    router.post("/login", (req: Request, res: Response, next: NextFunction) => {
-      res.locals.mongoAccess = app.locals.mongoAccess;
-      console.log("LOGGER NO POST");
-      backLogger.logRequests(req);
-      login.authenticateUser(req, res, next);
-    });
-
-    router.all("/secret", (req: Request, res: Response, next: NextFunction) => {
-      res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
-      auth.authorizeUser(req, res, next);
-    });
     
-  
+    // TECLADOS
     // Rota para API de teclados  
     router.get("/keyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
@@ -60,6 +49,33 @@ export class IndexRoute extends BaseRoute {
       backLogger.logRequests(req);
       keyboard.keyboard_api(req,res,next);  
     });
+
+    // LOGIN
+    // Rota para handler do login
+    router.post("/login", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      //console.log("LOGGER NO POST");
+      backLogger.logRequests(req);
+      login.authenticateUser(req, res, next);
+    });
+    
+    // REGISTER
+    // Rota para handler do registro
+    router.post("/register", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      //console.log("LOGGER NO POST");
+      backLogger.logRequests(req);
+      register.registerUser(req, res, next);
+    });
+
+    // Rota para alguma área que precisa de privilégios
+    router.all("/secret", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      //auth.authorizeUser(req, res, next);
+      mongoC.configureDatabase(req, res, next);
+    });
+
 
   }
 

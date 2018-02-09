@@ -6,6 +6,7 @@ import * as CryptoJS from 'crypto-js';
 import * as jwt from 'jsonwebtoken';
 import { backendConfig } from '../backend.config';
 
+
 //var jwt = require('jsonwebtoken');
 
 export class Login extends BaseRoute{
@@ -17,38 +18,62 @@ export class Login extends BaseRoute{
         super();
     }
 
-
     public authenticateUser(req: Request, res: Response, next: NextFunction){
-        //var jwt = require('jsonwebtoken');
-        this.user.name = "juliana";
-        this.user.email = "juliana@gmail.com";
-        this.user.password = 'juliana';
+        res.locals.mongoAccess.coll[0].find({"email": req.body['email']}).toArray(function(err, user_list) {         
+                if(user_list.length !== 0){
+                    console.log("USER FOUND!");
+                    console.log(user_list);
 
-        console.log("Checking login informations:")
-        //console.log("[server] Rec: " + req.body['token'] );
-        console.log(req.body);
-        //if(req.body['token'] === "407518f9df56de760624a95a909a23419456ad95bc3b3009c6c5e7cde4b072e05a3d7562eec3ff341d4bcd3e108721e5d96a8b191f6e20d122d2dd330dfc86f9f40c876037706dc2c3733ac00e561d1b8dc83dc6099e7e1192da116489ad7a4f"){
-        if( req.body['email'] === this.user.email && req.body['password'] === this.user.password) {    
-            console.log("AUTENTICADO!");
-           
-            let token = jwt.sign({sub: this.user.email, iss: 'etm-app'}, backendConfig.secret);
-            //res.send(JSON.stringify("OK!"));
-            console.log("[server] Sent: " + token);
-            res.json({name: this.user.name, email: this.user.email, accessToken: token});
+                    if (req.body['email'] === user_list[0]['email'] && 
+                        req.body['password'] === user_list[0]['password']) {
+                        console.log("AUTENTICADO!");
+        
+                        let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app' }, 
+                                    backendConfig.secret);
+                        
+                        console.log("[server] Sent: " + token);
+                        res.json({ name: user_list[0]['fullName'], email: user_list[0]['email'],
+                                 accessToken: token });
+        
+                    } else {
+                        console.log("NÃO AUTENTICADO");
+                        res.status(403).json({ message: 'Dados inválidos.' });
+                    }
 
-        } else {
-            console.log("NÃO AUTENTICADO");
-            //res.send(JSON.stringify("NOT OK!"));
-            res.status(403).json({message: 'Dados inválidos.'});
-        }
-        //console.log(req.body['token']);
-
-        //console.log(req.body['email']);
-        //console.log(req.body['password']);   
+                    console.log(user_list[0]['email']);
+                    console.log("MARK2");
+                    
+                } else {
+                    console.log("USER NOT FOUND!");
+                    res.status(400).json({message: 'Dados inválidos!'});
+                }
+ 
+        });
     }
+}        
+/*
+    private checkIfExistsAndReturn(req: Request, res: Response): any {
+        //this.user = {};  
+        res.locals.mongoAccess.coll[0].find({"email": req.body['email']}).toArray(function(err, user_list) {         
+                if(user_list.length !== 0){
+                    console.log("USER FOUND!");
+                    console.log(user_list);
+                    //this.user.fullName = user_list[0]['fullName'];
+                    //this.user.email = user_list[0]['email'];
+                    //this.user.password = user_list[0]['password'];
+                    console.log(user_list[0]['email']);
+                    console.log("MARK2");
+                    //this.user.fullName = user_list
+                    return true;
+                } else {
+                    console.log("USER NOT FOUND!");
+                    res.status(400).json({message: 'Dados incorretos!'});
+                    return false;
+                }
+        })
 
-
-
+ }
+*/
 
 /*
     public login_api(req: Request, res: Response, next: NextFunction, mongoAccess: MongoAccessModel) {
@@ -78,6 +103,3 @@ export class Login extends BaseRoute{
     }     
 
 */    
-}
-
-
