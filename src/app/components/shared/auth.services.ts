@@ -7,27 +7,27 @@ export class AuthService {
     constructor(private http: HttpClient) {
     }
 
-    authenticate(user: any){
-        return this.http.post("http://localhost:8080", user, this.getDefaultHeaders());
+    authenticate(user: any) {
+        return this.http.post("http://192.168.1.107:8080/login", user, this.getDefaultHeaders());
     }
 
-    isAuthenticated(){
-
-    }
-
-    logout(){
+    isAuthenticated() {
 
     }
 
-    register(){
+    logout() {
 
     }
 
-    resetPassword(){
+    register() {
 
     }
 
-    getDefaultHeaders(){
+    resetPassword() {
+
+    }
+
+    getDefaultHeaders() {
         return { headers: { 'Content-Type': 'application/json' } };
     }
 }

@@ -3,9 +3,11 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
+import { SwalComponent } from "@toverux/ngx-sweetalert2";
+import 'rxjs/add/operator/catch';
 
 @Component({
     selector: 'nb-login',
@@ -72,11 +74,18 @@ import { AuthService } from '../shared/auth.services';
           Don't have an account? <a (click)="navigateTo('./auth/register')"><strong>Sign Up</strong></a>
         </small>
       </div>
+      <swal
+        #loginAlert
+        title="Algo deu errado"
+        text="Usuário ou senha inválido!"
+        type="warning"
+        background="#ffffff">
+      </swal>
     </nb-auth-block>
   `,
 })
 export class NgxLoginComponent {
-
+    @ViewChild('loginAlert') private loginAlert: SwalComponent;
     errors: string[] = [];
     messages: string[] = [];
     user: any = {};
@@ -86,16 +95,17 @@ export class NgxLoginComponent {
     }
 
     login(): void {
-
-        this.service.authenticate(this.user).subscribe((result: any) => {
-
-            if(result){
-              this.router.navigate(['./pages/teclados']);
-            }
+        this.service.authenticate(this.user).catch((error) => {
+          this.loginAlert.show();
+          throw new Error("usuário ou senha inválido!");
+        }).subscribe((result: any) => {
+          if ( result ) {
+            this.router.navigate(['./pages/teclados']);
+          }
         });
     }
 
-    navigateTo(path: string){
+    navigateTo(path: string) {
       this.router.navigate([path]);
     }
 }

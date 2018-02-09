@@ -18,6 +18,7 @@ import { StateService } from './data/state.service';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
 import { AuthService } from './components/shared/auth.services';
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +29,12 @@ import { AuthService } from './components/shared/auth.services';
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    SweetAlert2Module.forRoot({
+        buttonsStyling: false,
+        customClass: 'modal-content',
+        confirmButtonClass: 'btn btn-primary',
+    })
   ],
   bootstrap: [AppComponent],
   providers: [

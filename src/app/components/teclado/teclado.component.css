@@ -1,5 +1,6 @@
 .box-teclado{
     position: relative;
+    bottom: -12px;
     margin: auto;
     max-height: 40%;
 }
