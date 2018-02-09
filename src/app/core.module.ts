@@ -2,7 +2,7 @@ import { ModuleWithProviders, NgModule, Optional, SkipSelf } from '@angular/core
 import { CommonModule } from '@angular/common';
 import { NbAuthModule, NbDummyAuthProvider } from '@nebular/auth';
 
-import { throwIfAlreadyLoaded } from './module-import-guard';
+import { throwIfAlreadyLoaded } from '../environments/module-import-guard';
 import { DataModule } from './data/data.module';
 
 const NB_CORE_PROVIDERS = [

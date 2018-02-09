@@ -21,6 +21,7 @@
   .logo-containter {
     display: flex;
     align-items: center;
+    color: white;
   }
 
   .control-item {
@@ -33,8 +34,8 @@
     width: 100%;
 
     .navigation {
-      padding-right: nb-theme(padding);
-      font-size: 2.5rem;
+      padding-right: 1rem;
+      font-size: 2rem;
       text-decoration: none;
 
       i {
@@ -44,10 +45,8 @@
     }
 
     .logo {
-      padding: 0 nb-theme(padding);
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       font-weight: nb-theme(font-weight-bolder);
-      border-left: 1px solid nb-theme(separator);
       white-space: nowrap;
 
       span {

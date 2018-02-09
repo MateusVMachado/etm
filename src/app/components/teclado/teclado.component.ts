@@ -1,3 +1,4 @@
+import { EditorModule } from '@tinymce/tinymce-angular';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
@@ -8,14 +9,18 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 export class TecladoComponent implements OnInit {
 
   @Output() key: EventEmitter<string> = new EventEmitter<string>();
+  public texto: string;
 
   constructor() { }
 
   ngOnInit() {
+    this.texto = '';
   }
 
-  public getValue(keyValue: any):void {
-    this.key.emit(keyValue);
+  public getValue(keyValue: any): void {
+    this.texto = this.texto + keyValue;
+    tinymce.get('tinyEditor').setContent(this.texto);
+    // this.key.emit(keyValue);
   }
 
 }
