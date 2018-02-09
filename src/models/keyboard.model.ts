@@ -4,12 +4,12 @@
 */
 export class KeyboardModel {
 
-    userId: string;
+    //userId: string;
     teclas: string[][];
     type: string;
 
     constructor() {
-        this.userId = undefined;
+        //this.userId = undefined;
         this.teclas = [];
         this.type = 'none';
     }
