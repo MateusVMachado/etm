@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
 import { Router } from '@angular/router';
+import { JWTtoken } from '../../storage';
 @Component({
   selector: 'app-header',
   styleUrls: ['./header.component.scss'],
@@ -22,6 +23,9 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    //if (JWTtoken.token === undefined) {
+    //  this.router.navigate(["./auth"]);
+    // }
   }
 
   toggleSidebar(): boolean {
@@ -39,6 +43,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(){
+    JWTtoken.token = undefined;
     this.router.navigate(["./auth"]);
   }
 

@@ -13,9 +13,9 @@ import { NgxLoginComponent } from './components/login/login.component';
 import { NgxRegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [
-  { 
-    path: 'pages', 
-    //canActivate: [AuthGuard],
+  {
+    path: 'pages',
+    canActivate: [AuthGuard],
     loadChildren: 'app/components/sidebar/sidebar.module#SidebarModule' 
   },
   {

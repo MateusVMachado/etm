@@ -103,6 +103,7 @@ export class NgxLoginComponent {
         }).subscribe(
           (res: any) => {
               console.log(res['accessToken']);
+              this.service.setToken(res['accessToken']);
               JWTtoken.token = res['accessToken'];
               if (JWTtoken.token !== undefined) {
                 this.router.navigate(['./pages/teclados']);

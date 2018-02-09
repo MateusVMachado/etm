@@ -7,6 +7,7 @@ import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { KeyboardData } from '../../../storage';
 
 
 @Component({
@@ -25,6 +26,7 @@ export class TeclaComponent implements OnInit {
 
   public data = [];
 
+
   restaurant: string;
 
   @Input() public layoutHide: boolean;
@@ -40,24 +42,30 @@ export class TeclaComponent implements OnInit {
     this.texto = '';
     this.teclado.teclas = [];
 
+    // this.teclado = this.teclaService.loadTeclado("normal");
     this.teclaService.loadData().catch((error) => {
-      this.teclado = this.teclaService.loadTeclado("normal");
+      // this.teclado = this.teclaService.loadTeclado("normal");
+      this.tecladoControl.nativeElement.click();
       throw new Error("teclado local");
     }).subscribe((data) => {
       if ( data ) {
-        this.teclado = <TeclaModel>(data);
+        this.teclado = <TeclaModel>(data[0]);
+        // this.teclado = <TeclaModel>(data[4]); //CUSTOM
+        KeyboardData.data = <TeclaModel>(data);
         console.log(this.teclado.teclas);
       }
       this.tecladoControl.nativeElement.click();
     });
+
   }
 
   public capsLock() {
     if (this.teclado.type === 'normal') {
-      this.teclaService.loadTeclado('caps');
+      this.teclado = <TeclaModel>(KeyboardData.data[1]);
       console.log(this.teclado.type);
     }else {
-      this.teclaService.loadTeclado('normal');
+      // this.teclado = this.teclaService.loadTeclado('normal');
+      this.teclado = <TeclaModel>(KeyboardData.data[0]);
       console.log(this.teclado.type);
     }
   }
