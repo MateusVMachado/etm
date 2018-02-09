@@ -10,6 +10,7 @@ import {
 } from '@nebular/auth';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
+import { NgxRegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [
   { 
@@ -31,7 +32,8 @@ const routes: Routes = [
       },
       {
         path: 'register',
-        component: NbRegisterComponent,
+        // component: NbRegisterComponent,
+        component: NgxRegisterComponent,
       },
       {
         path: 'logout',

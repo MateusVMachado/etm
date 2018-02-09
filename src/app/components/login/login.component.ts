@@ -6,6 +6,7 @@
 import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
+import { JWTtoken } from '../../storage';
 
 @Component({
     selector: 'nb-login',
@@ -80,32 +81,26 @@ export class NgxLoginComponent {
     errors: string[] = [];
     messages: string[] = [];
     user: any = {};
+    userInfo: any = {};
 
     constructor(protected service: AuthService,
                 protected router: Router) {
     }
 
-    login(): void {
+    public login(): void {
         this.service.authenticate(this.user).subscribe(
           (res: any) => {
-              console.log(res);
-              if (res === 'OK!') {
+              console.log(res['accessToken']);
+              JWTtoken.token = res['accessToken'];
+              if (JWTtoken.token !== undefined) {
                 this.router.navigate(['./pages/teclados']);
               }
           } ,  // changed
        );
 
-/*
-        this.service.authenticate(this.user, this.hashedUser).subscribe((result: any) => {
-            console.log(result.json());
-            if (result) {
-              this.router.navigate(['./pages/teclados']);
-            }
-        });
- */       
     }
 
-    navigateTo(path: string){
+    public navigateTo(path: string) {
       this.router.navigate([path]);
     }
 }

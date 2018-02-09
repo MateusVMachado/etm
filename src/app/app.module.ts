@@ -17,6 +17,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from './data/state.service';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
+import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/auth.services';
 
 @NgModule({
@@ -35,7 +36,7 @@ import { AuthService } from './components/shared/auth.services';
     StateService,
     AuthService,
     AuthGuard,
-    { provide: APP_BASE_HREF, useValue: '/' }   
+    { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
 export class AppModule {
