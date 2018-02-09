@@ -40,8 +40,11 @@ export class TeclaComponent implements OnInit {
     this.texto = '';
     this.teclado.teclas = [];
 
+    this.teclado = this.teclaService.loadTeclado("normal");
+
     this.teclaService.loadData().catch((error) => {
       this.teclado = this.teclaService.loadTeclado("normal");
+      this.tecladoControl.nativeElement.click();
       throw new Error("teclado local");
     }).subscribe((data) => {
       if ( data ) {

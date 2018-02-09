@@ -12,10 +12,10 @@ import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
-  { 
-    path: 'pages', 
-    //canActivate: [AuthGuard],
-    loadChildren: 'app/components/sidebar/sidebar.module#SidebarModule' 
+  {
+    path: 'pages',
+    // canActivate: [AuthGuard],
+    loadChildren: 'app/components/sidebar/sidebar.module#SidebarModule'
   },
   {
     path: 'auth',
