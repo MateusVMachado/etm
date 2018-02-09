@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 import { TecladoComponent } from './teclado.component';
 
 const routes: Routes = [
-    {  
-        path: 'pages/teclado',  component: TecladoComponent,  
+    {
+        path: 'pages/teclado',  component: TecladoComponent,
         children: [{
             path: 'teclado',
             component: TecladoComponent,
