@@ -46,7 +46,7 @@ const COMPONENTS = [
   HeaderComponent,
   FooterComponent,
   MainPageComponent,
-  NgxLoginComponent, 
+  NgxLoginComponent,
 ];
 
 const NB_THEME_PROVIDERS = [

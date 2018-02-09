@@ -25,17 +25,17 @@ import { AuthService } from './components/shared/auth.services';
     BrowserModule,
     BrowserAnimationsModule,
     HttpModule,
-    AppRoutingModule,      
+    AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot(),
+    CoreModule.forRoot()
   ],
   bootstrap: [AppComponent],
   providers: [
     StateService,
     AuthService,
     AuthGuard,
-    { provide: APP_BASE_HREF, useValue: '/' }   
+    { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
 export class AppModule {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { TeclaModel } from './tecla.model';
 import { TeclaService } from './tecla.service';
 import { Observable } from 'rxjs/Observable';
@@ -16,7 +16,7 @@ import 'rxjs/add/operator/catch';
 })
 
 export class TeclaComponent implements OnInit {
-
+  @ViewChild('tecladoControl') tecladoControl: ElementRef; // input DOM element
   public teclado: TeclaModel = new TeclaModel();
 
   public tecla: string;
@@ -40,15 +40,15 @@ export class TeclaComponent implements OnInit {
     this.texto = '';
     this.teclado.teclas = [];
 
-    /*this.teclaService.loadData().subscribe((data) => {
+    this.teclaService.loadData().subscribe((data) => {
       if ( data ) {
         this.teclado = <TeclaModel>(data);
         console.log(this.teclado.teclas);
       } else {
         this.teclado = this.teclaService.loadTeclado("normal");
       }
-    });*/
-    this.teclado = this.teclaService.loadTeclado("normal");
+      this.tecladoControl.nativeElement.click();
+    });
   }
 
   public capsLock() {
