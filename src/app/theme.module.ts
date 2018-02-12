@@ -1,3 +1,4 @@
+import { NgxRegisterComponent } from './components/register/register.component';
 import { ModuleWithProviders, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -48,6 +49,7 @@ const COMPONENTS = [
   FooterComponent,
   MainPageComponent,
   NgxLoginComponent,
+  NgxRegisterComponent
 ];
 
 const NB_THEME_PROVIDERS = [
