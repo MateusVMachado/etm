@@ -1,4 +1,3 @@
-import { NgxRegisterComponent } from './components/register/register.component';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import {
@@ -11,12 +10,13 @@ import {
 } from '@nebular/auth';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
+import { NgxRegisterComponent } from './components/register/register.component';
 
 const routes: Routes = [
   {
     path: 'pages',
-    // canActivate: [AuthGuard],
-    loadChildren: 'app/components/sidebar/sidebar.module#SidebarModule'
+    canActivate: [AuthGuard],
+    loadChildren: 'app/components/sidebar/sidebar.module#SidebarModule' 
   },
   {
     path: 'auth',

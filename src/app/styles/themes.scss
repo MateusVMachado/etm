@@ -8,6 +8,10 @@ $nb-enabled-themes: (default);
 
 $nb-themes: nb-register-theme((
  // app wise variables for each theme
+  menu-submenu-fg: #ffffff,
+  menu-submenu-hover-fg: #b4bcc8,
+  menu-submenu-active-fg: #b4bcc8,
+  menu-group-fg: #ffffff,
   sidebar-header-gap: 2rem,
   sidebar-header-height: initial,
   layout-content-width: 1400px,

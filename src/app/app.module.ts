@@ -7,7 +7,8 @@ import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
-import { HttpModule } from '@angular/http';
+
+import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './core.module';
 
 import { AppComponent } from './app.component';
@@ -16,6 +17,7 @@ import { ThemeModule } from './theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from './data/state.service';
 import { AuthGuard } from './guards/auth-guard.service';
+import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/auth.services';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 import { CookieService } from 'ngx-cookie-service';
@@ -25,7 +27,7 @@ import { CookieService } from 'ngx-cookie-service';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),

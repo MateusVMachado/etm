@@ -1,4 +1,3 @@
-import { NgxRegisterComponent } from './components/register/register.component';
 import { ModuleWithProviders, NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,7 +25,8 @@ import {
 
 import { DEFAULT_THEME } from './styles/theme.default';
 import { NgxLoginComponent } from './components/login/login.component';
-import { SweetAlert2Module } from "@toverux/ngx-sweetalert2";
+import { NgxRegisterComponent } from './components/register/register.component';
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
