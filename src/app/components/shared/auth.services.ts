@@ -8,7 +8,7 @@ export class AuthService {
     }
 
     authenticate(user: any) {
-        return this.http.post("http://localhost:8080/login", user, this.getDefaultHeaders());
+        return this.http.post("http://192.168.1.107:8080/login", user, this.getDefaultHeaders());
     }
 
     isAuthenticated() {
