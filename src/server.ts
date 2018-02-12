@@ -22,7 +22,7 @@ export class Server {
   public app: express.Application;
 
   public mongoAccess: MongoAccessModel = new MongoAccessModel();
-  public poolSize: number = 10;
+  public poolSize: number = 100;
   public guard: Login = new Login();
 
   /**

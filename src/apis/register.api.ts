@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "../routes/route";
-
+import * as mongoSanitize from 'express-mongo-sanitize';
+import { UserModel } from '../models/user.model';
 
 export class Register extends BaseRoute {
-
-    public user: any = {};
+    
 
     constructor(){
         super();
@@ -41,11 +41,18 @@ export class Register extends BaseRoute {
 
 
     private insertIntoDatabase(req: Request, res: Response){
-        this.user.fullName = req.body['fullName'];
-        this.user.email = req.body['email'];
-        this.user.password = req.body['password'];
+        let user = new UserModel();
+        user.fullName = req.body['fullName'];
+        user.email = req.body['email'];
+        user.password = req.body['password'];
 
-        res.locals.mongoAccess.coll[0].insert(this.user, (err, result) => {
+        // Remove caracteres indesejados do input do usuário    
+        mongoSanitize.sanitize(user.fullName);
+        mongoSanitize.sanitize(user.email);
+        mongoSanitize.sanitize(user.password);
+
+        res.locals.mongoAccess.coll[0].insert(user, (err, result) => {
+            console.log(user);
             console.log("Usuário inserido na database!");
         });  
         /*  
