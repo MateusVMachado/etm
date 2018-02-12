@@ -2,13 +2,11 @@ import { Injectable } from '@angular/core';
 import { TeclaModel } from './tecla.model';
 
 // import { ETM_API } from '../../app.api';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-
-import { Response } from '@angular/http/src/static_response';
 
 @Injectable()
 export class TeclaService {
