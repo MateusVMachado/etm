@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { TeclaModel } from './tecla.model';
 
 // import { ETM_API } from '../../app.api';
-
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -26,7 +25,7 @@ export class TeclaService {
     public csRow: string[] = ['*cpslck', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ç',  ':', '*arrowup', '*kbdrtrn'];
     public ctRow: string[] = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '\"', '*arrowleft', '*arrowdown', '*arrowright'];
 
-    constructor(private http: Http) {  }
+    constructor(private http: HttpClient) {  }
 
     loadTeclado(type: string): TeclaModel {
         this.teclado.teclas = []; // Clear teclado
