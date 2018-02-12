@@ -8,22 +8,18 @@ export class AuthService {
     private token: any = undefined;
 
     constructor(private http: HttpClient) {
-        //this.token = JWTtoken.token;
-        console.log("TESTE1234");
+        // this.token = JWTtoken.token;
+        console.log('TESTE1234');
     }
 
     authenticate(user: any) {
-        return this.http.post("http://localhost:8080/login", user, this.getDefaultHeaders());
+        return this.http.post('http://localhost:8080/login', user, this.getDefaultHeaders());
     }
 
     isAuthenticated(): boolean {
-        //if( JWTtoken.token !== undefined){
-        //    this.token = JWTtoken.token;
-       // }
-        //console.log("JWTtoken2: " + JWTtoken.token);
-        console.log("token: " + this.token);
+        console.log('token: ' + this.token);
         if ( JWTtoken.token !== undefined) {
-        //if ( this.token !== undefined) {
+        // if ( this.token !== undefined) {
             return true;
         } else {
             return false;

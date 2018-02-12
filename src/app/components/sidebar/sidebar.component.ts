@@ -4,12 +4,7 @@ import { MENU_ITEMS } from './sidebar-itens';
 
 @Component({
   selector: 'app-pages',
-  template: `
-    <app-main-page>
-      <nb-menu [items]="menu"></nb-menu>
-      <router-outlet></router-outlet>
-    </app-main-page>
-  `,
+  templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarComponent {

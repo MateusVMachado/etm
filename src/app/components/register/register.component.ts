@@ -3,10 +3,12 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit } from '@angular/core';
+import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
 import { JWTtoken } from '../../storage';
+import 'rxjs/add/operator/catch';
 
 // import { NB_AUTH_OPTIONS_TOKEN } from '../../auth.options';
 // import { getDeepFromObject } from '../../helpers';
@@ -118,7 +120,7 @@ import { JWTtoken } from '../../storage';
   })
 
 export class NgxRegisterComponent {
-
+    @ViewChild('loginAlert') private loginAlert: SwalComponent;
     // messages: string[] = [];
     errors: string[] = [];
     messages: string[] = [];
@@ -144,8 +146,12 @@ export class NgxRegisterComponent {
     public register() {
         this.service.register(this.user).subscribe(
             (res: any) => {
-                  if (res) {
+                  if (res.status !== 400 ) {
                     console.log('REGISTRADO!');
+                    this.router.navigate(['./pages/login']);
+                  } else {
+                    console.log("ERRO DE REGISTRO!");
+                    // Mostrar alerta
                   }
             }
         );

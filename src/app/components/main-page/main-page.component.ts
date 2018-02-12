@@ -18,35 +18,7 @@ import 'rxjs/add/operator/delay';
 @Component({
   selector: 'app-main-page',
   styleUrls: ['./main-page.component.scss'],
-  template: `<nb-layout [center]="layout.id === 'center-column'" windowMode>
-    <nb-layout-header fixed>
-      <app-header [position]="sidebar.id === 'left' ? 'normal': 'inverse'"></app-header>
-    </nb-layout-header>
-
-    <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive [right]="sidebar.id === 'right'" style="margin-top: 0;">
-      <ng-content select="nb-menu"></ng-content>
-    </nb-sidebar>
-
-    <nb-layout-column class="main-content" style="padding: 1% 1% 1%">
-      <ng-content select="router-outlet"></ng-content>
-    </nb-layout-column>
-
-    <nb-layout-column left class="small" *ngIf="layout.id === 'two-column' || layout.id === 'three-column'">
-      <nb-menu [items]="subMenu"></nb-menu>
-    </nb-layout-column>
-
-    <nb-layout-column right class="small" *ngIf="layout.id === 'three-column'">
-      <nb-menu [items]="subMenu"></nb-menu>
-    </nb-layout-column>
-
-    <!--<nb-layout-footer fixed>
-      <app-footer></app-footer>
-    </nb-layout-footer>-->
-
-    <nb-sidebar class="settings-sidebar" tag="settings-sidebar" state="collapsed"
-      fixed [right]="sidebar.id !== 'right'">
-      </nb-sidebar>
-  </nb-layout>`,
+  templateUrl: './main-page.component.html' ,
 })
 export class MainPageComponent implements OnDestroy {
 

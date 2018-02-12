@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
   userMenu = [{ title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService, 
+              private menuService: NbMenuService,
               private router: Router) {
   }
 
@@ -42,7 +42,7 @@ export class HeaderComponent implements OnInit {
     this.menuService.navigateHome();
   }
 
-  logout(){
+  logout() {
     JWTtoken.token = undefined;
     this.router.navigate(["./auth"]);
   }

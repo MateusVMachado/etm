@@ -26,7 +26,7 @@ import {
 import { DEFAULT_THEME } from './styles/theme.default';
 import { NgxLoginComponent } from './components/login/login.component';
 import { NgxRegisterComponent } from './components/register/register.component';
-import { SweetAlert2Module } from "@toverux/ngx-sweetalert2";
+import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
