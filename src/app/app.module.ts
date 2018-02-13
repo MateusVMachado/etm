@@ -35,7 +35,7 @@ import { CookieService } from 'ngx-cookie-service';
     SweetAlert2Module.forRoot({
         buttonsStyling: false,
         customClass: 'modal-content',
-        confirmButtonClass: 'btn btn-primary',
+        confirmButtonClass: 'btn btn-success',
     })
   ],
   bootstrap: [AppComponent],
