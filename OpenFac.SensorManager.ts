@@ -1,4 +1,4 @@
-import { IOpenCapSensor } from "./OpenFac.OpenCapSensor.Interface";
+import { IOpenCapSensor } from "./OpenFac.Sensor.Interface";
 
 export class OpenCapSensorManager {
 

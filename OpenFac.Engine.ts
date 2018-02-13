@@ -1,10 +1,10 @@
-import { IOpenCapEngine } from './OpenFac.OpenCapEngine.Interface';
-import { EngineScanType, IOpenCapConfig } from './OpenFac.OpenCapConfig.Interface';
-import { SensorState, IOpenCapSensor } from './OpenFac.OpenCapSensor.Interface';
-import { OpenCapKeyboard } from './OpenFac.OpenCapKeyboard';
-import { OpenCapKeyboardLine } from './OpenFac.OpenCapKeyboardLine';
-import { IOpenCapKeyboard } from './OpenFac.OpenCapKeyboard.Interface';
-import { OpenCapKeyboardButton } from './OpenFac.OpenCapButton';
+import { IOpenCapEngine } from './OpenFac.Engine.Interface';
+import { EngineScanType, IOpenCapConfig } from './OpenFac.Config.Interface';
+import { SensorState, IOpenCapSensor } from './OpenFac.Sensor.Interface';
+import { OpenCapKeyboard } from './OpenFac.Keyboard';
+import { OpenCapKeyboardLine } from './OpenFac.KeyboardLine';
+import { IOpenCapKeyboard } from './OpenFac.Keyboard.Interface';
+import { OpenCapKeyboardButton } from './OpenFac.Button';
 
 export enum EngineState {
     LineDown,

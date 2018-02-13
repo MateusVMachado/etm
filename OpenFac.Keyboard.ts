@@ -1,6 +1,6 @@
-import { IOpenCapKeyboard } from "./OpenFac.OpenCapKeyboard.Interface";
-import { OpenCapKeyboardButton } from "./OpenFac.OpenCapButton";
-import { OpenCapKeyboardLine } from "./OpenFac.OpenCapKeyboardLine";
+import { IOpenCapKeyboard } from "./OpenFac.Keyboard.Interface";
+import { OpenCapKeyboardButton } from "./OpenFac.Button";
+import { OpenCapKeyboardLine } from "./OpenFac.KeyboardLine";
 
 export class OpenCapKeyboard implements IOpenCapKeyboard {
     

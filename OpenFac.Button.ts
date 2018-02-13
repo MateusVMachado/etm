@@ -1,4 +1,4 @@
-import { IOpenCapAction } from "./OpenFac.OpenCapAction.Interface";
+import { IOpenCapAction } from "./OpenFac.Action.Interface";
 
 export class OpenCapKeyboardButton {
     public Items: Array<OpenCapKeyboardButton> = new Array<OpenCapKeyboardButton>();
