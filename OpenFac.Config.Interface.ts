@@ -3,9 +3,9 @@ export enum EngineScanType {
     ScanManual
 }
 
-export interface IOpenCapConfig {
-    GetKeyboardManager(): OpenCapKeyboardManager;
-    GetCurrentKeyboard(): OpenCapKeyboard;
+export interface IOpenFacConfig {
+    GetKeyboardManager(): OpenFacKeyboardManager;
+    GetCurrentKeyboard(): OpenFacKeyboard;
     GetScanType(): EngineScanType;
     GetActiveSensor(): string;
 };

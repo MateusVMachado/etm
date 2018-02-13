@@ -1,12 +1,12 @@
-import { OpenCapKeyboardButton } from "./OpenFac.Button";
+import { OpenFacKeyboardButton } from "./OpenFac.Button";
 
-export class OpenCapKeyboardLine {
+export class OpenFacKeyboardLine {
     
-    public Items: Array<OpenCapKeyboardLine> = new Array<OpenCapKeyboardLine>();
-    public Buttons: OpenCapKeyboardButton = new OpenCapKeyboardButton();
+    public Items: Array<OpenFacKeyboardLine> = new Array<OpenFacKeyboardLine>();
+    public Buttons: OpenFacKeyboardButton = new OpenFacKeyboardButton();
 
-    public Add(): OpenCapKeyboardLine {
-        let li = new OpenCapKeyboardLine();
+    public Add(): OpenFacKeyboardLine {
+        let li = new OpenFacKeyboardLine();
         this.Items.push(li);
         return li;
     };

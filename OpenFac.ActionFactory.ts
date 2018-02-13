@@ -1,3 +1,3 @@
-export class OpenCapActionFactory<T> {
+export class OpenFacActionFactory<T> {
     
 }

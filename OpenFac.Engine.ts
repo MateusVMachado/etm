@@ -1,10 +1,10 @@
-import { IOpenCapEngine } from './OpenFac.Engine.Interface';
-import { EngineScanType, IOpenCapConfig } from './OpenFac.Config.Interface';
-import { SensorState, IOpenCapSensor } from './OpenFac.Sensor.Interface';
-import { OpenCapKeyboard } from './OpenFac.Keyboard';
-import { OpenCapKeyboardLine } from './OpenFac.KeyboardLine';
-import { IOpenCapKeyboard } from './OpenFac.Keyboard.Interface';
-import { OpenCapKeyboardButton } from './OpenFac.Button';
+import { IOpenFacEngine } from './OpenFac.Engine.Interface';
+import { EngineScanType, IOpenFacConfig } from './OpenFac.Config.Interface';
+import { SensorState, IOpenFacSensor } from './OpenFac.Sensor.Interface';
+import { OpenFacKeyboard } from './OpenFac.Keyboard';
+import { OpenFacKeyboardLine } from './OpenFac.KeyboardLine';
+import { IOpenFacKeyboard } from './OpenFac.Keyboard.Interface';
+import { OpenFacKeyboardButton } from './OpenFac.Button';
 
 export enum EngineState {
     LineDown,
@@ -15,19 +15,19 @@ export enum EngineState {
 };
 
 export interface CallBackEngine {
-    (engine: OpenCapEngine): Boolean
+    (engine: OpenFacEngine): Boolean
 }
 
-export class OpenCapEngine implements IOpenCapEngine {
+export class OpenFacEngine implements IOpenFacEngine {
 
     private func: CallBackEngine;
     private scanType: EngineScanType;
     private currentState: EngineState;
-    private keyboardEngine: IOpenCapKeyboard;
-    private currentKeyboard: OpenCapKeyboard;
-    private currentLine: OpenCapKeyboardLine;
-    private openCapConfig: IOpenCapConfig;
-    private sensorManager: OpenCapSensorManager;
+    private keyboardEngine: IOpenFacKeyboard;
+    private currentKeyboard: OpenFacKeyboard;
+    private currentLine: OpenFacKeyboardLine;
+    private OpenFacConfig: IOpenFacConfig;
+    private sensorManager: OpenFacSensorManager;
 
     private currentRowNumber: number;
     private priorRowNumber: number;
@@ -75,7 +75,7 @@ export class OpenCapEngine implements IOpenCapEngine {
         this.currentState = state;
     };
 
-    public CurrentKeyboard(): OpenCapKeyboard {
+    public CurrentKeyboard(): OpenFacKeyboard {
         return this.currentKeyboard;
     };
 
@@ -153,20 +153,20 @@ export class OpenCapEngine implements IOpenCapEngine {
         this.currentColumnNumber = 0;
     };
 
-    public GetCurrentButton(): OpenCapKeyboardButton {
-        return this.currentKeyboard.Lines.Items[this.currentRowNumber].Buttons.Items[this.currentColumnNumber] as OpenCapKeyboardButton;
+    public GetCurrentButton(): OpenFacKeyboardButton {
+        return this.currentKeyboard.Lines.Items[this.currentRowNumber].Buttons.Items[this.currentColumnNumber] as OpenFacKeyboardButton;
     };
     
-    public CurrentLine(): OpenCapKeyboardLine {
+    public CurrentLine(): OpenFacKeyboardLine {
         return this.currentLine;
     };
 
     public Start(): void {
-        this.openCapConfig.GetScanType() == EngineScanType.ScanAuto ? this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
+        this.OpenFacConfig.GetScanType() == EngineScanType.ScanAuto ? this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
     
-        this.currentKeyboard = this.openCapConfig.GetCurrentKeyboard();
+        this.currentKeyboard = this.OpenFacConfig.GetCurrentKeyboard();
         
-        s = this.sensorManager.Find(this.openCapConfig.GetActiveSensor());
+        s = this.sensorManager.Find(this.OpenFacConfig.GetActiveSensor());
         s.DoCallBack(this, CallSensorAction);
         if (s != null)
         {

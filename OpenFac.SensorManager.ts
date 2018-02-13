@@ -1,19 +1,19 @@
-import { IOpenCapSensor } from "./OpenFac.Sensor.Interface";
+import { IOpenFacSensor } from "./OpenFac.Sensor.Interface";
 
-export class OpenCapSensorManager {
+export class OpenFacSensorManager {
 
-    private sensorList: Map<string, IOpenCapSensor> = new  Map<string, IOpenCapSensor>();
+    private sensorList: Map<string, IOpenFacSensor> = new  Map<string, IOpenFacSensor>();
 
-    public Add(sensorName: string, sensor: IOpenCapSensor){
+    public Add(sensorName: string, sensor: IOpenFacSensor){
         this.sensorList.set(sensorName, sensor);        
     }
 
-    public List(): Map<string, IOpenCapSensor>{
+    public List(): Map<string, IOpenFacSensor>{
         return this.sensorList;
     };
 
-    public Find(sensorName: string): IOpenCapSensor {
-        let sensor: IOpenCapSensor;
+    public Find(sensorName: string): IOpenFacSensor {
+        let sensor: IOpenFacSensor;
         sensor = this.sensorList.get(sensorName);
         if(!sensor){
             sensor = null;

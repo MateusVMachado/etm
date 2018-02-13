@@ -1,5 +1,5 @@
-import { IOpenCapEngine } from "./OpenFac.Engine.Interface";
+import { IOpenFacEngine } from "./OpenFac.Engine.Interface";
 
-export interface IOpenCapAction {
-    Execute(Engine: IOpenCapEngine): void;
+export interface IOpenFacAction {
+    Execute(Engine: IOpenFacEngine): void;
 }

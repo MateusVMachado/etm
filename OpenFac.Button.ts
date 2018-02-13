@@ -1,13 +1,13 @@
-import { IOpenCapAction } from "./OpenFac.Action.Interface";
+import { IOpenFacAction } from "./OpenFac.Action.Interface";
 
-export class OpenCapKeyboardButton {
-    public Items: Array<OpenCapKeyboardButton> = new Array<OpenCapKeyboardButton>();
-    public Action: IOpenCapAction;
+export class OpenFacKeyboardButton {
+    public Items: Array<OpenFacKeyboardButton> = new Array<OpenFacKeyboardButton>();
+    public Action: IOpenFacAction;
     public Caption: String;
     public Text: String;
     
-    public Add(): OpenCapKeyboardButton {
-        let bt  = new OpenCapKeyboardButton();
+    public Add(): OpenFacKeyboardButton {
+        let bt  = new OpenFacKeyboardButton();
         this.Items.push(bt);
         return bt;
     }

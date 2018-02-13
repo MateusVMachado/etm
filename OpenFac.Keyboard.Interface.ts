@@ -1,5 +1,5 @@
-import { OpenCapKeyboardButton } from "./OpenFac.Button";
+import { OpenFacKeyboardButton } from "./OpenFac.Button";
 
-export interface IOpenCapKeyboard {
-    DoAction(button: OpenCapKeyboardButton): void;
+export interface IOpenFacKeyboard {
+    DoAction(button: OpenFacKeyboardButton): void;
 }

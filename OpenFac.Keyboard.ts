@@ -1,12 +1,12 @@
-import { IOpenCapKeyboard } from "./OpenFac.Keyboard.Interface";
-import { OpenCapKeyboardButton } from "./OpenFac.Button";
-import { OpenCapKeyboardLine } from "./OpenFac.KeyboardLine";
+import { IOpenFacKeyboard } from "./OpenFac.Keyboard.Interface";
+import { OpenFacKeyboardButton } from "./OpenFac.Button";
+import { OpenFacKeyboardLine } from "./OpenFac.KeyboardLine";
 
-export class OpenCapKeyboard implements IOpenCapKeyboard {
+export class OpenFacKeyboard implements IOpenFacKeyboard {
     
-    public Lines: OpenCapKeyboardLine = new OpenCapKeyboardLine();
+    public Lines: OpenFacKeyboardLine = new OpenFacKeyboardLine();
     
-    public DoAction(button: OpenCapKeyboardButton): void {
+    public DoAction(button: OpenFacKeyboardButton): void {
         
     }
 

@@ -3,7 +3,7 @@ export class GenericWrapper<T>{
 }
 
 
-export class OpenCapSensorFactory {
+export class OpenFacSensorFactory {
     
     //private static m_FactoryMap: Map<string, Type>
 
