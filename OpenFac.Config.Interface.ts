@@ -1,3 +1,6 @@
+import { OpenFacKeyboardManager } from './OpenFac.KeyboardManager';
+import { OpenFacKeyboard } from './OpenFac.Keyboard';
+
 export enum EngineScanType {
     ScanAuto,
     ScanManual

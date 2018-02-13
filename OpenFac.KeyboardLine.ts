@@ -1,9 +1,13 @@
-import { OpenFacKeyboardButton } from "./OpenFac.Button";
+import { OpenFacKeyboardButton } from "./OpenFac.KeyboardButton";
 
 export class OpenFacKeyboardLine {
     
     public Items: Array<OpenFacKeyboardLine> = new Array<OpenFacKeyboardLine>();
     public Buttons: OpenFacKeyboardButton = new OpenFacKeyboardButton();
+
+    constructor() {
+
+    }
 
     public Add(): OpenFacKeyboardLine {
         let li = new OpenFacKeyboardLine();

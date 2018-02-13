@@ -4,7 +4,10 @@ import { SensorState, IOpenFacSensor } from './OpenFac.Sensor.Interface';
 import { OpenFacKeyboard } from './OpenFac.Keyboard';
 import { OpenFacKeyboardLine } from './OpenFac.KeyboardLine';
 import { IOpenFacKeyboard } from './OpenFac.Keyboard.Interface';
-import { OpenFacKeyboardButton } from './OpenFac.Button';
+import { OpenFacKeyboardButton } from './OpenFac.KeyboardButton';
+import { OpenFacSensorManager } from './OpenFac.SensorManager';
+import { OpenFacKeyboardManager } from './OpenFac.KeyboardManager';
+
 
 export enum EngineState {
     LineDown,
@@ -20,52 +23,44 @@ export interface CallBackEngine {
 
 export class OpenFacEngine implements IOpenFacEngine {
 
-    private func: CallBackEngine;
-    private scanType: EngineScanType;
     private currentState: EngineState;
-    private keyboardEngine: IOpenFacKeyboard;
     private currentKeyboard: OpenFacKeyboard;
+    private keyboardManager: OpenFacKeyboardManager;
+    private keyboardEngine: IOpenFacKeyboard;
+    private openFacConfig: IOpenFacConfig;
+    private func: CallBackEngine;
     private currentLine: OpenFacKeyboardLine;
-    private OpenFacConfig: IOpenFacConfig;
-    private sensorManager: OpenFacSensorManager;
-
+    private sensorManager: OpenFacSensorManager = new OpenFacSensorManager();
+    private scanType: EngineScanType;
     private currentRowNumber: number;
     private priorRowNumber: number;
     private currentColumnNumber: number;
     private priorColumnNumber: number;
+
+    constructor(config: IOpenFacConfig){
+        this.openFacConfig = config;
+        this.currentState = EngineState.LineDown;
+        this.currentRowNumber = this.priorRowNumber = this.currentColumnNumber = this.priorColumnNumber = 0;
+        this.keyboardManager = this.openFacConfig.GetKeyboardManager();
+    }
 
 
     public DoCallBack(func: CallBackEngine): void {
         this.func = func;
     };
 
-    public DoNextAction(): void {
-        switch (this.currentState) {
-            case EngineState.LineDown:
-                this.currentState = EngineState.ColumnRight;
-                break;
-            case EngineState.ColumnRight:
-                this.currentState = EngineState.DoAction;
-                this.DoAction();
-                this.currentState = EngineState.LineDown;
-                this.ResetColumn();
-                break;
-            default:
-                break;
-        }
-    };
 
     public CallSensorAction(sensor: SensorState): void {
-        if (this.scanType == EngineScanType.ScanAuto) {
-            this.DoNextAction();
-        }
-    };
+        this.SensorDoAction(sensor);
+    }
+
 
     public InvokeCallBack(): void {
-        if(this.func){
+        if ( this.func !== null ){
             this.func(this);
         }
-    };
+    }
+
 
     public CurrentState(): EngineState {
         return this.currentState;
@@ -75,6 +70,7 @@ export class OpenFacEngine implements IOpenFacEngine {
         this.currentState = state;
     };
 
+
     public CurrentKeyboard(): OpenFacKeyboard {
         return this.currentKeyboard;
     };
@@ -83,6 +79,7 @@ export class OpenFacEngine implements IOpenFacEngine {
         return this.currentRowNumber;        
     };
 
+    
     public GetPriorRowNumber(): Number {
         return this.priorRowNumber;
     };
@@ -149,6 +146,23 @@ export class OpenFacEngine implements IOpenFacEngine {
         }
     };
 
+    public DoNextAction(): void {
+        switch (this.currentState) {
+            case EngineState.LineDown:
+                this.currentState = EngineState.ColumnRight;
+                break;
+            case EngineState.ColumnRight:
+                this.currentState = EngineState.DoAction;
+                this.DoAction();
+                this.currentState = EngineState.LineDown;
+                this.ResetColumn();
+                break;
+            default:
+                break;
+        }
+    };
+
+
     public ResetColumn(): void {
         this.currentColumnNumber = 0;
     };
@@ -162,12 +176,12 @@ export class OpenFacEngine implements IOpenFacEngine {
     };
 
     public Start(): void {
-        this.OpenFacConfig.GetScanType() == EngineScanType.ScanAuto ? this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
+        this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
     
-        this.currentKeyboard = this.OpenFacConfig.GetCurrentKeyboard();
+        this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
         
-        s = this.sensorManager.Find(this.OpenFacConfig.GetActiveSensor());
-        s.DoCallBack(this, CallSensorAction);
+        let s = this.sensorManager.Find(this.openFacConfig.GetActiveSensor());
+        s.DoCallBack(this, this.CallSensorAction);
         if (s != null)
         {
             s.Start();
