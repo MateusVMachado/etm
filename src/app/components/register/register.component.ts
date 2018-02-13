@@ -3,12 +3,15 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
+import { AppBaseComponent } from '../shared/app-base.component';
+import { HttpResponse } from '@angular/common/http/src/response';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, ViewChild, OnInit } from '@angular/core';
-import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
 import { JWTtoken } from '../../storage';
 import 'rxjs/add/operator/catch';
+import { Injector } from '@angular/core';
 
 @Component({
     selector: 'nb-register',
@@ -16,9 +19,7 @@ import 'rxjs/add/operator/catch';
     templateUrl: './register.component.html',
   })
 
-export class NgxRegisterComponent {
-    @ViewChild('errorRegisterAlert') private errorRegisterAlert: SwalComponent;
-    @ViewChild('registerAlert') private registerAlert: SwalComponent;
+export class NgxRegisterComponent extends AppBaseComponent {
     user: any = {};
     userInfo: any = {};
 
@@ -34,19 +35,22 @@ export class NgxRegisterComponent {
 
     passwordConfRequired: boolean = true;
  
-    constructor(protected service: AuthService,
-                protected router: Router) { }
+    constructor(protected service: AuthService, protected router: Router, injector: Injector) { 
+      super(injector) 
+    }
 
     public register() {
       this.service.register(this.user).subscribe(
-          (res: any) => {
-              if (res.message === 'Registro feito com sucesso.' ) {
-                this.registerAlert.show();
-                this.router.navigate(['./pages/login']);
-              }
-          }, (error) => {
+          (res: Response) => {             
+            console.log(res);
+            this.messageService.success('Usuário cadastrado com sucesso!').then(res => {
+              this.router.navigate(['./auth/login']);
+            });
+          }, (error: HttpErrorResponse) => {  
             if(error.status === 400){
-              this.errorRegisterAlert.show();
+              this.messageService.error('Este email já foi cadastrado', 'Oops..');
+            } else{
+              this.messageService.error('Houve um error inesperado', 'Oops..');
             }
           }
       );
