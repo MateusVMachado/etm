@@ -49,6 +49,4 @@ export class NgxLoginComponent extends AppBaseComponent {
     navigateTo(path: string) {
       this.router.navigate([path]);
     }
-
-
 }
