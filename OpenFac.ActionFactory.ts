@@ -3,20 +3,19 @@ export class OpenFacActionFactory {
 
     public static dicTypes: Map<string, any> = new Map<string, any>();
     
-    public static Create<T extends IOpenFacAction>(actionName: string, type: { new(args?: any): T ;}, args: any): IOpenFacAction {
+    public static Create(actionName: string, args?: any): IOpenFacAction {
         //primeiro faz o get no dic 
-        //let abc = typeof(type);
-        if(this.dicTypes.get(actionName) ){
-            return new type(args);
+        let result = this.dicTypes.get(actionName)
+        if( result ){
+            return new result(args);
         } else {
             throw new console.error("No type registered for this id");
             
         }    
     }
 
-    public static Register<T extends IOpenFacAction>(actionName: string, type: { new(args?: any): T ;}): IOpenFacAction {
+    public static Register<T extends IOpenFacAction>(actionName: string, type: { new(args?: any): T ;}) {
         OpenFacActionFactory.dicTypes.set(actionName, type);
-        return
     }
 
    

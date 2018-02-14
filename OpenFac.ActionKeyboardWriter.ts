@@ -17,7 +17,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
     public OpenFacActionKeyboardWriter(document: any){
         this.document = document;
-
     }
 
     public static Create(): IOpenFacAction {

@@ -14,7 +14,7 @@ export class OpenFacActionManager {
         let action: IOpenFacAction;
         action = this.actionList.get(actionName);
         if(!action){
-            action = OpenFacActionFactory.Create<IOpenFacAction>(actionName);
+            let actionInstance = OpenFacActionFactory.Create(actionName, 'teste');
             if(action){
                 this.Add(actionName, action);
             }

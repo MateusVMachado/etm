@@ -1,4 +1,5 @@
 import { IOpenFacKeyboard } from './OpenFac.Keyboard.Interface';
+import { OpenFacKeyboardFactory } from './OpenFac.KeyboardFactory';
 
 export class OpenFacKeyboardManager {
     private keyboardList: Map<string, IOpenFacKeyboard> = new Map<string, IOpenFacKeyboard>();
@@ -12,7 +13,7 @@ export class OpenFacKeyboardManager {
         let keyboard: IOpenFacKeyboard;
         keyboard = this.keyboardList.get(keyboardName);
         if(!keyboard){
-            //keyboard = OpenFacKeyboardFactory<IOpenFacKeyboard>.Create(keyboardName);
+            keyboard = OpenFacKeyboardFactory.Create(keyboardName);
             if(keyboard){
                 this.Add(keyboardName, keyboard);
             }

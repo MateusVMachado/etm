@@ -74,19 +74,19 @@ console.log("\nStarting script...\n");
 
 //// Action ////
 OpenFacActionFactory.Register('action_0', Action);
-let actionInstance = OpenFacActionFactory.Create('action_0', Action, 'teste');
+let actionInstance = OpenFacActionFactory.Create('action_0', 'teste');
 let config = new Config();
 let engine = new OpenFacEngine(config);
 actionInstance.Execute(engine);
 
 //// Sensor ////
 OpenFacSensorFactory.Register('sensor_0', TSensor);
-let sensorInstance = OpenFacSensorFactory.Create('sensor_0', TSensor);
+let sensorInstance = OpenFacSensorFactory.Create('sensor_0');
 sensorInstance.DoAction(SensorState.SensorAuto);
 
 //// Keyboard ////
 OpenFacKeyboardFactory.Register('keyboard_0', TKeyboard);
-let keyboardInstance = OpenFacKeyboardFactory.Create('keyboard_0', TKeyboard);
+let keyboardInstance = OpenFacKeyboardFactory.Create('keyboard_0');
 let buttons = new OpenFacKeyboardButton();
 buttons.Add();
 buttons.Items[0].Caption = 'superButton';

@@ -1,6 +1,6 @@
 import { OpenFacSensorBase } from './OpenFac.SensorBase';
 
-export class OpenFacSensorMicrophoneWindows extends OpenFacSensorBase {
+export class OpenFacSensorMicrophone extends OpenFacSensorBase {
     /*
     private _recorder: WaveInRecorder;
     private _recorderBuffer: number[];

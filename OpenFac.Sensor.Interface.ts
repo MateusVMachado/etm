@@ -10,7 +10,7 @@ export interface CallBackSensor{
 };
 
 export interface IOpenFacSensor {
-    DoCallBack(func: Object, sensor: CallBackSensor): void;
+    DoCallBack(func: Object, callback: CallBackSensor): void;
     DoAction(state: SensorState): void;
     Start(): void;
     Stop(): void;

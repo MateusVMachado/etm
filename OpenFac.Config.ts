@@ -31,6 +31,7 @@ export class OpenFacConfig implements IOpenFacConfig {
         //let fs: FileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
         
         let config: OpenFACConfig = new OpenFACConfig();
+        config.KeyboardLayout = 'QWERT';
         //config = <OpenFACConfig>js.ReadObject(fs);
         //fs.Close();
         return config;

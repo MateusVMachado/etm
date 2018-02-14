@@ -17,8 +17,8 @@ export class OpenFacSensorBase  implements IOpenFacSensor {
     public  Stop (): void { 
 
     }
-    public DoCallBack (pFunc: Object, sensor: CallBackSensor): void {
-        this.func = sensor;
+    public DoCallBack (pFunc: Object, callback: CallBackSensor): void {
+        this.func = callback;
         this.pObject = pFunc;
     }
     public  DoAction (state: SensorState): void {

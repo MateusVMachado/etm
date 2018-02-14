@@ -75,20 +75,20 @@ export class OpenFacEngine implements IOpenFacEngine {
         return this.currentKeyboard;
     };
 
-    public GetCurrentRowNumber(): Number {
+    public GetCurrentRowNumber(): number {
         return this.currentRowNumber;        
     };
 
     
-    public GetPriorRowNumber(): Number {
+    public GetPriorRowNumber(): number {
         return this.priorRowNumber;
     };
 
-    public GetCurrentColumnNumber(): Number {
+    public GetCurrentColumnNumber(): number {
         return this.currentColumnNumber;
     };
 
-    public GetPriorColumnNumber(): Number {
+    public GetPriorColumnNumber(): number {
         return this.priorColumnNumber;
     };
 
@@ -168,7 +168,8 @@ export class OpenFacEngine implements IOpenFacEngine {
     };
 
     public GetCurrentButton(): OpenFacKeyboardButton {
-        return this.currentKeyboard.Lines.Items[this.currentRowNumber].Buttons.Items[this.currentColumnNumber] as OpenFacKeyboardButton;
+        return this.currentKeyboard.Lines.Items[this.currentRowNumber]
+                    .Buttons.Items[this.currentColumnNumber] as OpenFacKeyboardButton;
     };
     
     public CurrentLine(): OpenFacKeyboardLine {
@@ -176,7 +177,8 @@ export class OpenFacEngine implements IOpenFacEngine {
     };
 
     public Start(): void {
-        this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
+        this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? 
+                    this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
     
         this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
         
