@@ -41,13 +41,13 @@ export class NgxRegisterComponent extends AppBaseComponent {
 
     public register() {
       this.service.register(this.user).subscribe(
-          (res: Response) => {             
-            console.log(res);
-            this.messageService.success('Usuário cadastrado com sucesso!').then(res => {
+          (res: any) => {
+            this.messageService.success(res.message).then(res => {
               this.router.navigate(['./auth/login']);
             });
-          }, (error: any) => {              
-              this.messageService.error(error, 'Oops..');
+          }, (error: any) => {  
+            console.log(error.message);            
+            this.messageService.error(error.message, 'Oops..');
           }
       );
     }
