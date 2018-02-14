@@ -5,7 +5,6 @@ export enum SensorState {
     SensorLeft,
     SensorAuto
 }
-
 export interface CallBackSensor{
     (state: SensorState): void
 };

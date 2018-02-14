@@ -4,6 +4,8 @@ import { OpenFacEngine } from './OpenFac.Engine';
 
 export class OpenFacActionKeyboardWriter implements IOpenFacAction { 
 
+    private document: any;
+
     public Execute(Engine: IOpenFacEngine){
         let eg = <OpenFacEngine> Engine;
         let bt = eg.GetCurrentButton();
@@ -11,6 +13,11 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
         // IMPLEMENTAR A FUNÇÃO ABAIXO:
         //SendKeys.SendWait(str);
+    }
+
+    public OpenFacActionKeyboardWriter(document: any){
+        this.document = document;
+
     }
 
     public static Create(): IOpenFacAction {
