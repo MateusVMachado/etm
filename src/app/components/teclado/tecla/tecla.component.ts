@@ -9,6 +9,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { KeyboardData } from '../../../storage';
 
+import { OpenFacComponent } from '../../openFac/openFac.component';
 
 @Component({
   selector: 'app-tecla',
@@ -17,6 +18,9 @@ import { KeyboardData } from '../../../storage';
 })
 
 export class TeclaComponent implements OnInit {
+
+  public openFac: OpenFacComponent;
+
   @ViewChild('tecladoControl') tecladoControl: ElementRef; // input DOM element
   public teclado: TeclaModel = new TeclaModel();
 
@@ -42,10 +46,14 @@ export class TeclaComponent implements OnInit {
     this.texto = '';
     this.teclado.teclas = [];
 
-    // this.teclado = this.teclaService.loadTeclado("normal");
+     this.teclado = this.teclaService.loadTeclado("normal");
+     this.tecladoControl.nativeElement.click();
+
+     this.openFac = new OpenFacComponent();
+    /*
     this.teclaService.loadData().catch((error) => {
-      // this.teclado = this.teclaService.loadTeclado("normal");
-      this.tecladoControl.nativeElement.click();
+      this.teclado = this.teclaService.loadTeclado("normal");
+      //this.tecladoControl.nativeElement.click();
       this.tecladoControl.nativeElement.click();
       throw new Error("teclado local");
     }).subscribe((data) => {
@@ -57,7 +65,7 @@ export class TeclaComponent implements OnInit {
       }
       this.tecladoControl.nativeElement.click();
     });
-
+    */
   }
 
   public capsLock() {

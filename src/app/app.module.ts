@@ -21,6 +21,7 @@ import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/auth.services';
 import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 import { CookieService } from 'ngx-cookie-service';
+import { GamepadComponent } from './components/gamepad/gamepad.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -44,6 +45,7 @@ import { CookieService } from 'ngx-cookie-service';
     StateService,
     AuthService,
     AuthGuard,
+    GamepadComponent,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
