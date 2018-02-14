@@ -47,8 +47,9 @@ export class TeclaService {
     }
 
     loadData() {
-        return this.http.get('http://192.168.1.107:8080/keyboard').
-            map((response: Response) => response.json() );
+        //return this.http.get('http://192.168.1.107:8080/keyboard').
+        //    map((response: Response) => response.json() );
+        return this.http.get('http://localhost:8080/keyboard');
     }
 
 }

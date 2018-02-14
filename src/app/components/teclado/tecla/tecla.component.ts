@@ -46,13 +46,13 @@ export class TeclaComponent implements OnInit {
     this.texto = '';
     this.teclado.teclas = [];
 
-     this.teclado = this.teclaService.loadTeclado("normal");
-     this.tecladoControl.nativeElement.click();
+     //this.teclado = this.teclaService.loadTeclado("normal");
+     //this.tecladoControl.nativeElement.click();
 
-     this.openFac = new OpenFacComponent();
-    /*
+     //this.openFac = new OpenFacComponent();
+    
     this.teclaService.loadData().catch((error) => {
-      this.teclado = this.teclaService.loadTeclado("normal");
+      //this.teclado = this.teclaService.loadTeclado("normal");
       //this.tecladoControl.nativeElement.click();
       this.tecladoControl.nativeElement.click();
       throw new Error("teclado local");
@@ -65,7 +65,11 @@ export class TeclaComponent implements OnInit {
       }
       this.tecladoControl.nativeElement.click();
     });
-    */
+
+
+    // CRIA TODO O PROCESSO DO OpenFac
+    this.openFac = new OpenFacComponent();
+    
   }
 
   public capsLock() {
