@@ -90,27 +90,27 @@ export class OpenFacComponent implements OnInit {
 
 
     public DoCallBack(engine:OpenFacEngine): boolean {
-    switch ((this.engine as OpenFacEngine).CurrentState()) {
-        case EngineState.LineUp:
-            this.DoLineUp((this.engine as OpenFacEngine));
-            break;
-        case EngineState.LineDown:
-            this.DoLineDown((this.engine as OpenFacEngine));
-            break;
-        case EngineState.ColumnLeft:
-            this.DoColumnLeft((this.engine as OpenFacEngine));
-            break;
-        case EngineState.ColumnRight:
-            this.DoColumnRight((this.engine as OpenFacEngine));
-            break;
-        case EngineState.DoAction:
-            this.DoAction((this.engine as OpenFacEngine));
-            break;
-        default:
-            break;
+        switch ((this.engine as OpenFacEngine).CurrentState()) {
+            case EngineState.LineUp:
+                this.DoLineUp((this.engine as OpenFacEngine));
+                break;
+            case EngineState.LineDown:
+                this.DoLineDown((this.engine as OpenFacEngine));
+                break;
+            case EngineState.ColumnLeft:
+                this.DoColumnLeft((this.engine as OpenFacEngine));
+                break;
+            case EngineState.ColumnRight:
+                this.DoColumnRight((this.engine as OpenFacEngine));
+                break;
+            case EngineState.DoAction:
+                this.DoAction((this.engine as OpenFacEngine));
+                break;
+            default:
+                break;
+        }
+        return false;
     }
-    return false;
-}
 
 
     public configureAll(){
@@ -121,6 +121,7 @@ export class OpenFacComponent implements OnInit {
         OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
         // CARREGAR CONFIGURAÇÕES DOS DADOS DO BACKEND ARMAZENADOS LOCALMENTE
         let configFile = {
+            KeyboardLayout: "QWERT",
             scanType: "Auto",
             sensor: "Joystick"
         };
