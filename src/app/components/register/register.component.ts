@@ -46,12 +46,8 @@ export class NgxRegisterComponent extends AppBaseComponent {
             this.messageService.success('Usuário cadastrado com sucesso!').then(res => {
               this.router.navigate(['./auth/login']);
             });
-          }, (error: HttpErrorResponse) => {  
-            if(error.status === 400){
-              this.messageService.error('Este email já foi cadastrado', 'Oops..');
-            } else{
-              this.messageService.error('Houve um error inesperado', 'Oops..');
-            }
+          }, (error: any) => {              
+              this.messageService.error(error, 'Oops..');
           }
       );
     }
