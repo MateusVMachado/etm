@@ -13,8 +13,6 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { GamepadComponent } from '../gamepad/gamepad.component';
 
-import { ActiveLine } from '../openFac/activeLine.model';
-
 @Component({
     selector: 'nb-login',
     templateUrl: './login.component.html',
