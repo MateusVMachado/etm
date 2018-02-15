@@ -3,13 +3,16 @@
     <!--<p>{{activeLine.line}}</p>-->
   <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
     
-    <div class="col-md-6 line">
+    <div class="col-md-12 line">
         <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
-          <div *ngIf="i <= 6">
+          <div *ngIf="i <= 14">
             
-            <button style="background-color: yellow" class="btn button-keyboard icon-keyboard" *ngIf="key == '*tab' && iR === activeLine.line" (click)="getValue('\t')">
+            <button style="background-color: yellow" class="btn button-keyboard icon-keyboard" *ngIf="key == '*tab' && iR === activeLine.line  && i !== activeLine.col" (click)="getValue('\t')">
               <mat-icon style="background-color: yellow" class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">keyboard_tab</mat-icon>
             </button>
+            <button style="background-color: red" class="btn button-keyboard icon-keyboard" *ngIf="key == '*tab' && iR === activeLine.line && i === activeLine.col" (click)="getValue('\t')">
+                <mat-icon style="background-color: red" class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">keyboard_tab</mat-icon>
+              </button>
             <button  class="btn button-keyboard icon-keyboard" *ngIf="key == '*tab' && iR !== activeLine.line" (click)="getValue('\t')">
                 <mat-icon class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">keyboard_tab</mat-icon>
               </button>
@@ -33,10 +36,35 @@
             <input  *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*arrowup' && key != '*arrowleft' && key != '*arrowdown' && key != '*arrowright' && iR !== activeLine.line" 
               type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)"/>  
 
+
+              <button style="background-color: yellow;" class="btn button-keyboard icon-keyboard" *ngIf="key == '*bckspc' && iR === activeLine.line  && i !== activeLine.col" (click)="getValue('\t')">
+                  <mat-icon style="background-color: yellow;" class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                </button>
+                <button style="background-color: red;" class="btn button-keyboard icon-keyboard" *ngIf="key == '*bckspc' && iR === activeLine.line && i === activeLine.col" (click)="getValue('\t')">
+                    <mat-icon style="background-color: red;" class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                  </button>
+                <button class="btn button-keyboard icon-keyboard" *ngIf="key == '*bckspc'  && iR !== activeLine.line" (click)="getValue('\t')">
+                    <mat-icon  class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                  </button>
+                
+                <button class="btn button-keyboard icon-keyboard" *ngIf="key == '*arrowup'">  
+                  <mat-icon class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">arrow_upward</mat-icon>
+                </button>
+
+                <button style="background-color: yellow;" class="btn button-keyboard icon-keyboard" *ngIf="key == '*kbdrtrn' && iR === activeLine.line   && i !== activeLine.col" (click)="getValue('\n')">  
+                    <mat-icon style="background-color: yellow;" class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">keyboard_return</mat-icon>
+                  </button>
+                  <button style="background-color: red;" class="btn button-keyboard icon-keyboard" *ngIf="key == '*kbdrtrn' && iR === activeLine.line && i === activeLine.col" (click)="getValue('\n')">  
+                      <mat-icon style="background-color: red;" class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">keyboard_return</mat-icon>
+                    </button>
+                  <button class="btn button-keyboard icon-keyboard" *ngIf="key == '*kbdrtrn' && iR !== activeLine.line" (click)="getValue('\n')">  
+                      <mat-icon class="mat-icon material-icons icon-keyboard" role="img" aria-hidden="true">keyboard_return</mat-icon>
+                    </button>
+
           </div>
         </div>
     </div>
- 
+ <!--
     <div class="col-md-6 line">
         <div class="tamanho-button2" *ngFor="let key of row; index as i" style="display: inline-block;">
           <div *ngIf="i > 6">
@@ -78,6 +106,9 @@
           </div>
         </div>
     </div>
+  -->
+
+
   </div>
   <div class="col-md-12 line">
     <div class="tamanho-button3">

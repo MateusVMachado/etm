@@ -54,6 +54,7 @@ export class TeclaComponent implements OnInit {
     }).subscribe((data) => {
       if ( data ) {
         this.teclado = <TeclaModel>(data[0]);
+        this.openFac = new OpenFacComponent(this.activeLine, this.tecladoControl, this.teclado);
         // this.teclado = <TeclaModel>(data[4]); //CUSTOM
         KeyboardData.data = <TeclaModel>(data);
         console.log(this.teclado.teclas);
@@ -63,7 +64,7 @@ export class TeclaComponent implements OnInit {
 
     //setInterval(this.callBack.bind(this), 2000 );
     // CRIA TODO O PROCESSO DO OpenFac
-    this.openFac = new OpenFacComponent(this.activeLine, this.tecladoControl);
+    
     
   }
   //public callBack(){

@@ -23,7 +23,7 @@ import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/Ope
 
 import { ActiveLineCol } from './activeLine.model';
 import { TeclaComponent } from '../teclado/tecla/tecla.component';
-
+import { TeclaModel } from '../teclado/tecla/tecla.model';
 
 export class OpenFacComponent implements OnInit {
 
@@ -33,7 +33,7 @@ export class OpenFacComponent implements OnInit {
 
     public colorLine: boolean;
 
-    constructor(public activeLine: ActiveLineCol, public tecladoControl: any) {   
+    constructor(public activeLine: ActiveLineCol, public tecladoControl: any, public teclado: TeclaModel) {   
         //this.activeLine = teclaComponent.activeLine;
         this.configureAll();
     }
@@ -150,7 +150,7 @@ export class OpenFacComponent implements OnInit {
         };
 
         //this.config = new OpenFacConfig(JSON.stringify(configFile));
-        this.config = new OpenFacConfig('config.file');
+        this.config = new OpenFacConfig('config.file', this.teclado); // REVER ISSO DEPOIS!!!
         this.engine = new OpenFacEngine(this.config);
         this.engine.DoCallBack(this.DoCallBack.bind(this)); 
         this.engine.Start();

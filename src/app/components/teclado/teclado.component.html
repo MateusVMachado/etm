@@ -1,8 +1,6 @@
 <div style="height:50%">
-  <!--
-  <editor id="tinyEditor" [init]="{ plugins : 'autorecize',
-      height: '100%'}"></editor>-->
-</div>
+    <ckeditor #editor [(ngModel)]="texto" [config]="{ height: '170', language: 'pt-br', startupMode: 'source', allowedContent: 'true'}"></ckeditor>
+  </div>
 <div class="box-teclado">
   <div class="teclado-container">
     <app-tecla></app-tecla>

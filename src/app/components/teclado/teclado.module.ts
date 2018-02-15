@@ -6,6 +6,7 @@ import { TeclaComponent } from './tecla/tecla.component';
 import { CommonModule } from '@angular/common';
 import { TeclaService } from './tecla/tecla.service';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { CKEditorModule } from 'ng2-ckeditor';
 
 import { FormsModule } from '@angular/forms';
 
@@ -13,7 +14,8 @@ import { FormsModule } from '@angular/forms';
     imports: [
         CommonModule,
         EditorModule,
-        FormsModule
+        FormsModule,
+        CKEditorModule
     ],
     declarations: [
         TecladoComponent,
