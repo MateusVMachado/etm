@@ -1,6 +1,6 @@
 import { IOpenFacSensor, CallBackSensor, SensorState } from './OpenFac.Sensor.Interface';
 
-export class OpenFacSensorBase  implements IOpenFacSensor {
+export abstract class OpenFacSensorBase  implements IOpenFacSensor {
 
     private func: CallBackSensor;
     private pObject: Object ;
@@ -8,19 +8,17 @@ export class OpenFacSensorBase  implements IOpenFacSensor {
     constructor () {
 
     }
-    public Dispose (): void {
+    public abstract Dispose (): void;
 
-    }
-    public  Start (): void {
+    public abstract Start (): void;
 
-    }
-    public  Stop (): void { 
+    public abstract Stop (): void;
 
-    }
     public DoCallBack (pFunc: Object, callback: CallBackSensor): void {
         this.func = callback;
         this.pObject = pFunc;
     }
+    
     public  DoAction (state: SensorState): void {
         if(this.func != null) {
             this.func(SensorState.SensorAuto);

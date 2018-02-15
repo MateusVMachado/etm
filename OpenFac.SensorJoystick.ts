@@ -16,16 +16,22 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     constructor(document: any) {
         super();
         this.lastPressedButton = -1;
-      }
+    }
 
-
-    public Dispose(): void {
-        cancelAnimationFrame(this.cancelationToken);
-        super.Dispose();
+    public Dispose(): void {      
+      this.Stop();
     }
     
     public IsTrigged(): boolean {
         return false;
+    }
+
+    public Start(): void {
+      this.doGamepadLoop();      
+    }
+
+    public Stop(): void{
+      cancelAnimationFrame(this.cancelationToken);
     }
 
     public static Create(documentDOM: any): IOpenFacSensor {
