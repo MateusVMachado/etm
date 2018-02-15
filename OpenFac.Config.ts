@@ -9,6 +9,8 @@ import { OpenFacKeyboard } from './OpenFac.Keyboard';
 import { OpenFacKeyboardLine } from './OpenFac.KeyboardLine';
 import { OpenFacKeyboardButton } from './OpenFac.KeyboardButton';
 import { IOpenFacAction } from './OpenFac.Action.Interface';
+import { TeclaModel } from '../../src/app/components/teclado/tecla/tecla.model';
+import { forEach } from '@angular/router/src/utils/collection';
 
 export class OpenFacConfig implements IOpenFacConfig {
     private config: OpenFACConfig;
@@ -16,7 +18,7 @@ export class OpenFacConfig implements IOpenFacConfig {
     keyboardManager: OpenFacKeyboardManager;
     actionManager: OpenFacActionManager;
 
-    constructor(configFile:string)
+    constructor(configFile:string, public teclado: TeclaModel)
     {
         this.keyboardManager = new OpenFacKeyboardManager();
         this.actionManager = new OpenFacActionManager();
@@ -46,17 +48,50 @@ export class OpenFacConfig implements IOpenFacConfig {
         let layout: OpenFACLayout = new OpenFACLayout();
 
         //layout.Lines = JSON.parse("\"Lines\" : [{\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Oi Galera\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Alexandre Henzen\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Felippeto\"}]}]");
+        //console.log(this.teclado);
+
+        
+         //////////////////////////////////////
+        // LEITURA AUTOMATICA DO KEYBOARD
+        /*
+        let qntdLinhas = this.teclado.teclas.length;
+        layout.Lines = new Array<LayoutLine>();
+        for ( let k = 0; k < this.teclado.teclas.length; k++){
+            layout.Lines.push(new LayoutLine());
+            layout.Lines[k].Buttons = new Array<LayoutButton>();
+        }
+        console.log("LINHAS: " + layout.Lines.length);
+
+        this.teclado.teclas.forEach(element => {
+            console.log("COLUNA: " + element.length);
+            console.log(element);
+            for( let j = 0; j < layout.Lines.length; j++ ){
+                layout.Lines[j].Buttons = new Array<LayoutButton>();
+                for (let z = 0; z < element.length ; z++) {
+                    layout.Lines[j].Buttons.push(new LayoutButton());
+                    layout.Lines[j].Buttons[z].Action = 'Keyboard';
+                    layout.Lines[j].Buttons[z].Caption = element[z];
+                    layout.Lines[j].Buttons[z].Text = element[z];
+                }
+            }    
+            
+        });
+        */
+
+        console.log(layout.Lines);
+
         layout.Lines = new Array<LayoutLine>();
         layout.Lines.push(new LayoutLine());
         layout.Lines.push(new LayoutLine());
         layout.Lines.push(new LayoutLine());
         layout.Lines.push(new LayoutLine());
-        //console.log(layout.Lines.length);
+        
+        
         layout.Lines[0].Buttons = new Array<LayoutButton>();
         layout.Lines[1].Buttons = new Array<LayoutButton>();
         layout.Lines[2].Buttons = new Array<LayoutButton>();
         layout.Lines[3].Buttons = new Array<LayoutButton>();
-        for (let k = 0; k <= 12 ; k++) {
+        for (let k = 0; k <= 13 ; k++) {
             layout.Lines[0].Buttons.push(new LayoutButton());
             layout.Lines[0].Buttons[k].Action = 'Keyboard';
             layout.Lines[0].Buttons[k].Caption = 'caption';
@@ -77,6 +112,9 @@ export class OpenFacConfig implements IOpenFacConfig {
             layout.Lines[3].Buttons[k].Caption = 'caption';
             layout.Lines[3].Buttons[k].Text = 'text';
         }
+        
+
+
         console.log(JSON.stringify(layout.Lines));
 
         layout.Engine = "QWERT";

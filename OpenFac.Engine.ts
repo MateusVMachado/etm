@@ -133,6 +133,7 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public DoAction(): void {
         let bt = this.GetCurrentButton();
+        console.log("BUTTON: " + bt);
         if (this.keyboardEngine) {
             this.keyboardEngine.DoAction(bt);
         }
