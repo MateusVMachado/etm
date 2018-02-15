@@ -32,15 +32,24 @@ export class OpenFacConfig implements IOpenFacConfig {
         
         let config: OpenFACConfig = new OpenFACConfig();
         config.KeyboardLayout = 'QWERT';
+        config.ScanType = "Auto";
+        config.ActiveSensor = "Microphone";
         //config = <OpenFACConfig>js.ReadObject(fs);
         //fs.Close();
         return config;
     }
     private LoadLayout(FileName: string): OpenFACLayout {
         //IMPLEMENTAR
+        let layoutString = "";
         //let js: DataContractJsonSerializer = new DataContractJsonSerializer(/*typeof*/OpenFACLayout);
         //let fs: FileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
         let layout: OpenFACLayout = new OpenFACLayout();
+
+        layout.Lines = JSON.parse("\"Lines\" : [{\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Oi Galera\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Alexandre Henzen\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Felippeto\"}]}]");
+        
+        layout.Engine = "QWERT";
+        
+        //layout.Lines = JSON.parse
         //layout = <OpenFACLayout>js.ReadObject(fs);
         //fs.Close();
         return layout;
@@ -85,9 +94,8 @@ export class OpenFacConfig implements IOpenFacConfig {
     public GetKeyboardManager(): OpenFacKeyboardManager {
         return this.keyboardManager;
     }
-    public GetCurrentKeyboard(): OpenFacKeyboard {
-        return // ALTERAR ISSO!
-        //return __as__<OpenFacKeyboard>(this.keyboardManager.Find(this.layout.Engine), OpenFacKeyboard);
+    public GetCurrentKeyboard(): OpenFacKeyboard {        
+        return this.keyboardManager.Find(this.layout.Engine) as OpenFacKeyboard;
     }
     public GetScanType(): EngineScanType {
         if (this.config.ScanType == "Auto")
@@ -97,16 +105,18 @@ export class OpenFacConfig implements IOpenFacConfig {
     private LoadLayoutConfig(): void {
         // IMPLEMENTAR
         let kb = this.keyboardManager.Find(this.layout.Engine) as OpenFacKeyboard;
-        this.layout.Lines.forEach(function (li) {
+        for (let i = 0; i < this.layout.Lines.length; i++) {
+            let li = this.layout.Lines[i];
             let line: OpenFacKeyboardLine = kb.Lines.Add();
-            li.Buttons.forEach(function (bt) {
+            for (let k = 0; k < li.Buttons.length; k++) {
+                let bt = li.Buttons[k];
                 let button: OpenFacKeyboardButton = line.Buttons.Add();
                 button.Caption = bt.Caption;
                 button.Text = bt.Text;
                 let action: IOpenFacAction = this.actionManager.Find(bt.Action);
-            button.Action = action;
-        });
-    });
+                button.Action = action;
+            }
+        }
     }
 
 }
