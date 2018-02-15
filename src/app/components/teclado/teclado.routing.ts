@@ -4,16 +4,7 @@ import { TecladoComponent } from './teclado.component';
 
 const routes: Routes = [
     {
-        path: 'pages/teclado',  component: TecladoComponent,
-        children: [{
-            path: 'teclado',
-            component: TecladoComponent,
-        },
-        {
-            path: '',
-            redirectTo: 'teclado',
-            pathMatch: 'full',
-        }],
+        path: '/pages/teclado',  component: TecladoComponent
     }
 ];
 

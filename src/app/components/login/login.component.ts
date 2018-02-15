@@ -3,7 +3,7 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { Component, Inject, ViewChild, OnInit, Injectable } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
 import { JWTtoken } from '../../storage';
@@ -13,14 +13,16 @@ import { CookieService } from 'ngx-cookie-service';
 
 import { GamepadComponent } from '../gamepad/gamepad.component';
 
+import { ActiveLine } from '../openFac/activeLine.model';
+
 @Component({
     selector: 'nb-login',
     templateUrl: './login.component.html',
 })
 
-@Injectable()
-export class NgxLoginComponent {  
-    //@ViewChild('gps3') gps3: GamepadComponent;
+//@Injectable()
+export class NgxLoginComponent implements OnInit{  
+
     @ViewChild('loginAlert') private loginAlert: SwalComponent;
     errors: string[] = [];
     messages: string[] = [];
@@ -31,6 +33,10 @@ export class NgxLoginComponent {
                 protected router: Router,
                 private cookieService: CookieService,
                 private gamepad: GamepadComponent) {
+    }
+
+    ngOnInit(){
+      
     }
 
     public login(): void {

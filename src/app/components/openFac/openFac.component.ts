@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
@@ -21,25 +21,34 @@ import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
 
 import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
 
+import { ActiveLineCol } from './activeLine.model';
+import { TeclaComponent } from '../teclado/tecla/tecla.component';
+
+
 export class OpenFacComponent implements OnInit {
 
     public config: IOpenFacConfig;
-    public engine: IOpenFacEngine;
+    public engine: OpenFacEngine;
     public timer: boolean;
 
     public colorLine: boolean;
 
-    constructor() {   
-        console.log("MARK3"); 
+    constructor(public activeLine: ActiveLineCol, public tecladoControl: any) {   
+        //this.activeLine = teclaComponent.activeLine;
         this.configureAll();
     }
 
     ngOnInit() {  
-        console.log("MARK2");
-        this.configureAll();
+
     }
 
     private ChangeButtonColor(engine:OpenFacEngine, button:number, cor:string): void {
+        console.log('button: ' + button);
+        console.log('\n'+ cor + '\n');
+        this.activeLine.col = button;
+        this.activeLine.type = 'col';
+        this.activeLine.cor = cor;
+        this.tecladoControl.nativeElement.click();
         /*
         if(tableLayoutPanel.RowCount > 0) {
             var ct: Control = tableLayoutPanel.GetControlFromPosition(button, engine.GetCurrentRowNumber());
@@ -52,7 +61,16 @@ export class OpenFacComponent implements OnInit {
     }
 
     private ChangeLineColor(engine:OpenFacEngine, line:number, cor:string): void {
-        console.log(line);
+        console.log('line: ' + line);
+        console.log('\n'+ cor + '\n');
+        this.activeLine.line = line;
+        this.activeLine.col = 0;
+        this.activeLine.type = 'linha';
+        this.activeLine.cor = cor;
+        this.tecladoControl.nativeElement.click();
+        //this.activeLine.line = line;
+        //this.activeLine.cor = cor;
+        //console.log(cor.toLocaleUpperCase);
         /*
         if(tableLayoutPanel.RowCount > 0)
             for(var i:number = 0;i<engine.CurrentKeyboard().Lines.Items[line].Buttons.Count();i++)
@@ -66,45 +84,50 @@ export class OpenFacComponent implements OnInit {
         */
     }
 
-    private DoLineUp(engine: OpenFacEngine): void  {
-        //this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
+    public DoLineUp(engine: OpenFacEngine): void  {
+        console.log("LINHA!!");
+        this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
     }
 
-    private DoLineDown(engine:OpenFacEngine): void {
-        //this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
+    public DoLineDown(engine:OpenFacEngine): void {
+        console.log("LINHA!!");
+        this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
     }
-    private DoColumnRight(engine:OpenFacEngine): void {
-        //this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
-        this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'yellow');
+    public DoColumnRight(engine:OpenFacEngine): void {
+        console.log("COLUNA!!");
+        this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
+        this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
     }
-    private DoColumnLeft(engine:OpenFacEngine): void {
-        //this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
-        this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'yellow');
+    public DoColumnLeft(engine:OpenFacEngine): void {
+        console.log("COLUNA!!");
+        this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
+        this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
     }
-    private DoAction(engine:OpenFacEngine): void  {
-        //this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
+    public DoAction(engine:OpenFacEngine): void  {
+        console.log("ACTION!!");
+        this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
         this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'yellow');
     }
 
 
     public DoCallBack(engine:OpenFacEngine): boolean {
-        switch ((this.engine as OpenFacEngine).CurrentState()) {
+        switch (engine.CurrentState()) {
             case EngineState.LineUp:
-                this.DoLineUp((this.engine as OpenFacEngine));
+                this.DoLineUp(engine);
                 break;
             case EngineState.LineDown:
-                this.DoLineDown((this.engine as OpenFacEngine));
+                this.DoLineDown(engine);
                 break;
             case EngineState.ColumnLeft:
-                this.DoColumnLeft((this.engine as OpenFacEngine));
+                this.DoColumnLeft(engine);
                 break;
             case EngineState.ColumnRight:
-                this.DoColumnRight((this.engine as OpenFacEngine));
+                this.DoColumnRight(engine);
                 break;
             case EngineState.DoAction:
-                this.DoAction((this.engine as OpenFacEngine));
+                this.DoAction(engine);
                 break;
             default:
                 break;
@@ -116,7 +139,7 @@ export class OpenFacComponent implements OnInit {
     public configureAll(){
         OpenFacActionFactory.Register('TTS', OpenFacActionTTS);
         OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter);
-        OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
+        //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
         OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
         OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
         // CARREGAR CONFIGURAÇÕES DOS DADOS DO BACKEND ARMAZENADOS LOCALMENTE
@@ -126,25 +149,30 @@ export class OpenFacComponent implements OnInit {
             sensor: "Joystick"
         };
 
-        this.config = new OpenFacConfig(JSON.stringify(configFile));
+        //this.config = new OpenFacConfig(JSON.stringify(configFile));
+        this.config = new OpenFacConfig('config.file');
         this.engine = new OpenFacEngine(this.config);
-        (this.engine as OpenFacEngine).DoCallBack(this.DoCallBack); 
+        this.engine.DoCallBack(this.DoCallBack.bind(this)); 
         this.engine.Start();
 
         //BuildLayout
         this.timer = true;
-        setTimeout(this.timer1_Tick(), 3000);      
+        setInterval(this.timer1_Tick.bind(this), 1500);      
     }
 
     //private timer1_Tick(sender:Object, e:EventArgs): void
     private timer1_Tick(): void {
+        console.log("---------------------------");
         console.log("Tick");
-        if(this.engine != null) {
-            if ((this.engine as OpenFacEngine).CurrentState() == EngineState.LineDown)
-                (this.engine as OpenFacEngine).CalculateNextLine();
-
-            else if ((this.engine as OpenFacEngine).CurrentState() == EngineState.ColumnRight)
-                (this.engine as OpenFacEngine).CalculateNextButton();
+        if(this.engine !== null) {
+            console.log('CurrentState: ' + this.engine.CurrentState());
+            console.log('CurrentRowNumber: ' + this.engine.GetCurrentRowNumber());
+            if (this.engine.CurrentState() == EngineState.LineDown) {
+                this.engine.CalculateNextLine();
+            }
+            else if (this.engine.CurrentState() == EngineState.ColumnRight){
+                this.engine.CalculateNextButton();
+            }    
         }
     }
 

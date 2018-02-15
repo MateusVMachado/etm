@@ -1,15 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { TeclaModel } from './tecla.model';
 import { TeclaService } from './tecla.service';
 import { Observable } from 'rxjs/Observable';
-
-import { Http } from '@angular/http';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { KeyboardData } from '../../../storage';
 
 import { OpenFacComponent } from '../../openFac/openFac.component';
+import { ActiveLineCol } from '../../openFac/activeLine.model';
 
 @Component({
   selector: 'app-tecla',
@@ -20,6 +19,7 @@ import { OpenFacComponent } from '../../openFac/openFac.component';
 export class TeclaComponent implements OnInit {
 
   public openFac: OpenFacComponent;
+  public activeLine: ActiveLineCol = new ActiveLineCol();
 
   @ViewChild('tecladoControl') tecladoControl: ElementRef; // input DOM element
   public teclado: TeclaModel = new TeclaModel();
@@ -45,14 +45,9 @@ export class TeclaComponent implements OnInit {
   ngOnInit() {
     this.texto = '';
     this.teclado.teclas = [];
-
-     //this.teclado = this.teclaService.loadTeclado("normal");
-     //this.tecladoControl.nativeElement.click();
-
-     //this.openFac = new OpenFacComponent();
     
     this.teclaService.loadData().catch((error) => {
-      //this.teclado = this.teclaService.loadTeclado("normal");
+      this.teclado = this.teclaService.loadTeclado("normal");
       //this.tecladoControl.nativeElement.click();
       this.tecladoControl.nativeElement.click();
       throw new Error("teclado local");
@@ -66,11 +61,14 @@ export class TeclaComponent implements OnInit {
       this.tecladoControl.nativeElement.click();
     });
 
-
+    //setInterval(this.callBack.bind(this), 2000 );
     // CRIA TODO O PROCESSO DO OpenFac
-    this.openFac = new OpenFacComponent();
+    this.openFac = new OpenFacComponent(this.activeLine, this.tecladoControl);
     
   }
+  //public callBack(){
+  //  this.activeLine.line = this.activeLine.line + 1;
+  //}
 
   public capsLock() {
     if (this.teclado.type === 'normal') {
