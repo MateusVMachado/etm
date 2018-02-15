@@ -1,3 +1,4 @@
+import { ConfigTecladoComponent } from '../config/config.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
@@ -22,6 +23,10 @@ const routes: Routes = [{
       path: 'teclado',
       component: TecladoComponent,
     },
+    {
+      path: 'config',
+      component: ConfigTecladoComponent,
+    }
   ],
 }];
 
