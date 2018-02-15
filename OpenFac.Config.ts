@@ -11,7 +11,7 @@ import { OpenFacKeyboardButton } from './OpenFac.KeyboardButton';
 import { IOpenFacAction } from './OpenFac.Action.Interface';
 
 export class OpenFacConfig implements IOpenFacConfig {
-    config: OpenFACConfig;
+    private config: OpenFACConfig;
     layout: OpenFACLayout;
     keyboardManager: OpenFacKeyboardManager;
     actionManager: OpenFacActionManager;
@@ -33,7 +33,7 @@ export class OpenFacConfig implements IOpenFacConfig {
         let config: OpenFACConfig = new OpenFACConfig();
         config.KeyboardLayout = 'QWERT';
         config.ScanType = "Auto";
-        config.ActiveSensor = "Microphone";
+        config.ActiveSensor = "Joystick";
         //config = <OpenFACConfig>js.ReadObject(fs);
         //fs.Close();
         return config;
@@ -45,8 +45,40 @@ export class OpenFacConfig implements IOpenFacConfig {
         //let fs: FileStream = new FileStream(FileName, FileMode.Open, FileAccess.Read);
         let layout: OpenFACLayout = new OpenFACLayout();
 
-        layout.Lines = JSON.parse("\"Lines\" : [{\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Oi Galera\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Alexandre Henzen\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Felippeto\"}]}]");
-        
+        //layout.Lines = JSON.parse("\"Lines\" : [{\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Oi Galera\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Alexandre Henzen\"}]}, {\"Buttons\" : [{\"Action\" : \"Keyboard\",\"Caption\" : \"A\",\"Text\" : \"A\"}, {\"Action\" : \"TTS\",\"Caption\" : \"B\",\"Text\" : \"Felippeto\"}]}]");
+        layout.Lines = new Array<LayoutLine>();
+        layout.Lines.push(new LayoutLine());
+        layout.Lines.push(new LayoutLine());
+        layout.Lines.push(new LayoutLine());
+        layout.Lines.push(new LayoutLine());
+        //console.log(layout.Lines.length);
+        layout.Lines[0].Buttons = new Array<LayoutButton>();
+        layout.Lines[1].Buttons = new Array<LayoutButton>();
+        layout.Lines[2].Buttons = new Array<LayoutButton>();
+        layout.Lines[3].Buttons = new Array<LayoutButton>();
+        for (let k = 0; k <= 12 ; k++) {
+            layout.Lines[0].Buttons.push(new LayoutButton());
+            layout.Lines[0].Buttons[k].Action = 'Keyboard';
+            layout.Lines[0].Buttons[k].Caption = 'caption';
+            layout.Lines[0].Buttons[k].Text = 'text';
+
+            layout.Lines[1].Buttons.push(new LayoutButton());
+            layout.Lines[1].Buttons[k].Action = 'Keyboard';
+            layout.Lines[1].Buttons[k].Caption = 'caption';
+            layout.Lines[1].Buttons[k].Text = 'text';
+
+            layout.Lines[2].Buttons.push(new LayoutButton());
+            layout.Lines[2].Buttons[k].Action = 'Keyboard';
+            layout.Lines[2].Buttons[k].Caption = 'caption';
+            layout.Lines[2].Buttons[k].Text = 'text';
+
+            layout.Lines[3].Buttons.push(new LayoutButton());
+            layout.Lines[3].Buttons[k].Action = 'Keyboard';
+            layout.Lines[3].Buttons[k].Caption = 'caption';
+            layout.Lines[3].Buttons[k].Text = 'text';
+        }
+        console.log(JSON.stringify(layout.Lines));
+
         layout.Engine = "QWERT";
         
         //layout.Lines = JSON.parse

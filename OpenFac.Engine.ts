@@ -94,7 +94,7 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public CalculateNextButton(): void {
         this.priorColumnNumber = this.currentColumnNumber;
-        this.currentColumnNumber = + 1;
+        this.currentColumnNumber = this.currentColumnNumber + 1;
         if (this.currentColumnNumber == this.currentLine.Buttons.Count()) {
             this.currentColumnNumber = 0;
         }
@@ -103,7 +103,8 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public CalculateNextLine(): void {
         this.priorRowNumber = this.currentRowNumber;
-        this.currentRowNumber = + 1;
+        this.currentRowNumber = this.currentRowNumber + 1;
+        console.log('CurrentKeyboardLines: ' + this.currentKeyboard.Lines.Count());
         if (this.currentRowNumber == this.currentKeyboard.Lines.Count()) {
             this.currentRowNumber = 0;
         }
@@ -113,7 +114,7 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public CalculatePriorButton(): void {
         this.priorColumnNumber = this.currentColumnNumber;
-        this.currentColumnNumber = - 1;
+        this.currentColumnNumber = this.currentColumnNumber - 1;
         if (this.currentColumnNumber < 0) {
             this.currentColumnNumber = (this.currentLine.Buttons.Count() - 1);
         }
@@ -122,7 +123,7 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public CalculatePriorLine(): void {
         this.priorRowNumber = this.currentRowNumber;
-        this.currentRowNumber = - 1;
+        this.currentRowNumber = this.currentRowNumber - 1;
         if (this.currentRowNumber < 0) {
             this.currentRowNumber = this.currentKeyboard.Lines.Count() - 1;
         }
@@ -183,7 +184,7 @@ export class OpenFacEngine implements IOpenFacEngine {
         this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
         
         let s = this.sensorManager.Find(this.openFacConfig.GetActiveSensor());
-        s.DoCallBack(this, this.CallSensorAction);
+        s.DoCallBack(this, this.CallSensorAction.bind(this));
         if (s != null)
         {
             s.Start();

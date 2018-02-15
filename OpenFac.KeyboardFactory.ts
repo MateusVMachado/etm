@@ -10,7 +10,8 @@ export class OpenFacKeyboardFactory {
         if( result ) {
             return new result();
         } else {
-            throw new console.error("No type registered for this id");
+            console.log("No type registered for this id");
+            //throw new console.error("No type registered for this id");
         }    
     }
 
