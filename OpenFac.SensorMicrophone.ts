@@ -1,6 +1,6 @@
-import { OpenFacSensorBase } from './OpenFac.SensorBase';
+//import { OpenFacSensorBase } from './OpenFac.SensorBase';
 
-export class OpenFacSensorMicrophone extends OpenFacSensorBase {
+//export class OpenFacSensorMicrophone extends OpenFacSensorBase {
     /*
     private _recorder: WaveInRecorder;
     private _recorderBuffer: number[];
@@ -57,4 +57,4 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
 
     }
     */
-}
+//}
