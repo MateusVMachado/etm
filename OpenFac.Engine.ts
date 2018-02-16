@@ -94,6 +94,7 @@ export class OpenFacEngine implements IOpenFacEngine {
     };
 
     public CalculateNextButton(): void {
+        if( this.currentRowNumber === 0) this.currentLine = this.currentKeyboard.Lines.Items[this.currentRowNumber];
         this.priorColumnNumber = this.currentColumnNumber;
         this.currentColumnNumber = this.currentColumnNumber + 1;
         console.log("CURRENT_COL: " + this.currentColumnNumber);
@@ -116,6 +117,7 @@ export class OpenFacEngine implements IOpenFacEngine {
     };
 
     public CalculatePriorButton(): void {
+        if( this.currentRowNumber === 0) this.currentLine = this.currentKeyboard.Lines.Items[this.currentRowNumber];
         this.priorColumnNumber = this.currentColumnNumber;
         this.currentColumnNumber = this.currentColumnNumber - 1;
         if (this.currentColumnNumber < 0) {
