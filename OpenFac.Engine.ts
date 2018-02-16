@@ -40,7 +40,8 @@ export class OpenFacEngine implements IOpenFacEngine {
     constructor(config: IOpenFacConfig){
         this.openFacConfig = config;
         this.currentState = EngineState.LineDown;
-        this.currentRowNumber = this.priorRowNumber = this.currentColumnNumber = this.priorColumnNumber = 0;
+        this.currentRowNumber = this.priorRowNumber = 0;//this.currentColumnNumber = this.priorColumnNumber = 0;
+        this.currentColumnNumber = this.priorColumnNumber = -1;
         this.keyboardManager = this.openFacConfig.GetKeyboardManager();
     }
 
@@ -95,6 +96,8 @@ export class OpenFacEngine implements IOpenFacEngine {
     public CalculateNextButton(): void {
         this.priorColumnNumber = this.currentColumnNumber;
         this.currentColumnNumber = this.currentColumnNumber + 1;
+        console.log("CURRENT_COL: " + this.currentColumnNumber);
+        console.log("PRIOR_COL: " + this.priorColumnNumber);
         if (this.currentColumnNumber == this.currentLine.Buttons.Count()) {
             this.currentColumnNumber = 0;
         }
@@ -133,7 +136,7 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public DoAction(): void {
         let bt = this.GetCurrentButton();
-        console.log("BUTTON: " + bt);
+        console.log("BUTTON: " + bt)
         if (this.keyboardEngine) {
             this.keyboardEngine.DoAction(bt);
         }
@@ -166,7 +169,8 @@ export class OpenFacEngine implements IOpenFacEngine {
 
 
     public ResetColumn(): void {
-        this.currentColumnNumber = 0;
+        //this.currentColumnNumber = 0;
+        this.currentColumnNumber = -1;
     };
 
     public GetCurrentButton(): OpenFacKeyboardButton {

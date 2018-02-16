@@ -55,7 +55,8 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     
       public doGamepadLoop() {
          let fps = 5;
-         setTimeout(this.animate.bind(this), 1000/fps);
+         //setTimeout(this.animate.bind(this), 1000/fps);
+         setTimeout(this.animate.bind(this), 2500/fps);
                   
 
       }
