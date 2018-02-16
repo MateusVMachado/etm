@@ -48,16 +48,7 @@ export class OpenFacComponent implements OnInit {
         this.activeLine.col = button;
         this.activeLine.type = 'col';
         this.activeLine.cor = cor;
-        this.tecladoControl.nativeElement.click();
-        /*
-        if(tableLayoutPanel.RowCount > 0) {
-            var ct: Control = tableLayoutPanel.GetControlFromPosition(button, engine.GetCurrentRowNumber());
-            if (ct != null) {
-                var bt: Button = __as__<Button>(ct, Button);
-                bt.BackColor = cor;
-            }
-        }
-        */
+        //this.tecladoControl.nativeElement.click();
     }
 
     private ChangeLineColor(engine:OpenFacEngine, line:number, cor:string): void {
@@ -67,21 +58,7 @@ export class OpenFacComponent implements OnInit {
         this.activeLine.col = 0;
         this.activeLine.type = 'linha';
         this.activeLine.cor = cor;
-        this.tecladoControl.nativeElement.click();
-        //this.activeLine.line = line;
-        //this.activeLine.cor = cor;
-        //console.log(cor.toLocaleUpperCase);
-        /*
-        if(tableLayoutPanel.RowCount > 0)
-            for(var i:number = 0;i<engine.CurrentKeyboard().Lines.Items[line].Buttons.Count();i++)
-                {
-                var ct: Control = tableLayoutPanel.GetControlFromPosition(i, line);
-               if (ct != null) {
-                    var bt: Button = __as__<Button>(ct, Button);
-                    bt.BackColor = cor;
-                }
-        }
-        */
+        //this.tecladoControl.nativeElement.click();
     }
 
     public DoLineUp(engine: OpenFacEngine): void  {

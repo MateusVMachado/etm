@@ -15,7 +15,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Configuração',
     icon: 'nb-gear',
-    // link: '/pages/teclado',
+    //link: '/pages/teclado',
     children: [
     {
         title: 'pt-br',

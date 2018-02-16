@@ -11,7 +11,6 @@ import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 
-import { GamepadComponent } from '../gamepad/gamepad.component';
 
 @Component({
     selector: 'nb-login',
@@ -29,8 +28,7 @@ export class NgxLoginComponent implements OnInit{
 
     constructor(protected service: AuthService,
                 protected router: Router,
-                private cookieService: CookieService,
-                private gamepad: GamepadComponent) {
+                private cookieService: CookieService){
     }
 
     ngOnInit(){
@@ -60,22 +58,6 @@ export class NgxLoginComponent implements OnInit{
     navigateTo(path: string) {
       this.router.navigate([path]);
     }
-
-
-    public stopListenningKeys() {
-        console.log("Interrompendo processo...");
-        this.gamepad.stopListenningKeys();
-      }
-    
-      public onClickGetGamepads() {
-        console.log("Detectando controles...");
-        this.gamepad.detectControllers();
-      }
-    
-      public onClickMostrarControles() {
-        console.log('Processo iniciado.');
-        this.gamepad.doGamepadLoop();
-      }
 
 
 }

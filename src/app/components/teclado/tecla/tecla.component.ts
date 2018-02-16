@@ -49,7 +49,7 @@ export class TeclaComponent implements OnInit {
     this.teclaService.loadData().catch((error) => {
       this.teclado = this.teclaService.loadTeclado("normal");
       //this.tecladoControl.nativeElement.click();
-      this.tecladoControl.nativeElement.click();
+      //this.tecladoControl.nativeElement.click();
       throw new Error("teclado local");
     }).subscribe((data) => {
       if ( data ) {
@@ -59,7 +59,7 @@ export class TeclaComponent implements OnInit {
         KeyboardData.data = <TeclaModel>(data);
         console.log(this.teclado.teclas);
       }
-      this.tecladoControl.nativeElement.click();
+      //this.tecladoControl.nativeElement.click();
     });
 
     //setInterval(this.callBack.bind(this), 2000 );
