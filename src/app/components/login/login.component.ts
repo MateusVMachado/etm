@@ -1,8 +1,3 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- */
 import { AppBaseComponent } from '../shared/app-base.component';
 import { Component, Inject, ViewChild, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
@@ -10,6 +5,7 @@ import { AuthService } from '../shared/auth.services';
 import { JWTtoken } from '../../storage';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
+
 
 @Component({
     selector: 'nb-login',
@@ -24,8 +20,13 @@ export class NgxLoginComponent extends AppBaseComponent {
 
     constructor(protected service: AuthService,
                 protected router: Router,
-                private cookieService: CookieService,
+                private cookieService: CookieService){
+    }
                 private injector: Injector) { super(injector)}
+
+    ngOnInit(){
+      
+    }
 
     public login(): void {
         this.service.authenticate(this.user).subscribe(

@@ -1,5 +1,6 @@
-import { EditorModule } from '@tinymce/tinymce-angular';
+//import { EditorModule } from '@tinymce/tinymce-angular';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import * as ckeditor from 'ckeditor';
 
 @Component({
   selector: 'app-teclado',
@@ -19,8 +20,6 @@ export class TecladoComponent implements OnInit {
 
   public getValue(keyValue: any): void {
     this.texto = this.texto + keyValue;
-    tinymce.get('tinyEditor').setContent(this.texto);
-    // this.key.emit(keyValue);
   }
 
 }

@@ -1,11 +1,10 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { JWTtoken } from '../../storage';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './dashboard.component.html'
 })
 
 export class DashboardComponent implements OnInit {
