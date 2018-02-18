@@ -33,8 +33,7 @@ export class OpenFacComponent implements OnInit {
 
     public colorLine: boolean;
 
-    constructor(public activeLine: ActiveLineCol, public tecladoControl: any, public teclado: TeclaModel) {   
-        //this.activeLine = teclaComponent.activeLine;
+    constructor(public activeLine: ActiveLineCol, public teclado: TeclaModel) {   
         this.configureAll();
     }
 
@@ -43,47 +42,36 @@ export class OpenFacComponent implements OnInit {
     }
 
     private ChangeButtonColor(engine:OpenFacEngine, button:number, cor:string): void {
-        console.log('button: ' + button);
-        console.log('\n'+ cor + '\n');
         this.activeLine.col = button;
         this.activeLine.type = 'col';
         this.activeLine.cor = cor;
-        //this.tecladoControl.nativeElement.click();
     }
 
     private ChangeLineColor(engine:OpenFacEngine, line:number, cor:string): void {
-        console.log('line: ' + line);
-        console.log('\n'+ cor + '\n');
         this.activeLine.line = line;
         this.activeLine.col = 0;
         this.activeLine.type = 'linha';
         this.activeLine.cor = cor;
-        //this.tecladoControl.nativeElement.click();
     }
 
     public DoLineUp(engine: OpenFacEngine): void  {
-        console.log("LINHA!!");
         this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
     }
 
     public DoLineDown(engine:OpenFacEngine): void {
-        console.log("LINHA!!");
         this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
     }
     public DoColumnRight(engine:OpenFacEngine): void {
-        console.log("COLUNA!!");
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
         this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
     }
     public DoColumnLeft(engine:OpenFacEngine): void {
-        console.log("COLUNA!!");
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
         this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
     }
     public DoAction(engine:OpenFacEngine): void  {
-        console.log("ACTION!!");
         this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
         this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'yellow');
     }
@@ -136,14 +124,9 @@ export class OpenFacComponent implements OnInit {
         this.timer = true;
         setInterval(this.timer1_Tick.bind(this), 1500);      
     }
-
-    //private timer1_Tick(sender:Object, e:EventArgs): void
+    
     private timer1_Tick(): void {
-        console.log("---------------------------");
-        console.log("Tick");
         if(this.engine !== null) {
-            console.log('CurrentState: ' + this.engine.CurrentState());
-            console.log('CurrentRowNumber: ' + this.engine.GetCurrentRowNumber());
             if (this.engine.CurrentState() == EngineState.LineDown) {
                 this.engine.CalculateNextLine();
             }
