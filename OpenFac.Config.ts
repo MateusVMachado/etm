@@ -78,7 +78,6 @@ export class OpenFacConfig implements IOpenFacConfig {
         });
         */
 
-        console.log(layout.Lines);
 
         layout.Lines = new Array<LayoutLine>();
         layout.Lines.push(new LayoutLine());
@@ -114,8 +113,6 @@ export class OpenFacConfig implements IOpenFacConfig {
         }
         
 
-
-        console.log(JSON.stringify(layout.Lines));
 
         layout.Engine = "QWERT";
         

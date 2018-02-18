@@ -97,8 +97,6 @@ export class OpenFacEngine implements IOpenFacEngine {
         if( this.currentRowNumber === 0) this.currentLine = this.currentKeyboard.Lines.Items[this.currentRowNumber];
         this.priorColumnNumber = this.currentColumnNumber;
         this.currentColumnNumber = this.currentColumnNumber + 1;
-        console.log("CURRENT_COL: " + this.currentColumnNumber);
-        console.log("PRIOR_COL: " + this.priorColumnNumber);
         if (this.currentColumnNumber == this.currentLine.Buttons.Count()) {
             this.currentColumnNumber = 0;
         }
@@ -108,7 +106,6 @@ export class OpenFacEngine implements IOpenFacEngine {
     public CalculateNextLine(): void {
         this.priorRowNumber = this.currentRowNumber;
         this.currentRowNumber = this.currentRowNumber + 1;
-        console.log('CurrentKeyboardLines: ' + this.currentKeyboard.Lines.Count());
         if (this.currentRowNumber == this.currentKeyboard.Lines.Count()) {
             this.currentRowNumber = 0;
         }
@@ -138,7 +135,6 @@ export class OpenFacEngine implements IOpenFacEngine {
 
     public DoAction(): void {
         let bt = this.GetCurrentButton();
-        console.log("BUTTON: " + bt)
         if (this.keyboardEngine) {
             this.keyboardEngine.DoAction(bt);
         }

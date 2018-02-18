@@ -48,7 +48,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
       }
     
       public stopListenningKeys() {
-        console.log('Processo terminado.');
         window.cancelAnimationFrame(this.cancelationToken);
       }
     
@@ -73,7 +72,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
                   if (((button.value > 0) || (button.pressed))) {
                     this.DoAction(0);
-                    console.log("botão " + index + ': ' + button.value);
                     this.keyPressed = button.pressed + " " + button.value;
                   }
                 }
