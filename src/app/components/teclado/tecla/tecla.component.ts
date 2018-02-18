@@ -40,17 +40,11 @@ export class TeclaComponent implements OnInit {
   public timer: boolean;
   public colorLine: boolean;
 
-  @ViewChild('tecladoControl') tecladoControl: ElementRef; // input DOM element
   public teclado: TeclaModel = new TeclaModel();
 
-  public tecla: string;
-  public texto: string;
-  public testeTexto: string = '';
+
 
   public data = [];
-
-
-  restaurant: string;
 
   @Input() public layoutHide: boolean;
 
@@ -62,7 +56,6 @@ export class TeclaComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.texto = '';
     this.teclado.teclas = [];
     
     this.teclaService.loadData().catch((error) => {
