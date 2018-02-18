@@ -41,17 +41,8 @@ export class TeclaComponent implements OnInit {
   public colorLine: boolean;
 
   public teclado: TeclaModel = new TeclaModel();
-
-
-
   public data = [];
-
-  @Input() public layoutHide: boolean;
-
-  @Input() public lastValue: string;
-  @Output() onKeyPicked: EventEmitter<string> = new EventEmitter<string>();
-
-
+  
   constructor(private teclaService: TeclaService) {
    }
 
@@ -81,9 +72,9 @@ export class TeclaComponent implements OnInit {
 
   public getValue(event) {
     if (event.srcElement) {
-      this.onKeyPicked.emit(event.srcElement.value); // é o próprio valor
+      
     }else {
-      this.onKeyPicked.emit(event);
+      
     }
   }
 
