@@ -33,7 +33,7 @@ export class Keyboard extends BaseRoute{
 
 
     public getInDatabase(teclado: KeyboardModel, res: Response){    
-            res.locals.mongoAccess.coll[1].find({"system":"true"}).toArray(function(err, keyboard_list) {         
+            res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {         
                     teclado.teclas = keyboard_list[0].teclas
                     teclado.type = keyboard_list[0].type                
                     //res.send(teclado);
