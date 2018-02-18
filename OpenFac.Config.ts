@@ -9,7 +9,6 @@ import { OpenFacKeyboard } from './OpenFac.Keyboard';
 import { OpenFacKeyboardLine } from './OpenFac.KeyboardLine';
 import { OpenFacKeyboardButton } from './OpenFac.KeyboardButton';
 import { IOpenFacAction } from './OpenFac.Action.Interface';
-import { TeclaModel } from '../../src/app/components/teclado/tecla/tecla.model';
 import { forEach } from '@angular/router/src/utils/collection';
 
 export class OpenFacConfig implements IOpenFacConfig {
@@ -18,7 +17,7 @@ export class OpenFacConfig implements IOpenFacConfig {
     keyboardManager: OpenFacKeyboardManager;
     actionManager: OpenFacActionManager;
 
-    constructor(configFile:string, public teclado: TeclaModel)
+    constructor(configFile:string)
     {
         this.keyboardManager = new OpenFacKeyboardManager();
         this.actionManager = new OpenFacActionManager();
