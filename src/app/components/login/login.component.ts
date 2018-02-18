@@ -1,8 +1,3 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- */
 import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
@@ -17,7 +12,6 @@ import { CookieService } from 'ngx-cookie-service';
     templateUrl: './login.component.html',
 })
 
-//@Injectable()
 export class NgxLoginComponent implements OnInit{  
 
     @ViewChild('loginAlert') private loginAlert: SwalComponent;
