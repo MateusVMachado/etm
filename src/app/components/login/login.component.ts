@@ -1,8 +1,8 @@
-import { Component, Inject, ViewChild, OnInit } from '@angular/core';
+import { AppBaseComponent } from '../shared/app-base.component';
+import { Component, Inject, ViewChild, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
 import { JWTtoken } from '../../storage';
-import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -12,9 +12,7 @@ import { CookieService } from 'ngx-cookie-service';
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent implements OnInit{  
-
-    @ViewChild('loginAlert') private loginAlert: SwalComponent;
+export class NgxLoginComponent extends AppBaseComponent {
     errors: string[] = [];
     messages: string[] = [];
     user: any = {};
@@ -22,18 +20,15 @@ export class NgxLoginComponent implements OnInit{
 
     constructor(protected service: AuthService,
                 protected router: Router,
-                private cookieService: CookieService){
-    }
+                private cookieService: CookieService,
+                private injector: Injector) { super(injector)}
 
     ngOnInit(){
       
     }
 
     public login(): void {
-        this.service.authenticate(this.user).catch((error) => {
-          this.loginAlert.show();
-          throw new Error('usuário ou senha inválido!');
-        }).subscribe(
+        this.service.authenticate(this.user).subscribe(
           (res: any) => {
               console.log(res['accessToken']);
               this.service.setToken(res['accessToken']);
@@ -44,7 +39,9 @@ export class NgxLoginComponent implements OnInit{
                 }
                 this.router.navigate(['./pages/teclados']);
               }
-          } ,  // changed
+          }, (error) =>{
+            this.messageService.error('Usuário ou senha inválidos', 'Oops..');
+          }
        );
 
     }
@@ -52,6 +49,4 @@ export class NgxLoginComponent implements OnInit{
     navigateTo(path: string) {
       this.router.navigate([path]);
     }
-
-
 }

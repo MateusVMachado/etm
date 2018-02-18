@@ -1,13 +1,15 @@
+import { AppServiceBase } from './app-service-base.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { JWTtoken } from '../../storage';
 
 @Injectable()
-export class AuthService {
+export class AuthService extends AppServiceBase{
 
     private token: any = undefined;
 
     constructor(private http: HttpClient) {
+        super();
         // this.token = JWTtoken.token;
         console.log('TESTE1234');
     }
@@ -31,7 +33,9 @@ export class AuthService {
     }
 
     register(user: any) {
-        return  this.http.post('http://localhost:8080/register', user, this.getDefaultHeaders());
+        return  this.http.post('http://localhost:8080/register', user, this.getDefaultHeaders()).catch(error=>{
+            return this.handleError(error)
+        });
     }
 
     resetPassword() {
