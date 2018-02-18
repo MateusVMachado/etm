@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TeclaModel } from './tecla.model';
 
-// import { ETM_API } from '../../app.api';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
@@ -47,8 +46,7 @@ export class TeclaService {
     }
 
     loadData() {
-        return this.http.get('http://192.168.1.107:8080/keyboard').
-            map((response: Response) => response.json() );
+        return this.http.get('http://localhost:8080/keyboard');
     }
 
 }

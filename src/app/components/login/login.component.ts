@@ -1,8 +1,3 @@
-/**
- * @license
- * Copyright Akveo. All Rights Reserved.
- * Licensed under the MIT License. See License.txt in the project root for license information.
- */
 import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
@@ -11,12 +6,14 @@ import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 
+
 @Component({
     selector: 'nb-login',
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent {  
+export class NgxLoginComponent implements OnInit{  
+
     @ViewChild('loginAlert') private loginAlert: SwalComponent;
     errors: string[] = [];
     messages: string[] = [];
@@ -25,7 +22,11 @@ export class NgxLoginComponent {
 
     constructor(protected service: AuthService,
                 protected router: Router,
-                private cookieService: CookieService) {
+                private cookieService: CookieService){
+    }
+
+    ngOnInit(){
+      
     }
 
     public login(): void {
