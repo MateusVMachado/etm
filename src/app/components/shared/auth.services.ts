@@ -11,7 +11,6 @@ export class AuthService extends AppServiceBase{
     constructor(private http: HttpClient) {
         super();
         // this.token = JWTtoken.token;
-        console.log('TESTE1234');
     }
 
     authenticate(user: any) {
