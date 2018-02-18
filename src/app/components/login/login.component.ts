@@ -20,8 +20,7 @@ export class NgxLoginComponent extends AppBaseComponent {
 
     constructor(protected service: AuthService,
                 protected router: Router,
-                private cookieService: CookieService){
-    }
+                private cookieService: CookieService,
                 private injector: Injector) { super(injector)}
 
     ngOnInit(){
