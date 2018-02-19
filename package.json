@@ -39,7 +39,6 @@
     "@nebular/auth": "^2.0.0-rc.4",
     "@nebular/theme": "2.0.0-rc.4",
     "@ng-bootstrap/ng-bootstrap": "1.0.0-beta.8",
-    "@tinymce/tinymce-angular": "^1.0.2",
     "bootstrap": "4.0.0-beta.2",
     "ckeditor": "^4.8.0",
     "classlist.js": "1.1.20150312",

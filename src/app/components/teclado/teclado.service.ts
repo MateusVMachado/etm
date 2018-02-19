@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TeclaModel } from './tecla.model';
+import { TecladoModel } from './teclado.model';
 
 import { HttpClient, HttpResponse } from '@angular/common/http';
 
@@ -8,9 +8,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 
 @Injectable()
-export class TeclaService {
+export class TecladoService {
 
-    teclado: TeclaModel = new TeclaModel();
+    teclado: TecladoModel = new TecladoModel();
 
     public row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
     public pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
@@ -24,7 +24,7 @@ export class TeclaService {
 
     constructor(private http: HttpClient) {  }
 
-    loadTeclado(type: string): TeclaModel {
+    loadTeclado(type: string): TecladoModel {
         this.teclado.teclas = []; // Clear teclado
 
         if ( type === 'normal') {

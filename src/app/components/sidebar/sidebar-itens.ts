@@ -10,12 +10,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Teclado',
     icon: 'nb-home',
-    link: '/pages/teclado'
+    link: '/pages/editor-teclado'
   },
   {
     title: 'Configuração',
     icon: 'nb-gear',
-    //link: '/pages/teclado',
     children: [
     {
         title: 'pt-br',

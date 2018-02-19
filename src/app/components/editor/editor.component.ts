@@ -1,0 +1,13 @@
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import * as ckeditor from 'ckeditor';
+
+@Component({
+    selector: 'app-editor',
+    templateUrl: './editor.component.html',
+    styleUrls: ['./editor.component.css']
+})
+export class EditorComponent implements OnInit {
+    
+    ngOnInit(): void {
+    }
+}
