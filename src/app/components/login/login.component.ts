@@ -3,11 +3,11 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { Component, Inject, ViewChild, OnInit } from '@angular/core';
+import { AppBaseComponent } from '../shared/app-base.component';
+import { Component, Inject, ViewChild, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/auth.services';
 import { JWTtoken } from '../../storage';
-import { SwalComponent } from '@toverux/ngx-sweetalert2';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -16,8 +16,7 @@ import { CookieService } from 'ngx-cookie-service';
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent {  
-    @ViewChild('loginAlert') private loginAlert: SwalComponent;
+export class NgxLoginComponent extends AppBaseComponent {
     errors: string[] = [];
     messages: string[] = [];
     user: any = {};
@@ -25,14 +24,11 @@ export class NgxLoginComponent {
 
     constructor(protected service: AuthService,
                 protected router: Router,
-                private cookieService: CookieService) {
-    }
+                private cookieService: CookieService,
+                private injector: Injector) { super(injector)}
 
     public login(): void {
-        this.service.authenticate(this.user).catch((error) => {
-          this.loginAlert.show();
-          throw new Error('usuário ou senha inválido!');
-        }).subscribe(
+        this.service.authenticate(this.user).subscribe(
           (res: any) => {
               console.log(res['accessToken']);
               this.service.setToken(res['accessToken']);
@@ -43,7 +39,9 @@ export class NgxLoginComponent {
                 }
                 this.router.navigate(['./pages/teclados']);
               }
-          } ,  // changed
+          }, (error) =>{
+            this.messageService.error('Usuário ou senha inválidos', 'Oops..');
+          }
        );
 
     }
@@ -51,6 +49,4 @@ export class NgxLoginComponent {
     navigateTo(path: string) {
       this.router.navigate([path]);
     }
-
-
 }
