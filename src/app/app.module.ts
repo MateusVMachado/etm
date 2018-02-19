@@ -3,7 +3,7 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { MessageService } from './components/shared/message.service';
+import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +18,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from './data/state.service';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxRegisterComponent } from './components/register/register.component';
-import { AuthService } from './components/shared/auth.services';
+import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
@@ -30,7 +30,8 @@ import { CookieService } from 'ngx-cookie-service';
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    BootstrapModalModule
   ],
   bootstrap: [AppComponent],
   providers: [

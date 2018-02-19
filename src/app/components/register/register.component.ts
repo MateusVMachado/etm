@@ -3,12 +3,12 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { AppBaseComponent } from '../shared/app-base.component';
+import { AppBaseComponent } from '../shared/components/app-base.component';
 import { HttpResponse } from '@angular/common/http/src/response';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../shared/auth.services';
+import { AuthService } from '../shared/services/auth.services';
 import { JWTtoken } from '../../storage';
 import 'rxjs/add/operator/catch';
 import { Injector } from '@angular/core';
