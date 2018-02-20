@@ -93,22 +93,22 @@ export class OpenFacConfig implements IOpenFacConfig {
             layout.Lines[0].Buttons.push(new LayoutButton());
             layout.Lines[0].Buttons[k].Action = 'Keyboard';
             layout.Lines[0].Buttons[k].Caption = 'caption';
-            layout.Lines[0].Buttons[k].Text = 'text';
+            layout.Lines[0].Buttons[k].Text = 'A' + k.toString();
 
             layout.Lines[1].Buttons.push(new LayoutButton());
             layout.Lines[1].Buttons[k].Action = 'Keyboard';
             layout.Lines[1].Buttons[k].Caption = 'caption';
-            layout.Lines[1].Buttons[k].Text = 'text';
+            layout.Lines[1].Buttons[k].Text = 'B' + k.toString();
 
             layout.Lines[2].Buttons.push(new LayoutButton());
             layout.Lines[2].Buttons[k].Action = 'Keyboard';
             layout.Lines[2].Buttons[k].Caption = 'caption';
-            layout.Lines[2].Buttons[k].Text = 'text';
+            layout.Lines[2].Buttons[k].Text = 'C' + k.toString();
 
             layout.Lines[3].Buttons.push(new LayoutButton());
             layout.Lines[3].Buttons[k].Action = 'Keyboard';
             layout.Lines[3].Buttons[k].Caption = 'caption';
-            layout.Lines[3].Buttons[k].Text = 'text';
+            layout.Lines[3].Buttons[k].Text = 'D' + k.toString();
         }
         
 

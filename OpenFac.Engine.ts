@@ -139,6 +139,9 @@ export class OpenFacEngine implements IOpenFacEngine {
             this.keyboardEngine.DoAction(bt);
         }
         if (bt) {
+            console.log("BUTTON: " + bt.Text);
+            console.log("ACTION: " + bt.Action);
+            bt.Action ? console.log("Execute") : console.log("CallBack");
             bt.Action ? bt.Action.Execute(this) : this.InvokeCallBack();
         }
    };

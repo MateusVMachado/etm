@@ -17,8 +17,8 @@ export class OpenFacActionFactory {
     }
 
     public static Register<T extends IOpenFacAction>(actionName: string, 
-                                                    type: { new(): T ;}, 
-                                                    args?: any) {
+                                                    type: { new(args?:any): T ;}, 
+                                                    args?: any) {                                              
         OpenFacActionFactory.dicTypes.set(actionName, type);
         OpenFacActionFactory.dicInsta.set(actionName, args);
     }

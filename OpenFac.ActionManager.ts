@@ -14,11 +14,12 @@ export class OpenFacActionManager {
         let action: IOpenFacAction;
         action = this.actionList.get(actionName);
         if(!action){
-            let actionInstance = OpenFacActionFactory.Create(actionName);
+            let action = OpenFacActionFactory.Create(actionName);
             if(action){
                 this.Add(actionName, action);
             }
         } 
         return action;
+   
     }
 }
