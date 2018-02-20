@@ -30,8 +30,7 @@ import { CookieService } from 'ngx-cookie-service';
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot(),
-    BootstrapModalModule
+    CoreModule.forRoot()
   ],
   bootstrap: [AppComponent],
   providers: [

@@ -1,30 +1,43 @@
-//import { ConfigService } from './config.service';
-import { ConfigModalComponent } from './configModal/config.modal';
-import { AfterViewInit, Component, Injector, OnInit } from '@angular/core';
+import { NbAuthService } from '@nebular/auth';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
-    
-    selector: 'app-config',
-    templateUrl: './config.component.html'
+    selector: 'app-modal-config',
+    templateUrl: './config.component.html',
+    styleUrls: ['./config.component.scss']
 })
-export class ConfigTecladoComponent implements OnInit, AfterViewInit {
-   public op = ['Português', 'Inglês']
-    constructor(private modalService: NgbModal) {}
+export class ConfigModalComponent implements OnInit {
+    public modalHeader: string;
+    public modalContent: string;
+    public submitted: boolean;
+    public config: any = {};
+
+    constructor(
+        private activeModal: NgbActiveModal, 
+        private router: Router, 
+        private ref: ChangeDetectorRef,
+        private modalService: NgbModal
+    ) { }
 
     ngOnInit() {
-        /*this.configService.text = {
-            pt: 'pt-br',
-            en: 'en'
-        };*/
-     }
+        this.submitted = false;
+    }
 
-    public showLargeModal() {
+    show(): void {
         const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
         activeModal.componentInstance.modalHeader = 'Configurações';
     }
 
-    public ngAfterViewInit(): void {
-        this.showLargeModal();
+    public closeModal() {
+        this.activeModal.close();
+    }
+
+    public setConfiguration(){
+        this.submitted = true;
+        this.closeModal();
     }
 }
