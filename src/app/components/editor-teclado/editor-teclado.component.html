@@ -1,2 +1,2 @@
-<app-editor></app-editor>
-<app-teclado></app-teclado>
+<app-editor (EditorInstanceEvent)="receiveEvent($event)" ></app-editor>
+<app-teclado [textArea]="outValue"></app-teclado>

@@ -9,5 +9,9 @@ export class KeyboardData {
 }
 
 export class EditorInstance {
-    public static editor: EditorComponent;
+    public static editor: any;
+}
+
+export class MainTextEditor {
+    public static text: string;
 }

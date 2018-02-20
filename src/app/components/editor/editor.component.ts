@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, NgZone } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild, NgZone, Input } from '@angular/core';
 //import * as ckeditor from 'ckeditor';
 import { EditorInstance } from '../../storage';
 import { CKEditorComponent } from 'ng2-ckeditor';
+import { MainTextEditor } from '../../storage';
 
 @Component({
     selector: 'app-editor',
@@ -10,15 +11,17 @@ import { CKEditorComponent } from 'ng2-ckeditor';
 })
 export class EditorComponent implements OnInit {
     public testeVar: string = 'Uma string de teste';
-    //public texto: string = 'Uma string de teste';
-    constructor(){
+    @Input() public texto: string;
 
+    @Output() public EditorInstanceEvent = new EventEmitter<any>();
+
+    constructor(){
     }
 
     ngOnInit(): void {
-        EditorInstance.editor = this;    
+
+        this.EditorInstanceEvent.emit(document.getElementById('ckEditor').childNodes.item(0) );
+
     }
-
-
 
 }

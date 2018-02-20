@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
 
 
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
@@ -32,6 +32,11 @@ import { EditorInstance } from '../../storage';
   styleUrls: ['./teclado.component.css']
 })
 export class TecladoComponent implements OnInit {
+
+  @Input() public textArea: any;
+
+
+  public EditorInstance: any;
 
   public activeLine: ActiveLineCol = new ActiveLineCol();
 
@@ -141,9 +146,11 @@ export class TecladoComponent implements OnInit {
 
   public configureAll() {
     //OpenFacActionFactory.Register('TTS', OpenFacActionTTS);
-
+    //console.log(this.textArea);
+    //this.textArea.textContent = "configuring..."
+    //this.textArea.textContent += "system"
     // PASSAR INSTANCIA DO EDITOR COMO ARGUMENTO
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, EditorInstance.editor.testeVar);
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, this.textArea);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
