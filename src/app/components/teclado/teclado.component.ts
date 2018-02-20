@@ -24,6 +24,8 @@ import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 
+import { EditorInstance } from '../../storage';
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
@@ -57,6 +59,7 @@ export class TecladoComponent implements OnInit {
         this.configureAll();
       }
     });
+
 
   }
 
@@ -137,11 +140,15 @@ export class TecladoComponent implements OnInit {
 
 
   public configureAll() {
-    OpenFacActionFactory.Register('TTS', OpenFacActionTTS);
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter);
+    //OpenFacActionFactory.Register('TTS', OpenFacActionTTS);
+
+    // PASSAR INSTANCIA DO EDITOR COMO ARGUMENTO
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, EditorInstance.editor.testeVar);
+
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
     OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
+    
     // CARREGAR CONFIGURAÇÕES DOS DADOS DO BACKEND ARMAZENADOS LOCALMENTE
     let configFile = {
       KeyboardLayout: "QWERT",

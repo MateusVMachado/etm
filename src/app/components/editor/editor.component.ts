@@ -1,5 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import * as ckeditor from 'ckeditor';
+import { Component, EventEmitter, OnInit, Output, ViewChild, NgZone } from '@angular/core';
+//import * as ckeditor from 'ckeditor';
+import { EditorInstance } from '../../storage';
+import { CKEditorComponent } from 'ng2-ckeditor';
 
 @Component({
     selector: 'app-editor',
@@ -7,7 +9,16 @@ import * as ckeditor from 'ckeditor';
     styleUrls: ['./editor.component.css']
 })
 export class EditorComponent implements OnInit {
-    
-    ngOnInit(): void {
+    public testeVar: string = 'Uma string de teste';
+    //public texto: string = 'Uma string de teste';
+    constructor(){
+
     }
+
+    ngOnInit(): void {
+        EditorInstance.editor = this;    
+    }
+
+
+
 }
