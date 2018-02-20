@@ -1,9 +1,10 @@
+import { TecladoComponent } from '../teclado/teclado.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { SidebarComponent } from './sidebar.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
-import { TecladoComponent } from '../teclado/teclado.component';
+import { EditorTecladoComponent } from '../editor-teclado/editor-teclado.component';
 
 const routes: Routes = [{
   path: '',
@@ -19,8 +20,8 @@ const routes: Routes = [{
       component: DashboardComponent,
     },
     {
-      path: 'teclado',
-      component: TecladoComponent,
+      path: 'editor-teclado',
+      component: EditorTecladoComponent,
     }
   ],
 }];

@@ -2,7 +2,7 @@
         teclas: string[][];
 }
 */
-export class TeclaModel {
+export class TecladoModel {
 
     teclas: string[][];
     type: string;

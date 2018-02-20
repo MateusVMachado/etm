@@ -29,7 +29,6 @@ export class ConfigModalComponent implements OnInit {
 
     show(): void {
         const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
-        activeModal.componentInstance.modalHeader = 'Configurações';
     }
 
     public closeModal() {

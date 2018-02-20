@@ -7,8 +7,7 @@ import { MENU_ITEMS } from './sidebar-itens';
 
 @Component({
   selector: 'app-pages',
-  templateUrl: './sidebar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './sidebar.component.html'
 })
 export class SidebarComponent implements AfterViewInit {
 
@@ -30,6 +29,6 @@ export class SidebarComponent implements AfterViewInit {
 
   public showLargeModal() {
         const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
-        activeModal.componentInstance.modalHeader = 'Configurações';
+        activeModal.componentInstance.modalHeader = 'Configura��es';
     }
 }
