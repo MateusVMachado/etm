@@ -24,9 +24,6 @@ import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 
-import { EditorInstance } from '../../storage';
-
-import { EditorComponent } from '../editor/editor.component';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 
 
@@ -153,10 +150,10 @@ export class TecladoComponent implements OnInit {
   }
 
 
-  public configureAll(result: any) {
+  public configureAll(editorInstance: any) {
 
 
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, result);
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
