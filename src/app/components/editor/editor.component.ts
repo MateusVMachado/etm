@@ -1,8 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild, NgZone, Input, ElementRef } from '@angular/core';
-//import * as ckeditor from 'ckeditor';
-import { EditorInstance } from '../../storage';
 import { CKEditorComponent } from 'ng2-ckeditor';
-import { MainTextEditor } from '../../storage';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 
 @Component({
