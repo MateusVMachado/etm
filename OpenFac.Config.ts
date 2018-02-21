@@ -181,7 +181,6 @@ export class OpenFacConfig implements IOpenFacConfig {
                 button.Text = bt.Text;
                 let action: IOpenFacAction = this.actionManager.Find(bt.Action);
                 button.Action = action;
-                //console.log(k + " : " + button.Action);
             }
         }
     }
