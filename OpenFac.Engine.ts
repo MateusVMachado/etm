@@ -40,7 +40,7 @@ export class OpenFacEngine implements IOpenFacEngine {
     constructor(config: IOpenFacConfig){
         this.openFacConfig = config;
         this.currentState = EngineState.LineDown;
-        this.currentRowNumber = this.priorRowNumber = 0;//this.currentColumnNumber = this.priorColumnNumber = 0;
+        this.currentRowNumber = this.priorRowNumber = 0;
         this.currentColumnNumber = this.priorColumnNumber = -1;
         this.keyboardManager = this.openFacConfig.GetKeyboardManager();
     }
@@ -139,6 +139,9 @@ export class OpenFacEngine implements IOpenFacEngine {
             this.keyboardEngine.DoAction(bt);
         }
         if (bt) {
+            console.log("BUTTON: " + bt.Text);
+            console.log("ACTION: " + bt.Action);
+            bt.Action ? console.log("Execute") : console.log("CallBack");
             bt.Action ? bt.Action.Execute(this) : this.InvokeCallBack();
         }
    };
@@ -167,7 +170,6 @@ export class OpenFacEngine implements IOpenFacEngine {
 
 
     public ResetColumn(): void {
-        //this.currentColumnNumber = 0;
         this.currentColumnNumber = -1;
     };
 

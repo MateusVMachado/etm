@@ -10,15 +10,15 @@ export class OpenFacActionManager {
         return this.actionList;
     }
     public Find(actionName: string): IOpenFacAction {
-        //let a = typeof(IOpenFacAction);
         let action: IOpenFacAction;
         action = this.actionList.get(actionName);
         if(!action){
-            let actionInstance = OpenFacActionFactory.Create(actionName);
+            let action = OpenFacActionFactory.Create(actionName);
             if(action){
                 this.Add(actionName, action);
             }
         } 
         return action;
+   
     }
 }
