@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, Input, ViewChild, NgZone } from '@angular/core';
 
 
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
@@ -27,8 +27,8 @@ import { TecladoService } from './teclado.service';
 import { EditorInstance } from '../../storage';
 
 import { EditorComponent } from '../editor/editor.component';
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 
-import { DataService } from '../shared/data.service';
 
 @Component({
   selector: 'app-teclado',
@@ -38,8 +38,6 @@ import { DataService } from '../shared/data.service';
 export class TecladoComponent implements OnInit {
 
   public document:any;
-
-  public EditorInstance: any;
 
   public activeLine: ActiveLineCol = new ActiveLineCol();
 
@@ -51,16 +49,14 @@ export class TecladoComponent implements OnInit {
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
 
-  constructor(private tecladoService: TecladoService, private dados: DataService) {
+  constructor(private tecladoService: TecladoService, private editorTecladoService: EditorTecladoService, private zone: NgZone) {
   }
 
   ngAfterViewInit(){
-    this.dados.currentMessage.subscribe((document) => {
-      //if(document){
-        console.log("DOCUMENT: " + document);
-        console.log("OK, configuring....");
-        this.configureAll(document);
-      //}
+    this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
+      this.zone.run(() => {
+        this.configureAll(editor);
+      });
     })
   }
 
@@ -180,9 +176,8 @@ export class TecladoComponent implements OnInit {
     this.engine.Start();
 
     //BuildLayout
-    this.timer = true;
-    if(result) setInterval(this.timer1_Tick.bind(this), 1500);
-    //setInterval(this.timer1_Tick.bind(this), 1500);
+    this.timer = true;    
+    setInterval(this.timer1_Tick.bind(this), 1500);
   }
 
   private timer1_Tick(): void {

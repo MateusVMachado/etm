@@ -3,7 +3,7 @@ import { Component, EventEmitter, OnInit, Output, ViewChild, NgZone, Input, Elem
 import { EditorInstance } from '../../storage';
 import { CKEditorComponent } from 'ng2-ckeditor';
 import { MainTextEditor } from '../../storage';
-import { DataService } from '../shared/data.service';
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 
 @Component({
     selector: 'app-editor',
@@ -11,14 +11,10 @@ import { DataService } from '../shared/data.service';
     styleUrls: ['./editor.component.css']
 })
 export class EditorComponent implements OnInit {
-    @ViewChild('editor') editor: any;
-    public testeVar: string = 'Uma string de teste';
-    public frame: any;
-    @Input() public texto: string;
+    
+    @ViewChild('editor') editor: any;   
 
-    @Output() public EditorInstanceEvent = new EventEmitter<any>();
-
-    constructor(public dados: DataService){
+    constructor(public editorTecladoService: EditorTecladoService){
     }
 
     ngOnInit(): void {
@@ -26,8 +22,7 @@ export class EditorComponent implements OnInit {
     }
 
     emitInstance($event){
-        console.log('EMITIU');
-        this.dados.changeMessage(this.editor.instance);
+        this.editorTecladoService.emitEditorInstance(this.editor.instance);
     }
 
 }

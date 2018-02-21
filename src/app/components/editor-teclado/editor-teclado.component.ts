@@ -4,8 +4,7 @@ import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
     selector: 'app-editor-component',
     templateUrl: './editor-teclado.component.html'
 })
-export class EditorTecladoComponent implements OnInit { 
-    public outValue: any;
+export class EditorTecladoComponent implements OnInit {     
     constructor() { }
 
     ngOnInit() { }

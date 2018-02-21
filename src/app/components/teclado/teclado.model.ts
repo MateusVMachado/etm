@@ -1,7 +1,3 @@
-/*export interface TecladoModel {
-        teclas: string[][];
-}
-*/
 export class TecladoModel {
 
     teclas: string[][];
