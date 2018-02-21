@@ -26,6 +26,10 @@ import { TecladoService } from './teclado.service';
 
 import { EditorInstance } from '../../storage';
 
+import { EditorComponent } from '../editor/editor.component';
+
+import { DataService } from '../shared/data.service';
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
@@ -33,8 +37,7 @@ import { EditorInstance } from '../../storage';
 })
 export class TecladoComponent implements OnInit {
 
-  @Input() public textArea: any;
-
+  public document:any;
 
   public EditorInstance: any;
 
@@ -48,7 +51,17 @@ export class TecladoComponent implements OnInit {
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
 
-  constructor(private tecladoService: TecladoService) {
+  constructor(private tecladoService: TecladoService, private dados: DataService) {
+  }
+
+  ngAfterViewInit(){
+    this.dados.currentMessage.subscribe((document) => {
+      //if(document){
+        console.log("DOCUMENT: " + document);
+        console.log("OK, configuring....");
+        this.configureAll(document);
+      //}
+    })
   }
 
   ngOnInit() {
@@ -61,7 +74,7 @@ export class TecladoComponent implements OnInit {
       if (data) {
         this.teclado = <TecladoModel>(data[0]);
         KeyboardData.data = <TecladoModel>(data);
-        this.configureAll();
+
       }
     });
 
@@ -144,13 +157,10 @@ export class TecladoComponent implements OnInit {
   }
 
 
-  public configureAll() {
-    //OpenFacActionFactory.Register('TTS', OpenFacActionTTS);
-    //console.log(this.textArea);
-    //this.textArea.textContent = "configuring..."
-    //this.textArea.textContent += "system"
-    // PASSAR INSTANCIA DO EDITOR COMO ARGUMENTO
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, this.textArea);
+  public configureAll(result: any) {
+
+
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, result);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
@@ -171,7 +181,8 @@ export class TecladoComponent implements OnInit {
 
     //BuildLayout
     this.timer = true;
-    setInterval(this.timer1_Tick.bind(this), 1500);
+    if(result) setInterval(this.timer1_Tick.bind(this), 1500);
+    //setInterval(this.timer1_Tick.bind(this), 1500);
   }
 
   private timer1_Tick(): void {

@@ -16,6 +16,7 @@ import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
+import { DataService } from './components/shared/data.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +37,7 @@ import { CKEditorComponent } from 'ng2-ckeditor';
     AuthGuard,
     MessageService,
     CKEditorComponent,
+    DataService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
