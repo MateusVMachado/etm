@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "../routes/route";
 import { KeyboardModel } from '../models/keyboard.model';
-//import { MongoAccessModel } from "../models/mongoAccess.model";
+import { OpenFACLayout, LayoutLine, LayoutButton } from '../models/layout.model';
 
 
 export class Keyboard extends BaseRoute{
@@ -18,41 +18,49 @@ export class Keyboard extends BaseRoute{
 
     public keyboard_api(req: Request, res: Response, next: NextFunction) {    
         this.title = "Home | ETM - BackEnd";
-
-        // DESCOMENTAR LINHA ABAIXO SE NAO FOR FAZER O TESTE ABAIXO!!
         this.getInDatabase(this.teclado, res);
-
-                 /////////////////////////
-                // USADO PARA TESTES   //
-               /////////////////////////
-                //this.teclado = this.loadKeyboard('normal');
-                //this.insertIntoDatabase(this.teclado);
-            ///   FIM DOS TESTES   /// 
-           // COMENTAR AO TERMINAR //  
       }
 
-
     public getInDatabase(teclado: KeyboardModel, res: Response){    
-            res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {         
-                    teclado.teclas = keyboard_list[0].teclas
-                    teclado.type = keyboard_list[0].type                
-                    //res.send(teclado);
+            let instance = this;
+            res.locals.mongoAccess.coll[1].find({"nameLayout":"normal"}).toArray(function(err, keyboard_list) {
+                if(keyboard_list.length !== 0){
                     res.send(keyboard_list);
+                } else {
+                    instance.insertBasicIntoDatabase(teclado, res);
+                }         
             })
      }
 
-    
-    insertIntoDatabase(teclado: KeyboardModel){
-        var mongodb = require('mongodb') , MongoClient = mongodb.MongoClient
-        const myAwesomeDB = '';
-        MongoClient.connect(process.env.MONGOHQ_URL|| 'mongodb://localhost:27017',
-             function(err, database) {  
-                var db = database.db('etm-database');
-                db.collection('keyboards').insert(teclado, (err, result) => {
-                    console.log("Keyboard inserido")
-            })
+    public insertBasicIntoDatabase(teclado: KeyboardModel, res: Response){
+        res.locals.mongoAccess.coll[1].insert(this.populateLayout('normal'), (err, result) => {
+            console.log("Keyboard inserido")
         })
-    }     
+     } 
+
+    public populateLayout(type: string): OpenFACLayout{
+        let openFacLayout = new OpenFACLayout(); 
+        openFacLayout.nameLayout = type;
+        openFacLayout.email = 'email.teste@email.com'; 
+
+        let teclado = this.loadKeyboard(type);
+        let qntyLines = teclado.teclas.length;
+
+        openFacLayout.Lines = new Array<LayoutLine>();
+        for(let i = 0; i < qntyLines; i++){
+            openFacLayout.Lines.push(new LayoutLine());
+            openFacLayout.Lines[i].Buttons = new Array<LayoutButton>();
+            for( let j = 0 ; j < this.teclado.teclas[i].length; j++){
+                    openFacLayout.Lines[i].Buttons.push(new LayoutButton());
+                    openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
+                    openFacLayout.Lines[i].Buttons[j].Caption = 'caption';
+                    openFacLayout.Lines[i].Buttons[j].Text = this.teclado.teclas[i][j];
+            }
+        } 
+
+        return openFacLayout;
+     }
+
 
     // FUNCAO PARA TESTES APENAS
     public loadKeyboard(type: string){
