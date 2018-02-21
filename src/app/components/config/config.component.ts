@@ -1,3 +1,5 @@
+import { ConfigModel } from './config';
+import { ConfigService } from './config.service';
 import { NbAuthService } from '@nebular/auth';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -20,7 +22,8 @@ export class ConfigModalComponent implements OnInit {
         private activeModal: NgbActiveModal, 
         private router: Router, 
         private ref: ChangeDetectorRef,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private configService: ConfigService
     ) { }
 
     ngOnInit() {
@@ -37,6 +40,11 @@ export class ConfigModalComponent implements OnInit {
 
     public setConfiguration(){
         this.submitted = true;
+        this.configService.configure(this.config).subscribe(result => {
+            console.log("sucesso");
+        }, (error) => {
+            console.log(error);
+        });
         this.closeModal();
-    }
+    }  
 }

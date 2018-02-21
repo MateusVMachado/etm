@@ -1,3 +1,5 @@
+import { HttpClientModule } from '@angular/common/http';
+import { ConfigService } from './config.service';
 import { FormsModule } from '@angular/forms';
 import { ConfigModalComponent } from './config.component';
 import { NgModule } from '@angular/core';
@@ -8,7 +10,8 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
   imports: [
     FormsModule,
     ThemeModule,
-    BootstrapModalModule
+    BootstrapModalModule,
+    HttpClientModule
   ],
   declarations: [
     ConfigModalComponent
@@ -16,6 +19,8 @@ import { BootstrapModalModule } from 'ng2-bootstrap-modal';
   entryComponents: [
     ConfigModalComponent
   ],
-  providers: []
+  providers: [
+    ConfigService
+  ]
 })
 export class ConfigTecladoModule { }
