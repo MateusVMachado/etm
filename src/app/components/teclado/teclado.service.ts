@@ -6,6 +6,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 
 @Injectable()
 export class TecladoService {
@@ -46,7 +47,7 @@ export class TecladoService {
     }
 
     loadData() {
-        return this.http.get('http://localhost:8080/keyboard');
+        return this.http.get<OpenFACLayout>('http://localhost:8080/keyboard');
     }
 
 }
