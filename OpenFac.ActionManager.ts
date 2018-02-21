@@ -10,7 +10,6 @@ export class OpenFacActionManager {
         return this.actionList;
     }
     public Find(actionName: string): IOpenFacAction {
-        //let a = typeof(IOpenFacAction);
         let action: IOpenFacAction;
         action = this.actionList.get(actionName);
         if(!action){

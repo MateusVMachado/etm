@@ -16,8 +16,9 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     constructor(document: any){
 
         this.document = document;
-    
-        this.document.textContent = "HELLOOOO3";
+        console.log("MARK4");
+        console.log(this.document)
+
     }
 
 
@@ -27,27 +28,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         let str = bt.Text;
  
         console.log("STR: " + str);
-        //console.log(this.document);
-        this.document += str;
-        //this.text += str;
 
-        //console.log(this.text);
+        this.document.insertText(str);
 
-        //console.log(this.document);
-    
-        // IMPLEMENTAR A FUNÇÃO ABAIXO:
-        //SendKeys.SendWait(str);
     }
-
-    //public OpenFacActionKeyboardWriter(document: any){
-    //    document.textContent = "HELLOOOO3";
-        //console.log('criando...');
-        //console.log(document);
-        //this.document = document;
-        //console.log(this.document);
-    //}
-
-    //public static Create(): IOpenFacAction {
-    //    return new OpenFacActionKeyboardWriter(document);
-   // }
 }

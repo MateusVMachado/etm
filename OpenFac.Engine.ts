@@ -40,7 +40,7 @@ export class OpenFacEngine implements IOpenFacEngine {
     constructor(config: IOpenFacConfig){
         this.openFacConfig = config;
         this.currentState = EngineState.LineDown;
-        this.currentRowNumber = this.priorRowNumber = 0;//this.currentColumnNumber = this.priorColumnNumber = 0;
+        this.currentRowNumber = this.priorRowNumber = 0;
         this.currentColumnNumber = this.priorColumnNumber = -1;
         this.keyboardManager = this.openFacConfig.GetKeyboardManager();
     }
@@ -170,7 +170,6 @@ export class OpenFacEngine implements IOpenFacEngine {
 
 
     public ResetColumn(): void {
-        //this.currentColumnNumber = 0;
         this.currentColumnNumber = -1;
     };
 
