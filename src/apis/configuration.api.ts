@@ -10,16 +10,44 @@ export class Configuration extends BaseRoute {
     }
 
     public userConfigure(req: Request, res: Response, next: NextFunction){
-        let config = new ConfigurationModel();
-        config.openFacConfig = new OpenFACConfig();
+        let config = req.body as ConfigurationModel;
 
-        config.language = req.body['language'];
-        config.openFacConfig = req.body['openFacConfig'];
+        res.locals.mongoAccess.coll[2].find({ "user": config.user }).toArray(function(err, config_list) {
+            if(config_list.length == 0){
+                res.locals.mongoAccess.coll[2].insert(config, (err, result) => {
+                    console.log("configuração inserida");
+                    res.status(200);
+                });
+            } else {
+                res.locals.mongoAccess.coll[2].update({ "user": config.user }, { "openFacConfig": config.openFacConfig, "language": config.language, "user": config.user });
+                res.status(200);
+            }
+        });
+    }
 
-        res.locals.mongoAccess.coll[2].insert(config.openFacConfig, (err, result) => {
-            console.log("configuração inserida");
-        }); 
-        console.log("fim requisiçao");
-        res.status(200);
+    public getUserConfigure(req: Request, res: Response, next: NextFunction){
+        res.locals.mongoAccess.coll[2].find({ "user": req.query.email }).toArray(function(err, config_list) {                    
+            let config;
+            if(config_list.length == 0){
+                config = config_list[0];
+                config = {
+                    openFacConfig: 
+                    {
+                        ActiveSensor: "tec",
+                        ScanType: "automatico",
+                        ScanTime: "3"
+                    },
+                    language: "pt-br"
+                }
+                res.status(200).send(config);
+            } else {
+                config = config_list[0];
+                config = {
+                    openFacConfig: config.openFacConfig,
+                    language: config.language
+                }
+                res.status(200).send(config);
+            }
+        });
     }
 }

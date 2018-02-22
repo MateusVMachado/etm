@@ -84,6 +84,12 @@ export class IndexRoute extends BaseRoute {
       configuration.userConfigure(req, res, next);
     });
 
+    // Rota para buscar configurações
+    router.get("/configuration", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      configuration.getUserConfigure(req, res, next);
+    });
   }
 
 
