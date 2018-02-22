@@ -1,3 +1,4 @@
+import { ConfigTecladoModule } from './components/config/config.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -25,7 +26,8 @@ import { CookieService } from 'ngx-cookie-service';
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    ConfigTecladoModule
   ],
   bootstrap: [AppComponent],
   providers: [

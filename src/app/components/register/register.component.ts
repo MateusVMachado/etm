@@ -3,6 +3,7 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
+import { User } from '../shared/models/user';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { HttpResponse } from '@angular/common/http/src/response';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -40,7 +41,9 @@ export class NgxRegisterComponent extends AppBaseComponent {
     }
 
     public register() {
-      this.service.register(this.user).subscribe(
+      let usuario: User = new User();
+      usuario = this.user;
+      this.service.register(usuario).subscribe(
           (res: any) => {
             this.messageService.success(res.message).then(res => {
               this.router.navigate(['./auth/login']);
@@ -53,6 +56,7 @@ export class NgxRegisterComponent extends AppBaseComponent {
     }
 
     getConfigValue() { }
+    
     navigateTo(path: string) {
       this.router.navigate([path]);
     }
