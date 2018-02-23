@@ -1,3 +1,4 @@
+import { ProfileService } from '../profile/profile.service';
 import { AppBaseComponent } from '../shared/app-base.component';
 import { Component, Inject, ViewChild, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
@@ -21,7 +22,9 @@ export class NgxLoginComponent extends AppBaseComponent {
     constructor(protected service: AuthService,
                 protected router: Router,
                 private cookieService: CookieService,
-                private injector: Injector) { super(injector)}
+                private injector: Injector,
+                private profileService: ProfileService
+                ) { super(injector)}
 
     ngOnInit(){
       

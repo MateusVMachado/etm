@@ -1,0 +1,40 @@
+<div style="background-color: white;">
+    <div class="modal-header">
+        <span>Perfil</span>
+        <button class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form (ngSubmit)="save()" #form="ngForm" autocomplete="off">
+        <div class="modal-body">
+            <div class="from-group line">
+                <label for="name">Imagem de perfil</label>
+                <input type="file" ng2FileSelect [uploader]="uploader" id="picture" name="picture" [(ngModel)]="user.picture" #picture="ngModel" class="form-control"/>
+            </div>
+            <div class="from-group line">
+                <label for="name">Nome</label>
+                <input type="text" id="name" name="name" [(ngModel)]="user.name" #name="ngModel" class="form-control" placeholder="Nome completo"
+                    [class.form-control-danger]="name.invalid && name.touched" [required]="getConfigValue('forms.validation.name.required')"
+                />
+                <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
+                Nome é obrigatório!
+            </small>
+            </div>
+            <div class="from-group line">
+                <label for="email">Email</label>
+                <input type="text" id="email" name="email" [(ngModel)]="user.email" #email="ngModel" class="form-control" placeholder="Email"
+                    pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="getConfigValue('forms.validation.email.required')"
+                />
+                <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
+                Email é obrigatório!
+            </small>
+                <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.pattern">
+                Deve ser um email real!
+            </small>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" [disabled]="saved || !form.valid">Salvar</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -31,7 +31,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ]
   },
   {
-    title: 'Perfil',
+    title: 'Gerenciar Perfil',
     icon: 'nb-person',
     link: '/pages/profile'
   }
