@@ -14,6 +14,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Configuração',
-    icon: 'nb-gear'
+    icon: 'nb-gear',
+    target: 'config'
   }
 ];

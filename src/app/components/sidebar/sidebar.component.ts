@@ -21,7 +21,7 @@ export class SidebarComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.menuService.onItemClick()
         .subscribe((result) => {
-          if ( result.item.title === 'Configuração') {
+          if ( result.item.target === 'config') {
             this.showLargeModal();
           }
         });
