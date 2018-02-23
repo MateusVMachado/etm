@@ -18,7 +18,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
 import { OpenFacKeyCommandService } from '../../node_modules/openfac/OpenFac.KeyCommand.service';
 
-import * as $ from 'jquery';
 
 @NgModule({
   declarations: [AppComponent],
