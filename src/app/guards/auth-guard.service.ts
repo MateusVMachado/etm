@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { tap } from 'rxjs/operators/tap';
 import { Observable } from 'rxjs/Observable';
-import { AuthService } from '../components/shared/auth.services';
+import { AuthService } from '../components/shared/services/auth.services';
 import { JWTtoken } from '../storage';
 
 @Injectable()

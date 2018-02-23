@@ -1,4 +1,6 @@
-import { MessageService } from './components/shared/message.service';
+import { ProfileService } from './components/profile/profile.service';
+import { ConfigTecladoModule } from './components/config/config.module';
+import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,9 +15,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from './data/state.service';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxRegisterComponent } from './components/register/register.component';
-import { AuthService } from './components/shared/auth.services';
+import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
+import { OpenFacKeyCommandService } from '../../node_modules/openfac/OpenFac.KeyCommand.service';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +30,8 @@ import { CKEditorComponent } from 'ng2-ckeditor';
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot(), 
+    CoreModule.forRoot(),
+    ConfigTecladoModule
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -35,7 +40,9 @@ import { CKEditorComponent } from 'ng2-ckeditor';
     AuthService,
     AuthGuard,
     MessageService,
+    ProfileService,
     CKEditorComponent,
+    OpenFacKeyCommandService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

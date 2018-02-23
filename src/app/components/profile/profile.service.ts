@@ -1,4 +1,4 @@
-import { AuthService } from '../shared/auth.services';
+import { AuthService } from '../shared/services/auth.services';
 import { JWTtoken } from '../../storage';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

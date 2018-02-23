@@ -15,21 +15,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Configuração',
     icon: 'nb-gear',
-    children: [
-    {
-        title: 'pt-br',
-        link: '/pages/ui-features/buttons',
+    target: 'config'
     },
-    {
-      title: 'en-us',
-      link: '/pages/ui-features/buttons',
-    },
-    {
-      title: 'user-defined-01',
-      link: '/pages/teclados:title',
-    }
-    ]
-  },
   {
     title: 'Gerenciar Perfil',
     icon: 'nb-person',
