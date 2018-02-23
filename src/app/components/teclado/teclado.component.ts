@@ -25,6 +25,7 @@ import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 
 
 @Component({
@@ -34,7 +35,7 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 })
 export class TecladoComponent implements OnInit {
 
-  public document:any;
+  public openFacLayout: OpenFACLayout;
 
   public activeLine: ActiveLineCol = new ActiveLineCol();
 
@@ -50,16 +51,26 @@ export class TecladoComponent implements OnInit {
   }
 
   ngAfterViewInit(){
-    this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
-      this.zone.run(() => {
-        this.configureAll(editor);
-      });
-    })
+
   }
 
   ngOnInit() {
     this.teclado.teclas = [];
 
+    this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
+      this.zone.run(() => {
+          this.tecladoService.loadData().subscribe((data)=>{
+              if(data){
+                this.openFacLayout = (data[0]);
+                this.configureAll(editor);
+                console.log(this.openFacLayout);
+                console.log(editor);
+              }
+          })
+        //this.configureAll(editor);
+      });
+    })
+/*
     this.tecladoService.loadData().catch((error) => {
       this.teclado = this.tecladoService.loadTeclado("normal");
       throw new Error("teclado local");
@@ -70,7 +81,7 @@ export class TecladoComponent implements OnInit {
 
       }
     });
-
+*/
 
   }
 
@@ -167,7 +178,7 @@ export class TecladoComponent implements OnInit {
     };
 
     //this.config = new OpenFacConfig(JSON.stringify(configFile));
-    this.config = new OpenFacConfig('config.file'); // REVER ISSO DEPOIS!!!
+    this.config = new OpenFacConfig('config.file', this.openFacLayout); // REVER ISSO DEPOIS!!!
     this.engine = new OpenFacEngine(this.config);
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();

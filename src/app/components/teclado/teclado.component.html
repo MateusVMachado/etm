@@ -1,7 +1,9 @@
 <div class="box-teclado">
+  {{openFacLayout.Lines}}
   <div class="teclado-container">
     <div style="z-index: 0">
       <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
+      <!--<div class="row" *ngFor="let row of openFacLayout.Lines; index as iR" style="padding-left:15px">-->
 
         <div class="col-md-12 line">
           <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
