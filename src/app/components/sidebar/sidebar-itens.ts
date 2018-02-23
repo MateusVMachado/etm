@@ -32,7 +32,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Perfil',
-    icon: 'nb-home',
-    link: '/pages/editor-teclado'
+    icon: 'nb-person',
+    link: '/pages/profile'
   }
 ];

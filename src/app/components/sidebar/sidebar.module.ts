@@ -1,3 +1,4 @@
+import { ProfileModule } from '../profile/profile.module';
 import { NgModule } from '@angular/core';
 import { SidebarComponent } from './sidebar.component';
 import { SidebarRoutingModule } from './sidebar.routing';
@@ -14,7 +15,8 @@ const PAGES_COMPONENTS = [
     SidebarRoutingModule,
     ThemeModule,
     DashboardModule,
-    EditorTecladoModule
+    EditorTecladoModule,
+    ProfileModule
   ],
   declarations: [
     ...PAGES_COMPONENTS,
