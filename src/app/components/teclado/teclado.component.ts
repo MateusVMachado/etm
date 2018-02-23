@@ -26,7 +26,7 @@ import { TecladoService } from './teclado.service';
 
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
-
+import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
 
 @Component({
   selector: 'app-teclado',
@@ -43,11 +43,15 @@ export class TecladoComponent implements OnInit {
   public engine: OpenFacEngine;
   public timer: boolean;
   public colorLine: boolean;
+  public KeyboardData: any;
 
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
 
-  constructor(private tecladoService: TecladoService, private editorTecladoService: EditorTecladoService, private zone: NgZone) {
+  constructor(private tecladoService: TecladoService, 
+              private editorTecladoService: EditorTecladoService, 
+              private zone: NgZone,
+              private keyCommandService: OpenFacKeyCommandService) {
   }
 
   ngAfterViewInit(){
@@ -57,10 +61,19 @@ export class TecladoComponent implements OnInit {
   ngOnInit() {
     this.teclado.teclas = [];
 
+    this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
+      this.zone.run(() =>{
+        if(result === 'caps'){
+          this.capsLock();
+        }
+      })
+    })
+    
     this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
       this.zone.run(() => {
           this.tecladoService.loadData().subscribe((data)=>{
               if(data){
+                this.KeyboardData = data;
                 this.openFacLayout = (data[0]);
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 this.configureAll(editor);
@@ -72,7 +85,7 @@ export class TecladoComponent implements OnInit {
   }
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
-
+      this.teclado.teclas = [];
       layout.Lines.forEach(element => {
           let line = [];
           element.Buttons.forEach(element => {
@@ -81,16 +94,22 @@ export class TecladoComponent implements OnInit {
           this.teclado.teclas.push(line);
           
       });
+      this.teclado.type = layout.nameLayout;
       //console.log(this.teclado);
   }
 
 
-  private capsLock() {
+  public capsLock() {
     if (this.teclado.type === 'normal') {
-      this.teclado = <TecladoModel>(KeyboardData.data[1]);
+      this.openFacLayout = this.KeyboardData[1];
+      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[1]);
+      //this.teclado = <TecladoModel>(KeyboardData.data[1]);
     } else {
-      this.teclado = <TecladoModel>(KeyboardData.data[0]);
+      this.openFacLayout = this.KeyboardData[0];
+      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
+      //this.teclado = <TecladoModel>(KeyboardData.data[0]);
     }
+    this.configureSome();
   }
 
   private ChangeButtonColor(engine: OpenFacEngine, button: number, cor: string): void {
@@ -152,9 +171,18 @@ export class TecladoComponent implements OnInit {
     return false;
   }
 
+  private configureSome(){
+    this.config = new OpenFacConfig('config.file', this.openFacLayout); 
+    this.engine = new OpenFacEngine(this.config);
+    this.engine.DoCallBack(this.DoCallBack.bind(this));
+    this.engine.Start();
+
+    //this.timer = true;    
+    //setInterval(this.timer1_Tick.bind(this), 1500);
+  }
 
   private configureAll(editorInstance: any) {
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance);
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance, this.keyCommandService, this.zone);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
