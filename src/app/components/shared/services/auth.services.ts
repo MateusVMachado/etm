@@ -1,7 +1,7 @@
 import { AppServiceBase } from './app-service-base.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { JWTtoken } from '../../storage';
+import { JWTtoken } from '../../../storage';
 
 @Injectable()
 export class AuthService extends AppServiceBase{

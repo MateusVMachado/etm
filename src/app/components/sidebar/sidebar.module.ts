@@ -4,6 +4,7 @@ import { SidebarRoutingModule } from './sidebar.routing';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { ThemeModule } from '../../theme.module';
 import { EditorTecladoModule } from '../editor-teclado/editor-teclado.module';
+import { ConfigTecladoModule } from '../config/config.module';
 
 const PAGES_COMPONENTS = [
   SidebarComponent,
@@ -14,7 +15,8 @@ const PAGES_COMPONENTS = [
     SidebarRoutingModule,
     ThemeModule,
     DashboardModule,
-    EditorTecladoModule
+    EditorTecladoModule,
+    ConfigTecladoModule
   ],
   declarations: [
     ...PAGES_COMPONENTS,
