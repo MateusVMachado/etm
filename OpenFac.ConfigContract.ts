@@ -8,6 +8,8 @@ export class OpenFACConfig {
 export class OpenFACLayout {
     public Engine: string;
     public Lines: Array<LayoutLine>;
+    public nameLayout: string;
+    public email: string;
 }
 /*[DataContract]*/
 export class LayoutLine {
