@@ -1,3 +1,4 @@
+import { AuthService } from '../shared/services/auth.services';
 import { RequestMethod, RequestOptions } from '@angular/http';
 import { ConfigModel } from './config';
 import { CookieService } from 'ngx-cookie-service';
@@ -11,7 +12,7 @@ import { JWTtoken } from '../../storage';
 export class ConfigService extends AppServiceBase{
 
     public configuration = {};
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private authService: AuthService) {
         super();
     }
 
