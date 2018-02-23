@@ -4,4 +4,8 @@ export class ConfigurationModel {
     user: string;
     language: string;
     openFacConfig: OpenFACConfig;
+    
+    constructor(){
+        this.openFacConfig = new OpenFACConfig();
+    }
 }

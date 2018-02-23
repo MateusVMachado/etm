@@ -27,25 +27,19 @@ export class Configuration extends BaseRoute {
 
     public getUserConfigure(req: Request, res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[2].find({ "user": req.query.email }).toArray(function(err, config_list) {                    
-            let config;
+            let config: ConfigurationModel = new ConfigurationModel() ;
             if(config_list.length == 0){
-                config = config_list[0];
-                config = {
-                    openFacConfig: 
-                    {
-                        ActiveSensor: "tec",
-                        ScanType: "automatico",
-                        ScanTime: "3"
-                    },
-                    language: "pt-br"
-                }
+                config.openFacConfig.ActiveSensor = "joy";
+                config.openFacConfig.ScanType = "automatico";
+                config.openFacConfig.ScanTime = 3;
+                config.language = "pt-br"
+
                 res.status(200).send(config);
             } else {
-                config = config_list[0];
-                config = {
-                    openFacConfig: config.openFacConfig,
-                    language: config.language
-                }
+                let configuration = config_list[0];
+                config.openFacConfig = configuration.openFacConfig;
+                config.language = configuration.language
+
                 res.status(200).send(config);
             }
         });
