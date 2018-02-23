@@ -28,6 +28,9 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
 
+import { SideBarService } from '../sidebar/sidebar.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
@@ -51,7 +54,9 @@ export class TecladoComponent implements OnInit {
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
-              private keyCommandService: OpenFacKeyCommandService) {
+              private keyCommandService: OpenFacKeyCommandService,
+              private sideBarService: SideBarService,
+              private router: Router) {
   }
 
   ngAfterViewInit(){
@@ -68,15 +73,44 @@ export class TecladoComponent implements OnInit {
         }
       })
     })
+
+
+
     
     this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
       this.zone.run(() => {
           this.tecladoService.loadData().subscribe((data)=>{
               if(data){
                 this.KeyboardData = data;
-                this.openFacLayout = (data[0]);
+                let lastUsed = 0;
+                this.openFacLayout = (data[lastUsed]);
+                
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 this.configureAll(editor);
+                this.router.navigate(['/pages/editor-teclado']);
+
+                this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+                  this.zone.run(() =>{
+                    if(result === 'pt-br'){
+                      console.log("chegou user");
+                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
+                      this.router.navigate(['/pages/editor-teclado']);
+                      this.configureSome();
+                    }else if(result === 'user'){
+                      console.log("chegou user");
+                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
+                      this.router.navigate(['/pages/editor-teclado']);
+                      this.configureSome();
+                    } else if(result === 'exp'){
+                      console.log("chegou exp");
+                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
+                      this.router.navigate(['/pages/editor-teclado']);
+                      this.configureSome();
+                    }
+                  })
+                })
+
+
               }
           })
       });
@@ -85,6 +119,7 @@ export class TecladoComponent implements OnInit {
   }
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
+      this.openFacLayout = layout;
       this.teclado.teclas = [];
       layout.Lines.forEach(element => {
           let line = [];
@@ -101,11 +136,11 @@ export class TecladoComponent implements OnInit {
 
   public capsLock() {
     if (this.teclado.type === 'normal') {
-      this.openFacLayout = this.KeyboardData[1];
+      //this.openFacLayout = this.KeyboardData[1];
       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[1]);
       //this.teclado = <TecladoModel>(KeyboardData.data[1]);
     } else {
-      this.openFacLayout = this.KeyboardData[0];
+      //this.openFacLayout = this.KeyboardData[0];
       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
       //this.teclado = <TecladoModel>(KeyboardData.data[0]);
     }
