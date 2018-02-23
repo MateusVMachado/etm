@@ -11,6 +11,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public cursorPosition: number = 0;
     public selection: any;
     public range: any;
+    public backspace_flag: boolean = false;
 
     constructor(private editor: any, public keyCommandService: OpenFacKeyCommandService, private zone: NgZone){        
         this.selection = this.editor.getSelection();
@@ -22,6 +23,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         let bt = eg.GetCurrentButton();
         this.editor.focus();
         this.doGetCaretPosition();
+        this.backspace_flag = false;
+          ////////////////////////////
+         // TORNAR GENÉRICO !!! /////
+        ////////////////////////////
         switch (bt.Text) {
             case '*kbdrtrn':
                 this.editor.insertHtml('<br>');
@@ -58,14 +63,16 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
             case '1':
                 // do something
                 this.backspaceKey();
-                //this.setCaretPosition(3);
+            
                 break;    
             case '*space':
                 this.editor.insertHtml('&nbsp;');
 
                 break;                                   
             default:
+                //this.doGetCaretPosition();
                 this.editor.insertText(bt.Text);
+                
                 //this.cursorPosition += 1;      
                 break;
         }
@@ -75,7 +82,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
     public backspaceKey(){
         //this.cursorPosition = this.cursorPosition-1;
-
+        
         this.editor.focus();
         let sel = this.editor.getSelection();
         let element = sel.getStartElement();
@@ -93,7 +100,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         } else {
             return;
         } 
-        this.editor.insertText('');
+        this.editor.insertHtml('');
+        this.backspace_flag = true;
+        //this.doGetCaretPosition();
+
     }
 
     public doGetCaretPosition() {
