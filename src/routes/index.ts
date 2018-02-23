@@ -9,6 +9,7 @@ import { Login } from '../apis/login.api';
 import { Auth } from '../apis/auth.api';
 import { Register } from '../apis/register.api';
 import { MongoConfig } from '../mongo.config';
+import { Configuration } from "../apis/configuration.api";
 
 /**
  * / route
@@ -29,7 +30,7 @@ export class IndexRoute extends BaseRoute {
     let newIndexRoute = new IndexRoute();    let backLogger = new BackLogger();
     let keyboard = new Keyboard();    let login = new Login();
     let auth = new Auth();    let register = new Register();
-    let mongoC = new MongoConfig();
+    let mongoC = new MongoConfig();    let configuration = new Configuration();
 
     console.log("[Server is UP and listening]\n");
 
@@ -76,7 +77,19 @@ export class IndexRoute extends BaseRoute {
       mongoC.configureDatabase(req, res, next);
     });
 
+    // Rota para salvar configurações
+    router.post("/configuration", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      configuration.userConfigure(req, res, next);
+    });
 
+    // Rota para buscar configurações
+    router.get("/configuration", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      configuration.getUserConfigure(req, res, next);
+    });
   }
 
 
