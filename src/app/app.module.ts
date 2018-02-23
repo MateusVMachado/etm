@@ -17,6 +17,8 @@ import { AuthService } from './components/shared/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
 
+import * as $ from 'jquery';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [

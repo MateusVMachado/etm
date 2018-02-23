@@ -51,7 +51,7 @@ export class TecladoComponent implements OnInit {
   }
 
   ngAfterViewInit(){
-
+    
   }
 
   ngOnInit() {
@@ -62,42 +62,34 @@ export class TecladoComponent implements OnInit {
           this.tecladoService.loadData().subscribe((data)=>{
               if(data){
                 this.openFacLayout = (data[0]);
+                this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 this.configureAll(editor);
-                console.log(this.openFacLayout);
-                console.log(editor);
               }
           })
-        //this.configureAll(editor);
       });
     })
-/*
-    this.tecladoService.loadData().catch((error) => {
-      this.teclado = this.tecladoService.loadTeclado("normal");
-      throw new Error("teclado local");
-    }).subscribe((data) => {
-      if (data) {
-        this.teclado = <TecladoModel>(data[0]);
-        KeyboardData.data = <TecladoModel>(data);
-
-      }
-    });
-*/
 
   }
 
-  public capsLock() {
+  private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
+
+      layout.Lines.forEach(element => {
+          let line = [];
+          element.Buttons.forEach(element => {
+              line.push(element.Text);
+          });
+          this.teclado.teclas.push(line);
+          
+      });
+      //console.log(this.teclado);
+  }
+
+
+  private capsLock() {
     if (this.teclado.type === 'normal') {
       this.teclado = <TecladoModel>(KeyboardData.data[1]);
     } else {
       this.teclado = <TecladoModel>(KeyboardData.data[0]);
-    }
-  }
-
-  public getValue(event) {
-    if (event.srcElement) {
-
-    } else {
-
     }
   }
 
@@ -114,24 +106,24 @@ export class TecladoComponent implements OnInit {
     this.activeLine.cor = cor;
   }
 
-  public DoLineUp(engine: OpenFacEngine): void {
+  private DoLineUp(engine: OpenFacEngine): void {
     this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
     this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
   }
 
-  public DoLineDown(engine: OpenFacEngine): void {
+  private DoLineDown(engine: OpenFacEngine): void {
     this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
     this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
   }
-  public DoColumnRight(engine: OpenFacEngine): void {
+  private DoColumnRight(engine: OpenFacEngine): void {
     this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
     this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
   }
-  public DoColumnLeft(engine: OpenFacEngine): void {
+  private DoColumnLeft(engine: OpenFacEngine): void {
     this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
     this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
   }
-  public DoAction(engine: OpenFacEngine): void {
+  private DoAction(engine: OpenFacEngine): void {
     this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
     this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'yellow');
   }
@@ -161,29 +153,18 @@ export class TecladoComponent implements OnInit {
   }
 
 
-  public configureAll(editorInstance: any) {
-
-
+  private configureAll(editorInstance: any) {
     OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
     OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
     
-    // CARREGAR CONFIGURAÇÕES DOS DADOS DO BACKEND ARMAZENADOS LOCALMENTE
-    let configFile = {
-      KeyboardLayout: "QWERT",
-      scanType: "Auto",
-      sensor: "Joystick"
-    };
-
-    //this.config = new OpenFacConfig(JSON.stringify(configFile));
-    this.config = new OpenFacConfig('config.file', this.openFacLayout); // REVER ISSO DEPOIS!!!
+    this.config = new OpenFacConfig('config.file', this.openFacLayout); 
     this.engine = new OpenFacEngine(this.config);
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
 
-    //BuildLayout
     this.timer = true;    
     setInterval(this.timer1_Tick.bind(this), 1500);
   }
