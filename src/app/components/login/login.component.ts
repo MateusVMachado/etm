@@ -36,8 +36,8 @@ export class NgxLoginComponent extends AppBaseComponent {
               JWTtoken.token = res['accessToken'];
               this.configService.getConfiguration(this.user.email).subscribe((result: ConfigModel) => {
                 //TODO: chamar função de translate e de configuração do teclado
-              }, (error) => {
-                console.log(JSON.stringify(error));
+              }, (error: any) => {
+                this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
               })
               if (JWTtoken.token !== undefined) {
                 if (this.user.rememberMe) {
