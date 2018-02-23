@@ -1,3 +1,6 @@
+import { ConfigModel } from '../config/config';
+import { User } from '../shared/models/user';
+import { ConfigService } from '../config/config.service';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { Component, Inject, ViewChild, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
@@ -20,14 +23,22 @@ export class NgxLoginComponent extends AppBaseComponent {
     constructor(protected service: AuthService,
                 protected router: Router,
                 private cookieService: CookieService,
-                private injector: Injector) { super(injector)}
+                private injector: Injector,
+                private configService: ConfigService
+                ) { super(injector)}
 
     public login(): void {
-        this.service.authenticate(this.user).subscribe(
+        let usuario: User = new User();
+        usuario = this.user;
+        this.service.authenticate(usuario).subscribe(
           (res: any) => {
-              console.log(res['accessToken']);
               this.service.setToken(res['accessToken']);
               JWTtoken.token = res['accessToken'];
+              this.configService.getConfiguration(this.user.email).subscribe((result: ConfigModel) => {
+                //TODO: chamar função de translate e de configuração do teclado
+              }, (error: any) => {
+                this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
+              })
               if (JWTtoken.token !== undefined) {
                 if (this.user.rememberMe) {
                      this.cookieService.set('token', JWTtoken.token);
