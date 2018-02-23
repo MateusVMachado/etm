@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, Input, ViewChild, NgZone } from '@angular/core';
 
 
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
@@ -24,12 +24,17 @@ import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
   styleUrls: ['./teclado.component.css']
 })
 export class TecladoComponent implements OnInit {
+
+  public document:any;
 
   public activeLine: ActiveLineCol = new ActiveLineCol();
 
@@ -41,7 +46,15 @@ export class TecladoComponent implements OnInit {
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
 
-  constructor(private tecladoService: TecladoService) {
+  constructor(private tecladoService: TecladoService, private editorTecladoService: EditorTecladoService, private zone: NgZone) {
+  }
+
+  ngAfterViewInit(){
+    this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
+      this.zone.run(() => {
+        this.configureAll(editor);
+      });
+    })
   }
 
   ngOnInit() {
@@ -54,9 +67,10 @@ export class TecladoComponent implements OnInit {
       if (data) {
         this.teclado = <TecladoModel>(data[0]);
         KeyboardData.data = <TecladoModel>(data);
-        this.configureAll();
+
       }
     });
+
 
   }
 
@@ -136,12 +150,15 @@ export class TecladoComponent implements OnInit {
   }
 
 
-  public configureAll() {
-    OpenFacActionFactory.Register('TTS', OpenFacActionTTS);
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter);
+  public configureAll(editorInstance: any) {
+
+
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance);
+
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
     OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
+    
     // CARREGAR CONFIGURAÇÕES DOS DADOS DO BACKEND ARMAZENADOS LOCALMENTE
     let configFile = {
       KeyboardLayout: "QWERT",
@@ -156,7 +173,7 @@ export class TecladoComponent implements OnInit {
     this.engine.Start();
 
     //BuildLayout
-    this.timer = true;
+    this.timer = true;    
     setInterval(this.timer1_Tick.bind(this), 1500);
   }
 
