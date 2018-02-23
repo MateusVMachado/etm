@@ -29,6 +29,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
       link: '/pages/teclados:title',
     }
     ]
-
+  },
+  {
+    title: 'Perfil',
+    icon: 'nb-home',
+    link: '/pages/editor-teclado'
   }
 ];
