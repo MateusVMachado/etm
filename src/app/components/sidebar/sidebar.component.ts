@@ -15,16 +15,25 @@ export class SidebarComponent implements AfterViewInit {
 
   menu = MENU_ITEMS;
 
+
   constructor(private menuService: NbMenuService, 
               private router: Router,
               private sideBarService: SideBarService,
-              private zone: NgZone)  {
+              private zone: NgZone,
+              private modalService: NgbModal)  {
     
   } 
 
   ngAfterViewInit(): void {
     this.menuService.onItemClick()
         .subscribe((result) => {
+
+          ////////////////////////////
+         // TORNAR GENÉRICO !!! /////
+        ////////////////////////////  
+          if ( result.item.target === 'config') {
+            this.showLargeModal();
+          }
           if ( result.item.target === 'hello') {
             console.log('Hellooooooo');
             this.router.navigate(['/pages/editor-teclado']);
@@ -48,4 +57,9 @@ export class SidebarComponent implements AfterViewInit {
   }
 
 
+  public showLargeModal() {
+    const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
+  }
+
 }
+

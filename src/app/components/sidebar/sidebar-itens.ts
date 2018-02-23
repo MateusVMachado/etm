@@ -12,6 +12,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'nb-home',
     target: 'hello',
     link: '/pages/editor-teclado',
+          ////////////////////////////
+         // TORNAR DINÂMICO !!! /////
+        ////////////////////////////
     children: [
       {
         title: 'pt-br',

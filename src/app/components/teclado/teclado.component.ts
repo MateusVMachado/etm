@@ -91,6 +91,9 @@ export class TecladoComponent implements OnInit {
 
                 this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
                   this.zone.run(() =>{
+                             ////////////////////////////
+                            // TORNAR GENÉRICO !!! /////
+                           ////////////////////////////
                     if(result === 'pt-br'){
                       console.log("chegou user");
                       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
@@ -130,19 +133,14 @@ export class TecladoComponent implements OnInit {
           
       });
       this.teclado.type = layout.nameLayout;
-      //console.log(this.teclado);
   }
 
 
   public capsLock() {
     if (this.teclado.type === 'normal') {
-      //this.openFacLayout = this.KeyboardData[1];
       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[1]);
-      //this.teclado = <TecladoModel>(KeyboardData.data[1]);
     } else {
-      //this.openFacLayout = this.KeyboardData[0];
       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
-      //this.teclado = <TecladoModel>(KeyboardData.data[0]);
     }
     this.configureSome();
   }
@@ -211,9 +209,6 @@ export class TecladoComponent implements OnInit {
     this.engine = new OpenFacEngine(this.config);
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
-
-    //this.timer = true;    
-    //setInterval(this.timer1_Tick.bind(this), 1500);
   }
 
   private configureAll(editorInstance: any) {
