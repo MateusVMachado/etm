@@ -16,6 +16,8 @@ import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
+import { OpenFacKeyCommandService } from '../../node_modules/openfac/OpenFac.KeyCommand.service';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -36,6 +38,7 @@ import { CKEditorComponent } from 'ng2-ckeditor';
     AuthGuard,
     MessageService,
     CKEditorComponent,
+    OpenFacKeyCommandService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

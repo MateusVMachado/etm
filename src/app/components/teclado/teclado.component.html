@@ -1,9 +1,8 @@
 <div class="box-teclado">
-  {{openFacLayout.Lines}}
+  <!--{{openFacLayout.Lines}}-->
   <div class="teclado-container">
     <div style="z-index: 0">
       <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
-      <!--<div class="row" *ngFor="let row of openFacLayout.Lines; index as iR" style="padding-left:15px">-->
 
         <div class="col-md-12 line">
           <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
@@ -29,9 +28,10 @@
 
               <input [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-                *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*arrowup' && key != '*arrowleft' 
-                                                      && key != '*arrowdown' && key != '*arrowright'" type="button" class="btn button-keyboard"
-                value="{{ key }}" (click)="getValue($event)" />
+                *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                        && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                        && key != '*arrowdown' && key != '*arrowright'" 
+                type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)" />
 
 
               <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
@@ -45,6 +45,41 @@
 
               <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                         (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                *ngIf="key == '*arrowup'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+                <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                              (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                  class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
+              </button>                 
+
+              <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                *ngIf="key == '*arrowdown'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+                <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                              (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                  class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
+              </button>              
+
+              
+              <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                *ngIf="key == '*arrowleft'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+                <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                              (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                  class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
+              </button>   
+
+
+              <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                *ngIf="key == '*arrowright'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+                <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                              (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                  class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
+              </button>                 
+
+
+              <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                                                        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 *ngIf="key == '*kbdrtrn'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
                 <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                               (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
@@ -52,17 +87,27 @@
               </button>
 
 
+
+                <!--<div class="col-md-12 line" *ngIf="key == '*space'">-->
+                    <!--<div class="tamanho-button3" *ngIf="key == '*space'">-->
+                        <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                            (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                            *ngIf="key == '*space'" class="btn button-keyboard icon-keyboard tamanho-button3" 
+                             value="SPACE" (click)="getValue($event)">
+                        <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                              (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+                              class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
+                        </button>
+
+                    <!--</div>-->
+                <!--</div>-->
+              
+
+
             </div>
           </div>
         </div>
       </div>
-
-      <div class="col-md-12 line">
-        <div class="tamanho-button3">
-          <input title="SPACE" type="button" class="btn button-keyboard" value=" " (click)="getValue($event)" #tecladoControl />
-        </div>
-      </div>
     </div>
-
   </div>
 </div>
