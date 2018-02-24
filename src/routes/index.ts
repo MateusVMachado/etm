@@ -10,6 +10,7 @@ import { Auth } from '../apis/auth.api';
 import { Register } from '../apis/register.api';
 import { MongoConfig } from '../mongo.config';
 import { Configuration } from "../apis/configuration.api";
+import { User } from "../apis/user.api";
 
 /**
  * / route
@@ -31,6 +32,7 @@ export class IndexRoute extends BaseRoute {
     let keyboard = new Keyboard();    let login = new Login();
     let auth = new Auth();    let register = new Register();
     let mongoC = new MongoConfig();    let configuration = new Configuration();
+    let user = new User();
 
     console.log("[Server is UP and listening]\n");
 
@@ -89,6 +91,28 @@ export class IndexRoute extends BaseRoute {
       res.locals.mongoAccess = app.locals.mongoAccess;
       backLogger.logRequests(req);
       configuration.getUserConfigure(req, res, next);
+    });
+
+    // Rota para atualizar informações do usuário
+    router.post("/user", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      user.updateUser(req, res, next);
+    });
+
+    // Rota para atualizar foto de perfil do usuário
+    router.put("/user", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      console.log("save profilePic " + JSON.stringify(req.body));
+      backLogger.logRequests(req);
+      //user.updateProfilePic(req, res, next);
+    });
+
+    // Rota para buscar informações do usuário
+    router.get("/user", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      user.getUser(req, res, next);
     });
   }
 
