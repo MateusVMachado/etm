@@ -1,3 +1,4 @@
+import { ProfileModule } from './components/profile/profile.module';
 import { ProfileService } from './components/profile/profile.service';
 import { ConfigTecladoModule } from './components/config/config.module';
 import { MessageService } from './components/shared/services/message.service';
@@ -31,7 +32,8 @@ import { OpenFacKeyCommandService } from '../../node_modules/openfac/OpenFac.Key
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
-    ConfigTecladoModule
+    ConfigTecladoModule,
+    ProfileModule
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -40,7 +42,6 @@ import { OpenFacKeyCommandService } from '../../node_modules/openfac/OpenFac.Key
     AuthService,
     AuthGuard,
     MessageService,
-    ProfileService,
     CKEditorComponent,
     OpenFacKeyCommandService,
     { provide: APP_BASE_HREF, useValue: '/' }

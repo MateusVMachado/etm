@@ -1,3 +1,5 @@
+import { User } from '../shared/models/user';
+import { AuthService } from '../shared/services/auth.services';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Component, OnInit } from '@angular/core';
@@ -8,11 +10,12 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-    
-    constructor(private modalService: NgbModal) { }
+    user: User;
+    constructor(private modalService: NgbModal, private authService: AuthService) { }
     
     ngOnInit() {
-        
+        this.user = new User();
+        this.user = this.authService.getUser();
     }
 
     public showLargeModal() {

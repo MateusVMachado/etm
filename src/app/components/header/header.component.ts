@@ -1,3 +1,5 @@
+import { User } from '../shared/models/user';
+import { AuthService } from '../shared/services/auth.services';
 import { Component, Input, OnInit } from '@angular/core';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
@@ -13,19 +15,20 @@ export class HeaderComponent implements OnInit {
 
   @Input() position = 'normal';
 
-  user: any;
+  private usuario: User;
 
   userMenu = [{ title: 'Log out' }];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
-              private router: Router) {
+              private router: Router,
+              private authService: AuthService
+            ) {
   }
 
   ngOnInit() {
-    //if (JWTtoken.token === undefined) {
-    //  this.router.navigate(["./auth"]);
-    // }
+    this.usuario = new User();
+    this.usuario = this.authService.getUser();
   }
 
   toggleSidebar(): boolean {
@@ -46,5 +49,6 @@ export class HeaderComponent implements OnInit {
     JWTtoken.token = undefined;
     this.router.navigate(["./auth"]);
   }
+
 
 }
