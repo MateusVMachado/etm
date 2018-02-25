@@ -4,7 +4,7 @@
 */
 export class UserModel {
 
-    //userId: string;
+    _id: string;
     fullName: string;
     email: string;
     password: string;
