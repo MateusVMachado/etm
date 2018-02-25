@@ -1,3 +1,4 @@
+import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ProfileEditComponent } from './profile-edit.component';
 import { NgModule } from '@angular/core';
@@ -16,6 +17,7 @@ import { FileUploadModule } from "ng2-file-upload";
         BootstrapModalModule,
         FormsModule,
         HttpModule,
+        HttpClientModule,
         FileUploadModule
     ],
     exports: [],

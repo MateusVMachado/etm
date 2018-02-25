@@ -38,7 +38,7 @@ export class ProfileEditComponent implements OnInit {
         user = this.authService.getUser();
         user.email = this.user.email;
         user.fullName = this.user.name;
-        this.profileService.updateUser(user);
+        this.profileService.updateUser(user).subscribe();
         this.closeModal();
     }
 

@@ -1,3 +1,4 @@
+import { User } from '../shared/models/user';
 import { JWTtoken } from '../../storage';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -8,7 +9,7 @@ import { HttpHeaders } from '@angular/common/http';
 export class ProfileService {
     constructor(private http: HttpClient){}
 
-    updateUser(user: any) {
+    updateUser(user: User) {
         return this.http.post('http://localhost:8080/user', user, this.getDefaultHeaders());
     }
 
@@ -17,7 +18,7 @@ export class ProfileService {
     }
 
     getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer' + JWTtoken.token } };
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + JWTtoken.token } };
     }
 
 }
