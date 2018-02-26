@@ -11,7 +11,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public cursorPosition: number = 0;
     public selection: any;
     public range: any;
-    public backspace_flag: boolean = false;
 
     constructor(private editor: any, public keyCommandService: OpenFacKeyCommandService, private zone: NgZone){        
         this.selection = this.editor.getSelection();
@@ -22,15 +21,11 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         let eg = <OpenFacEngine> Engine;
         let bt = eg.GetCurrentButton();
         this.editor.focus();
-        this.doGetCaretPosition();
-        this.backspace_flag = false;
-          ////////////////////////////
-         // TORNAR GENÉRICO !!! /////
-        ////////////////////////////
+
         switch (bt.Text) {
             case '*kbdrtrn':
                 this.editor.insertHtml('<br>');
-
+                this.doGetCaretPosition();
                 break;
             case '*bckspc':
                 this.backspaceKey();
@@ -38,15 +33,12 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 break;
             case '*tab':
                 for(let i = 0; i < 4; i++)  this.editor.insertHtml('&nbsp;');
-
+                this.doGetCaretPosition();
                 break;
             case '*cpslck':
-                    //this.tecladoComponent.capsLock();
                     this.zone.run(() =>{
                             this.keyCommandService.emitKeyCommand('caps');
                       })
-                    //this.keyCommandService.emitKeyCommand(this.editor.instance);
-                // do something
                 break;
             case '*arrowup':
                 // do something
@@ -61,19 +53,15 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 // do something
                 break;
             case '1':
-                // do something
                 this.backspaceKey();
-            
+                this.doGetCaretPosition();
                 break;    
             case '*space':
-                this.editor.insertHtml('&nbsp;');
-
+                this.editor.insertHtml('&nbsp;');      
                 break;                                   
             default:
-                //this.doGetCaretPosition();
                 this.editor.insertText(bt.Text);
-                
-                //this.cursorPosition += 1;      
+                this.doGetCaretPosition();
                 break;
         }
       
@@ -81,8 +69,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
 
     public backspaceKey(){
-        //this.cursorPosition = this.cursorPosition-1;
-        
         this.editor.focus();
         let sel = this.editor.getSelection();
         let element = sel.getStartElement();
@@ -99,11 +85,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
             sel.selectRanges([ranges[0]]);
         } else {
             return;
-        } 
+        }
         this.editor.insertHtml('');
-        this.backspace_flag = true;
-        //this.doGetCaretPosition();
-
     }
 
     public doGetCaretPosition() {
