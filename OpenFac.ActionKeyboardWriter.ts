@@ -1,18 +1,23 @@
 import { IOpenFacAction } from './OpenFac.Action.Interface';
 import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { OpenFacEngine } from './OpenFac.Engine';
-import { ElementRef, ViewChild, Injectable, NgZone } from '@angular/core';
 import { OpenFacKeyCommandService } from './OpenFac.KeyCommand.service';
 
 
-@Injectable()
 export class OpenFacActionKeyboardWriter implements IOpenFacAction {    
-    @ViewChild('ckEditor') elRef: ElementRef;
     public cursorPosition: number = 0;
     public selection: any;
     public range: any;
+    public editor: any;
+    public keyCommandService: any;
+    public zone: any;
 
-    constructor(private editor: any, public keyCommandService: OpenFacKeyCommandService, private zone: NgZone){        
+    //constructor(private editor: any, public keyCommandService: OpenFacKeyCommandService, private zone: NgZone){        
+    constructor(private args: any){
+        this.editor = this.args[0];
+        this.keyCommandService = this.args[1];
+        this.zone = this.args[2];
+
         this.selection = this.editor.getSelection();
         this.range = this.selection.getRanges()[0];
     }
@@ -36,9 +41,9 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
                 break;
             case '*cpslck':
-                    this.zone.run(() =>{
+                    //this.zone.run(() =>{
                             this.keyCommandService.emitKeyCommand('caps');
-                      })
+                      //})
                 break;
             case '*arrowup':
                 // do something
