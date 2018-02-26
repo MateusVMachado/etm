@@ -34,16 +34,14 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 break;
             case '*bckspc':
                 this.backspaceKey();
-
+                this.doGetCaretPosition();
                 break;
             case '*tab':
                 for(let i = 0; i < 4; i++)  this.editor.insertHtml('&nbsp;');
                 this.doGetCaretPosition();
                 break;
             case '*cpslck':
-                    //this.zone.run(() =>{
-                            this.keyCommandService.emitKeyCommand('caps');
-                      //})
+                this.keyCommandService.emitKeyCommand('caps');
                 break;
             case '*arrowup':
                 // do something
@@ -63,6 +61,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 break;    
             case '*space':
                 this.editor.insertHtml('&nbsp;');      
+                this.doGetCaretPosition();
                 break;                                   
             default:
                 this.editor.insertText(bt.Text);
