@@ -21,11 +21,11 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         let eg = <OpenFacEngine> Engine;
         let bt = eg.GetCurrentButton();
         this.editor.focus();
-        this.doGetCaretPosition();
+
         switch (bt.Text) {
             case '*kbdrtrn':
                 this.editor.insertHtml('<br>');
-
+                this.doGetCaretPosition();
                 break;
             case '*bckspc':
                 this.backspaceKey();
@@ -33,15 +33,12 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 break;
             case '*tab':
                 for(let i = 0; i < 4; i++)  this.editor.insertHtml('&nbsp;');
-
+                this.doGetCaretPosition();
                 break;
             case '*cpslck':
-                    //this.tecladoComponent.capsLock();
                     this.zone.run(() =>{
                             this.keyCommandService.emitKeyCommand('caps');
                       })
-                    //this.keyCommandService.emitKeyCommand(this.editor.instance);
-                // do something
                 break;
             case '*arrowup':
                 // do something
@@ -56,17 +53,15 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 // do something
                 break;
             case '1':
-                // do something
                 this.backspaceKey();
-                //this.setCaretPosition(3);
+                this.doGetCaretPosition();
                 break;    
             case '*space':
-                this.editor.insertHtml('&nbsp;');
-
+                this.editor.insertHtml('&nbsp;');      
                 break;                                   
             default:
                 this.editor.insertText(bt.Text);
-                //this.cursorPosition += 1;      
+                this.doGetCaretPosition();
                 break;
         }
       
@@ -74,8 +69,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
 
     public backspaceKey(){
-        //this.cursorPosition = this.cursorPosition-1;
-
         this.editor.focus();
         let sel = this.editor.getSelection();
         let element = sel.getStartElement();
@@ -92,8 +85,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
             sel.selectRanges([ranges[0]]);
         } else {
             return;
-        } 
-        this.editor.insertText('');
+        }
+        this.editor.insertHtml('');
     }
 
     public doGetCaretPosition() {
