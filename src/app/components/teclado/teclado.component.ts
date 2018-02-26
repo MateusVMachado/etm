@@ -50,13 +50,16 @@ export class TecladoComponent implements OnInit {
 
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
+  private keyCommandService: OpenFacKeyCommandService;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
-              private keyCommandService: OpenFacKeyCommandService,
+              
               private sideBarService: SideBarService,
               private router: Router) {
+
+              this.keyCommandService = new OpenFacKeyCommandService();
   }
 
   ngAfterViewInit(){
@@ -212,7 +215,9 @@ export class TecladoComponent implements OnInit {
   }
 
   private configureAll(editorInstance: any) {
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance, this.keyCommandService, this.zone);
+    let configArray = [editorInstance, this.keyCommandService, this.zone]
+    //OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance, this.keyCommandService, this.zone);
+    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);

@@ -17,7 +17,6 @@ import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
-import { OpenFacKeyCommandService } from '../../node_modules/openfac/OpenFac.KeyCommand.service';
 import { SideBarService } from './components/sidebar/sidebar.service';
 
 @NgModule({
@@ -40,7 +39,6 @@ import { SideBarService } from './components/sidebar/sidebar.service';
     AuthGuard,
     MessageService,
     CKEditorComponent,
-    OpenFacKeyCommandService,
     SideBarService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
