@@ -1,7 +1,13 @@
+import { Picture } from "./picture";
+
 export class User {
     _id: string;
     fullName: string;
     email: string;
     password: string;
-    picture: string;
+    picture: Picture;
+
+    constructor(){
+        this.picture = new Picture();
+    }
 }

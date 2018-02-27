@@ -13,6 +13,6 @@
   [class.right]="position === 'normal'"
   [class.left]="position === 'inverse'">
   <nb-action>
-    <nb-user [menu]="userMenu" [name]="usuario.fullName" picture="../../../assets/images/nick.png" (menuClick)="logout()" style="color: white;"></nb-user>
+    <nb-user [menu]="userMenu" [name]="usuario.fullName" [picture]='imgUrl' (menuClick)="logout()" style="color: white;"></nb-user>
   </nb-action>
 </nb-actions>
