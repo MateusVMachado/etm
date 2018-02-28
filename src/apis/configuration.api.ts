@@ -32,7 +32,8 @@ export class Configuration extends BaseRoute {
                 config.openFacConfig.ActiveSensor = "joy";
                 config.openFacConfig.ScanType = "automatico";
                 config.openFacConfig.ScanTime = 3;
-                config.language = "pt-br"
+                config.language = "pt-br";
+                config.openFacConfig.KeyboardLayout = "QWERT";
 
                 res.status(200).send(config);
             } else {
