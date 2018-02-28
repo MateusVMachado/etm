@@ -17,6 +17,7 @@
     "@types/errorhandler": "0.0.32",
     "@types/jsonwebtoken": "^7.2.5",
     "@types/method-override": "0.0.31",
+    "@types/mongoose": "^5.0.2",
     "@types/morgan": "^1.7.35",
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
@@ -29,6 +30,7 @@
     "method-override": "^2.3.10",
     "moment": "^2.20.1",
     "mongodb": "^3.0.2",
+    "mongoose": "^5.0.7",
     "morgan": "^1.9.0",
     "promise": "^8.0.1",
     "pug": "^2.0.0-rc.4"
