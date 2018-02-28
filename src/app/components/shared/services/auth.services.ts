@@ -1,3 +1,4 @@
+import { User } from '../models/user';
 import { AppServiceBase } from './app-service-base.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -5,7 +6,7 @@ import { JWTtoken } from '../../../storage';
 
 @Injectable()
 export class AuthService extends AppServiceBase{
-
+    private user: User;
     private token: any = undefined;
 
     constructor(private http: HttpClient) {
@@ -13,7 +14,10 @@ export class AuthService extends AppServiceBase{
         // this.token = JWTtoken.token;
     }
 
-    authenticate(user: any) {
+    authenticate(user: User) {
+        console.log(user);
+        this.user = new User();
+        this.user.email = user.email;
         return this.http.post('http://localhost:8080/login', user, this.getDefaultHeaders());
     }
 
@@ -47,5 +51,9 @@ export class AuthService extends AppServiceBase{
 
     setToken(value: any) {
         this.token = value;
+    }
+
+    public getUser(): User{
+        return this.user;
     }
 }

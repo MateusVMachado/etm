@@ -1,3 +1,4 @@
+import { ConfigTecladoModule } from './components/config/config.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,6 +16,8 @@ import { AuthGuard } from './guards/auth-guard.service';
 import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
+import { CKEditorComponent } from 'ng2-ckeditor';
+import { SideBarService } from './components/sidebar/sidebar.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +28,8 @@ import { CookieService } from 'ngx-cookie-service';
     AppRoutingModule,
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
-    CoreModule.forRoot()
+    CoreModule.forRoot(),
+    ConfigTecladoModule
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -34,6 +38,8 @@ import { CookieService } from 'ngx-cookie-service';
     AuthService,
     AuthGuard,
     MessageService,
+    CKEditorComponent,
+    SideBarService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

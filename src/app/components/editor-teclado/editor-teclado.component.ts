@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'app-editor-component',
     templateUrl: './editor-teclado.component.html'
 })
-export class EditorTecladoComponent implements OnInit {
+export class EditorTecladoComponent implements OnInit {     
     constructor() { }
 
     ngOnInit() { }
+
 }
