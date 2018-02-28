@@ -1,5 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild, NgZone, Input, ElementRef } from '@angular/core';
-import { CKEditorComponent } from 'ng2-ckeditor';
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 
 @Component({
@@ -7,19 +6,25 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.css']
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements AfterViewInit {
+    @ViewChild('editor') editor: any;  
+    private editorConfig: any;
     
-    @ViewChild('editor') editor: any;   
-
-    constructor(public editorTecladoService: EditorTecladoService){
+    ngAfterViewInit(): void {
+        this.editor.ckeditorInit(this.editorConfig || {});
     }
 
-    ngOnInit(): void {
+    constructor(public editorTecladoService: EditorTecladoService){
+        this.editorConfig = { height: 170, language: 'pt-br'};
+    }
 
+    config(){
+        this.editor.ckeditorInit(this.editorConfig || {});
     }
 
     emitInstance($event){
         this.editorTecladoService.emitEditorInstance(this.editor.instance);
     }
+
 
 }

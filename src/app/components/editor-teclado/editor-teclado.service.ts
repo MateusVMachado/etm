@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject, Subscription } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class EditorTecladoService {
@@ -14,6 +12,7 @@ export class EditorTecladoService {
   emitEditorInstance(editor: any) {
     this.editorInstanceSubject.next(editor);
   }
+  
 
   subscribeToEditorSubject() {
       return this.editorInstanceSubject.asObservable();      

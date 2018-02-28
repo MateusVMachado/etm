@@ -29,7 +29,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Dashboard',
     icon: 'nb-home',
-    link: '/pages/dashboard',
+    target: 'dashboard',
   },
   {
     title: 'Configuração',

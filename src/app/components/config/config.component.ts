@@ -7,7 +7,7 @@ import { ConfigService } from './config.service';
 import { NbAuthService } from '@nebular/auth';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Injector, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Injector, Input, OnInit, Injectable } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -16,6 +16,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
     templateUrl: './config.component.html',
     styleUrls: ['./config.component.scss']
 })
+
 export class ConfigModalComponent extends AppBaseComponent implements OnInit, AfterViewInit {
     public modalHeader: string;
     public modalContent: string;
@@ -50,7 +51,7 @@ export class ConfigModalComponent extends AppBaseComponent implements OnInit, Af
 
     public setConfiguration(){
         this.submitted = true;
-        this.configService.saveConfiguration(this.config).subscribe(result => {
+        this.configService.saveConfiguration(this.config, 'pt-br').subscribe(result => {
             console.log("sucesso");
         }, (error: any) => {
             this.closeModal();
@@ -67,6 +68,7 @@ export class ConfigModalComponent extends AppBaseComponent implements OnInit, Af
             this.config.sensor = result.openFacConfig.ActiveSensor;
             this.config.tipoVarredura = result.openFacConfig.ScanType;
             this.config.tmpVarredura = result.openFacConfig.ScanTime;
+            this.config.lastKeyboard = result.lastKeyboard;
         }, (error: any) => {
             this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
         });
