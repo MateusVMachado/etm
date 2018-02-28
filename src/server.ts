@@ -92,9 +92,9 @@ export class Server {
              /* 0 */ mongoAccess.coll.push(mongoAccess.database.collection('users'));
              /* 1 */ mongoAccess.coll.push(mongoAccess.database.collection('keyboards'));
              /* 2 */ mongoAccess.coll.push(mongoAccess.database.collection('configurations'));
-             /* 3 */ mongoAccess.coll.push(mongoAccess.database.collection('favorites'));
-             /* 4 */ mongoAccess.coll.push(mongoAccess.database.collection('passwords'));
-             /* 5 */ mongoAccess.coll.push(mongoAccess.database.collection('logs'));
+             /* 3 */ //mongoAccess.coll.push(mongoAccess.database.collection('favorites'));
+             /* 4 */ //mongoAccess.coll.push(mongoAccess.database.collection('passwords'));
+             /* 5 */ //mongoAccess.coll.push(mongoAccess.database.collection('logs'));
         }) 
   }
 
