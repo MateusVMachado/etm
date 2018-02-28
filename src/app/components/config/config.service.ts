@@ -31,8 +31,7 @@ export class ConfigService extends AppServiceBase{
     }
 
     public saveOnlyLastKeyboard(keyboardName?:string){
-        let user: User = new User();
-        user = this.authService.getUser();
+        let user = this.authService.getUser();
         return this.http.post(`http://localhost:8080/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, { responseType: 'text' });
     }
 
@@ -44,24 +43,8 @@ export class ConfigService extends AppServiceBase{
         return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + JWTtoken.token}};
     }
 
-    public loadConfiguration(toReturn?:boolean){
-            let user: User = new User();
-            user = this.authService.getUser();
-            this.getConfiguration(user.email).subscribe((result: ConfigModel) => {
-                this.config.linguagem = result.language;
-                this.config.sensor = result.openFacConfig.ActiveSensor;
-                this.config.tipoVarredura = result.openFacConfig.ScanType;
-                this.config.tmpVarredura = result.openFacConfig.ScanTime;
-                this.config.lastKeyboard = result.lastKeyboard;
-            }, (error: any) => {
-                //this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
-            });
-   
-        }
-
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {
-        let user: User = new User();
-        user = this.authService.getUser();
+        let user = this.authService.getUser();
         return this.http.get(`http://localhost:8080/configuration?email=${user.email}`, this.getDefaultHeaders());
     }
 

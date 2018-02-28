@@ -17,6 +17,7 @@ import { SideBarService } from '../sidebar/sidebar.service';
 import { ConfigService } from '../config/config.service';
 import { ConfigModel } from '../config/config';
 import { ActiveLineCol } from './activeLine.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-teclado',
@@ -33,10 +34,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
   private keyCommandService: OpenFacKeyCommandService;
-  private keyCommandServiceSubscribe: any;
-  private editorTecladoServiceSubscribe: any;
-  private sideBarServiceSubscribe: any;
-  private configServiceSubscribe: any;
+  private keyCommandServiceSubscribe: Subscription;
+  private editorTecladoServiceSubscribe: Subscription;
+  private sideBarServiceSubscribe: Subscription;
+  private configServiceSubscribe: Subscription;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -48,7 +49,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-     console.log("DESTROY");
      this.keyCommandServiceSubscribe.unsubscribe();
      this.editorTecladoServiceSubscribe.unsubscribe();
      this.sideBarServiceSubscribe.unsubscribe();
@@ -61,7 +61,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit(){
 
-    console.log("SUPER INIT");
     this.teclado.teclas = [];
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
@@ -109,24 +108,18 @@ export class TecladoComponent implements OnInit, OnDestroy {
                                     console.log("chegou pt-br");
                                     this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
                                     this.configureSome(); 
-                                    let config = new ConfigModel();
-                                    this.configService.loadConfiguration();
                                     this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();         
 
                                   }else if(result === 'user'){
                                     console.log("chegou user");
                                     this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
                                     this.configureSome();
-                                    let config = new ConfigModel(); 
-                                    this.configService.loadConfiguration();         
                                     this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
 
                                   } else if(result === 'exp'){
                                     console.log("chegou exp");
                                     this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
                                     this.configureSome();
-                                    let config = new ConfigModel();
-                                    this.configService.loadConfiguration();         
                                     this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
 
                                   } 
