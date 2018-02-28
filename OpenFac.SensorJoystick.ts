@@ -9,7 +9,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     public keyPressed: String;
     public controllerName: String;
   
-    public main_gamepad: number = 3;
+    public main_gamepad: number = 1;
   
     private lastPressedButton: Number;
 
