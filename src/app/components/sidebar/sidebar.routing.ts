@@ -13,7 +13,7 @@ const routes: Routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'dashboard',
+      redirectTo: 'editor-teclado',
       pathMatch: 'full',
     },
     {

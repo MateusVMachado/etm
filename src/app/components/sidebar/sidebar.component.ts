@@ -1,9 +1,11 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
 import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, Component, NgZone } from '@angular/core';
 
 import { MENU_ITEMS } from './sidebar-itens';
+import { Router } from '@angular/router';
+import { SideBarService } from './sidebar.service';
 
 @Component({
   selector: 'app-pages',
@@ -13,22 +15,51 @@ export class SidebarComponent implements AfterViewInit {
 
   menu = MENU_ITEMS;
 
-  constructor(private modalService: NgbModal, private menuService: NbMenuService)
-  {
+
+  constructor(private menuService: NbMenuService, 
+              private router: Router,
+              private sideBarService: SideBarService,
+              private zone: NgZone,
+              private modalService: NgbModal)  {
     
   } 
 
   ngAfterViewInit(): void {
     this.menuService.onItemClick()
         .subscribe((result) => {
+
+          ////////////////////////////
+         // TORNAR GENÉRICO !!! /////
+        ////////////////////////////  
           if ( result.item.target === 'config') {
             this.showLargeModal();
           }
-        });
+          if ( result.item.target === 'hello') {
+            console.log('Hellooooooo');
+            this.router.navigate(['/pages/editor-teclado']);
+          }
+          if ( result.item.target === 'pt-br') {
+            console.log('pt-br');
+            this.sideBarService.emitSideBarCommand('pt-br');
+            this.router.navigate(['/pages/editor-teclado']);
+          }
+          if ( result.item.target === 'user') {
+            console.log('userDefined-01');
+            this.sideBarService.emitSideBarCommand('user');
+            this.router.navigate(['/pages/editor-teclado']);
+          }
+          if ( result.item.target === 'exp') {
+            console.log('experimental');
+            this.sideBarService.emitSideBarCommand('exp');      
+            this.router.navigate(['/pages/editor-teclado']);
+          }
+        });  
   }
 
+
   public showLargeModal() {
-        const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
-        activeModal.componentInstance.modalHeader = 'Configura��es';
-    }
+    const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
+  }
+
 }
+
