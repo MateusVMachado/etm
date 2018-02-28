@@ -41,7 +41,7 @@ export class Login extends BaseRoute{
                     }
 
                     console.log(user_list[0]['email']);
-                    console.log("MARK2");
+                    //console.log("MARK2");
                     
                 } else {
                     console.log("USER NOT FOUND!");
