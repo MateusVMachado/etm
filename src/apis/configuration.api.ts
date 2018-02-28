@@ -14,22 +14,22 @@ export class Configuration extends BaseRoute {
             res.locals.mongoAccess.coll[2].update({ "user": req.query.email }, { $set: {"lastKeyboard": req.query.onlyKeyboard }});
             res.status(200).send();
         } else {
-            let config = req.body as ConfigurationModel;
+        let config = req.body as ConfigurationModel;
             console.log(config.lastKeyboard);
 
-            res.locals.mongoAccess.coll[2].find({ "user": config.user }).toArray(function(err, config_list) {
+        res.locals.mongoAccess.coll[2].find({ "user": config.user }).toArray(function(err, config_list) {
                 if(config_list.length === 0){
-                    res.locals.mongoAccess.coll[2].insert(config, (err, result) => {
-                        console.log("configuração inserida");
+                res.locals.mongoAccess.coll[2].insert(config, (err, result) => {
+                    console.log("configuração inserida");
                         res.status(200).send();
-                    });
-                } else {
+                });
+            } else {
                     console.log("Fazendo update");
                     console.log(config.lastKeyboard + ' ' + config.user );
                     res.locals.mongoAccess.coll[2].update({ "user": config.user }, { "openFacConfig": config.openFacConfig, "language": config.language, "user": config.user, "lastKeyboard": config.lastKeyboard });
                     res.status(200).send();
-                }
-            });
+            }
+        });
         }    
     }
 
@@ -41,7 +41,8 @@ export class Configuration extends BaseRoute {
                 config.openFacConfig.ActiveSensor = "joy";
                 config.openFacConfig.ScanType = "automatico";
                 config.openFacConfig.ScanTime = 3;
-                config.language = "pt-br"
+                config.language = "pt-br";
+                config.openFacConfig.KeyboardLayout = "QWERT";
                 config.lastKeyboard = "pt-br"
 
                 res.status(200).send(config);
