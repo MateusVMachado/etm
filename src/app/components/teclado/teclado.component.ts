@@ -182,7 +182,7 @@ export class TecladoComponent implements OnInit {
   }
 
   private configureAll(editorInstance: any) {
-    OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance, this.keyCommandService, this.zone);
+    //OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance, this.keyCommandService, this.zone);
 
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
