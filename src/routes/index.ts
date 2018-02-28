@@ -10,6 +10,7 @@ import { Auth } from '../apis/auth.api';
 import { Register } from '../apis/register.api';
 import { MongoConfig } from '../mongo.config';
 import { Configuration } from "../apis/configuration.api";
+import { ConfigurationModel } from "../models/configuration.model";
 
 /**
  * / route
