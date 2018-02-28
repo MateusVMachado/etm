@@ -10,7 +10,7 @@ export class ProfileService {
     constructor(private http: HttpClient){}
 
     updateUser(user: User) {
-        return this.http.post('http://localhost:8080/user', user, this.getDefaultHeaders());
+        return this.http.post('http://localhost:8080/updateUser', user, this.getDefaultHeaders());
     }
 
     getUser(email:string) {
@@ -20,5 +20,4 @@ export class ProfileService {
     getDefaultHeaders() {
         return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + JWTtoken.token } };
     }
-
 }

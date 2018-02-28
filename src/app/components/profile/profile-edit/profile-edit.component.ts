@@ -48,11 +48,9 @@ export class ProfileEditComponent implements OnInit {
             usuario.picture = this.imageFile;
         }
         this.closeModal();
-        this.profileService.updateUser(usuario).map(()=> {
-            console.log("requisição");
+        this.profileService.updateUser(usuario).subscribe(() =>{
             this.authService.setUser(usuario);
-            
-        }).subscribe();
+        });
     }
 
     public show(): void {
@@ -75,8 +73,7 @@ export class ProfileEditComponent implements OnInit {
         if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 100000) {
             this.bigImage = false;
             var reader = new FileReader();
-            reader.onload = () => {
-                console.log(fileInput.target.files[0].size)
+            reader.onload = () => {                
                 this.imageFile.content = reader.result.substring((reader.result.indexOf(this.base64Token) + this.base64Token.length));
                 this.imageFile.name = fileInput.target.files[0].name;
                 this.fileLoaded = true;

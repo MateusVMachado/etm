@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit {
   private usuario: User;
   private imgUrl;
   public abc: boolean;
+  private  i = 0;
 
   userMenu = [{ title: 'Log out' }];
 
@@ -29,18 +30,19 @@ export class HeaderComponent implements OnInit {
               private authService: AuthService,
               private domSanitizer: DomSanitizer,
               private zone: NgZone,
-              private profileService: ProfileService
+              private profileService: ProfileService,
+              private ref: ChangeDetectorRef
             ) {
               this.abc = false;
             }
 
   ngOnInit() {    
     this.authService.getObservableUser().subscribe(result =>{
-      
+      this.zone.run(() => {
         this.usuario = result;
-        this.imgUrl = `http://localhost:8080/getUserProfilePicture?email=${this.usuario.email}`;
+        this.imgUrl = 'data:image/png;base64,'+result.picture.content;
+      });
     });
-
   }
 
   toggleSidebar(): boolean {
