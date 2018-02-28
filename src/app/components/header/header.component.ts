@@ -19,8 +19,6 @@ export class HeaderComponent implements OnInit {
   private readonly base64Token = ';base64,';
   private usuario: User;
   private imgUrl;
-  public abc: boolean;
-  private  i = 0;
 
   userMenu = [{ title: 'Log out' }];
 
@@ -28,19 +26,19 @@ export class HeaderComponent implements OnInit {
               private menuService: NbMenuService,
               private router: Router,
               private authService: AuthService,
-              private domSanitizer: DomSanitizer,
               private zone: NgZone,
-              private profileService: ProfileService,
-              private ref: ChangeDetectorRef
-            ) {
-              this.abc = false;
-            }
+              private profileService: ProfileService
+            ) {}
 
   ngOnInit() {    
     this.authService.getObservableUser().subscribe(result =>{
       this.zone.run(() => {
         this.usuario = result;
-        this.imgUrl = 'data:image/png;base64,'+result.picture.content;
+        if(result.picture.content){
+          this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
+        }else{
+          this.imgUrl = '../../../assets/images/avatarUser.png'
+        }
       });
     });
   }
