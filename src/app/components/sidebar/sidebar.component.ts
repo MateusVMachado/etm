@@ -1,7 +1,7 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
 import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, ChangeDetectionStrategy, Component, NgZone } from '@angular/core';
+import { AfterViewInit, Component, NgZone } from '@angular/core';
 
 import { MENU_ITEMS } from './sidebar-itens';
 import { Router } from '@angular/router';

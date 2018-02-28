@@ -1,23 +1,23 @@
+import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user';
 import { AppServiceBase } from './app-service-base.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { JWTtoken } from '../../../storage';
+import { Observable } from "rxjs/Observable";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class AuthService extends AppServiceBase{
-    private user: User;
+    private user: User = new User();
+    private userSubject: BehaviorSubject<User> = new BehaviorSubject<User>(new User());
     private token: any = undefined;
 
     constructor(private http: HttpClient) {
         super();
-        // this.token = JWTtoken.token;
     }
 
     authenticate(user: User) {
-        console.log(user);
-        this.user = new User();
-        this.user.email = user.email;
         return this.http.post('http://localhost:8080/login', user, this.getDefaultHeaders());
     }
 
@@ -53,7 +53,16 @@ export class AuthService extends AppServiceBase{
         this.token = value;
     }
 
+    public getObservableUser(): Observable<User>{
+        return this.userSubject.asObservable();
+    }
+
     public getUser(): User{
         return this.user;
+    }
+
+    public setUser(user: User){
+        this.user = user;
+        this.userSubject.next(this.user);
     }
 }

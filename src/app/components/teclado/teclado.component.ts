@@ -112,8 +112,8 @@ export class TecladoComponent implements OnInit {
                       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
                       this.router.navigate(['/pages/editor-teclado']);
                       this.configureSome();
-                    }
-                  })
+              }
+          })
                 })
 
 
