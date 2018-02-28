@@ -95,7 +95,7 @@ export class IndexRoute extends BaseRoute {
     });
 
     // Rota para atualizar informações do usuário
-    router.post("/user", (req: Request, res: Response, next: NextFunction) => {
+    router.post("/updateUser", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       backLogger.logRequests(req);
       user.updateUser(req, res, next);

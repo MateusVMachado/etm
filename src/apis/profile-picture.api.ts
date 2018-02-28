@@ -9,9 +9,9 @@ export class ProfilePicture extends BaseRoute{
                 let user: UserModel = new UserModel();
                 user = user_list[0];
                 if(user.picture){
-                    var img = new Buffer(String(user.picture.content), 'base64');
+                    let img = new Buffer(user.picture.content, 'base64');
                     res.writeHead(200, {
-                        'Content-Type': 'image',
+                        'Content-Type': 'image/png',
                         'Content-Length': img.length
                     });
                     res.end(img);
