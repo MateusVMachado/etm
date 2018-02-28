@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
+      console.log("hello");
       //console.log("RESET");
       //if (JWTtoken.token === undefined) {
       //  this.router.navigate(["./auth"]);

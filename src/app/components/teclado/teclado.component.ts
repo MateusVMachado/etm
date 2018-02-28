@@ -1,127 +1,134 @@
-import { Component, OnInit, Output, Input, ViewChild, NgZone } from '@angular/core';
-
-
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
-import { IOpenFacSensor } from '../../../../node_modules/openfac/OpenFac.Sensor.Interface';
-import { IOpenFacAction } from '../../../../node_modules/openfac/OpenFac.Action.Interface';
-import { IOpenFacKeyboard } from '../../../../node_modules/openfac/OpenFac.Keyboard.Interface';
-import { IOpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config.Interface';
-import { IOpenFacEngine } from '../../../../node_modules/openfac/OpenFac.Engine.Interface';
-import { OpenFacActionTTS } from '../../../../node_modules/openfac/OpenFac.ActionTTS';
 import { OpenFacActionKeyboardWriter } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardWriter';
 import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.SensorJoystick';
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
 import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
 import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
-
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import { KeyboardData } from '../../storage';
-import { ActiveLineCol } from './activeLine.model';
-
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
-
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
-
 import { SideBarService } from '../sidebar/sidebar.service';
-import { Router } from '@angular/router';
+import { ConfigService } from '../config/config.service';
+import { ConfigModel } from '../config/config';
+import { ActiveLineCol } from './activeLine.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
   styleUrls: ['./teclado.component.css']
 })
-export class TecladoComponent implements OnInit {
+export class TecladoComponent implements OnInit, OnDestroy {
 
   public openFacLayout: OpenFACLayout;
-
   public activeLine: ActiveLineCol = new ActiveLineCol();
-
-  public config: IOpenFacConfig;
+  public config: any = {};
   public engine: OpenFacEngine;
-  public timer: boolean;
-  public colorLine: boolean;
   public KeyboardData: any;
-
   public teclado: TecladoModel = new TecladoModel();
   public data = [];
   private keyCommandService: OpenFacKeyCommandService;
+  private keyCommandServiceSubscribe: Subscription;
+  private editorTecladoServiceSubscribe: Subscription;
+  private sideBarServiceSubscribe: Subscription;
+  private configServiceSubscribe: Subscription;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
-              
               private sideBarService: SideBarService,
-              private router: Router) {
+              private configService: ConfigService) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
   }
 
-  ngAfterViewInit(){
-    
+  ngOnDestroy(): void {
+     this.keyCommandServiceSubscribe.unsubscribe();
+     this.editorTecladoServiceSubscribe.unsubscribe();
+     this.sideBarServiceSubscribe.unsubscribe();
+     this.configServiceSubscribe.unsubscribe();
   }
 
   ngOnInit() {
+    
+  }
+
+  ngAfterViewInit(){
+
     this.teclado.teclas = [];
 
-    this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
-      this.zone.run(() =>{
+    // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
+    this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
         if(result === 'caps'){
           this.capsLock();
         }
-      })
     })
 
+      this.editorTecladoServiceSubscribe = 
+                  this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
 
-
-    
-    this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
-      this.zone.run(() => {
-          this.tecladoService.loadData().subscribe((data)=>{
+            this.tecladoService.loadData().subscribe((data)=>{
               if(data){
                 this.KeyboardData = data;
-                let lastUsed = 0;
-                this.openFacLayout = (data[lastUsed]);
-                
+                // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
+                let lastUsed: number = 0;
+        
+                  this.configServiceSubscribe = 
+                                this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
+                                .subscribe((result: ConfigModel) => {
+
+                  this.config.lastKeyboard = result.lastKeyboard;
+                  if(this.config.lastKeyboard === 'pt-br'){
+                    lastUsed = 0;
+                    this.openFacLayout = (data[lastUsed]);
+                  } else if(this.config.lastKeyboard === 'user'){
+                    lastUsed = 2;
+                    this.openFacLayout = (data[lastUsed]);
+                  } else if(this.config.lastKeyboard === 'exp'){
+                    lastUsed = 3;
+                    this.openFacLayout = (data[lastUsed]);
+                  }
+                  console.log('configureAll');
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 this.configureAll(editor);
-                this.router.navigate(['/pages/editor-teclado']);
 
-                this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                  this.zone.run(() =>{
-                             ////////////////////////////
-                            // TORNAR GENÉRICO !!! /////
-                           ////////////////////////////
-                    if(result === 'pt-br'){
-                      console.log("chegou user");
-                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
-                      this.router.navigate(['/pages/editor-teclado']);
-                      this.configureSome();
-                    }else if(result === 'user'){
-                      console.log("chegou user");
-                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
-                      this.router.navigate(['/pages/editor-teclado']);
-                      this.configureSome();
-                    } else if(result === 'exp'){
-                      console.log("chegou exp");
-                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
-                      this.router.navigate(['/pages/editor-teclado']);
-                      this.configureSome();
+              });
+
+                this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+                                          ////////////////////////////
+                                         // TORNAR GENÉRICO !!! /////
+                                        ////////////////////////////
+                                  if(result === 'pt-br'){
+                                    console.log("chegou pt-br");
+                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
+                                    this.configureSome(); 
+                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();         
+
+                                  }else if(result === 'user'){
+                                    console.log("chegou user");
+                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
+                                    this.configureSome();
+                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
+
+                                  } else if(result === 'exp'){
+                                    console.log("chegou exp");
+                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
+                                    this.configureSome();
+                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
+
+                                  } 
+                });
               }
           })
-                })
 
-
-              }
-          })
-      });
-    })
-
+    });
+  
   }
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
@@ -138,9 +145,8 @@ export class TecladoComponent implements OnInit {
       this.teclado.type = layout.nameLayout;
   }
 
-
   public capsLock() {
-    if (this.teclado.type === 'normal') {
+    if (this.teclado.type === 'pt-br') {
       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[1]);
     } else {
       this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
@@ -216,9 +222,7 @@ export class TecladoComponent implements OnInit {
 
   private configureAll(editorInstance: any) {
     let configArray = [editorInstance, this.keyCommandService, this.zone]
-    //OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, editorInstance, this.keyCommandService, this.zone);
     OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
-
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
     OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
     OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
@@ -227,8 +231,7 @@ export class TecladoComponent implements OnInit {
     this.engine = new OpenFacEngine(this.config);
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
-
-    this.timer = true;    
+   
     setInterval(this.timer1_Tick.bind(this), 1500);
   }
 

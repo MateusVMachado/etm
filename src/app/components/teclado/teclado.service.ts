@@ -7,11 +7,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class TecladoService {
 
     teclado: TecladoModel = new TecladoModel();
+    public tecladoSubject = new Subject<any>();  
+    
 
     public row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
     public pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
@@ -24,6 +27,16 @@ export class TecladoService {
     public ctRow: string[] = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '\"', '*arrowleft', '*arrowdown', '*arrowright'];
 
     constructor(private http: HttpClient) {  }
+
+
+    emitTecladoCommand(editor: any) {
+        this.tecladoSubject.next(editor);
+      }
+    
+      subscribeToTecladoSubject() {
+          return this.tecladoSubject.asObservable();      
+      }
+    
 
     loadTeclado(type: string): TecladoModel {
         this.teclado.teclas = []; // Clear teclado

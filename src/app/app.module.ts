@@ -21,6 +21,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
 import { SideBarService } from './components/sidebar/sidebar.service';
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
