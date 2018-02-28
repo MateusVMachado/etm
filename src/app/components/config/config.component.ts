@@ -65,6 +65,7 @@ export class ConfigModalComponent extends AppBaseComponent implements OnInit, Af
         user = this.authService.getUser();
         this.configService.getConfiguration(user.email).subscribe((result: ConfigModel) => {
             this.config.linguagem = result.language;
+            this.config.layout = result.openFacConfig.KeyboardLayout;
             this.config.sensor = result.openFacConfig.ActiveSensor;
             this.config.tipoVarredura = result.openFacConfig.ScanType;
             this.config.tmpVarredura = result.openFacConfig.ScanTime;

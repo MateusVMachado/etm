@@ -1,3 +1,4 @@
+import { ProfileService } from '../profile/profile.service';
 import { ConfigModel } from '../config/config';
 import { User } from '../shared/models/user';
 import { ConfigService } from '../config/config.service';
@@ -24,6 +25,7 @@ export class NgxLoginComponent extends AppBaseComponent {
                 protected router: Router,
                 private cookieService: CookieService,
                 private injector: Injector,
+                private profileService: ProfileService,
                 private configService: ConfigService
                 ) { super(injector)}
 
@@ -43,7 +45,11 @@ export class NgxLoginComponent extends AppBaseComponent {
                 if (this.user.rememberMe) {
                      this.cookieService.set('token', JWTtoken.token);
                 }
-                this.router.navigate(['./pages/teclados']);
+                
+                this.profileService.getUser(usuario.email).subscribe((result: User) => {
+                  this.service.setUser(result);
+                  this.router.navigate(['./pages/teclados']);
+                });
               }
           }, (error) =>{
             this.messageService.error('Usuário ou senha inválidos', 'Oops..');

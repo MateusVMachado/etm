@@ -1,3 +1,5 @@
+import { ProfileModule } from './components/profile/profile.module';
+import { ProfileService } from './components/profile/profile.service';
 import { ConfigTecladoModule } from './components/config/config.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
@@ -30,7 +32,8 @@ import { SideBarService } from './components/sidebar/sidebar.service';
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
-    ConfigTecladoModule
+    ConfigTecladoModule,
+    ProfileModule
   ],
   bootstrap: [AppComponent],
   providers: [

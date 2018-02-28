@@ -15,8 +15,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'pt-br',
         target: 'pt-br'
-      },
-      {
+  },
+  {
         title: 'userDefined-01',
         target: 'user'
       },
@@ -35,6 +35,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Configuração',
     icon: 'nb-gear',
     target: 'config'
-  },
-
+    },
+  {
+    title: 'Gerenciar Perfil',
+    icon: 'nb-person',
+    link: '/pages/profile'
+  }
 ];
