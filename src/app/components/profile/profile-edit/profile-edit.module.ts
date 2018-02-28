@@ -5,8 +5,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { FormsModule } from '@angular/forms';
-import { Angular2TokenService } from "angular2-token/angular2-token";
-import { FileUploadModule } from "ng2-file-upload";
 
 @NgModule({
     declarations: [
@@ -17,12 +15,10 @@ import { FileUploadModule } from "ng2-file-upload";
         BootstrapModalModule,
         FormsModule,
         HttpModule,
-        HttpClientModule,
-        FileUploadModule
+        HttpClientModule
     ],
     exports: [],
     providers: [
-        Angular2TokenService
     ],
     entryComponents: [
         ProfileEditComponent

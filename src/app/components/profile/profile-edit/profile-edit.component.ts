@@ -1,14 +1,12 @@
 import { NbUser } from '@nebular/auth/models/user';
 import { Picture } from '../../shared/models/picture';
 import { ProfileService } from '../profile.service';
-import { FileUploaderOptions } from 'ng2-file-upload/file-upload/file-uploader.class';
 import { AuthService } from '../../shared/services/auth.services';
 import { User } from '../../shared/models/user';
 import { JWTtoken } from '../../../storage';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FileUploader, FileSelectDirective } from 'ng2-file-upload';
 import 'rxjs/add/operator/map';
 
 @Component({
