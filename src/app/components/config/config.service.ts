@@ -24,7 +24,7 @@ export class ConfigService extends AppServiceBase{
         configOpenFAC.openFacConfig.ScanType = config.tipoVarredura;
         configOpenFAC.openFacConfig.ScanTime = config.tmpVarredura;
         configOpenFAC.user = user.email;
-        
+        configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         return this.http.post('http://localhost:8080/configuration', configOpenFAC, this.getDefaultHeaders());
     }
 

@@ -18,6 +18,16 @@
             </small>
         </div>
         <div class="form-group">
+            <label for="linguagem" class="label-margin-bottom">Layout do teclado</label>
+            <select class="form-control input" name="layout" [(ngModel)]="config.layout" id="layout" #layout="ngModel" [required]="true">
+                <option value="QWERT">QWERT</option>
+                <option value="layout2">layout2</option>
+            </select>
+            <small class="form-text error" *ngIf="layout.invalid && layout.touched && layout.errors?.required">
+                Layout é obrigatório
+            </small>
+        </div>
+        <div class="form-group">
             <label class="label-margin-bottom label-margin-top">Sensor</label>
             <select class="form-control input" name="sensor" [(ngModel)]="config.sensor" id="sensor" #sensor="ngModel" [required]="true">
                 <option value="mic">Microfone</option>
