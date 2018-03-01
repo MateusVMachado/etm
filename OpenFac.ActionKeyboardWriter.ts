@@ -29,21 +29,25 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
         switch (bt.Text) {
             case '*kbdrtrn':
+                this.editor.focus();
                 this.editor.insertHtml('<br>');
                 this.maxLength += 1;
                 this.doGetCaretPosition();
                 break;
             case '*bckspc':
+                this.editor.focus();
                 this.backspaceKey();
                 this.maxLength -= 1;
                 this.doGetCaretPosition();
                 break;
             case '*tab':
+                this.editor.focus();
                 for(let i = 0; i < 4; i++)  this.editor.insertHtml('&nbsp;');
                 this.maxLength += 1;
                 this.doGetCaretPosition();
                 break;
             case '*cpslck':
+                this.editor.focus();
                 this.keyCommandService.emitKeyCommand('caps');
                 break;
             case '*arrowup':
@@ -53,6 +57,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 // do something
                 break;
             case '*arrowleft':
+                this.editor.focus();
                 let toGoBackward = this.doGetCaretPosition(true)-2;
                 if(toGoBackward >= 0){
                     this.setCaretPosition(toGoBackward);
@@ -61,17 +66,13 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 // do something
                 break;
             case '*arrowright':
+                this.editor.focus();
                 let toGoForward = this.doGetCaretPosition(true);
                 console.log(toGoForward);
                 if(toGoForward < this.maxLength) this.setCaretPosition(toGoForward);
                 this.doGetCaretPosition();
                 // do something
                 break;
-            case '1':
-                this.backspaceKey();
-                this.maxLength -= 1;
-                this.doGetCaretPosition();
-                break;    
             case '*space':
                 this.editor.insertHtml('&nbsp;');      
                 this.maxLength += 1;
