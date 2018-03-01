@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { TecladoModel } from './teclado.model';
 
 import { HttpClient, HttpResponse } from '@angular/common/http';
@@ -8,9 +8,10 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { Subject } from 'rxjs';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
 
 @Injectable()
-export class TecladoService {
+export class TecladoService extends AppServiceBase {
 
     teclado: TecladoModel = new TecladoModel();
     public tecladoSubject = new Subject<any>();  
@@ -26,7 +27,9 @@ export class TecladoService {
     public csRow: string[] = ['*cpslck', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ç',  ':', '*arrowup', '*kbdrtrn'];
     public ctRow: string[] = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '\"', '*arrowleft', '*arrowdown', '*arrowright'];
 
-    constructor(private http: HttpClient) {  }
+    constructor(protected injector: Injector, private http: HttpClient) {
+        super(injector);
+      }
 
 
     emitTecladoCommand(editor: any) {
@@ -60,7 +63,7 @@ export class TecladoService {
     }
 
     loadData() {
-        return this.http.get<OpenFACLayout>('http://localhost:8080/keyboard');
+        return this.http.get<OpenFACLayout>(this.backendAddress + '/keyboard');
     }
 
 }

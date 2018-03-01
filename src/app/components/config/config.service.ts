@@ -8,14 +8,17 @@ import { Injectable } from '@angular/core';
 import { OpenFACConfig, OpenFACLayout } from "openfac/OpenFac.ConfigContract";
 import { JWTtoken } from '../../storage';
 import { User } from '../shared/models/user';
+import { Injector } from '@angular/core';
 
 @Injectable()
 export class ConfigService extends AppServiceBase{
     public config: any = {};
+    private http: HttpClient;
 
     public configuration = {};
-    constructor(private http: HttpClient, private authService: AuthService) {
-        super();
+    constructor(protected injector: Injector,  private authService: AuthService) {
+        super(injector);
+        this.http = this.injector.get(HttpClient);
     }
 
     public saveConfiguration(config?: any, keyboardName?:string){
@@ -28,16 +31,16 @@ export class ConfigService extends AppServiceBase{
         configOpenFAC.user = user.email;
         configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         configOpenFAC.lastKeyboard = keyboardName;
-        return this.http.post('http://localhost:8080/configuration', configOpenFAC, { responseType: 'text' });
+        return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text' });
     }
 
     public saveOnlyLastKeyboard(keyboardName?:string){
         let user = this.authService.getUser();
-        return this.http.post(`http://localhost:8080/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, { responseType: 'text' });
+        return this.http.post(this.backendAddress + `/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, { responseType: 'text' });
     }
 
     public getConfiguration(email: string){
-        return this.http.get<ConfigModel>(`http://localhost:8080/configuration?email=${email}`, this.getDefaultHeaders());
+        return this.http.get<ConfigModel>(this.backendAddress + `/configuration?email=${email}`, this.getDefaultHeaders());
     }
 
     private getDefaultHeaders() {
@@ -46,7 +49,7 @@ export class ConfigService extends AppServiceBase{
 
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {
         let user = this.authService.getUser();
-        return this.http.get(`http://localhost:8080/configuration?email=${user.email}`, this.getDefaultHeaders());
+        return this.http.get(this.backendAddress + `/configuration?email=${user.email}`, this.getDefaultHeaders());
     }
 
 }
