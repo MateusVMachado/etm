@@ -8,7 +8,7 @@ export class Keyboard extends BaseRoute{
 
     public title: string;
     public teclado: KeyboardModel = new KeyboardModel();
-
+    public names = new Array();
 
     constructor() {
         super();
@@ -18,7 +18,15 @@ export class Keyboard extends BaseRoute{
 
     public keyboard_api(req: Request, res: Response, next: NextFunction) {    
         this.title = "Home | ETM - BackEnd";
-        this.getInDatabase(this.teclado, res);
+        if ( req.query.option === 'names'){
+            console.log("NAMES");
+            this.getKeyboardNamesInDatabase(this.teclado, res);
+        } else {
+            console.log("NORMAL");
+            this.getInDatabase(this.teclado, res);
+        }
+
+        
       }
 
     public getInDatabase(teclado: KeyboardModel, res: Response){    
@@ -31,6 +39,19 @@ export class Keyboard extends BaseRoute{
                 }         
             })
      }
+
+    public getKeyboardNamesInDatabase(teclado: KeyboardModel, res: Response){    
+        let instance = this;
+        let names = [];
+        res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {
+            if(keyboard_list.length !== 0){
+                for(let i = 0; i < keyboard_list.length; i++){
+                    names.push(keyboard_list[i].nameLayout); 
+                }
+                res.send(names);
+            }     
+        })
+    }
 
     public insertBasicIntoDatabase(teclado: KeyboardModel, res: Response){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
@@ -92,7 +113,7 @@ export class Keyboard extends BaseRoute{
         var tuser: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
         var zuser: string[] = ['*space'];
 
-        var exp: string[] = ['\'', '1', '2'];
+        var exp: string[] = ['\'', '1', '*bckspc'];
         var pexp: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u'];
         var sexp: string[] = ['l', '*kbdrtrn'];
         var texp: string[] = ['*arrowleft', '*arrowright', '*arrowup', '*arrowdown'];
