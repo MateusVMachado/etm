@@ -93,7 +93,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   }    
                 }
 
-                this.generateMenuItem(this.KeyboardData);
+                this.loadSendNames();
                 // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
                 let lastUsed: number = 0;
         
@@ -137,38 +137,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
   
   }
 
-  private generateMenuItem(data: any){
-    for(let j=0; j < data.length; j++){
-      if(data[j].nameLayout === 'caps') continue;
-      let object = {
-        title: data[j].nameLayout,
-        target: data[j].nameLayout
-      }
-      this.jsonArray.push(object);
-    }
-    
-    let myJson = [{
-        title: 'Teclado',
-        icon: 'nb-home', 
-        target: 'hello',
-        link: '/pages/editor-teclado', 
-        home: true,
-        children: this.jsonArray
-      },
-      {
-        title: 'Dashboard',
-        icon: 'nb-home',
-        target: 'dashboard',
-      },
-      {
-        title: 'Configuração',
-        icon: 'nb-gear',
-        target: 'config'
-      }];
-
-    this.menu = new Array();  
-    this.menu = myJson; 
-    this.tecladoService.emitTecladoCommand(this.menu);
+  private loadSendNames(){
+    this.sideBarService.loadNames().subscribe((result) => {
+      this.tecladoService.emitTecladoCommand(result);
+    });
   };
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){

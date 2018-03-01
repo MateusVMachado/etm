@@ -3,7 +3,7 @@ import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AfterViewInit, Component } from '@angular/core';
 
-import { MENU_ITEMS } from './sidebar-itens';
+//import { MENU_ITEMS } from './sidebar-itens';
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
 
@@ -19,7 +19,9 @@ export class SidebarComponent implements AfterViewInit {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
 
-  public menu = MENU_ITEMS;
+  
+  public menu: NbMenuItem[] = [];
+  public jsonArray = new Array();
 
   constructor(private menuService: NbMenuService, 
               private router: Router,
@@ -29,12 +31,14 @@ export class SidebarComponent implements AfterViewInit {
               private tecladoService: TecladoService)  {
               
               this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
-                this.menu = result;
+                this.menu = this.generateMenuItem(result);
               });
     
   } 
 
   ngAfterViewInit(): void {
+ 
+
     this.editorTecladoServiceSubscribe = 
           this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
     
@@ -65,6 +69,42 @@ export class SidebarComponent implements AfterViewInit {
   public showLargeModal() {
     const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
   }
+
+  
+  private generateMenuItem(data: any){
+    this.jsonArray = [];
+    for(let j=0; j < data.length; j++){
+      if(data[j].nameLayout === 'caps') continue;
+      let object = {
+        title: data[j].nameLayout,
+        target: data[j].nameLayout
+      }
+      this.jsonArray.push(object);
+    }
+    
+    let myJson = [{
+        title: 'Teclado',
+        icon: 'nb-home', 
+        target: 'hello',
+        link: '/pages/editor-teclado', 
+        home: true,
+        children: this.jsonArray
+      },
+      {
+        title: 'Dashboard',
+        icon: 'nb-home',
+        target: 'dashboard',
+      },
+      {
+        title: 'Configuração',
+        icon: 'nb-gear',
+        target: 'config'
+      }];
+
+     return myJson; 
+  };
+
+
 
 }
 
