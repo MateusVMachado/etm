@@ -44,7 +44,6 @@ export class SidebarComponent implements AfterViewInit {
                         this.showLargeModal();
                       }
                       if ( result.item.target === 'dashboard') {
-                        console.log("dashboard!");
                         editor.focus();
                         this.editorTecladoServiceSubscribe.unsubscribe();
                         this.router.navigate(['/pages/dashboard']);

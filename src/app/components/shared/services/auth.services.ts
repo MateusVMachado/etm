@@ -22,7 +22,6 @@ export class AuthService extends AppServiceBase {
     }
 
     isAuthenticated(): boolean {
-        console.log('token: ' + this.token);
         if ( JWTtoken.token !== undefined) {
         // if ( this.token !== undefined) {
             return true;

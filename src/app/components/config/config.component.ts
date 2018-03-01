@@ -52,7 +52,6 @@ export class ConfigModalComponent extends AppBaseComponent implements OnInit, Af
     public setConfiguration(){
         this.submitted = true;
         this.configService.saveConfiguration(this.config, 'pt-br').subscribe(result => {
-            console.log("sucesso");
         }, (error: any) => {
             this.closeModal();
             this.messageService.error("Ocorreu um problema ao salvar suas configurações", "Oops..");

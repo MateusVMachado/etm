@@ -114,7 +114,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       }                                    
                 if(!found) this.openFacLayout = (data[0]);  
 
-                console.log('configureAll');
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 this.configureAll(editor);
 
