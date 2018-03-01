@@ -84,7 +84,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
       }
 
       public getActiveGamepadId(gamepads: Gamepad[]){
-
+        if(gamepads.length === 0 ) return;
         for(let i=0 ; i < gamepads.length; i++){
             this.gamepads[i].buttons.forEach((key) =>{
               if(key.pressed){
