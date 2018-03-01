@@ -28,13 +28,11 @@ export class SidebarComponent implements AfterViewInit {
   } 
 
   ngAfterViewInit(): void {
-    console.log("SIDEBAR INIT!!!");
     this.editorTecladoServiceSubscribe = 
           this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => {
-                    console.log("ONclick!");
                     ////////////////////////////
                     // TORNAR GENÉRICO !!! /////
                   ////////////////////////////  
