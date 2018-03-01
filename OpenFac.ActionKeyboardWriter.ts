@@ -67,6 +67,11 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
                 // do something
                 break;
+            case '1':
+                this.backspaceKey();
+                this.maxLength -= 1;
+                this.doGetCaretPosition();
+                break;    
             case '*space':
                 this.editor.insertHtml('&nbsp;');      
                 this.maxLength += 1;
