@@ -5,12 +5,12 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
     private cancelationToken: number;
     private gamepads: Gamepad[];
-    private gamepad: any;
-    public keyPressed: String;
-    public controllerName: String;
+    private keyPressed: String;
+    private controllerName: String;
   
-    public main_gamepad: number = 1;
-  
+    //public main_gamepad: number = 1;
+    private mainGamepad: number = -1;
+
     private lastPressedButton: Number;
 
     constructor(document: any) {
@@ -40,9 +40,13 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
     public detectControllers(){
         this.gamepads = navigator.getGamepads();
+        
+        if(this.mainGamepad === -1){
+            this.getActiveGamepadId(this.gamepads);
+        }    
         if (this.gamepads) {
-          if (this.gamepads[this.main_gamepad]) {
-            this.controllerName = this.gamepads[this.main_gamepad].id;
+          if (this.gamepads[this.mainGamepad]) {
+            this.controllerName = this.gamepads[this.mainGamepad].id;
           }
         }
       }
@@ -64,7 +68,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
               this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
 
               this.detectControllers();
-              const gamepad = this.gamepads[this.main_gamepad];
+              const gamepad = this.gamepads[this.mainGamepad];
               if (gamepad && gamepad.connected) {
 
                 for (let index = 0; index < gamepad.buttons.length; index++) {
@@ -78,6 +82,18 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
               }
 
       }
+
+      public getActiveGamepadId(gamepads: Gamepad[]){
+
+        for(let i=0 ; i < gamepads.length; i++){
+            this.gamepads[i].buttons.forEach((key) =>{
+              if(key.pressed){
+                this.mainGamepad = i;
+              }  
+            });
+        }
+        
+      }  
 
 }
 
