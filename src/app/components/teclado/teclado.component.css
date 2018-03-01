@@ -6,6 +6,8 @@
 }
 
 .teclado-container{
+    max-width: 100%;
+    min-height: 100%;
     background-color: #eeeeee;
     padding: 14px 24px;
     border-radius: 2px;

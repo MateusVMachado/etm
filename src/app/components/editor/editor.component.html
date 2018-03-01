@@ -1,3 +1,4 @@
-<div style="height:50%">
-  <ckeditor (ready)="emitInstance($event)" id="ckEditor" #editor [(ngModel)]="texto"></ckeditor>
+<div #editorContainer id="editorContainer" class="editorContainer">
+    <ckeditor (ready)="emitInstance($event)" id="ckEditor" #editor [(ngModel)]="texto" [config]='editorConfig'></ckeditor>
 </div>
+  
