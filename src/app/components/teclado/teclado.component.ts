@@ -19,6 +19,8 @@ import { ConfigModel } from '../config/config';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
 
+import { NbMenuItem } from '@nebular/theme';
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
@@ -38,6 +40,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private editorTecladoServiceSubscribe: Subscription;
   private sideBarServiceSubscribe: Subscription;
   private configServiceSubscribe: Subscription;
+  private capsIndex: number;
+  private ptbrIndex: number; 
+ 
+
+  public menu: NbMenuItem[];
+  public jsonArray = new Array();
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -56,6 +64,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+   
     
   }
 
@@ -76,53 +85,51 @@ export class TecladoComponent implements OnInit, OnDestroy {
             this.tecladoService.loadData().subscribe((data)=>{
               if(data){
                 this.KeyboardData = data;
+                for(let i = 0; i < this.KeyboardData.length; i++){
+                  if(this.KeyboardData[i].nameLayout === 'caps'){
+                      this.capsIndex = i;
+                  } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
+                    this.ptbrIndex = i;
+                  }    
+                }
+
+                this.generateMenuItem(this.KeyboardData);
                 // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
                 let lastUsed: number = 0;
         
-                  this.configServiceSubscribe = 
+                this.configServiceSubscribe = 
                                 this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
                                 .subscribe((result: ConfigModel) => {
 
-                  this.config.lastKeyboard = result.lastKeyboard;
-                  if(this.config.lastKeyboard === 'pt-br'){
-                    lastUsed = 0;
-                    this.openFacLayout = (data[lastUsed]);
-                  } else if(this.config.lastKeyboard === 'user'){
-                    lastUsed = 2;
-                    this.openFacLayout = (data[lastUsed]);
-                  } else if(this.config.lastKeyboard === 'exp'){
-                    lastUsed = 3;
-                    this.openFacLayout = (data[lastUsed]);
-                  }
-                  console.log('configureAll');
+                      this.config.lastKeyboard = result.lastKeyboard;
+                      let found = false;
+                      for(let i=0; i < this.KeyboardData.length; i++){
+                        if(this.KeyboardData[i].nameLayout === 'caps') continue;
+                        if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
+                          lastUsed = i;
+                          this.openFacLayout = (data[lastUsed]);
+                          found = true;
+                          break;
+                        }
+                      }                                    
+                if(!found) this.openFacLayout = (data[0]);  
+
+                console.log('configureAll');
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 this.configureAll(editor);
 
               });
 
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                                          ////////////////////////////
-                                         // TORNAR GENÉRICO !!! /////
-                                        ////////////////////////////
-                                  if(result === 'pt-br'){
-                                    console.log("chegou pt-br");
-                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
-                                    this.configureSome(); 
-                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();         
-
-                                  }else if(result === 'user'){
-                                    console.log("chegou user");
-                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
-                                    this.configureSome();
-                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
-
-                                  } else if(result === 'exp'){
-                                    console.log("chegou exp");
-                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
-                                    this.configureSome();
-                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
-
-                                  } 
+                                  for (let j = 0; j < this.KeyboardData.length; j++) {
+                                    if (this.KeyboardData[j].nameLayout === 'caps') continue;
+                                    if (result === this.KeyboardData[j].nameLayout) {
+                                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
+                                      this.configureSome(); 
+                                      this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
+                                      break;
+                                    }
+                                  }    
                 });
               }
           })
@@ -130,6 +137,40 @@ export class TecladoComponent implements OnInit, OnDestroy {
     });
   
   }
+
+  private generateMenuItem(data: any){
+    for(let j=0; j < data.length; j++){
+      if(data[j].nameLayout === 'caps') continue;
+      let object = {
+        title: data[j].nameLayout,
+        target: data[j].nameLayout
+      }
+      this.jsonArray.push(object);
+    }
+    
+    let myJson = [{
+        title: 'Teclado',
+        icon: 'nb-home', 
+        target: 'hello',
+        link: '/pages/editor-teclado', 
+        home: true,
+        children: this.jsonArray
+      },
+      {
+        title: 'Dashboard',
+        icon: 'nb-home',
+        target: 'dashboard',
+      },
+      {
+        title: 'Configuração',
+        icon: 'nb-gear',
+        target: 'config'
+      }];
+
+    this.menu = new Array();  
+    this.menu = myJson; 
+    this.tecladoService.emitTecladoCommand(this.menu);
+  };
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
@@ -147,9 +188,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   public capsLock() {
     if (this.teclado.type === 'pt-br') {
-      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[1]);
+            this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[this.capsIndex]);
     } else {
-      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
+            this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[this.ptbrIndex]);
+
     }
     this.configureSome();
   }

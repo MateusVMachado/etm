@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
 
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { TecladoService } from '../teclado/teclado.service';
+import { NbMenuItem } from '@nebular/theme';
 
 @Component({
   selector: 'app-pages',
@@ -17,13 +19,18 @@ export class SidebarComponent implements AfterViewInit {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
 
-  menu = MENU_ITEMS;
+  public menu = MENU_ITEMS;
 
   constructor(private menuService: NbMenuService, 
               private router: Router,
               private sideBarService: SideBarService,
               private modalService: NgbModal,
-              private editorTecladoService: EditorTecladoService)  {
+              private editorTecladoService: EditorTecladoService,
+              private tecladoService: TecladoService)  {
+              
+              this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
+                this.menu = result;
+              });
     
   } 
 
@@ -32,36 +39,21 @@ export class SidebarComponent implements AfterViewInit {
           this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
-            .subscribe((result) => {
-                    ////////////////////////////
-                    // TORNAR GENÉRICO !!! /////
-                  ////////////////////////////  
+            .subscribe((result) => { 
                       if ( result.item.target === 'config') {
                         this.showLargeModal();
                       }
-                      if ( result.item.target === 'pt-br') {
-                        editor.focus();
-                        this.sideBarService.emitSideBarCommand('pt-br');
-                        this.editorTecladoServiceSubscribe.unsubscribe();
-                        this.router.navigate(['/pages/editor-teclado']);
-
-                      }
-                      if ( result.item.target === 'user') {
-                        editor.focus();
-                        this.sideBarService.emitSideBarCommand('user');
-                        this.editorTecladoServiceSubscribe.unsubscribe();
-                        this.router.navigate(['/pages/editor-teclado']);
-                      }
-                      if ( result.item.target === 'exp') {
-                        editor.focus();
-                        this.sideBarService.emitSideBarCommand('exp');         
-                        this.editorTecladoServiceSubscribe.unsubscribe();
-                        this.router.navigate(['/pages/editor-teclado']);
-                      }
                       if ( result.item.target === 'dashboard') {
+                        console.log("dashboard!");
                         editor.focus();
                         this.editorTecladoServiceSubscribe.unsubscribe();
                         this.router.navigate(['/pages/dashboard']);
+                      } else {
+                              // PARTE DO TECLADO
+                              editor.focus();
+                              this.sideBarService.emitSideBarCommand(result.item.target);
+                              this.editorTecladoServiceSubscribe.unsubscribe();
+                              this.router.navigate(['/pages/editor-teclado']);
                       }
             });  
     });
