@@ -8,7 +8,8 @@ export class AppServiceBase {
 
     protected backendAddress: string = 'http://etm-api.korp.com.br/';
     protected frontendAddress: string = 'http://etm.korp.com.br/';
-    
+    //protected backendAddress: string = 'http://localhost:8080';
+
     constructor(protected injector: Injector){
 
     }

@@ -1,3 +1,4 @@
+/*
 import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
@@ -15,10 +16,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'pt-br',
         target: 'pt-br'
-  },
-  {
-        title: 'userDefined-01',
-        target: 'user'
       },
       {
         title: 'experimental',
@@ -42,3 +39,4 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/profile'
   }
 ];
+*/

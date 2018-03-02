@@ -3,11 +3,13 @@ import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AfterViewInit, Component } from '@angular/core';
 
-import { MENU_ITEMS } from './sidebar-itens';
+//import { MENU_ITEMS } from './sidebar-itens';
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
 
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { TecladoService } from '../teclado/teclado.service';
+import { NbMenuItem } from '@nebular/theme';
 
 @Component({
   selector: 'app-pages',
@@ -17,51 +19,44 @@ export class SidebarComponent implements AfterViewInit {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
 
-  menu = MENU_ITEMS;
+  
+  public menu: NbMenuItem[] = [];
+  public jsonArray = new Array();
 
   constructor(private menuService: NbMenuService, 
               private router: Router,
               private sideBarService: SideBarService,
               private modalService: NgbModal,
-              private editorTecladoService: EditorTecladoService)  {
+              private editorTecladoService: EditorTecladoService,
+              private tecladoService: TecladoService)  {
+              
+              this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
+                this.menu = this.generateMenuItem(result);
+              });
     
   } 
 
   ngAfterViewInit(): void {
+ 
+
     this.editorTecladoServiceSubscribe = 
           this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
-            .subscribe((result) => {
-                    ////////////////////////////
-                    // TORNAR GENÉRICO !!! /////
-                  ////////////////////////////  
+            .subscribe((result) => { 
                       if ( result.item.target === 'config') {
                         this.showLargeModal();
-                      }
-                      if ( result.item.target === 'pt-br') {
-                        editor.focus();
-                        this.sideBarService.emitSideBarCommand('pt-br');
-                        this.editorTecladoServiceSubscribe.unsubscribe();
-                        this.router.navigate(['/pages/editor-teclado']);
-
-                      }
-                      if ( result.item.target === 'user') {
-                        editor.focus();
-                        this.sideBarService.emitSideBarCommand('user');
-                        this.editorTecladoServiceSubscribe.unsubscribe();
-                        this.router.navigate(['/pages/editor-teclado']);
-                      }
-                      if ( result.item.target === 'exp') {
-                        editor.focus();
-                        this.sideBarService.emitSideBarCommand('exp');         
-                        this.editorTecladoServiceSubscribe.unsubscribe();
-                        this.router.navigate(['/pages/editor-teclado']);
                       }
                       if ( result.item.target === 'dashboard') {
                         editor.focus();
                         this.editorTecladoServiceSubscribe.unsubscribe();
                         this.router.navigate(['/pages/dashboard']);
+                      } else {
+                              // PARTE DO TECLADO
+                              editor.focus();
+                              this.sideBarService.emitSideBarCommand(result.item.target);
+                              this.editorTecladoServiceSubscribe.unsubscribe();
+                              this.router.navigate(['/pages/editor-teclado']);
                       }
             });  
     });
@@ -74,6 +69,42 @@ export class SidebarComponent implements AfterViewInit {
   public showLargeModal() {
     const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
   }
+
+  
+  private generateMenuItem(data: any){
+    this.jsonArray = [];
+    for(let j=0; j < data.length; j++){
+      if(data[j].nameLayout === 'caps') continue;
+      let object = {
+        title: data[j].nameLayout,
+        target: data[j].nameLayout
+      }
+      this.jsonArray.push(object);
+    }
+    
+    let myJson = [{
+        title: 'Teclado',
+        icon: 'nb-home', 
+        target: 'hello',
+        link: '/pages/editor-teclado', 
+        home: true,
+        children: this.jsonArray
+      },
+      {
+        title: 'Dashboard',
+        icon: 'nb-home',
+        target: 'dashboard',
+      },
+      {
+        title: 'Configuração',
+        icon: 'nb-gear',
+        target: 'config'
+      }];
+
+     return myJson; 
+  };
+
+
 
 }
 
