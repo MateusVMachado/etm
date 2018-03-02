@@ -22,7 +22,7 @@ export class NgxLoginComponent extends AppBaseComponent implements OnInit, After
     messages: string[] = [];
     user: any = {
       email: '',
-      password: '',
+      password: 'inserir',
       rememberMe: ''
     };
     userInfo: any = {};
@@ -38,7 +38,7 @@ export class NgxLoginComponent extends AppBaseComponent implements OnInit, After
     public ngAfterViewInit(){
       // WORKAROUND PARA RESOLVER PROBLEMA DO BOTÃO DE ENTRAR 
       // NÃO SER ATIVADO COM O AUTOFILL DO BROWSER
-      this.user.password = ''; 
+      this.user.password = 'inserir'; 
     }                
 
     public ngOnInit(){
