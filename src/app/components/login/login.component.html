@@ -36,15 +36,15 @@
         </div>
         <div class="form-group accept-group col-sm-12">
             <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">Mantenha-me conectado</nb-checkbox>
-            <a class="forgot-password" (click)="navigateTo('./auth/request-password')">Esqueci minha senha</a>
+            <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">Esqueceu?</a>
         </div>
-        <button [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
+        <button style="cursor:pointer;" [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
           Entrar
         </button>
     </form>
     <div class="links" style="margin-top: 16px; text-align: center;">
         <small class="form-text">
-          Não tem uma conta? <a (click)="navigateTo('./auth/register')"><strong>Crie uma!</strong></a>
+          Não tem uma conta? <a (click)="navigateTo('./auth/register')"><label style="cursor:pointer; color:#4799eb">Crie uma!</label></a>
         </small>
     </div>
 </nb-auth-block>
