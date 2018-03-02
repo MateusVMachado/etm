@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
@@ -18,14 +18,13 @@ import { ConfigService } from '../config/config.service';
 import { ConfigModel } from '../config/config';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
-
+import * as $ from 'jquery';
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
   styleUrls: ['./teclado.component.css']
 })
 export class TecladoComponent implements OnInit, OnDestroy {
-
   public openFacLayout: OpenFACLayout;
   public activeLine: ActiveLineCol = new ActiveLineCol();
   public config: any = {};
@@ -60,74 +59,71 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit(){
-
     this.teclado.teclas = [];
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
     this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
+      console.log("subscribeToKeyCommandSubject");
         if(result === 'caps'){
           this.capsLock();
         }
-    })
-
-      this.editorTecladoServiceSubscribe = 
-                  this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
-
-            this.tecladoService.loadData().subscribe((data)=>{
-              if(data){
-                this.KeyboardData = data;
-                // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
-                let lastUsed: number = 0;
-        
-                  this.configServiceSubscribe = 
-                                this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
-                                .subscribe((result: ConfigModel) => {
-
-                  this.config.lastKeyboard = result.lastKeyboard;
-                  if(this.config.lastKeyboard === 'pt-br'){
-                    lastUsed = 0;
-                    this.openFacLayout = (data[lastUsed]);
-                  } else if(this.config.lastKeyboard === 'user'){
-                    lastUsed = 2;
-                    this.openFacLayout = (data[lastUsed]);
-                  } else if(this.config.lastKeyboard === 'exp'){
-                    lastUsed = 3;
-                    this.openFacLayout = (data[lastUsed]);
-                  }
-                  console.log('configureAll');
-                this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-                this.configureAll(editor);
-
-              });
-
-                this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                                          ////////////////////////////
-                                         // TORNAR GENÉRICO !!! /////
-                                        ////////////////////////////
-                                  if(result === 'pt-br'){
-                                    console.log("chegou pt-br");
-                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
-                                    this.configureSome(); 
-                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();         
-
-                                  }else if(result === 'user'){
-                                    console.log("chegou user");
-                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
-                                    this.configureSome();
-                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
-
-                                  } else if(result === 'exp'){
-                                    console.log("chegou exp");
-                                    this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
-                                    this.configureSome();
-                                    this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
-
-                                  } 
-                });
-              }
-          })
-
     });
+
+    this.tecladoService.loadData().subscribe((data)=>{
+      console.log("load");
+      if(data){
+        this.KeyboardData = data;
+        // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
+        let lastUsed: number = 0;
+
+        this.configServiceSubscribe = 
+                      this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
+                      .subscribe((result: ConfigModel) => {
+          this.config.lastKeyboard = result.lastKeyboard;
+          if(this.config.lastKeyboard === 'pt-br'){
+            lastUsed = 0;
+            this.openFacLayout = (data[lastUsed]);
+          } else if(this.config.lastKeyboard === 'user'){
+            lastUsed = 2;
+            this.openFacLayout = (data[lastUsed]);
+          } else if(this.config.lastKeyboard === 'exp'){
+            lastUsed = 3;
+            this.openFacLayout = (data[lastUsed]);
+          }
+          this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
+        });
+      }
+    });
+
+    this.editorTecladoServiceSubscribe = 
+                this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
+                  this.configureAll(editor);
+            });
+
+              this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+                        ////////////////////////////
+                        // TORNAR GENÉRICO !!! /////
+                      ////////////////////////////
+                if(result === 'pt-br'){
+                  console.log("chegou pt-br");
+                  this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
+                  this.configureSome(); 
+                  this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();         
+
+                }else if(result === 'user'){
+                  console.log("chegou user");
+                  this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
+                  this.configureSome();
+                  this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
+
+                } else if(result === 'exp'){
+                  console.log("chegou exp");
+                  this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
+                  this.configureSome();
+                  this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
+
+                } 
+              });
   
   }
 

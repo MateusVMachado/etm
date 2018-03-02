@@ -15,11 +15,12 @@ export class EditorComponent implements AfterViewInit {
     private height: number;
 
     ngOnInit(){
-        let dif = ($(".editorContainer").height()) - this.tamanhoDiv;
-        console.log(this.tamanhoDiv)
-        let height: number = ($(".editorContainer").height() - dif);
-        console.log("editor: " + height)
-        this.editorConfig = { height: height};
+        console.log("editor: " + this.tamanhoDiv);
+        
+        this.editorTecladoService.getHeight().subscribe((tamanho)=>{
+            this.editorConfig = { height: (tamanho - 140)};
+            console.log("subscribe: " + tamanho);
+        });
     }
     
     ngAfterViewInit(): void {
@@ -32,6 +33,7 @@ export class EditorComponent implements AfterViewInit {
     emitInstance($event){
         this.editorTecladoService.emitEditorInstance(this.editor.instance);
     }
+
 
 
 }
