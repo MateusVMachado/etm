@@ -69,7 +69,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
 
   
   private generateMenuItem(list: KeyboardNamesList){
-    let data = list['KeyboardsNames']
+    let data = list.KeyboardsNames;
     this.jsonArray = [];
     console.log(data.length);
     for(let j=0; j < data.length; j++){
