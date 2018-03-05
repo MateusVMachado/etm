@@ -4,11 +4,7 @@ import { KeyboardModel } from '../../models/keyboard.model';
 import { OpenFACLayout, LayoutLine, LayoutButton } from '../../models/layout.model';
 import { KeyboardNamesList } from "./keyboard-list.model";
 
-
-export class Keyboard extends BaseRoute{
-
-    public title: string;    
-    public names = new Array();
+export class Keyboard extends BaseRoute {
 
     constructor() {
         super();
