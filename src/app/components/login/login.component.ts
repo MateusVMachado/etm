@@ -6,7 +6,6 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 import { Component, ViewChild, OnInit, Injector, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.services';
-import { JWTtoken } from '../../storage';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 import { NgForm } from '@angular/forms';
@@ -43,23 +42,17 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
         usuario = this.user;
         this.service.authenticate(usuario).subscribe(
           (res: any) => {
-              this.service.setToken(res['accessToken']);
-              JWTtoken.token = res['accessToken'];
+              window.localStorage.setItem('JWTtoken', res['accessToken']);
               this.configService.getConfiguration(this.user.email).subscribe((result: ConfigModel) => {
                 //TODO: chamar função de translate e de configuração do teclado
               }, (error: any) => {
                 this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
               })
-              if (JWTtoken.token !== undefined) {
-                if (this.user.rememberMe) {
-                     this.cookieService.set('token', JWTtoken.token);
-                }
-                
-                this.profileService.getUser(usuario.email).subscribe((result: User) => {
-                  this.service.setUser(result);
-                  this.router.navigate(['./pages/teclados']);
-                });
-              }
+
+              this.profileService.getUser(usuario.email).subscribe((result: User) => {
+                this.service.setUser(result);
+                this.router.navigate(['./pages/teclados']);
+              });
           }, (error) =>{
             this.messageService.error('Usuário ou senha inválidos', 'Oops..');
           }

@@ -3,7 +3,6 @@ import { Picture } from '../../shared/models/picture';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../shared/services/auth.services';
 import { User } from '../../shared/models/user';
-import { JWTtoken } from '../../../storage';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';

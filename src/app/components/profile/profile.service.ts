@@ -1,5 +1,4 @@
 import { User } from '../shared/models/user';
-import { JWTtoken } from '../../storage';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from "rxjs/Observable";
@@ -21,6 +20,6 @@ export class ProfileService extends AppServiceBase {
     }
 
     getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + JWTtoken.token } };
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.localStorage.getItem('JWTtoken')} };
     }
 }

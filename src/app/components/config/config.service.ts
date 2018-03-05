@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
 import { Injectable } from '@angular/core';
 import { OpenFACConfig, OpenFACLayout } from "openfac/OpenFac.ConfigContract";
-import { JWTtoken } from '../../storage';
 import { User } from '../shared/models/user';
 import { Injector } from '@angular/core';
 
@@ -44,7 +43,7 @@ export class ConfigService extends AppServiceBase{
     }
 
     private getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + JWTtoken.token}};
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.localStorage.getItem('JWTtoken')}};
     }
 
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {

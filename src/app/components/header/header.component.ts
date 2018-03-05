@@ -6,7 +6,6 @@ import { DomSanitizer, SafeHtml, SafeStyle } from '@angular/platform-browser';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
 import { Router } from '@angular/router';
-import { JWTtoken } from '../../storage';
 @Component({
   selector: 'app-header',
   styleUrls: ['./header.component.scss'],
@@ -58,7 +57,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    JWTtoken.token = undefined;
+    window.localStorage.removeItem('JWTtoken')
     this.router.navigate(["./auth"]);
   }
 

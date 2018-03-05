@@ -1,19 +1,21 @@
+import { ProfileService } from '../../profile/profile.service';
 import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user';
 import { AppServiceBase } from './app-service-base.service';
 import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { JWTtoken } from '../../../storage';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService extends AppServiceBase {
     private user: User = new User();
     private userSubject: BehaviorSubject<User> = new BehaviorSubject<User>(new User());
     private token: any = undefined;
+    public isLoggedIn: boolean;
 
-    constructor(protected injector: Injector, private http: HttpClient) {
+    constructor(protected injector: Injector, private http: HttpClient, private profileService: ProfileService) {
         super(injector);
     }
 
@@ -21,17 +23,16 @@ export class AuthService extends AppServiceBase {
         return this.http.post(this.backendAddress + '/login', user, this.getDefaultHeaders());
     }
 
-    isAuthenticated(): boolean {
-        if ( JWTtoken.token !== undefined) {
-        // if ( this.token !== undefined) {
-            return true;
-        } else {
-            return false;
+    isAuthenticated() {
+        let token = window.localStorage.getItem('JWTtoken');
+        if(token){
+            let email = jwt.decode(token).sub;
+            this.profileService.getUser(email).subscribe((usuario: User) =>{
+                this.setUser(usuario);
+            });
+            return true
         }
-    }
-
-    logout() {
-
+        return false
     }
 
     register(user: any) {
@@ -45,7 +46,7 @@ export class AuthService extends AppServiceBase {
     }
 
     getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json' } };
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.localStorage.getItem('JWTtoken') } };
     }
 
     setToken(value: any) {

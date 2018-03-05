@@ -1,7 +1,6 @@
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
-import { JWTtoken } from '../../storage';
 import { ConfigModel } from './config';
 import { ConfigService } from './config.service';
 import { NbAuthService } from '@nebular/auth';
