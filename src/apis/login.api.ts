@@ -29,7 +29,7 @@ export class Login extends BaseRoute{
                         console.log("AUTENTICADO!");
         
                         let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app' }, 
-                                    backendConfig.secret);
+                                    backendConfig.secret, {expiresIn: 86400}); //1 dia
                         
                         console.log("[server] Sent: " + token);
                         res.json({ name: user_list[0]['fullName'], email: user_list[0]['email'],
