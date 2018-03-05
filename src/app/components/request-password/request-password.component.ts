@@ -50,6 +50,10 @@ export class RequestPasswordComponent {
 
   getConfigValue(key: string): any {}
 
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
+
   /*getConfigValue(key: string): any {
     return getDeepFromObject(this.config, key, null);
   }*/
