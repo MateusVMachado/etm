@@ -1,7 +1,7 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
 import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 //import { MENU_ITEMS } from './sidebar-itens';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { NbMenuItem } from '@nebular/theme';
   selector: 'app-pages',
   templateUrl: './sidebar.component.html'
 })
-export class SidebarComponent implements AfterViewInit {
+export class SidebarComponent implements AfterViewInit, OnInit {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
 
@@ -30,9 +30,9 @@ export class SidebarComponent implements AfterViewInit {
               private editorTecladoService: EditorTecladoService,
               private tecladoService: TecladoService)  {
               
-              this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
-                this.menu = this.generateMenuItem(result);
-              });
+              //this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
+              //  this.menu = this.generateMenuItem(result);
+              //});
     
   } 
 
@@ -64,6 +64,15 @@ export class SidebarComponent implements AfterViewInit {
 
   ngOnInit() {
 
+    //this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
+    //  this.menu = this.generateMenuItem(result);
+    //});
+
+    this.sideBarService.loadNames().subscribe((result) => {
+        console.log("Names: " + JSON.stringify(result));
+        this.menu = this.generateMenuItem(result);
+    });
+      //this.sideBarService.loadNames();
   }
 
   public showLargeModal() {
@@ -73,12 +82,15 @@ export class SidebarComponent implements AfterViewInit {
   
   private generateMenuItem(data: any){
     this.jsonArray = [];
+    console.log(data.length);
     for(let j=0; j < data.length; j++){
-      if(data[j].nameLayout === 'caps') continue;
+      //if(data[j].nameLayout === 'caps') continue;
+      if(data[j] === 'caps') continue;
       let object = {
-        title: data[j].nameLayout,
-        target: data[j].nameLayout
+        title: data[j],//.nameLayout,
+        target: data[j]//.nameLayout
       }
+      console.log("children: " + JSON.stringify(object));
       this.jsonArray.push(object);
     }
     

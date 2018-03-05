@@ -4,6 +4,7 @@ import { Subject, Subscription } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
 import { HttpClient } from '@angular/common/http';
+import { KeyboardNamesList } from './keyboards-list.model';
 
 @Injectable()
 export class SideBarService extends AppServiceBase{
@@ -24,7 +25,7 @@ export class SideBarService extends AppServiceBase{
   }
 
   loadNames() {
-    return this.http.get(this.backendAddress + '/keyboard?options=names');
+    return this.http.get<KeyboardNamesList>(this.backendAddress + '/keyboard/getKeyboardNames');
   }
 
 }

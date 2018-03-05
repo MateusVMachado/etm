@@ -93,7 +93,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   }    
                 }
 
-                this.loadSendNames();
+                //this.loadSendNames();
                 // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
                 let lastUsed: number = 0;
         
