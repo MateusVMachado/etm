@@ -3,7 +3,6 @@ import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 
-//import { MENU_ITEMS } from './sidebar-itens';
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
 
@@ -28,12 +27,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
               private sideBarService: SideBarService,
               private modalService: NgbModal,
               private editorTecladoService: EditorTecladoService,
-              private tecladoService: TecladoService)  {
-              
-              //this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
-              //  this.menu = this.generateMenuItem(result);
-              //});
-    
+              private tecladoService: TecladoService)  {  
   } 
 
   ngAfterViewInit(): void {
@@ -63,16 +57,9 @@ export class SidebarComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-
-    //this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
-    //  this.menu = this.generateMenuItem(result);
-    //});
-
     this.sideBarService.loadNames().subscribe((result) => {
-        console.log("Names: " + JSON.stringify(result));
-        this.menu = this.generateMenuItem(result);
+        this.menu = this.generateMenuItem(result['KeyboardsNames']);
     });
-      //this.sideBarService.loadNames();
   }
 
   public showLargeModal() {
@@ -84,13 +71,11 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     this.jsonArray = [];
     console.log(data.length);
     for(let j=0; j < data.length; j++){
-      //if(data[j].nameLayout === 'caps') continue;
       if(data[j] === 'caps') continue;
       let object = {
-        title: data[j],//.nameLayout,
-        target: data[j]//.nameLayout
+        title: data[j],
+        target: data[j]
       }
-      console.log("children: " + JSON.stringify(object));
       this.jsonArray.push(object);
     }
     
