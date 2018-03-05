@@ -15,7 +15,7 @@ export class OpenFacActionFactory {
         if( result ){
            return new result.type(result.args);
         } else {
-            throw new console.error("No type registered for this id");
+            //throw new console.error("No type registered for this id");
             
         }    
     }

@@ -12,6 +12,9 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public keyCommandService: any;
     public zone: any;
     private maxLength: number = 1;
+
+    private tabs: Map<number, boolean> = new Map<number, boolean>()
+
     //constructor(private editor: any, public keyCommandService: OpenFacKeyCommandService, private zone: NgZone){        
     constructor(private args: any){
         this.editor = this.args[0];
@@ -36,15 +39,29 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 break;
             case '*bckspc':
                 this.editor.focus();
-                this.backspaceKey();
-                this.maxLength -= 1;
-                this.doGetCaretPosition();
+                if ( this.tabs.get(this.cursorPosition) ){
+                    for(let i = 0; i < 4; i++){
+                        this.backspaceKey();
+                        this.maxLength -= 1;
+                        this.doGetCaretPosition();
+                        this.tabs.delete(this.cursorPosition);
+                    }
+                } else {
+                    this.backspaceKey();
+                    this.maxLength -= 1;
+                    this.doGetCaretPosition();
+                }
                 break;
             case '*tab':
                 this.editor.focus();
-                for(let i = 0; i < 4; i++)  this.editor.insertHtml('&nbsp;');
-                this.maxLength += 1;
-                this.doGetCaretPosition();
+                for(let i = 0; i < 4; i++) {
+                    this.editor.insertHtml('&nbsp;');                    
+                    this.maxLength += 1;
+                    this.doGetCaretPosition();
+                    
+                } 
+                this.tabs.set(this.cursorPosition, true);
+                this.tabs.set(this.cursorPosition-3, true);
                 break;
             case '*cpslck':
                 this.editor.focus();
@@ -57,20 +74,39 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 // do something
                 break;
             case '*arrowleft':
+            if ( this.tabs.get(this.cursorPosition) ){
+                for(let i = 0; i < 4; i++){
+                    this.editor.focus();
+                    let toGoBackward = this.doGetCaretPosition(true)-2;
+                    if(toGoBackward >= 0){
+                        this.setCaretPosition(toGoBackward);
+                    }
+                    this.doGetCaretPosition();
+                }
+            } else {
                 this.editor.focus();
                 let toGoBackward = this.doGetCaretPosition(true)-2;
                 if(toGoBackward >= 0){
                     this.setCaretPosition(toGoBackward);
                 }
                 this.doGetCaretPosition();
+            }
                 // do something
                 break;
             case '*arrowright':
+            if ( this.tabs.get(this.cursorPosition) ){
+                for(let i = 0; i < 4; i++){
+                    this.editor.focus();
+                    let toGoForward = this.doGetCaretPosition(true);
+                    if(toGoForward < this.maxLength) this.setCaretPosition(toGoForward);
+                    this.doGetCaretPosition();
+                }
+            } else {
                 this.editor.focus();
                 let toGoForward = this.doGetCaretPosition(true);
-                console.log(toGoForward);
                 if(toGoForward < this.maxLength) this.setCaretPosition(toGoForward);
                 this.doGetCaretPosition();
+            }    
                 // do something
                 break;
             case '*space':
@@ -113,22 +149,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     }
 
     public doGetCaretPosition(toReturn?:boolean) {
-        //console.log("this.cursorPosition-2: " + (this.cursorPosition-2).toString() );
-        //console.log("this.cursorPosition-1: " + (this.cursorPosition-1).toString() );
-        console.log("maxLength: " + this.maxLength);
-        //console.log("start: " + 
-        //            (this.cursorPosition-(this.maxLength-(this.cursorPosition-2))-1).toString() );
-        //console.log("end: " + 
-        //            (this.cursorPosition-(this.maxLength-(this.cursorPosition-1))-1).toString() );
-
         this.editor.focus();
         let selection = this.editor.getSelection();
         let range = selection.getRanges()[0];
         this.cursorPosition = range.startOffset + 1;
-        //if(this.cursorPosition > this.maxLength) {
-        //    this.maxLength = this.cursorPosition;
-        //}
-        console.log(this.cursorPosition);
         if(toReturn) return this.cursorPosition;
     }
 

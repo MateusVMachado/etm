@@ -68,7 +68,12 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
               this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
 
               this.detectControllers();
+              
               const gamepad = this.gamepads[this.mainGamepad];
+
+              
+
+
               if (gamepad && gamepad.connected) {
 
                 for (let index = 0; index < gamepad.buttons.length; index++) {
@@ -84,15 +89,14 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
       }
 
       public getActiveGamepadId(gamepads: Gamepad[]){
-        if(gamepads.length === 0 ) return;
-        for(let i=0 ; i < gamepads.length; i++){
-            this.gamepads[i].buttons.forEach((key) =>{
-              if(key.pressed){
-                this.mainGamepad = i;
-              }  
-            });
-        }
-        
+            for (let i = 0; i < gamepads.length; i++) {
+              if (gamepads[i] === null) break;
+              this.gamepads[i].buttons.forEach((key) => {
+                if (key.pressed) {
+                  this.mainGamepad = i;
+                }
+              });
+            }
       }  
 
 }
