@@ -92,8 +92,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                     this.ptbrIndex = i;
                   }    
                 }
-
-                this.loadSendNames();
+                
                 // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
                 let lastUsed: number = 0;
         
@@ -137,11 +136,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
   
   }
 
-  private loadSendNames(){
-    this.sideBarService.loadNames().subscribe((result) => {
-      this.tecladoService.emitTecladoCommand(result);
-    });
-  };
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;

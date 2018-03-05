@@ -1,21 +1,21 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
 import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
-//import { MENU_ITEMS } from './sidebar-itens';
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
 
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
+import { KeyboardNamesList } from './keyboards-list.model';
 
 @Component({
   selector: 'app-pages',
   templateUrl: './sidebar.component.html'
 })
-export class SidebarComponent implements AfterViewInit {
+export class SidebarComponent implements AfterViewInit, OnInit {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
 
@@ -28,12 +28,7 @@ export class SidebarComponent implements AfterViewInit {
               private sideBarService: SideBarService,
               private modalService: NgbModal,
               private editorTecladoService: EditorTecladoService,
-              private tecladoService: TecladoService)  {
-              
-              this.tecladoService.subscribeToTecladoSubject().subscribe((result) =>{
-                this.menu = this.generateMenuItem(result);
-              });
-    
+              private tecladoService: TecladoService)  {  
   } 
 
   ngAfterViewInit(): void {
@@ -63,7 +58,9 @@ export class SidebarComponent implements AfterViewInit {
   }
 
   ngOnInit() {
-
+    this.sideBarService.loadKeyboardsNames().subscribe((result) => {
+        this.menu = this.generateMenuItem(result);
+    });
   }
 
   public showLargeModal() {
@@ -71,14 +68,16 @@ export class SidebarComponent implements AfterViewInit {
   }
 
   
-  private generateMenuItem(data: any){
+  private generateMenuItem(list: KeyboardNamesList){
+    let data = list.KeyboardsNames;
     this.jsonArray = [];
+    console.log(data.length);
     for(let j=0; j < data.length; j++){
-      if(data[j].nameLayout === 'caps') continue;
+      if(data[j] === 'caps') continue;
       let object = {
-        title: data[j].nameLayout,
-        target: data[j].nameLayout
-      }
+        title: data[j],
+        target: data[j]
+      } 
       this.jsonArray.push(object);
     }
     
