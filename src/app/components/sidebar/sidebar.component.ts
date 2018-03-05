@@ -9,6 +9,7 @@ import { SideBarService } from './sidebar.service';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
+import { KeyboardNamesList } from './keyboards-list.model';
 
 @Component({
   selector: 'app-pages',
@@ -57,8 +58,8 @@ export class SidebarComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.sideBarService.loadNames().subscribe((result) => {
-        this.menu = this.generateMenuItem(result['KeyboardsNames']);
+    this.sideBarService.loadKeyboardsNames().subscribe((result) => {
+        this.menu = this.generateMenuItem(result);
     });
   }
 
@@ -67,7 +68,8 @@ export class SidebarComponent implements AfterViewInit, OnInit {
   }
 
   
-  private generateMenuItem(data: any){
+  private generateMenuItem(list: KeyboardNamesList){
+    let data = list['KeyboardsNames']
     this.jsonArray = [];
     console.log(data.length);
     for(let j=0; j < data.length; j++){

@@ -23,8 +23,8 @@ export class SideBarService extends AppServiceBase{
   subscribeTosideBarSubject() {
       return this.sideBarSubject.asObservable();      
   }
-
-  loadNames() {
+  
+  loadKeyboardsNames() {
     return this.http.get<KeyboardNamesList>(this.backendAddress + '/keyboard/getKeyboardNames');
   }
 
