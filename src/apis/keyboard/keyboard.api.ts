@@ -1,32 +1,27 @@
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseRoute } from "../routes/route";
-import { KeyboardModel } from '../models/keyboard.model';
-import { OpenFACLayout, LayoutLine, LayoutButton } from '../models/layout.model';
+import { BaseRoute } from "../../routes/route";
+import { KeyboardModel } from '../../models/keyboard.model';
+import { OpenFACLayout, LayoutLine, LayoutButton } from '../../models/layout.model';
+import { KeyboardNamesList } from "./keyboard-list.model";
 
 
 export class Keyboard extends BaseRoute{
 
-    public title: string;
-    public teclado: KeyboardModel = new KeyboardModel();
+    public title: string;    
     public names = new Array();
 
     constructor() {
         super();
-        this.teclado.teclas = [];
+    }
+    
+    public getKeyboardNames(req: Request, res: Response, next: NextFunction){
+        let teclado: KeyboardModel = new KeyboardModel();
+        this.getKeyboardNamesInDatabase(teclado, res);        
     }
 
-
     public keyboard_api(req: Request, res: Response, next: NextFunction) {    
-        this.title = "Home | ETM - BackEnd";
-        if ( req.query.option === 'names'){
-            console.log("NAMES");
-            this.getKeyboardNamesInDatabase(this.teclado, res);
-        } else {
-            console.log("NORMAL");
-            this.getInDatabase(this.teclado, res);
-        }
-
-        
+        let teclado: KeyboardModel = new KeyboardModel();                
+        this.getInDatabase(teclado, res);
       }
 
     public getInDatabase(teclado: KeyboardModel, res: Response){    
@@ -42,13 +37,13 @@ export class Keyboard extends BaseRoute{
 
     public getKeyboardNamesInDatabase(teclado: KeyboardModel, res: Response){    
         let instance = this;
-        let names = [];
+        let keyboardNames = new KeyboardNamesList();
         res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {
             if(keyboard_list.length !== 0){
                 for(let i = 0; i < keyboard_list.length; i++){
-                    names.push(keyboard_list[i].nameLayout); 
+                    keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
                 }
-                res.send(names);
+                res.send(keyboardNames);
             }     
         })
     }
@@ -80,11 +75,11 @@ export class Keyboard extends BaseRoute{
         for(let i = 0; i < qntyLines; i++){
             openFacLayout.Lines.push(new LayoutLine());
             openFacLayout.Lines[i].Buttons = new Array<LayoutButton>();
-            for( let j = 0 ; j < this.teclado.teclas[i].length; j++){
+            for( let j = 0 ; j < teclado.teclas[i].length; j++){
                     openFacLayout.Lines[i].Buttons.push(new LayoutButton());
                     openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
                     openFacLayout.Lines[i].Buttons[j].Caption = 'caption';
-                    openFacLayout.Lines[i].Buttons[j].Text = this.teclado.teclas[i][j];
+                    openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j];
             }
         } 
 
@@ -93,8 +88,9 @@ export class Keyboard extends BaseRoute{
 
 
     // FUNCAO PARA TESTES APENAS
-    public loadKeyboard(type: string){
-
+    public loadKeyboard(type: string): KeyboardModel {
+        let teclado = new KeyboardModel();
+        
         var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
         var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
         var sRow: string[] = ['*cpslck', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn'];
@@ -118,38 +114,38 @@ export class Keyboard extends BaseRoute{
         var sexp: string[] = ['l', '*kbdrtrn'];
         var texp: string[] = ['*arrowleft', '*arrowright', '*arrowup', '*arrowdown'];
 
-        this.teclado.teclas = []; // Clear teclado
+        teclado.teclas = []; // Clear teclado
     
         if ( type === 'pt-br') {
-            this.teclado.teclas.push(row);
-            this.teclado.teclas.push(pRow);
-            this.teclado.teclas.push(sRow);
-            this.teclado.teclas.push(tRow);
-            this.teclado.teclas.push(zRow);
-            this.teclado.type = 'pt-br';
+            teclado.teclas.push(row);
+            teclado.teclas.push(pRow);
+            teclado.teclas.push(sRow);
+            teclado.teclas.push(tRow);
+            teclado.teclas.push(zRow);
+            teclado.type = 'pt-br';
         } else if ( type === 'caps') {
-            this.teclado.teclas.push(crow);
-            this.teclado.teclas.push(cpRow);
-            this.teclado.teclas.push(csRow);
-            this.teclado.teclas.push(ctRow);
-            this.teclado.teclas.push(czRow);
-            this.teclado.type = 'caps';
+            teclado.teclas.push(crow);
+            teclado.teclas.push(cpRow);
+            teclado.teclas.push(csRow);
+            teclado.teclas.push(ctRow);
+            teclado.teclas.push(czRow);
+            teclado.type = 'caps';
         } else if ( type === 'user') {
-            this.teclado.teclas.push(user);
-            this.teclado.teclas.push(puser);
-            this.teclado.teclas.push(suser);
-            this.teclado.teclas.push(tuser);
-            this.teclado.teclas.push(zuser);
-            this.teclado.type = 'user';
+            teclado.teclas.push(user);
+            teclado.teclas.push(puser);
+            teclado.teclas.push(suser);
+            teclado.teclas.push(tuser);
+            teclado.teclas.push(zuser);
+            teclado.type = 'user';
         } else if ( type === 'exp') {
-            this.teclado.teclas.push(exp);
-            this.teclado.teclas.push(pexp);
-            this.teclado.teclas.push(sexp);
-            this.teclado.teclas.push(texp);
-            this.teclado.type = 'exp';
+            teclado.teclas.push(exp);
+            teclado.teclas.push(pexp);
+            teclado.teclas.push(sexp);
+            teclado.teclas.push(texp);
+            teclado.type = 'exp';
         }
     
-        return this.teclado;
+        return teclado;
     
     }  
 
