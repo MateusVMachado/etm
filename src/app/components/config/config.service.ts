@@ -27,10 +27,12 @@ export class ConfigService extends AppServiceBase{
         configOpenFAC.language = config.linguagem;
         configOpenFAC.openFacConfig.ActiveSensor = config.sensor;
         configOpenFAC.openFacConfig.ScanType = config.tipoVarredura;
-        configOpenFAC.openFacConfig.ScanTime = config.tmpVarredura;
+        configOpenFAC.openFacConfig.ScanTimeLines = config.tmpVarreduraLns;
+        configOpenFAC.openFacConfig.ScanTimeColumns = config.tmpVarreduraCls;
         configOpenFAC.user = user.email;
         configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         configOpenFAC.lastKeyboard = keyboardName;
+        
         return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text' });
     }
 

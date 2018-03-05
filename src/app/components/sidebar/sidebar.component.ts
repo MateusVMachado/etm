@@ -10,6 +10,7 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
 import { KeyboardNamesList } from './keyboards-list.model';
+//import { GeneralConfigComponent } from '../general-config/general-config.component';
 
 @Component({
   selector: 'app-pages',
@@ -39,8 +40,9 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => { 
-                      if ( result.item.target === 'config') {
-                        this.showLargeModal();
+                      if ( result.item.target === 'general-config') {
+                        console.log("general-config");
+                        // this.router.navigate(['/pages/dashboard']);
                       }
                       if ( result.item.target === 'dashboard') {
                         editor.focus();
@@ -97,7 +99,20 @@ export class SidebarComponent implements AfterViewInit, OnInit {
       {
         title: 'Configuração',
         icon: 'nb-gear',
-        target: 'config'
+        target: 'config',
+        children: [
+          {
+            title: 'Configuração geral',
+            icon: 'nb-grid-a',
+            //target: 'general-config',
+            link: '/pages/general-config', 
+          },
+          {
+            title: 'Editor de layouts',
+            icon: 'nb-keypad',
+            target: 'layout-editor',
+          },
+        ]
       }];
 
      return myJson; 

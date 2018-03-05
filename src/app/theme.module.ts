@@ -27,7 +27,7 @@ import { DEFAULT_THEME } from './styles/theme.default';
 import { NgxLoginComponent } from './components/login/login.component';
 import { NgxRegisterComponent } from './components/register/register.component';
 import { RequestPasswordComponent } from './components/request-password/request-password.component';
-
+import { GeneralConfigModule } from './components/general-config/general-config.module';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
@@ -43,6 +43,7 @@ const NB_MODULES = [
   NbSidebarModule,
   NbCheckboxModule,
   NgbModule,
+  //GeneralConfigModule
 ];
 
 const COMPONENTS = [
@@ -51,7 +52,7 @@ const COMPONENTS = [
   MainPageComponent,
   NgxLoginComponent,
   NgxRegisterComponent,
-  RequestPasswordComponent
+  RequestPasswordComponent,
 ];
 
 const NB_THEME_PROVIDERS = [

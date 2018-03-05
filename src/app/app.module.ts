@@ -20,6 +20,9 @@ import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
 import { SideBarService } from './components/sidebar/sidebar.service';
+import { GeneralConfigModule } from './components/general-config/general-config.module';
+import { FormsModule } from '@angular/forms';
+//import { GeneralConfigComponent } from './components/general-config/general-config.component';
 
 
 @NgModule({
@@ -32,8 +35,11 @@ import { SideBarService } from './components/sidebar/sidebar.service';
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
+    ProfileModule,
     ConfigTecladoModule,
-    ProfileModule
+    FormsModule
+    //GeneralConfigModule,
+    
   ],
   bootstrap: [AppComponent],
   providers: [

@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { SidebarComponent } from './sidebar.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { EditorTecladoComponent } from '../editor-teclado/editor-teclado.component';
+import { GeneralConfigComponent } from '../general-config/general-config.component';
 
 const routes: Routes = [{
   path: '',
@@ -26,7 +27,11 @@ const routes: Routes = [{
     },{
       path: 'profile',
       component: ProfileComponent,
-    }
+    },
+    {
+      path: 'general-config',
+      component: GeneralConfigComponent,
+    },
   ],
 }];
 
