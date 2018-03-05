@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "./route";
 import * as express from 'express';
-import { Keyboard } from '../apis/keyboard.api';
+import { Keyboard } from '../apis/keyboard/keyboard.api';
 import { MongoAccessModel } from "../models/mongoAccess.model";
 import * as moment from 'moment';
 import { BackLogger } from "../apis/backLogger.api";
@@ -53,6 +53,13 @@ export class IndexRoute extends BaseRoute {
       console.log("LOGGER NO GET");
       backLogger.logRequests(req);
       keyboard.keyboard_api(req,res,next);  
+    });
+
+    router.get("/keyboard/getKeyboardNames", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      console.log("getKeyboardNames");
+      backLogger.logRequests(req);
+      keyboard.getKeyboardNames(req,res,next);  
     });
 
     // LOGIN
