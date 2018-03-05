@@ -3,7 +3,7 @@ import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import { JWTtoken } from '../../storage';
 import { ConfigModel } from './config';
-import { ConfigService } from '../config/config.service';
+import { GeneralConfigService } from './general-config.service';
 import { NbAuthService } from '@nebular/auth';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +28,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
     constructor( 
         private router: Router, 
         private ref: ChangeDetectorRef,
-        private configService: ConfigService,
+        private configService: GeneralConfigService,
         protected authService: AuthService,
         private injector: Injector
         ) {  super(injector); }

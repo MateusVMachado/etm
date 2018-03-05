@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { GeneralConfigComponent } from './general-config.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { GeneralConfigService } from './general-config.service';
 
 
 @NgModule({
@@ -17,6 +18,9 @@ import { FormsModule } from '@angular/forms';
   exports: [
     GeneralConfigComponent
 ],
+  providers: [
+   GeneralConfigService,
+  ]
 })
 export class GeneralConfigModule { }
 

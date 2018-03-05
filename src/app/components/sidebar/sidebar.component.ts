@@ -1,5 +1,5 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
-import { ConfigModalComponent } from '../config/config.component';
+//import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 
@@ -65,9 +65,9 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     });
   }
 
-  public showLargeModal() {
-    const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
-  }
+ // public showLargeModal() {
+ //   const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
+ // }
 
   
   private generateMenuItem(list: KeyboardNamesList){

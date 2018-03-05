@@ -14,8 +14,8 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
 import { SideBarService } from '../sidebar/sidebar.service';
-import { ConfigService } from '../config/config.service';
-import { ConfigModel } from '../config/config';
+import { GeneralConfigService } from '../general-config/general-config.service';
+import { ConfigModel } from '../general-config/config';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
 
@@ -51,7 +51,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
               private sideBarService: SideBarService,
-              private configService: ConfigService) {
+              private configService: GeneralConfigService) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
   }
