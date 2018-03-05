@@ -36,7 +36,7 @@
         </div>
         <div class="form-group accept-group col-sm-12">
             <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">Mantenha-me conectado</nb-checkbox>
-            <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./pages/request-password')">Esqueceu?</a>
+            <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">Esqueceu?</a>
         </div>
         <button style="cursor:pointer;" [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
           Entrar
