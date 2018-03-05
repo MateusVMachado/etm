@@ -75,7 +75,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
       let object = {
         title: data[j],
         target: data[j]
-      }
+      } 
       this.jsonArray.push(object);
     }
     
