@@ -42,7 +42,7 @@ export class Configuration extends BaseRoute {
                 config.openFacConfig.ScanType = "automatico";
                 config.openFacConfig.ScanTime = 3;
                 config.language = "pt-br";
-                config.openFacConfig.KeyboardLayout = "QWERT";
+                config.openFacConfig.KeyboardLayout = "QWERTY";
                 config.lastKeyboard = "pt-br"
 
                 res.status(200).send(config);
