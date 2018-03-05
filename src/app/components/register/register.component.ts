@@ -53,8 +53,6 @@ export class NgxRegisterComponent extends AppBaseComponent {
           }
       );
     }
-
-    getConfigValue() { }
     
     navigateTo(path: string) {
       this.router.navigate([path]);
