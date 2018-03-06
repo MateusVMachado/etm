@@ -141,6 +141,13 @@ export class TecladoComponent implements OnInit, OnDestroy {
   
   }
 
+  private loadSingleKeyboardByName(nameLayout: string){
+    this.tecladoService.loadSingleKeyboard(nameLayout).subscribe((data)=>{
+      console.log(data[0]);
+    });
+
+  }
+
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
