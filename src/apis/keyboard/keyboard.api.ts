@@ -10,6 +10,16 @@ export class Keyboard extends BaseRoute {
         super();
     }
     
+
+    public getSingleKeyboardByName(req: Request, res: Response, next: NextFunction){
+        let instance = this;
+        res.locals.mongoAccess.coll[1].find({nameLayout: req.query.nameLayout}).toArray(function(err, keyboard) {
+            res.send(keyboard);
+        })
+
+    }
+
+
     public getKeyboardNames(req: Request, res: Response, next: NextFunction){
         let teclado: KeyboardModel = new KeyboardModel();
         this.getKeyboardNamesInDatabase(teclado, res);        
