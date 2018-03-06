@@ -13,8 +13,8 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
 import { SideBarService } from '../sidebar/sidebar.service';
-import { ConfigService } from '../config/config.service';
-import { ConfigModel } from '../config/config';
+import { GeneralConfigService } from '../general-config/general-config.service';
+import { ConfigModel } from '../general-config/config.model';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
 
@@ -41,7 +41,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private configServiceSubscribe: Subscription;
   private capsIndex: number;
   private ptbrIndex: number; 
- 
+  private timerId: number;
+  private scanTimeLines: number;
+  private scanTimeColumns: number;
+  
 
   public menu: NbMenuItem[];
   public jsonArray = new Array();
@@ -50,7 +53,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
               private sideBarService: SideBarService,
-              private configService: ConfigService) {
+              private configService: GeneralConfigService) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
   }
@@ -63,7 +66,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-   
     
   }
 
@@ -91,8 +93,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                     this.ptbrIndex = i;
                   }    
                 }
-
-                this.loadSendNames();
+                
                 // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
                 let lastUsed: number = 0;
         
@@ -101,6 +102,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
                                 .subscribe((result: ConfigModel) => {
 
                       this.config.lastKeyboard = result.lastKeyboard;
+                      this.scanTimeLines = result.openFacConfig.ScanTimeLines;
+                      this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
+
                       let found = false;
                       for(let i=0; i < this.KeyboardData.length; i++){
                         if(this.KeyboardData[i].nameLayout === 'caps') continue;
@@ -136,11 +140,13 @@ export class TecladoComponent implements OnInit, OnDestroy {
   
   }
 
-  private loadSendNames(){
-    this.sideBarService.loadNames().subscribe((result) => {
-      this.tecladoService.emitTecladoCommand(result);
+  private loadSingleKeyboardByName(nameLayout: string){
+    this.tecladoService.loadSingleKeyboard(nameLayout).subscribe((data)=>{
+      console.log(data[0]);
     });
-  };
+
+  }
+
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
@@ -244,16 +250,20 @@ export class TecladoComponent implements OnInit, OnDestroy {
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
    
-    setInterval(this.timer1_Tick.bind(this), 1500);
+    this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }
 
   private timer1_Tick(): void {
     if (this.engine !== null) {
       if (this.engine.CurrentState() == EngineState.LineDown) {
+        clearInterval(this.timerId);  
         this.engine.CalculateNextLine();
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
       }
       else if (this.engine.CurrentState() == EngineState.ColumnRight) {
+        clearInterval(this.timerId);
         this.engine.CalculateNextButton();
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeColumns*1000);
       }
     }
   }
