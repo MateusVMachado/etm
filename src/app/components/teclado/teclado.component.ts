@@ -15,7 +15,7 @@ import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
 import { SideBarService } from '../sidebar/sidebar.service';
 import { GeneralConfigService } from '../general-config/general-config.service';
-import { ConfigModel } from '../general-config/config';
+import { ConfigModel } from '../general-config/config.model';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
 
@@ -105,7 +105,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       this.config.lastKeyboard = result.lastKeyboard;
                       this.scanTimeLines = result.openFacConfig.ScanTimeLines;
                       this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
-                                  console.log(result.lastKeyboard);
+
                       let found = false;
                       for(let i=0; i < this.KeyboardData.length; i++){
                         if(this.KeyboardData[i].nameLayout === 'caps') continue;
@@ -244,8 +244,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
    
-    
-    //this.timerId = setInterval(this.timer1_Tick.bind(this), 1500);
     this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }
 

@@ -37,9 +37,7 @@ import { GeneralConfigService } from './components/general-config/general-config
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
     ProfileModule,
-    //ConfigTecladoModule,
     FormsModule
-    //GeneralConfigModule,
     
   ],
   bootstrap: [AppComponent],

@@ -43,7 +43,6 @@ const NB_MODULES = [
   NbSidebarModule,
   NbCheckboxModule,
   NgbModule,
-  //GeneralConfigModule
 ];
 
 const COMPONENTS = [

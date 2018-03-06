@@ -19,7 +19,6 @@ const PAGES_COMPONENTS = [
     DashboardModule,
     EditorTecladoModule,
     ProfileModule,
-    //ConfigTecladoModule,
     GeneralConfigModule
   ],
   declarations: [

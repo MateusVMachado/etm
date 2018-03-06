@@ -41,8 +41,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => { 
                       if ( result.item.target === 'general-config') {
-                        console.log("general-config");
-                        // this.router.navigate(['/pages/dashboard']);
+                        
                       }
                       if ( result.item.target === 'dashboard') {
                         editor.focus();
