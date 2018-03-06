@@ -2,7 +2,7 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import { JWTtoken } from '../../storage';
-import { ConfigModel } from './config';
+import { ConfigModel } from './config.model';
 import { GeneralConfigService } from './general-config.service';
 import { NbAuthService } from '@nebular/auth';
 import { Router } from '@angular/router';
