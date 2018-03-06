@@ -10,7 +10,7 @@ import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
 import * as promise from 'promise';
 import { promisify } from "util";
-import { Login } from './apis/login.api';
+import { Login } from './apis/login/login.api';
 
 /**
  * The server.

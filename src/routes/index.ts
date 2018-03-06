@@ -5,7 +5,7 @@ import { Keyboard } from '../apis/keyboard/keyboard.api';
 import { MongoAccessModel } from "../models/mongoAccess.model";
 import * as moment from 'moment';
 import { BackLogger } from "../apis/backLogger.api";
-import { Login } from '../apis/login.api';
+import { Login } from '../apis/login/login.api';
 import { Auth } from '../apis/auth.api';
 import { Register } from '../apis/register.api';
 import { MongoConfig } from '../mongo.config';
