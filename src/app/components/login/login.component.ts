@@ -1,5 +1,5 @@
 import { ProfileService } from '../profile/profile.service';
-import { ConfigModel } from '../general-config/config';
+import { ConfigModel } from '../general-config/config.model';
 import { User } from '../shared/models/user';
 import { GeneralConfigService } from '../general-config/general-config.service';
 import { AppBaseComponent } from '../shared/components/app-base.component';
