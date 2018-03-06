@@ -10,6 +10,7 @@ import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
 import { NgxRegisterComponent } from './components/register/register.component';
 import { RequestPasswordComponent } from './components/request-password/request-password.component';
+import { GeneralConfigComponent } from './components/general-config/general-config.component';
 
 const routes: Routes = [
   {

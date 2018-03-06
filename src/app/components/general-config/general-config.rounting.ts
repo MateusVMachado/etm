@@ -1,17 +1,17 @@
-import { ConfigModalComponent } from './config.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { GeneralConfigComponent } from './general-config.component';
 
 const routes: Routes = [
     {
-        path: '',  component: ConfigModalComponent,
+        path: '',  component: GeneralConfigComponent,
         children: [{
-            path: 'config',
-            component: ConfigModalComponent,
+            path: 'general-config',
+            component: GeneralConfigComponent,
         },
         {
             path: '',
-            redirectTo: 'config',
+            redirectTo: 'general-config',
             pathMatch: 'full',
         }],
     }
@@ -21,5 +21,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ConfigTecladoRoutingModule {
+export class GeneralConfigRoutingModule {
 }

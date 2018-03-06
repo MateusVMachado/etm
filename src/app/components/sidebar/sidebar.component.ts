@@ -1,5 +1,5 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
-import { ConfigModalComponent } from '../config/config.component';
+//import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 
@@ -10,6 +10,7 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
 import { KeyboardNamesList } from './keyboards-list.model';
+//import { GeneralConfigComponent } from '../general-config/general-config.component';
 
 @Component({
   selector: 'app-pages',
@@ -39,8 +40,8 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => { 
-                      if ( result.item.target === 'config') {
-                        this.showLargeModal();
+                      if ( result.item.target === 'general-config') {
+                        
                       }
                       if ( result.item.target === 'dashboard') {
                         editor.focus();
@@ -49,9 +50,11 @@ export class SidebarComponent implements AfterViewInit, OnInit {
                       } else {
                               // PARTE DO TECLADO
                               editor.focus();
+                              
                               this.sideBarService.emitSideBarCommand(result.item.target);
                               this.editorTecladoServiceSubscribe.unsubscribe();
                               this.router.navigate(['/pages/editor-teclado']);
+                              this.sideBarService.emitSideBarCommand(result.item.target);
                       }
             });  
     });
@@ -63,9 +66,9 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     });
   }
 
-  public showLargeModal() {
-    const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
-  }
+ // public showLargeModal() {
+ //   const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
+ // }
 
   
   private generateMenuItem(list: KeyboardNamesList){
@@ -97,7 +100,20 @@ export class SidebarComponent implements AfterViewInit, OnInit {
       {
         title: 'Configuração',
         icon: 'nb-gear',
-        target: 'config'
+        target: 'config',
+        children: [
+          {
+            title: 'Configuração geral',
+            icon: 'nb-grid-a',
+            //target: 'general-config',
+            link: '/pages/general-config', 
+          },
+          {
+            title: 'Editor de layouts',
+            icon: 'nb-keypad',
+            target: 'layout-editor',
+          },
+        ]
       }];
 
      return myJson; 
