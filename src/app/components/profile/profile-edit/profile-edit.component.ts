@@ -35,7 +35,7 @@ export class ProfileEditComponent implements OnInit {
 
     public save(){
         let usuario: User = new User();
-        usuario = this.authService.getUser();
+        usuario = this.authService.getLocalUser();
         usuario.email = this.user.email;
         usuario.fullName = this.user.name;
         if(this.user.password && this.user.confirmPassword){
@@ -60,7 +60,7 @@ export class ProfileEditComponent implements OnInit {
 
     private loadUser(){
         let user: User = new User();
-        user = this.authService.getUser();
+        user = this.authService.getLocalUser();
         this.user.name = user.fullName;
         this.user.email = user.email;
     }

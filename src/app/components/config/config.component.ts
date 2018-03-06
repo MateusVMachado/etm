@@ -60,7 +60,7 @@ export class ConfigModalComponent extends AppBaseComponent implements OnInit, Af
 
     private loadConfiguration(){
         let user: User = new User();
-        user = this.authService.getUser();
+        user = this.authService.getLocalUser();
         this.configService.getConfiguration(user.email).subscribe((result: ConfigModel) => {
             this.config.linguagem = result.language;
             this.config.layout = result.openFacConfig.KeyboardLayout;

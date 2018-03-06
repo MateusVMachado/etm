@@ -21,7 +21,7 @@ export class ConfigService extends AppServiceBase{
     }
 
     public saveConfiguration(config?: any, keyboardName?:string){
-        let user = this.authService.getUser();
+        let user = this.authService.getLocalUser();
         let configOpenFAC: ConfigModel = new ConfigModel();
         configOpenFAC.language = config.linguagem;
         configOpenFAC.openFacConfig.ActiveSensor = config.sensor;
@@ -34,7 +34,7 @@ export class ConfigService extends AppServiceBase{
     }
 
     public saveOnlyLastKeyboard(keyboardName?:string){
-        let user = this.authService.getUser();
+        let user = this.authService.getLocalUser();
         return this.http.post(this.backendAddress + `/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, { responseType: 'text' });
     }
 
@@ -43,11 +43,12 @@ export class ConfigService extends AppServiceBase{
     }
 
     private getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.localStorage.getItem('JWTtoken')}};
+        let user = this.authService.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {
-        let user = this.authService.getUser();
+        let user = this.authService.getLocalUser();
         return this.http.get(this.backendAddress + `/configuration?email=${user.email}`, this.getDefaultHeaders());
     }
 

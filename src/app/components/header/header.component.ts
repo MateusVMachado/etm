@@ -25,20 +25,17 @@ export class HeaderComponent implements OnInit {
               private menuService: NbMenuService,
               private router: Router,
               private authService: AuthService,
-              private zone: NgZone,
               private profileService: ProfileService
             ) {}
 
   ngOnInit() {    
     this.authService.getObservableUser().subscribe(result =>{
-      this.zone.run(() => {
-        this.usuario = result;
-        if(result.picture.content){
-          this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
-        }else{
-          this.imgUrl = '../../../assets/images/avatarUser.png'
-        }
-      });
+      this.usuario = result;
+      if(result.picture.content){
+        this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
+      }else{
+        this.imgUrl = '../../../assets/images/avatarUser.png'
+      }
     });
   }
 

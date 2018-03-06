@@ -41,7 +41,7 @@
             As senhas não são iguais.                
           </small>
         </div>
-        <div class="form-group accept-group col-sm-12" *ngIf="getConfigValue('forms.register.terms')">
+        <div class="form-group accept-group col-sm-12">
             <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="true">
                 Aceito os <a href="#" target="_blank"><strong>Termos de uso</strong></a>
             </nb-checkbox>

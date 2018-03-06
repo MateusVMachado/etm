@@ -9,6 +9,7 @@ import { AuthService } from '../shared/services/auth.services';
 import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 import { NgForm } from '@angular/forms';
+import { LoginAuthenticateModel } from "./login-authenticate.model";
 
 @Component({
     selector: 'nb-login',
@@ -23,7 +24,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
       rememberMe: ''
     };
 
-    constructor(protected service: AuthService,
+    constructor(protected authService: AuthService,
                 protected router: Router,
                 private cookieService: CookieService,
                 private injector: Injector,
@@ -40,24 +41,20 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
     public login(): void {
         let usuario: User = new User();
         usuario = this.user;
-        this.service.authenticate(usuario).subscribe(
-          (res: any) => {
-              window.localStorage.setItem('JWTtoken', res['accessToken']);
-              this.configService.getConfiguration(this.user.email).subscribe((result: ConfigModel) => {
-                //TODO: chamar função de translate e de configuração do teclado
-              }, (error: any) => {
-                this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
-              })
-
-              this.profileService.getUser(usuario.email).subscribe((result: User) => {
-                this.service.setUser(result);
-                this.router.navigate(['./pages/teclados']);
-              });
+        this.authService.authenticate(usuario).subscribe(
+          (res: LoginAuthenticateModel) => {
+            usuario.jwt = res.accessToken;
+            if(this.user.rememberMe){
+              window.localStorage.setItem('JWTtoken', res.accessToken);
+            }
+            this.authService.getUser(usuario.email).subscribe((res:User) => {
+              this.authService.setUser(res, usuario.jwt)
+              this.router.navigate(['./pages/teclados']);
+            });
           }, (error) =>{
             this.messageService.error('Usuário ou senha inválidos', 'Oops..');
           }
        );
-
     }
 
     navigateTo(path: string) {

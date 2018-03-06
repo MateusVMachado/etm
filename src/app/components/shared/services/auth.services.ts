@@ -1,3 +1,4 @@
+import { LoginAuthenticateModel } from '../../login/login-authenticate.model';
 import { ProfileService } from '../../profile/profile.service';
 import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user';
@@ -15,21 +16,29 @@ export class AuthService extends AppServiceBase {
     private token: any = undefined;
     public isLoggedIn: boolean;
 
-    constructor(protected injector: Injector, private http: HttpClient, private profileService: ProfileService) {
+    constructor(protected injector: Injector, private http: HttpClient) {
         super(injector);
     }
 
     authenticate(user: User) {
-        return this.http.post(this.backendAddress + '/login', user, this.getDefaultHeaders());
+        return this.http.post<LoginAuthenticateModel>(this.backendAddress + '/login', user, this.getDefaultHeaders());
     }
 
     isAuthenticated() {
         let token = window.localStorage.getItem('JWTtoken');
-        if(token){
-            let email = jwt.decode(token).sub;
-            this.profileService.getUser(email).subscribe((usuario: User) =>{
-                this.setUser(usuario);
-            });
+        let user = this.getLocalUser();
+        if(token || user.jwt){
+            if(token){
+                let tokenDecode = jwt.decode(token);
+                let dateNow = Date.now().valueOf() / 1000;
+                if(tokenDecode.exp < dateNow){
+                    window.localStorage.removeItem('JWTtoken');
+                    return false
+                }
+                this.getUser(jwt.decode(token).sub).subscribe((usuario: User) =>{
+                    this.setUser(usuario, token);
+                });
+            }
             return true
         }
         return false
@@ -46,7 +55,8 @@ export class AuthService extends AppServiceBase {
     }
 
     getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.localStorage.getItem('JWTtoken') } };
+        let user = this.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
     setToken(value: any) {
@@ -57,12 +67,17 @@ export class AuthService extends AppServiceBase {
         return this.userSubject.asObservable();
     }
 
-    public getUser(): User{
+    public getLocalUser(): User{
         return this.user;
     }
 
-    public setUser(user: User){
+    public getUser(email:string) {
+        return this.http.get(this.backendAddress + `/user?email=${email}`, this.getDefaultHeaders());
+    }
+
+    public setUser(user: User, jwt?: string){
         this.user = user;
+        this.user.jwt = jwt;
         this.userSubject.next(this.user);
     }
 }

@@ -1,3 +1,4 @@
+import { AuthService } from '../shared/services/auth.services';
 import { User } from '../shared/models/user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
@@ -7,7 +8,7 @@ import { AppServiceBase } from '../shared/services/app-service-base.service';
 
 @Injectable()
 export class ProfileService extends AppServiceBase {
-    constructor(protected injector: Injector, private http: HttpClient){
+    constructor(protected injector: Injector, private http: HttpClient, private authService: AuthService){
         super(injector);
     }
 
@@ -15,11 +16,8 @@ export class ProfileService extends AppServiceBase {
         return this.http.post(this.backendAddress + '/updateUser', user, this.getDefaultHeaders());
     }
 
-    getUser(email:string) {
-        return this.http.get(this.backendAddress + `/user?email=${email}`, this.getDefaultHeaders());
-    }
-
     getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + window.localStorage.getItem('JWTtoken')} };
+        let user = this.authService.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 }
