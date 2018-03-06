@@ -51,9 +51,11 @@ export class SidebarComponent implements AfterViewInit, OnInit {
                       } else {
                               // PARTE DO TECLADO
                               editor.focus();
+                              
                               this.sideBarService.emitSideBarCommand(result.item.target);
                               this.editorTecladoServiceSubscribe.unsubscribe();
                               this.router.navigate(['/pages/editor-teclado']);
+                              this.sideBarService.emitSideBarCommand(result.item.target);
                       }
             });  
     });

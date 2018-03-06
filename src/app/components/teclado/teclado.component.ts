@@ -42,7 +42,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private configServiceSubscribe: Subscription;
   private capsIndex: number;
   private ptbrIndex: number; 
- 
+  private timerId: number;
+  private scanTimeLines: number;
+  private scanTimeColumns: number;
+  
 
   public menu: NbMenuItem[];
   public jsonArray = new Array();
@@ -64,7 +67,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-   
     
   }
 
@@ -101,6 +103,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
                                 .subscribe((result: ConfigModel) => {
 
                       this.config.lastKeyboard = result.lastKeyboard;
+                      this.scanTimeLines = result.openFacConfig.ScanTimeLines;
+                      this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
+                                  console.log(result.lastKeyboard);
                       let found = false;
                       for(let i=0; i < this.KeyboardData.length; i++){
                         if(this.KeyboardData[i].nameLayout === 'caps') continue;
@@ -239,16 +244,22 @@ export class TecladoComponent implements OnInit, OnDestroy {
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
    
-    setInterval(this.timer1_Tick.bind(this), 1500);
+    
+    //this.timerId = setInterval(this.timer1_Tick.bind(this), 1500);
+    this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }
 
   private timer1_Tick(): void {
     if (this.engine !== null) {
       if (this.engine.CurrentState() == EngineState.LineDown) {
+        clearInterval(this.timerId);  
         this.engine.CalculateNextLine();
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
       }
       else if (this.engine.CurrentState() == EngineState.ColumnRight) {
+        clearInterval(this.timerId);
         this.engine.CalculateNextButton();
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeColumns*1000);
       }
     }
   }

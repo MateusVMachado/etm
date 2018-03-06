@@ -16,7 +16,6 @@ import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
 @Component({
     selector: 'app-modal-config',
     templateUrl: './general-config.component.html',
-    //styleUrls: ['./general-config.component.scss']
 })
 
 export class GeneralConfigComponent extends AppBaseComponent implements OnInit, AfterViewInit {
