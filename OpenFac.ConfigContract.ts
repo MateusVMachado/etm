@@ -3,7 +3,8 @@ export class OpenFACConfig {
     public KeyboardLayout: string;
     public ScanType: string;
     public ActiveSensor: string;
-    public ScanTime: number;
+    public ScanTimeLines: number;
+    public ScanTimeColumns: number;
 }
 /*[DataContract]*/
 export class OpenFACLayout {

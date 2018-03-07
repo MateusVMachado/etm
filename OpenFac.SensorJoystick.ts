@@ -3,10 +3,12 @@ import { OpenFacSensorBase } from './OpenFac.SensorBase';
 
 export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
+    private toDoAction: boolean = true;
     private cancelationToken: number;
     private gamepads: Gamepad[];
     private keyPressed: String;
     private controllerName: String;
+    private worker;
   
     //public main_gamepad: number = 1;
     private mainGamepad: number = -1;
@@ -27,6 +29,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     }
 
     public Start(): void {
+      this.worker = new Worker('worker.js');
       this.doGamepadLoop();      
     }
 
@@ -58,21 +61,24 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     
       public doGamepadLoop() {
          let fps = 5;
+         //let speed = 1250;
+         //let speed = 2000;
+         let speed = 1200;
          //setTimeout(this.animate.bind(this), 1000/fps);
-         setTimeout(this.animate.bind(this), 2500/fps);
-                  
-
+         //setTimeout(this.animate.bind(this), 2500/fps);
+         //setTimeout(this.animate.bind(this), speed/fps);   
+         //this.detectControllers();
+         //setTimeout(this.toDoAction = true, (speed/2)/fps );     
+         this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
       }
 
       public animate(){
-              this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
+              //this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
+              this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
 
               this.detectControllers();
               
               const gamepad = this.gamepads[this.mainGamepad];
-
-              
-
 
               if (gamepad && gamepad.connected) {
 
@@ -80,8 +86,13 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
                   const button = gamepad.buttons[index];
 
                   if (((button.value > 0) || (button.pressed))) {
-                    this.DoAction(0);
-                    this.keyPressed = button.pressed + " " + button.value;
+                    
+                        this.DoAction(0);
+                        //this.toDoAction = false;
+                        this.keyPressed = button.pressed + " " + button.value;
+                        console.log(this.keyPressed);
+                        
+                    //this.keyPressed = button.pressed + " " + button.value;
                   }
                 }
               }
