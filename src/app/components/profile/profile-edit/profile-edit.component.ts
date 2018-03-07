@@ -3,7 +3,6 @@ import { Picture } from '../../shared/models/picture';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../shared/services/auth.services';
 import { User } from '../../shared/models/user';
-import { JWTtoken } from '../../../storage';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -36,7 +35,7 @@ export class ProfileEditComponent implements OnInit {
 
     public save(){
         let usuario: User = new User();
-        usuario = this.authService.getUser();
+        usuario = this.authService.getLocalUser();
         usuario.email = this.user.email;
         usuario.fullName = this.user.name;
         if(this.user.password && this.user.confirmPassword){
@@ -61,7 +60,7 @@ export class ProfileEditComponent implements OnInit {
 
     private loadUser(){
         let user: User = new User();
-        user = this.authService.getUser();
+        user = this.authService.getLocalUser();
         this.user.name = user.fullName;
         this.user.email = user.email;
     }

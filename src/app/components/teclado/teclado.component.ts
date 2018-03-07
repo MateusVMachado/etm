@@ -7,7 +7,6 @@ import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
 import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
 import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
-import { KeyboardData } from '../../storage';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';

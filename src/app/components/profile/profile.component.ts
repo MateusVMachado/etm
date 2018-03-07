@@ -15,7 +15,7 @@ export class ProfileComponent implements OnInit {
     
     ngOnInit() {
         this.user = new User();
-        this.user = this.authService.getUser();
+        this.user = this.authService.getLocalUser();
     }
 
     public showLargeModal() {

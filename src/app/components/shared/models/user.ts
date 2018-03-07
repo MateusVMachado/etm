@@ -6,6 +6,7 @@ export class User {
     email: string;
     password: string;
     picture: Picture;
+    jwt: string;
 
     constructor(){
         this.picture = new Picture();

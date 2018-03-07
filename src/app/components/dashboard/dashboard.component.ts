@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { JWTtoken } from '../../storage';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,7 +7,6 @@ import { Router } from '@angular/router';
 })
 
 export class DashboardComponent implements OnInit {
-    public token: string = JWTtoken.token;
 
     constructor(private router: Router) {
 

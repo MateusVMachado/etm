@@ -1,7 +1,6 @@
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
-import { JWTtoken } from '../../storage';
 import { ConfigModel } from './config.model';
 import { GeneralConfigService } from './general-config.service';
 import { NbAuthService } from '@nebular/auth';
@@ -51,7 +50,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
 
     private loadConfiguration(){
         let user: User = new User();
-        user = this.authService.getUser();
+        user = this.authService.getLocalUser();
         this.configService.getConfiguration(user.email).subscribe((result: ConfigModel) => {
             this.config.linguagem = result.language;
             this.config.layout = result.openFacConfig.KeyboardLayout;

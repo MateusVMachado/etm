@@ -10,7 +10,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.services';
-import { JWTtoken } from '../../storage';
 import 'rxjs/add/operator/catch';
 import { Injector } from '@angular/core';
 

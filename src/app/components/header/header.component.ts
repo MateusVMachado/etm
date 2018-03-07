@@ -6,7 +6,6 @@ import { DomSanitizer, SafeHtml, SafeStyle } from '@angular/platform-browser';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
 import { Router } from '@angular/router';
-import { JWTtoken } from '../../storage';
 @Component({
   selector: 'app-header',
   styleUrls: ['./header.component.scss'],
@@ -26,20 +25,17 @@ export class HeaderComponent implements OnInit {
               private menuService: NbMenuService,
               private router: Router,
               private authService: AuthService,
-              private zone: NgZone,
               private profileService: ProfileService
             ) {}
 
   ngOnInit() {    
     this.authService.getObservableUser().subscribe(result =>{
-      this.zone.run(() => {
-        this.usuario = result;
-        if(result.picture.content){
-          this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
-        }else{
-          this.imgUrl = '../../../assets/images/avatarUser.png'
-        }
-      });
+      this.usuario = result;
+      if(result.picture.content){
+        this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
+      }else{
+        this.imgUrl = '../../../assets/images/avatarUser.png'
+      }
     });
   }
 
@@ -58,7 +54,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    JWTtoken.token = undefined;
+    window.localStorage.removeItem('JWTtoken')
     this.router.navigate(["./auth"]);
   }
 
