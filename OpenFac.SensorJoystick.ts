@@ -48,13 +48,10 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     }
 
     public Start(): void {
-      //this.worker = new Worker('worker.js');
 
-      //var w;
       this.startWorker();
       this.animateLoop();
-
-      //this.doGamepadLoop();      
+    
     }
 
     public sayHello(){
@@ -66,19 +63,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     public detectControllers(){
       
       this.gamepads = navigator.getGamepads();
-    /*  
-      if(this.mainGamepad === -1){
-          this.getActiveGamepadId(this.gamepads);
-      }    
-      if (this.gamepads) {
-        if (this.gamepads[this.mainGamepad]) {
-          this.controllerName = this.gamepads[this.mainGamepad].id;
-        }
-      }
 
-      */
-      
-      
       let gamepadsArray = new Array<EtmGamepad>();
       for(let i =0 ; i < this.gamepads.length; i++){
           if(this.gamepads[i] !== null){
@@ -91,7 +76,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
               let etmButton = new Button();
               etmButton.value = button.value;
               etmButton.pressed = button.pressed;
-              //if(etmButton.pressed) console.log("HEllo")
               gamepad.buttons.push(etmButton);
             }
           } 
@@ -103,11 +87,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
         gamepads: gamepadsArray
       };       
 
-
-      //console.log(msg.gamepads);
-      //console.log(JSON.parse(JSON.stringify(msg)));
-      
-      //this.worker.postMessage(JSON.parse(JSON.stringify(msg))); // Start the worker.
       this.worker.postMessage(msg); // Start the worker.
 
     }
@@ -136,7 +115,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     public startWorker() {
       if (typeof (Worker) !== "undefined") {
         if (typeof (this.worker) == "undefined") {
-          //let blob = new Blob([this.doGamepadLoop()], { type: "text/javascript" })
           let workerCode = 'var gamepads;'+
           'var sentinel = 0;'+
           'var sentinelIndex = -1;'+
@@ -164,10 +142,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
           ''+
           ''+
           'function detectControllers(gamepads) {'+
-          //'self.console.log(navigatorObj);'+
-          //'	//gamepads = navigatorObj.getGamepads();'+
-          //'	gamepads = msg.gamepads;'+
-          //' self.console.log(gamepads);'+
           '	if (mainGamepad === -1) {'+
           '		getActiveGamepadId(gamepads);'+
           '	}'+
@@ -179,46 +153,33 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
           '};'+
           ''+
           'function animate(gamepads) {        '+
-         // '	while (doLoop) {'+
          ' if(!gamepads) return;'+
           '		detectControllers(gamepads);'+
-          //'self.console.log(gamepads);'+
-          //'       self.console.log(mainGamepad);'+
           '		var gamepad = gamepads[mainGamepad];'+
           
           '		if (gamepad && gamepad.connected) {'+
-          //'       self.console.log("MARK0");'+
           '			for (var index = 0; index < gamepad.buttons.length; index++) {'+
           '				var button = gamepad.buttons[index];'+
-          //'       self.console.log("MARK1");'+
           '				if (((button.value > 0) || (button.pressed))) {'+
-          //'       self.console.log("apertou");'+ 
           '       sentinelIndex = index;'+
           '       sentinel += 1;'+
-          //'       self.console.log(sentinel);'+
-          //'         self.console.log("PRESSED");'+
           '         if(sentinel < 2){'+
           '					  postMessage("doAction");'+
           '         }'+
           '       }'+
-          '				if (!button.pressed && index === sentinelIndex){'+
-          //'       self.console.log("desapertou");'+        
+          '				if (!button.pressed && index === sentinelIndex){'+     
           '           sentinel=0;'+
           '       }'+
           '			}'+
           '		}'+
-          //'	}'+
           '};'+
           ''+
           'self.onmessage = function (msg) {'+          
-          //' console.log(msg); '+
           ' msg = msg.data; '+
           ' gamepads = msg.gamepads; '+
           '  if(msg.start){'+
-          //' console.log("START = TRUE");'+
           '    animate(gamepads);'+
           '  }else{'+
-          //' console.log("START = FALSE");'+
           '    doLoop = false;'+
           '  }'+
           '}'+
@@ -252,7 +213,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
   public Stop(): void{
     this.stopWorker();
-    //cancelAnimationFrame(this.cancelationToken);
   }
 
   public static Create(documentDOM: any): IOpenFacSensor {
@@ -260,82 +220,3 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
   }
 }
 
-
-
-// FUNCIONANDO
-/*
-public doGamepadLoop() {
-  let fps = 5;
-  let speed = 1200;
-  setTimeout(this.animate.bind(this), speed/fps);   
-}
-
-public animate(){
-       this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
-
-       this.detectControllers();
-       
-       const gamepad = this.gamepads[this.mainGamepad];
-
-       if (gamepad && gamepad.connected) {
-
-         for (let index = 0; index < gamepad.buttons.length; index++) {
-           const button = gamepad.buttons[index];
-
-           if (((button.value > 0) || (button.pressed))) {
-             
-                 this.DoAction(0);
-                 //this.toDoAction = false;
-                 this.keyPressed = button.pressed + " " + button.value;
-                 console.log(this.keyPressed);
-                 
-             //this.keyPressed = button.pressed + " " + button.value;
-           }
-         }
-       }
-
-}
-*/
-
-// EM DESENVOLVIMENTO
-/*
-  public doGamepadLoop() {
-         let fps = 5;
-         //let speed = 1250;
-         //let speed = 2000;
-         let speed = 1200;
-         //setTimeout(this.animate.bind(this), 1000/fps);
-         //setTimeout(this.animate.bind(this), 2500/fps);
-         //setTimeout(this.animate.bind(this), speed/fps);   
-         //this.detectControllers();
-         //setTimeout(this.toDoAction = true, (speed/2)/fps );     
-         this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
-      }
-
-      public animate(){
-              //this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
-              this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
-
-              this.detectControllers();
-              
-              const gamepad = this.gamepads[this.mainGamepad];
-
-              if (gamepad && gamepad.connected) {
-
-                for (let index = 0; index < gamepad.buttons.length; index++) {
-                  const button = gamepad.buttons[index];
-
-                  if (((button.value > 0) || (button.pressed))) {
-                    
-                        this.DoAction(0);
-                        //this.toDoAction = false;
-                        this.keyPressed = button.pressed + " " + button.value;
-                        console.log(this.keyPressed);
-                        
-                    //this.keyPressed = button.pressed + " " + button.value;
-                  }
-                }
-              }
-
-      }
-*/      
