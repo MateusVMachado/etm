@@ -55,6 +55,13 @@ export class IndexRoute extends BaseRoute {
       keyboard.keyboard_api(req,res,next);  
     });
 
+    router.get("/getSingleKeyboard", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      console.log("LOGGER NO GET");
+      backLogger.logRequests(req);
+      keyboard.getSingleKeyboardByName(req,res,next);  
+    });
+
     router.get("/keyboard/getKeyboardNames", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       console.log("getKeyboardNames");
