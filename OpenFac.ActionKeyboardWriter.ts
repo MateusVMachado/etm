@@ -2,7 +2,7 @@ import { IOpenFacAction } from './OpenFac.Action.Interface';
 import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { OpenFacEngine } from './OpenFac.Engine';
 import { OpenFacKeyCommandService } from './OpenFac.KeyCommand.service';
-
+import { KeyboardWriterService } from './OpenFAc.KeyboardWriterService';
 
 export class OpenFacActionKeyboardWriter implements IOpenFacAction {    
     public cursorPosition: number = 0;
@@ -12,10 +12,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public keyCommandService: any;
     public zone: any;
     private maxLength: number = 1;
+    private keyboardWriterService: KeyboardWriterService = new KeyboardWriterService();
 
     private tabs: Map<number, boolean> = new Map<number, boolean>()
-
-    //constructor(private editor: any, public keyCommandService: OpenFacKeyCommandService, private zone: NgZone){        
+      
     constructor(private args: any){
         this.editor = this.args[0];
         this.keyCommandService = this.args[1];
@@ -26,6 +26,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     }
 
     public Execute(Engine: IOpenFacEngine){
+        if(this.editor === null) return;
         let eg = <OpenFacEngine> Engine;
         let bt = eg.GetCurrentButton();
         this.editor.focus();
@@ -110,11 +111,13 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 // do something
                 break;
             case '*space':
+                this.editor.focus();
                 this.editor.insertHtml('&nbsp;');      
                 this.maxLength += 1;
                 this.doGetCaretPosition();
                 break;                                   
             default:
+                this.editor.focus();
                 this.editor.insertText(bt.Text);
                 this.maxLength += 1;
                 this.doGetCaretPosition();
@@ -151,8 +154,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public doGetCaretPosition(toReturn?:boolean) {
         this.editor.focus();
         let selection = this.editor.getSelection();
-        let range = selection.getRanges()[0];
-        this.cursorPosition = range.startOffset + 1;
+        if(selection !== null) { 
+            let range = selection.getRanges()[0];
+            this.cursorPosition = range.startOffset + 1;
+        }    
         if(toReturn) return this.cursorPosition;
     }
 
