@@ -1,10 +1,11 @@
+import {LoginAuthenticate } from './login-authenticate.model';
 import { NextFunction, Request, Response, Router } from "express";
-import { BaseRoute } from "../routes/route";
-import { KeyboardModel } from '../models/keyboard.model';
-import { MongoAccessModel } from "../models/mongoAccess.model";
+import { BaseRoute } from "../../routes/route";
+import { KeyboardModel } from '../../models/keyboard.model';
+import { MongoAccessModel } from "../../models/mongoAccess.model";
 import * as CryptoJS from 'crypto-js';
 import * as jwt from 'jsonwebtoken';
-import { backendConfig } from '../backend.config';
+import { backendConfig } from '../../backend.config';
 
 
 //var jwt = require('jsonwebtoken');
@@ -29,11 +30,14 @@ export class Login extends BaseRoute{
                         console.log("AUTENTICADO!");
         
                         let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app' }, 
-                                    backendConfig.secret);
+                                    backendConfig.secret, {expiresIn: 86400}); //1 dia
                         
                         console.log("[server] Sent: " + token);
-                        res.json({ name: user_list[0]['fullName'], email: user_list[0]['email'],
-                                 accessToken: token });
+                        let response = new LoginAuthenticate();
+                        response.name = user_list[0]['fullName'];
+                        response.email = user_list[0]['email'];
+                        response.accessToken = token;
+                        res.json(response);
         
                     } else {
                         console.log("NÃO AUTENTICADO");
