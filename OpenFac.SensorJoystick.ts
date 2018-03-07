@@ -29,7 +29,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     }
 
     public Start(): void {
-      this.worker = new Worker('worker.js');
       this.doGamepadLoop();      
     }
 

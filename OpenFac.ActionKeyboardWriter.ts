@@ -37,7 +37,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.insertHtml('<br>');
                 this.maxLength += 1;
                 this.doGetCaretPosition();
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
             case '*bckspc':
                 this.editor.focus();
@@ -53,7 +52,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                     this.maxLength -= 1;
                     this.doGetCaretPosition();
                 }
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
             case '*tab':
                 this.editor.focus();
@@ -65,12 +63,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 } 
                 this.tabs.set(this.cursorPosition, true);
                 this.tabs.set(this.cursorPosition-3, true);
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
             case '*cpslck':
                 this.editor.focus();
                 this.keyCommandService.emitKeyCommand('caps');
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
             case '*arrowup':
                 // do something
@@ -97,7 +93,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
             }
                 // do something
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
             case '*arrowright':
             if ( this.tabs.get(this.cursorPosition) ){
@@ -114,7 +109,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
             }    
                 // do something
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
             case '*space':
                 this.editor.focus();
@@ -127,7 +121,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.insertText(bt.Text);
                 this.maxLength += 1;
                 this.doGetCaretPosition();
-                this.keyboardWriterService.emitKeyboardWriterCommand("activate");
                 break;
         }
       
