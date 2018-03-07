@@ -111,3 +111,39 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
 }
 
+
+
+// FUNCIONANDO
+/*
+public doGamepadLoop() {
+  let fps = 5;
+  let speed = 1200;
+  setTimeout(this.animate.bind(this), speed/fps);   
+}
+
+public animate(){
+       this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
+
+       this.detectControllers();
+       
+       const gamepad = this.gamepads[this.mainGamepad];
+
+       if (gamepad && gamepad.connected) {
+
+         for (let index = 0; index < gamepad.buttons.length; index++) {
+           const button = gamepad.buttons[index];
+
+           if (((button.value > 0) || (button.pressed))) {
+             
+                 this.DoAction(0);
+                 //this.toDoAction = false;
+                 this.keyPressed = button.pressed + " " + button.value;
+                 console.log(this.keyPressed);
+                 
+             //this.keyPressed = button.pressed + " " + button.value;
+           }
+         }
+       }
+
+}
+*/
