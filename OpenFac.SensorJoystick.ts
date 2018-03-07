@@ -59,44 +59,41 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     
     
       public doGamepadLoop() {
-         let fps = 5;
-         //let speed = 1250;
-         //let speed = 2000;
-         let speed = 1200;
-         //setTimeout(this.animate.bind(this), 1000/fps);
-         //setTimeout(this.animate.bind(this), 2500/fps);
-         //setTimeout(this.animate.bind(this), speed/fps);   
-         //this.detectControllers();
-         //setTimeout(this.toDoAction = true, (speed/2)/fps );     
-         this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
+        let fps = 5;
+        let speed = 1200;
+        setTimeout(this.animate.bind(this), speed/fps);   
       }
-
+      
       public animate(){
-              //this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
-              this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
-
-              this.detectControllers();
-              
-              const gamepad = this.gamepads[this.mainGamepad];
-
-              if (gamepad && gamepad.connected) {
-
-                for (let index = 0; index < gamepad.buttons.length; index++) {
-                  const button = gamepad.buttons[index];
-
-                  if (((button.value > 0) || (button.pressed))) {
-                    
-                        this.DoAction(0);
-                        //this.toDoAction = false;
-                        this.keyPressed = button.pressed + " " + button.value;
-                        console.log(this.keyPressed);
-                        
-                    //this.keyPressed = button.pressed + " " + button.value;
-                  }
-                }
-              }
-
+             this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
+      
+             this.detectControllers();
+             
+             const gamepad = this.gamepads[this.mainGamepad];
+      
+             if (gamepad && gamepad.connected) {
+      
+               for (let index = 0; index < gamepad.buttons.length; index++) {
+                 const button = gamepad.buttons[index];
+      
+                 if (((button.value > 0) || (button.pressed))) {
+                   
+                       this.DoAction(0);
+                       //this.toDoAction = false;
+                       this.keyPressed = button.pressed + " " + button.value;
+                       console.log(this.keyPressed);
+                       
+                   //this.keyPressed = button.pressed + " " + button.value;
+                 }
+               }
+             }
+      
       }
+
+
+
+
+    
 
       public getActiveGamepadId(gamepads: Gamepad[]){
             for (let i = 0; i < gamepads.length; i++) {
@@ -147,3 +144,46 @@ public animate(){
 
 }
 */
+
+// EM DESENVOLVIMENTO
+/*
+  public doGamepadLoop() {
+         let fps = 5;
+         //let speed = 1250;
+         //let speed = 2000;
+         let speed = 1200;
+         //setTimeout(this.animate.bind(this), 1000/fps);
+         //setTimeout(this.animate.bind(this), 2500/fps);
+         //setTimeout(this.animate.bind(this), speed/fps);   
+         //this.detectControllers();
+         //setTimeout(this.toDoAction = true, (speed/2)/fps );     
+         this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
+      }
+
+      public animate(){
+              //this.cancelationToken = requestAnimationFrame(this.doGamepadLoop.bind(this));
+              this.cancelationToken = requestAnimationFrame(this.animate.bind(this));
+
+              this.detectControllers();
+              
+              const gamepad = this.gamepads[this.mainGamepad];
+
+              if (gamepad && gamepad.connected) {
+
+                for (let index = 0; index < gamepad.buttons.length; index++) {
+                  const button = gamepad.buttons[index];
+
+                  if (((button.value > 0) || (button.pressed))) {
+                    
+                        this.DoAction(0);
+                        //this.toDoAction = false;
+                        this.keyPressed = button.pressed + " " + button.value;
+                        console.log(this.keyPressed);
+                        
+                    //this.keyPressed = button.pressed + " " + button.value;
+                  }
+                }
+              }
+
+      }
+*/      
