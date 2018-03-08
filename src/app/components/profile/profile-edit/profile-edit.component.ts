@@ -41,7 +41,7 @@ export class ProfileEditComponent implements OnInit {
         if(this.user.password && this.user.confirmPassword){
             usuario.password = this.user.password
         }
-        if(this.imageFile){
+        if(this.imageFile.content){
             usuario.picture = this.imageFile;
         }
         this.closeModal();
