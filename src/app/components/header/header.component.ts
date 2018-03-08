@@ -1,6 +1,6 @@
-import { ProfileEditComponent } from '../profile/profile-edit.component';
+import { ProfileComponent } from '../profile/profile.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProfileEditService } from '../profile/profile-edit.service';
+import { ProfileService } from '../profile/profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone, OnInit } from '@angular/core';
@@ -60,16 +60,16 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(["./auth"]);
   }
 
-  public showLargeModal() {
+  /*public showLargeModal() {
       const activeModal = this.modalService.open(ProfileEditComponent, { size: 'lg', container: 'nb-layout' });
-  }
+  }*/
 
   menuItem(item: any){
     if(item.tag === 'sair'){
       this.logout();
     }else {
       if(item.tag === 'perfil'){
-        this.showLargeModal();
+        this.router.navigate(["/pages/profile"]);
       }
     }
   }

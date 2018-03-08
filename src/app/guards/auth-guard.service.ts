@@ -1,4 +1,4 @@
-import { ProfileEditService } from '../components/profile/profile-edit.service';
+import { ProfileService } from '../components/profile/profile.service';
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { tap } from 'rxjs/operators/tap';
@@ -8,7 +8,7 @@ import { AuthService } from '../components/shared/services/auth.services';
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-  constructor(public authService: AuthService, public router: Router, private profileService: ProfileEditService) {}
+  constructor(public authService: AuthService, public router: Router, private profileService: ProfileService) {}
 
   canActivate(): boolean {
     if (!this.authService.isAuthenticated()) {

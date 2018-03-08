@@ -1,3 +1,4 @@
+import { ProfileComponent } from '../profile/profile.component';
 import { TecladoComponent } from '../teclado/teclado.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -28,6 +29,10 @@ const routes: Routes = [{
       path: 'general-config',
       component: GeneralConfigComponent,
     },
+    {
+      path: 'profile',
+      component: ProfileComponent,
+    }
   ],
 }];
 
