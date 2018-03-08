@@ -1,4 +1,3 @@
-import { ProfileComponent } from '../profile/profile.component';
 import { TecladoComponent } from '../teclado/teclado.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
@@ -24,9 +23,6 @@ const routes: Routes = [{
     {
       path: 'editor-teclado',
       component: EditorTecladoComponent,
-    },{
-      path: 'profile',
-      component: ProfileComponent,
     },
     {
       path: 'general-config',

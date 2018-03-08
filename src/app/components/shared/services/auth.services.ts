@@ -1,5 +1,4 @@
 import { LoginAuthenticateModel } from '../../login/login-authenticate.model';
-import { ProfileService } from '../../profile/profile.service';
 import { Subject } from 'rxjs/Subject';
 import { User } from '../models/user';
 import { AppServiceBase } from './app-service-base.service';
