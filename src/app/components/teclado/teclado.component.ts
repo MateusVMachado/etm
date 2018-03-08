@@ -65,9 +65,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.configServiceSubscribe.unsubscribe();
   }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() { }
 
   ngAfterViewInit(){
 
@@ -91,7 +89,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       this.capsIndex = i;
                   } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
                     this.ptbrIndex = i;
-                  }    
+                  }   
                 }
                 
                 // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
