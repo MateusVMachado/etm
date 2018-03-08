@@ -7,6 +7,7 @@ import { SidebarComponent } from './sidebar.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { EditorTecladoComponent } from '../editor-teclado/editor-teclado.component';
 import { GeneralConfigComponent } from '../general-config/general-config.component';
+import { LayoutEditorComponent } from '../layout-editor/layout-editor.component';
 
 const routes: Routes = [{
   path: '',
@@ -31,6 +32,10 @@ const routes: Routes = [{
     {
       path: 'general-config',
       component: GeneralConfigComponent,
+    },
+    {
+      path: 'layout-editor',
+      component: LayoutEditorComponent,
     },
   ],
 }];

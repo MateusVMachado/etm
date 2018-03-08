@@ -1,0 +1,216 @@
+<div styele="width: 100%; heigth: 100%; background-color: #364150">
+
+        <div class="box-teclado">
+                <div class="teclado-container">
+                        <div class="row" style="padding-left:15px">
+                                <div class="col-md-1">
+                                    <input type="button" class="btn button-keyboard-menu" value="Adicionar Linha" style="word-break: normal" />
+                                </div>    
+                                <div class="col-md-1">
+                                        <input type="button" class="btn button-keyboard-menu" value="Remover Linha" />
+                                </div>    
+                                <div class="col-md-1">
+                                            <input type="button" class="btn button-keyboard-menu" value="Inserir Imagem" />
+                                </div>    
+                                <div class="col-md-1">
+                                        <input type="button" class="btn button-keyboard-menu" value="Deletar Teclado" />
+                            </div>
+                            <div class="col-md-1">
+                                    <input type="button" class="btn button-keyboard-menu" value="Salvar Teclado" />
+                        </div>
+                        <div class="col-md-1">                        
+                            <select style="width: 200px; height: 40px;">
+                                <option selected disabled>Teclados</option>
+                                <option value="volvo">pt-br</option>
+                                <option value="saab">teste01</option>
+                                <option value="opel">teste02</option>
+                            </select>
+                        </div>
+                                
+                        </div>        
+            </div>
+        </div>
+
+        <div class="box-teclado">
+            <!--{{openFacLayout.Lines}}-->
+            <div class="teclado-container-editor">
+            <div style="z-index: 0">
+                <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px">
+        
+                <div class="col-md-12 line">
+                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
+                    <div *ngIf="i <= 14">
+        
+                        <button *ngIf="key == '*tab'"
+                        class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon  class="mat-icon material-icons"
+                            role="img" aria-hidden="true">keyboard_tab</mat-icon>
+                        </button>
+        
+        
+                        <button 
+                        *ngIf="key == '*cpslck'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
+                        </button>
+        
+        
+                        <input style="text-align: center;"
+                        *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                                && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                                && key != '*arrowdown' && key != '*arrowright'" 
+                        type="button" class="btn button-keyboard-down" value="{{ key }}" />
+        
+        
+                        <button 
+                        *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                        </button>
+        
+        
+                        <button 
+                        *ngIf="key == '*arrowup'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
+                        </button>                 
+        
+                        <button 
+                        *ngIf="key == '*arrowdown'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
+                        </button>              
+        
+                        
+                        <button 
+                        *ngIf="key == '*arrowleft'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
+                        </button>   
+        
+        
+                        <button 
+                        *ngIf="key == '*arrowright'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
+                        </button>                 
+        
+        
+                        <button 
+                        *ngIf="key == '*kbdrtrn'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
+                        </button>
+        
+        
+        
+                                <button 
+                                    *ngIf="key == '*space'" class="btn button-keyboard icon-keyboard tamanho-button3" 
+                                    value="SPACE" >
+                                <mat-icon 
+                                        class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
+                                </button>
+        
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="box-teclado">
+            <!--{{openFacLayout.Lines}}-->
+            <div class="teclado-container">
+            <div style="z-index: 0">
+                <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
+        
+                <div class="col-md-12 line">
+                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
+                    <div *ngIf="i <= 14">
+        
+                        <button *ngIf="key == '*tab'"
+                        class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon  class="mat-icon material-icons"
+                            role="img" aria-hidden="true">keyboard_tab</mat-icon>
+                        </button>
+        
+        
+                        <button 
+                        *ngIf="key == '*cpslck'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
+                        </button>
+        
+        
+                        <input 
+                        *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                                && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                                && key != '*arrowdown' && key != '*arrowright'" 
+                        type="button" class="btn button-keyboard" value="{{ key }}"  />
+        
+        
+                        <button 
+                        *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                        </button>
+        
+        
+                        <button 
+                        *ngIf="key == '*arrowup'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
+                        </button>                 
+        
+                        <button 
+                        *ngIf="key == '*arrowdown'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
+                        </button>              
+        
+                        
+                        <button 
+                        *ngIf="key == '*arrowleft'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
+                        </button>   
+        
+        
+                        <button 
+                        *ngIf="key == '*arrowright'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
+                        </button>                 
+        
+        
+                        <button 
+                        *ngIf="key == '*kbdrtrn'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
+                        </button>
+        
+        
+        
+                                <button 
+                                    *ngIf="key == '*space'" class="btn button-keyboard icon-keyboard tamanho-button3" 
+                                    value="SPACE" >
+                                <mat-icon 
+                                        class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
+                                </button>
+        
+                        
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+</div>        

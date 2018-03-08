@@ -40,7 +40,19 @@ export class TecladoService extends AppServiceBase {
           return this.tecladoSubject.asObservable();      
       }
     
-
+     convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
+        keyboard.teclas = [];
+        layout.Lines.forEach(element => {
+            let line = [];
+            element.Buttons.forEach(element => {
+                line.push(element.Text);
+            });
+            keyboard.teclas.push(line);
+            
+        });
+        keyboard.type = layout.nameLayout;
+    }
+      
     loadTeclado(type: string): TecladoModel {
         this.teclado.teclas = []; // Clear teclado
 

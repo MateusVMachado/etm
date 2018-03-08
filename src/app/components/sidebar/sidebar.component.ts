@@ -40,9 +40,6 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => { 
-                      if ( result.item.target === 'general-config') {
-                        
-                      }
                       if ( result.item.target === 'dashboard') {
                         editor.focus();
                         this.editorTecladoServiceSubscribe.unsubscribe();
@@ -111,7 +108,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
           {
             title: 'Editor de layouts',
             icon: 'nb-keypad',
-            target: 'layout-editor',
+            link: '/pages/layout-editor',
           },
         ]
       }];
