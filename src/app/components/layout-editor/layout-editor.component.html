@@ -17,7 +17,10 @@
                                 </div>    
                                 <div class="col-md-1">
                                             <input type="button" class="btn button-keyboard-menu" value="Inserir Imagem" />
-                                </div>    
+                                </div>
+                                <div class="col-md-1">
+                                        <input type="button" class="btn button-keyboard-menu" value="Editar Texto" />
+                                 </div>        
                                 <div class="col-md-1">
                                         <input type="button" class="btn button-keyboard-menu" value="Deletar Teclado" />
                             </div>
@@ -37,8 +40,11 @@
             </div>
         </div>
 
+
+
+
+        
         <div class="box-teclado">
-            <!--{{openFacLayout.Lines}}-->
             <div class="teclado-container-editor">
             <div style="z-index: 0">
                 <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px">
@@ -126,19 +132,82 @@
             </div>
         </div>
 
+    
 
-
-
+<!--
+        <div class="box-teclado">
+                <div class="teclado-container ">
+                        <div class="row"style="padding-left:15px"> 
+                                <div class="col-md-12 line" >
+                                        <div class="tamanho-button"style="display: inline-block;" [dragula]='"fifth-bag"' >
+                                                <input type="button" class="btn button-keyboard" value="TESTE"/>
+                                        </div>    
+                                </div>
+                        </div>
+                </div>
+        </div>
+    -->
 
         <div class="box-teclado">
-            <!--{{openFacLayout.Lines}}-->
+                <div class="teclado-container ">
+                        <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
+                                <div class="col-md-12 line" >
+                                        
+
+
+                                        <div class="tamanho-button-especial"  *ngFor="let key of row; index as i" style="display: inline-block;" [dragula]='"fifth-bag"' id="content" >
+                                                <div></div>
+                                               <!-- <input type="button" class="btn button-keyboard" value=""/>-->
+                                        </div>
+
+                                        
+
+
+                                </div>
+                        </div>
+                </div>
+        </div>
+<!--
+
+        <div class="box-teclado">
+                <div class="teclado-container ">
+                        <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
+                                <div class="col-md-12 line">
+                                        <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;"  [dragula]='"fifth-bag"' >
+                                                <input type="button" class="btn button-keyboard" value="{{ key }}"/>
+                                        </div>    
+                                </div>
+                        </div>
+                </div>
+        </div>
+    -->
+
+
+
+
+<!-- FUNCIONAL
+        <div class="box-teclado">
+                <div class="teclado-container ">
+                        <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
+                                <div class="col-md-12 line">
+                                        <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;"  [dragula]='"fifth-bag"' >
+                                                <input type="button" class="btn button-keyboard" value="{{ key }}"/>
+                                        </div>    
+                                </div>
+                        </div>
+                </div>
+        </div>
+    -->
+
+<!-- ORIGINAL
+        <div class="box-teclado">
             <div class="teclado-container ">
             <div style="z-index: 0">
                 <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
         
                 <div class="col-md-12 line" >
-                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;" [dragula]='"fifth-bag"'  id="content">
-                    <div *ngIf="i <= 14" [dragula]='"fifth-bag"' id="content">
+                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
+                    <div *ngIf="i <= 14" [dragula]='"fifth-bag"' id="content" title="{{i.toString() + '#' + iR.toString()}}" >
                         
                         <button *ngIf="key == '*tab'"
                         class="btn button-keyboard icon-keyboard" value="{{ key }}" >
@@ -218,5 +287,7 @@
             </div>
             </div>
         </div>
+
+    -->
 
 </div>        
