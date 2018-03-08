@@ -1,13 +1,19 @@
+<!--<div [dragula]='"fifth-bag"'></div>-->
+
+
+      
+
+
 <div styele="width: 100%; heigth: 100%; background-color: #364150">
 
         <div class="box-teclado">
-                <div class="teclado-container">
+                <div class="teclado-container-menu">
                         <div class="row" style="padding-left:15px">
                                 <div class="col-md-1">
-                                    <input type="button" class="btn button-keyboard-menu" value="Adicionar Linha" style="word-break: normal" />
+                                    <input type="button" class="btn button-keyboard-menu" value="Adicionar Linha" style="word-break: normal" (click)="addLine()"/>
                                 </div>    
                                 <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Remover Linha" />
+                                        <input type="button" class="btn button-keyboard-menu" value="Remover Linha" (click)="removeLine()"/>
                                 </div>    
                                 <div class="col-md-1">
                                             <input type="button" class="btn button-keyboard-menu" value="Inserir Imagem" />
@@ -39,7 +45,7 @@
         
                 <div class="col-md-12 line">
                     <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
-                    <div *ngIf="i <= 14">
+                    <div *ngIf="i <= 14" [dragula]='"fifth-bag"'>
         
                         <button *ngIf="key == '*tab'"
                         class="btn button-keyboard icon-keyboard" value="{{ key }}" >
@@ -54,13 +60,13 @@
                             class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
                         </button>
         
-        
-                        <input style="text-align: center;"
-                        *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
-                                                && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-                                                && key != '*arrowdown' && key != '*arrowright'" 
-                        type="button" class="btn button-keyboard-down" value="{{ key }}" />
-        
+                    
+                            <input  style="text-align: center;"
+                            *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                                    && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                                    && key != '*arrowdown' && key != '*arrowright'" 
+                            type="button" class="btn button-keyboard-down" value="{{ key }}" />
+                         
         
                         <button 
                         *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
@@ -126,14 +132,14 @@
 
         <div class="box-teclado">
             <!--{{openFacLayout.Lines}}-->
-            <div class="teclado-container">
+            <div class="teclado-container ">
             <div style="z-index: 0">
                 <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
         
-                <div class="col-md-12 line">
-                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
-                    <div *ngIf="i <= 14">
-        
+                <div class="col-md-12 line" >
+                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;" [dragula]='"fifth-bag"'  id="content">
+                    <div *ngIf="i <= 14" [dragula]='"fifth-bag"' id="content">
+                        
                         <button *ngIf="key == '*tab'"
                         class="btn button-keyboard icon-keyboard" value="{{ key }}" >
                         <mat-icon  class="mat-icon material-icons"
@@ -147,13 +153,13 @@
                             class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
                         </button>
         
-        
-                        <input 
-                        *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
-                                                && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-                                                && key != '*arrowdown' && key != '*arrowright'" 
-                        type="button" class="btn button-keyboard" value="{{ key }}"  />
-        
+                        
+                            <input 
+                            *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                                    && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                                    && key != '*arrowdown' && key != '*arrowright'" 
+                            type="button" class="btn button-keyboard" value="{{ key }}"  />
+                        
         
                         <button 
                         *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >

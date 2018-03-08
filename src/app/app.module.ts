@@ -23,7 +23,7 @@ import { SideBarService } from './components/sidebar/sidebar.service';
 import { GeneralConfigModule } from './components/general-config/general-config.module';
 import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
-//import { GeneralConfigComponent } from './components/general-config/general-config.component';
+import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
 
 
 @NgModule({
@@ -37,7 +37,8 @@ import { GeneralConfigService } from './components/general-config/general-config
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
     ProfileModule,
-    FormsModule
+    FormsModule,
+    DragulaModule,
     
   ],
   bootstrap: [AppComponent],
