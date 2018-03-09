@@ -1,8 +1,36 @@
+
+.upper {
+    height: 100%;
+    width: 100%;
+    background-color: #fdd;
+}
+
+.lower {
+    height: 100%;
+    width: 100%;
+    background-color: #bbb;
+}
+
+.left {
+    height: 100%;
+    background-color: #ddf;
+}
+
 .box-teclado{
     position: relative;
     bottom: -12px;
     margin: auto;
     max-height: 40%;
+}
+
+.box-teclado-bottom{
+    height: 100%;
+    padding-top: 20px;
+    position: relative;
+    bottom: -12px;
+    margin: auto;
+    max-height: 40%;
+    background-color: #364150;
 }
 
 .teclado-container-menu{
@@ -14,10 +42,13 @@
     background-color:  #364150;
 }
 
+
+
 .teclado-container{
-    overflow-y:scroll;
     height: 350px;
-    padding: 54px 24px 14px 24px;
+    overflow-y:scroll;
+    /*padding: 54px 24px 14px 24px;*/
+    padding: 24px 14px;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
     0 2px 2px 0 rgba(0,0,0,.14), 
@@ -38,13 +69,14 @@
 }
 .tamanho-button-especial{
     background-color: white; 
+    color:black;
     height:48px;
     width: calc((100% / 14) - 6px);
     position: relative;
     top: 0;
     margin-right: 6px; 
 
-    border-radius:  6px;
+    border-radius:  8px;
     display: inline-block;
     text-align: center;
     white-space: nowrap;
