@@ -36,7 +36,6 @@ export class ProfileEditComponent implements OnInit {
     public save(){
         let usuario: User = new User();
         usuario = this.authService.getLocalUser();
-        usuario.email = this.user.email;
         usuario.fullName = this.user.name;
         if(this.user.password && this.user.confirmPassword){
             usuario.password = this.user.password
