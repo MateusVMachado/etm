@@ -26,6 +26,8 @@ import {
 import { DEFAULT_THEME } from './styles/theme.default';
 import { NgxLoginComponent } from './components/login/login.component';
 import { NgxRegisterComponent } from './components/register/register.component';
+import { RequestPasswordComponent } from './components/request-password/request-password.component';
+import { GeneralConfigModule } from './components/general-config/general-config.module';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 
@@ -48,7 +50,8 @@ const COMPONENTS = [
   FooterComponent,
   MainPageComponent,
   NgxLoginComponent,
-  NgxRegisterComponent
+  NgxRegisterComponent,
+  RequestPasswordComponent,
 ];
 
 const NB_THEME_PROVIDERS = [

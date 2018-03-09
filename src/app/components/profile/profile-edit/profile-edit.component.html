@@ -24,18 +24,6 @@
             </small>
             </div>
             <div class="from-group line">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" [(ngModel)]="user.email" #email="ngModel" class="form-control" placeholder="Email"
-                    pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="true"
-                />
-                <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
-                    Email é obrigatório!
-                </small>
-                <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.pattern">
-                    Deve ser um email real!
-                </small>
-            </div>
-            <div class="from-group line">
                 <label for="password"> Nova Senha</label>
                 <input type="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="form-control" placeholder="Nova Senha"
                      [class.form-control-danger]="password.invalid && password.touched"

@@ -1,59 +1,58 @@
 <nb-auth-block>
-    <h2 class="title">Sign Up</h2>
+    <h2 class="title">Criar conta</h2>
     <form (ngSubmit)="register()" #form="ngForm">
         <div class="form-group">
-            <label for="input-name" class="sr-only">Full name</label>
-            <input name="fullName" [(ngModel)]="user.fullName" id="input-name" #fullName="ngModel" class="form-control" placeholder="Full name"
-                [class.form-control-danger]="fullName.invalid && fullName.touched" [required]="getConfigValue('forms.validation.fullName.required')"
+            <label for="input-name" class="sr-only">Nome completo</label>
+            <input name="fullName" [(ngModel)]="user.fullName" id="input-name" #fullName="ngModel" class="form-control" placeholder="Nome completo"
+                [class.form-control-danger]="fullName.invalid && fullName.touched" [required]="true"
                 autofocus>
             <small class="form-text error" *ngIf="fullName.invalid && fullName.touched && fullName.errors?.required">
-                Full name is required!
+                Nome completo é obrigatório!
             </small>
         </div>
         <div class="form-group">
-            <label for="input-email" class="sr-only">Email address</label>
-            <input name="email" [(ngModel)]="user.email" id="input-email" #email="ngModel" class="form-control" placeholder="Email address"
-                pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="getConfigValue('forms.validation.email.required')">
+            <label for="input-email" class="sr-only">E-mail</label>
+            <input name="email" [(ngModel)]="user.email" id="input-email" #email="ngModel" class="form-control" placeholder="Novo e-mail"
+                pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="true">
             <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
-                Email is required!
+                    E-mail é obrigatório!
             </small>
             <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.pattern">
-                Email should be the real one!
+                    O e-mail deve ser válido!
             </small>
         </div>
         <div class="form-group">
-            <label for="input-password" class="sr-only">Password</label>
-            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="Password"
-                #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="getConfigValue('forms.validation.password.required')"
-                [minlength]="getConfigValue('forms.validation.password.minLength')" [maxlength]="getConfigValue('forms.validation.password.maxLength')">
+            <label for="input-password" class="sr-only">Senha</label>
+            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="Senha"
+                #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="passwordRequired">
             <small class="form-text error" *ngIf="password.invalid && password.touched && password.errors?.required">
-            Password is required!
+                    A senha é obrigatória!
           </small>
         </div>
         <div class="form-group">
-            <label for="input-re-password" class="sr-only">Repeat password</label>
-            <input name="rePass" [(ngModel)]="user.confirmPassword" type="password" id="input-re-password" class="form-control" placeholder="Confirm Password"
+            <label for="input-re-password" class="sr-only">Confirme a senha</label>
+            <input name="rePass" [(ngModel)]="user.confirmPassword" type="password" id="input-re-password" class="form-control" placeholder="Confirme a senha"
                 #rePass="ngModel" [class.form-control-danger]="(rePass.invalid || password.value != rePass.value) && rePass.touched"
-                [required]="getConfigValue('forms.validation.password.required')">
+                [required]="passwordConfRequired">
             <small class="form-text error" *ngIf="rePass.invalid && rePass.touched && rePass.errors?.required">
-            Password confirmation is required!
+            A confirmação da senha é obrigatória!                
           </small>
             <small class="form-text error" *ngIf="rePass.touched && password.value != rePass.value && !rePass.errors?.required">
-            Password does not match the confirm password.
+            As senhas não são iguais.                
           </small>
         </div>
-        <div class="form-group accept-group col-sm-12" *ngIf="getConfigValue('forms.register.terms')">
-            <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="getConfigValue('forms.register.terms')">
-                Agree to <a href="#" target="_blank"><strong>Terms & Conditions</strong></a>
+        <div class="form-group accept-group col-sm-12">
+            <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="true">
+                Aceito os <a href="#" target="_blank"><strong>Termos de uso</strong></a>
             </nb-checkbox>
         </div>
         <button [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
-          Register
+          Registrar
         </button>
     </form>
     <div class="links">
         <small class="form-text">
-          Already have an account? <a (click)="navigateTo('./auth/login')"><strong>Sign in</strong></a>
+          Já tem uma conta? <a (click)="navigateTo('./auth/login')"><label style="cursor:pointer; color:#4799eb" >Entrar</label></a>
         </small>
     </div>
 </nb-auth-block>

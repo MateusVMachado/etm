@@ -1,15 +1,17 @@
+import { ProfileComponent } from './components/profile/profile.component';
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { NbAuthComponent,
   NbLoginComponent,
   NbLogoutComponent,
   NbRegisterComponent,
-  NbRequestPasswordComponent,
   NbResetPasswordComponent,
 } from '@nebular/auth';
 import { AuthGuard } from './guards/auth-guard.service';
 import { NgxLoginComponent } from './components/login/login.component';
 import { NgxRegisterComponent } from './components/register/register.component';
+import { RequestPasswordComponent } from './components/request-password/request-password.component';
+import { GeneralConfigComponent } from './components/general-config/general-config.component';
 
 const routes: Routes = [
   {
@@ -39,12 +41,12 @@ const routes: Routes = [
       },
       {
         path: 'request-password',
-        component: NbRequestPasswordComponent,
+        component: RequestPasswordComponent,
       },
       {
         path: 'reset-password',
         component: NbResetPasswordComponent,
-      },
+      }
     ],
   },
   { path: '', redirectTo: 'pages', pathMatch: 'full' },

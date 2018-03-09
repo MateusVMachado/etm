@@ -1,17 +1,16 @@
 import { AuthService } from '../shared/services/auth.services';
 import { RequestMethod, RequestOptions } from '@angular/http';
-import { ConfigModel } from './config';
+import { ConfigModel } from './config.model';
 import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
 import { Injectable } from '@angular/core';
 import { OpenFACConfig, OpenFACLayout } from "openfac/OpenFac.ConfigContract";
-import { JWTtoken } from '../../storage';
 import { User } from '../shared/models/user';
 import { Injector } from '@angular/core';
 
 @Injectable()
-export class ConfigService extends AppServiceBase{
+export class GeneralConfigService extends AppServiceBase{
     public config: any = {};
     private http: HttpClient;
 
@@ -22,20 +21,22 @@ export class ConfigService extends AppServiceBase{
     }
 
     public saveConfiguration(config?: any, keyboardName?:string){
-        let user = this.authService.getUser();
+        let user = this.authService.getLocalUser();
         let configOpenFAC: ConfigModel = new ConfigModel();
         configOpenFAC.language = config.linguagem;
         configOpenFAC.openFacConfig.ActiveSensor = config.sensor;
         configOpenFAC.openFacConfig.ScanType = config.tipoVarredura;
-        configOpenFAC.openFacConfig.ScanTime = config.tmpVarredura;
+        configOpenFAC.openFacConfig.ScanTimeLines = config.tmpVarreduraLns;
+        configOpenFAC.openFacConfig.ScanTimeColumns = config.tmpVarreduraCls;
         configOpenFAC.user = user.email;
         configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         configOpenFAC.lastKeyboard = keyboardName;
+        
         return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text' });
     }
 
     public saveOnlyLastKeyboard(keyboardName?:string){
-        let user = this.authService.getUser();
+        let user = this.authService.getLocalUser();
         return this.http.post(this.backendAddress + `/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, { responseType: 'text' });
     }
 
@@ -44,11 +45,12 @@ export class ConfigService extends AppServiceBase{
     }
 
     private getDefaultHeaders() {
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + JWTtoken.token}};
+        let user = this.authService.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {
-        let user = this.authService.getUser();
+        let user = this.authService.getLocalUser();
         return this.http.get(this.backendAddress + `/configuration?email=${user.email}`, this.getDefaultHeaders());
     }
 

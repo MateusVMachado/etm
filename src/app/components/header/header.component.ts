@@ -1,3 +1,5 @@
+import { ProfileComponent } from '../profile/profile.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileService } from '../profile/profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
@@ -6,7 +8,6 @@ import { DomSanitizer, SafeHtml, SafeStyle } from '@angular/platform-browser';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
 import { Router } from '@angular/router';
-import { JWTtoken } from '../../storage';
 @Component({
   selector: 'app-header',
   styleUrls: ['./header.component.scss'],
@@ -20,26 +21,23 @@ export class HeaderComponent implements OnInit {
   private usuario: User;
   private imgUrl;
 
-  userMenu = [{ title: 'Log out' }];
+  userMenu = [{ title: 'Log out', tag: 'sair' }, { title: 'Editar perfil', tag: 'perfil' }];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private router: Router,
               private authService: AuthService,
-              private zone: NgZone,
-              private profileService: ProfileService
+              private modalService: NgbModal
             ) {}
 
   ngOnInit() {    
     this.authService.getObservableUser().subscribe(result =>{
-      this.zone.run(() => {
-        this.usuario = result;
-        if(result.picture.content){
-          this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
-        }else{
-          this.imgUrl = '../../../assets/images/avatarUser.png'
-        }
-      });
+      this.usuario = result;
+      if(result.picture.content){
+        this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
+      }else{
+        this.imgUrl = '../../../assets/images/avatarUser.png'
+      }
     });
   }
 
@@ -58,9 +56,22 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    JWTtoken.token = undefined;
+    window.localStorage.removeItem('JWTtoken')
     this.router.navigate(["./auth"]);
   }
 
+  /*public showLargeModal() {
+      const activeModal = this.modalService.open(ProfileEditComponent, { size: 'lg', container: 'nb-layout' });
+  }*/
+
+  menuItem(item: any){
+    if(item.tag === 'sair'){
+      this.logout();
+    }else {
+      if(item.tag === 'perfil'){
+        this.router.navigate(["/pages/profile"]);
+      }
+    }
+  }
 
 }

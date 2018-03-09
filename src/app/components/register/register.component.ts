@@ -10,7 +10,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.services';
-import { JWTtoken } from '../../storage';
 import 'rxjs/add/operator/catch';
 import { Injector } from '@angular/core';
 
@@ -48,14 +47,11 @@ export class NgxRegisterComponent extends AppBaseComponent {
             this.messageService.success(res.message).then(res => {
               this.router.navigate(['./auth/login']);
             });
-          }, (error: any) => {  
-            console.log(error.message);            
+          }, (error: any) => {            
             this.messageService.error(error.message, 'Oops..');
           }
       );
     }
-
-    getConfigValue() { }
     
     navigateTo(path: string) {
       this.router.navigate([path]);

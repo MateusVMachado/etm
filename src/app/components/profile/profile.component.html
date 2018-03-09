@@ -1,14 +1,39 @@
-<div class="card-profile">
-    <table>
-        <tr class="table-header">
-            <th>Nome Completo</th>
-            <th>Email</th>
-            <th>Ações</th>
-        </tr>
-        <tr>
-            <td>{{user.fullName}}</td>
-            <td>{{user.email}}</td>
-            <td><button (click)="showLargeModal();" class="btn"><i class="ion-edit"></i></button></td>
-        </tr>
-    </table>
+<div class="card-profile container">
+    <div class="row" style="border-bottom: 1px solid #e9e9e9; margin-bottom: 15px;">
+        <h4>Perfil: {{ user.fullName }}</h4>
+    </div>
+    <div class="label-detalhes">
+        <div class="row">
+            <div class="col-md-2">
+                <h5>Detalhes</h5>
+            </div>
+            <div class="col-md-3">
+                <button class="btn edit-button"(click)="showLargeModal()"><i class="ion-edit"></i></button>
+            </div>
+        </div>
+    </div>
+    <div class="row line-margin">
+        <div class="col-md-2">
+            <label class="label-user-info">Avatar:</label>
+        </div>
+        <div class="col-md-6">
+            <img class="profile-img" [src]='imgUrl'/>
+        </div>
+    </div>
+    <div class="row line-margin">
+        <div class="col-md-2">
+            <label class="label-user-info">Nome Completo:</label>
+        </div>
+        <div class="col-md-6">
+            <label>{{ user.fullName }}</label>
+        </div>
+    </div>
+    <div class="row line-margin">
+        <div class="col-md-2">
+            <label class="label-user-info">Email:</label>
+        </div>
+        <div class="col-md-6">
+            <label>{{ user.email }}</label>
+        </div>
+    </div>
 </div>

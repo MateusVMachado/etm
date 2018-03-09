@@ -2,15 +2,23 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Injector } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class AppServiceBase {
 
-    protected backendAddress: string = 'http://etm-api.korp.com.br/';
-    protected frontendAddress: string = 'http://etm.korp.com.br/';
     
-    constructor(protected injector: Injector){
+    protected backendAddress: string;
+    protected frontendAddress: string;
 
+    constructor(protected injector: Injector){
+        if(environment.production){
+            this.backendAddress = 'http://etm-api.korp.com.br/';
+            this.frontendAddress = 'http://etm.korp.com.br/';
+        } else {
+            this.backendAddress = 'http://localhost:8080';
+            this.frontendAddress = 'http://localhost:4200/';
+        }
     }
 
     protected handleError(error: HttpErrorResponse) {

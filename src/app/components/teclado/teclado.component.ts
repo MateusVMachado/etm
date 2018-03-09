@@ -7,18 +7,19 @@ import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
 import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
 import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
-import { KeyboardData } from '../../storage';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
 import { SideBarService } from '../sidebar/sidebar.service';
-import { ConfigService } from '../config/config.service';
-import { ConfigModel } from '../config/config';
+import { GeneralConfigService } from '../general-config/general-config.service';
+import { ConfigModel } from '../general-config/config.model';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
 import * as $ from 'jquery';
+import { NbMenuItem } from '@nebular/theme';
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
@@ -37,12 +38,21 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private editorTecladoServiceSubscribe: Subscription;
   private sideBarServiceSubscribe: Subscription;
   private configServiceSubscribe: Subscription;
+  private capsIndex: number;
+  private ptbrIndex: number; 
+  private timerId: number;
+  private scanTimeLines: number;
+  private scanTimeColumns: number;
+  
+
+  public menu: NbMenuItem[];
+  public jsonArray = new Array();
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
               private sideBarService: SideBarService,
-              private configService: ConfigService) {
+              private configService: GeneralConfigService) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
   }
@@ -54,9 +64,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.configServiceSubscribe.unsubscribe();
   }
 
-  ngOnInit() {
-    
-  }
+  ngOnInit() { }
 
   ngAfterViewInit(){
     this.teclado.teclas = [];
@@ -73,23 +81,35 @@ export class TecladoComponent implements OnInit, OnDestroy {
       console.log("load");
       if(data){
         this.KeyboardData = data;
+                for(let i = 0; i < this.KeyboardData.length; i++){
+                  if(this.KeyboardData[i].nameLayout === 'caps'){
+                      this.capsIndex = i;
+                  } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
+                    this.ptbrIndex = i;
+                  }   
+                }
+                
         // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
         let lastUsed: number = 0;
 
-        this.configServiceSubscribe = 
+                this.configServiceSubscribe = 
                       this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
                       .subscribe((result: ConfigModel) => {
-          this.config.lastKeyboard = result.lastKeyboard;
-          if(this.config.lastKeyboard === 'pt-br'){
-            lastUsed = 0;
-            this.openFacLayout = (data[lastUsed]);
-          } else if(this.config.lastKeyboard === 'user'){
-            lastUsed = 2;
-            this.openFacLayout = (data[lastUsed]);
-          } else if(this.config.lastKeyboard === 'exp'){
-            lastUsed = 3;
-            this.openFacLayout = (data[lastUsed]);
-          }
+                      this.config.lastKeyboard = result.lastKeyboard;
+                      this.scanTimeLines = result.openFacConfig.ScanTimeLines;
+                      this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
+
+                      let found = false;
+                      for(let i=0; i < this.KeyboardData.length; i++){
+                        if(this.KeyboardData[i].nameLayout === 'caps') continue;
+                        if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
+                          lastUsed = i;
+                          this.openFacLayout = (data[lastUsed]);
+                          found = true;
+                          break;
+                      }                                    
+                if(!found) this.openFacLayout = (data[0]);  
+
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
         });
       }
@@ -101,31 +121,26 @@ export class TecladoComponent implements OnInit, OnDestroy {
             });
 
               this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                        ////////////////////////////
-                        // TORNAR GENÉRICO !!! /////
-                      ////////////////////////////
-                if(result === 'pt-br'){
-                  console.log("chegou pt-br");
-                  this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
-                  this.configureSome(); 
-                  this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();         
-
-                }else if(result === 'user'){
-                  console.log("chegou user");
-                  this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[2]);
-                  this.configureSome();
-                  this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
-
-                } else if(result === 'exp'){
-                  console.log("chegou exp");
-                  this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[3]);
-                  this.configureSome();
-                  this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();
-
-                } 
+                                  for (let j = 0; j < this.KeyboardData.length; j++) {
+                                    if (this.KeyboardData[j].nameLayout === 'caps') continue;
+                                    if (result === this.KeyboardData[j].nameLayout) {
+                                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
+                                      this.configureSome(); 
+                                      this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
+                                      break;
+                                    }
+                                  }    
               });
   
   }
+
+  private loadSingleKeyboardByName(nameLayout: string){
+    this.tecladoService.loadSingleKeyboard(nameLayout).subscribe((data)=>{
+      console.log(data[0]);
+    });
+
+  }
+
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
@@ -143,9 +158,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   public capsLock() {
     if (this.teclado.type === 'pt-br') {
-      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[1]);
+            this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[this.capsIndex]);
     } else {
-      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[0]);
+            this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[this.ptbrIndex]);
+
     }
     this.configureSome();
   }
@@ -228,16 +244,20 @@ export class TecladoComponent implements OnInit, OnDestroy {
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
    
-    setInterval(this.timer1_Tick.bind(this), 1500);
+    this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }
 
   private timer1_Tick(): void {
     if (this.engine !== null) {
       if (this.engine.CurrentState() == EngineState.LineDown) {
+        clearInterval(this.timerId);  
         this.engine.CalculateNextLine();
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
       }
       else if (this.engine.CurrentState() == EngineState.ColumnRight) {
+        clearInterval(this.timerId);
         this.engine.CalculateNextButton();
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeColumns*1000);
       }
     }
   }
