@@ -93,11 +93,6 @@ export class SidebarComponent implements AfterViewInit, OnInit {
         children: this.jsonArray
       },
       {
-        title: 'Dashboard',
-        icon: 'nb-home',
-        target: 'dashboard',
-      },
-      {
         title: 'Configuração',
         icon: 'nb-gear',
         target: 'config',
