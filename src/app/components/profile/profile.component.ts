@@ -11,11 +11,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
     user: User;
+    imgUrl: any;
     constructor(private modalService: NgbModal, private authService: AuthService) { }
     
     ngOnInit() {
         this.user = new User();
-        this.user = this.authService.getLocalUser();
+        //this.user = this.authService.getLocalUser();
+        this.authService.getObservableUser().subscribe(result =>{
+            this.user = result;
+            if(result.picture.content){
+                this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
+            }else{
+                this.imgUrl = '../../../assets/images/avatarUser.png'
+            }
+        });
     }
 
     public showLargeModal() {

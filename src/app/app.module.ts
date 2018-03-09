@@ -1,6 +1,6 @@
-import { ProfileModule } from './components/profile/profile.module';
-import { ProfileService } from './components/profile/profile.service';
 //import { ConfigTecladoModule } from './components/config/config.module';
+import { ProfileService } from './components/profile/profile.service';
+import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -20,7 +20,6 @@ import { AuthService } from './components/shared/services/auth.services';
 import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
 import { SideBarService } from './components/sidebar/sidebar.service';
-import { GeneralConfigModule } from './components/general-config/general-config.module';
 import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
 //import { GeneralConfigComponent } from './components/general-config/general-config.component';
@@ -36,9 +35,7 @@ import { GeneralConfigService } from './components/general-config/general-config
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
-    ProfileModule,
     FormsModule
-    
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -50,6 +47,7 @@ import { GeneralConfigService } from './components/general-config/general-config
     CKEditorComponent,
     SideBarService,
     GeneralConfigService,
+    ProfileService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

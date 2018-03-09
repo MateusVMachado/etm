@@ -1,3 +1,4 @@
+import { ProfileService } from '../profile.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { ProfileEditComponent } from './profile-edit.component';
@@ -19,6 +20,7 @@ import { FormsModule } from '@angular/forms';
     ],
     exports: [],
     providers: [
+        ProfileService
     ],
     entryComponents: [
         ProfileEditComponent

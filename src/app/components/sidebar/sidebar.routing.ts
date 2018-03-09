@@ -24,14 +24,15 @@ const routes: Routes = [{
     {
       path: 'editor-teclado',
       component: EditorTecladoComponent,
-    },{
-      path: 'profile',
-      component: ProfileComponent,
     },
     {
       path: 'general-config',
       component: GeneralConfigComponent,
     },
+    {
+      path: 'profile',
+      component: ProfileComponent,
+    }
   ],
 }];
 

@@ -18,8 +18,8 @@ const PAGES_COMPONENTS = [
     ThemeModule,
     DashboardModule,
     EditorTecladoModule,
-    ProfileModule,
-    GeneralConfigModule
+    GeneralConfigModule,
+    ProfileModule
   ],
   declarations: [
     ...PAGES_COMPONENTS,
