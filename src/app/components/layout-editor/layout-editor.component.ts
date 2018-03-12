@@ -18,9 +18,13 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
     
     public masterKeys: TecladoModel = new TecladoModel(); 
     public teclado: TecladoModel = new TecladoModel();
+    public tecladoReplicant: TecladoModel = new TecladoModel();
     private correctChoices: any;
     public matrixIndex: string;
     public spillMode: boolean = false;
+    public timerId: any;
+
+    public aux: string;
 
     constructor(private router: Router, private tecladoService: TecladoService, private dragulaService: DragulaService) {
 
@@ -29,12 +33,20 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
           return target.id === 'content';
         },
         copy: function (el, source) {
-          return source.id === 'copy';
+          let sourceParts = source.id.split('$');
+          let theSource = sourceParts[0];
+          return theSource === 'copy';
+          //return source.id === 'copy';
         },
         removeOnSpill: function (el, source) {
           return source.id === 'content';
         },  
       });
+
+
+      dragulaService.over.subscribe((value)=> {
+        this.onOver(value);
+      })
 
       dragulaService.drag.subscribe((value) => {
         //console.log(value);
@@ -60,27 +72,84 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
       
     }
 
-    public setCopyMode(){
+
+    public setTimeToDisappear(value){
+
+    }
+
+    public clearTip(value){
+
+    }
+
+    public setCopyMode(value){
+      console.log("FROM COPY AREA");
+      console.log(value[2].var);
       //this.spillMode = false;
     }
 
-    public setSpillMode(){
+    public setKeyboardState(value){
+      console.log("FROM KEYBOARD AREA");
+
+      let newTitle = value[2].className.split('@');
+      let title = newTitle[1];
+      //console.log("OLD VALUE: " + value[2].title.toString());
+      console.log("OLD VALUE: " + title.toString());
+      //let parts = value[2].title.split("#");
+      let parts = title.split("#");
+      let x = <number>parts[0];
+      let y = <number>parts[1];
+      this.tecladoReplicant.teclas[y][x] = "";
+      console.log(JSON.stringify(this.tecladoReplicant));
       //this.spillMode = true;
     }
 
+
+    public onMouseOverMaster(){
+
+    }
+
+    public onMouseLeaveMaster(){
+
+    }
+
+    private onOver(value) {
+      console.log("MARK1");
+      this.setTimeToDisappear(value);
+    } 
+
     private onDrag(value) {
-      if(value[2].id === 'copy') this.setCopyMode();
-      if(value[2].id === 'content') this.setSpillMode();
+      let valueParts = value[2].id.split('$');
+      let theValue = valueParts[0];
+      if(theValue === 'copy') this.setCopyMode(value);
+      if(theValue === 'content') this.setKeyboardState(value);
+
+      //if(value[2].id === 'copy') this.setCopyMode(value);
+      //if(value[2].id === 'content') this.setKeyboardState(value);
     }    
 
     private onDrop(value) {
-      if (value[2] == null) //dragged outside any of the bags
+      if (value[2] == null) {//dragged outside any of the bags
+          //let bigParts = value[1].title.split("$");
+          //let parts = bigParts[1].split('#');
+          //let x = <number>parts[0];
+          //let y = <number>parts[1];
+          //this.tecladoReplicant.teclas[y][x] = "";
+          //console.log(JSON.stringify(this.tecladoReplicant));
           return;
-    
-          console.log(value[2].title);
+      }    
+          let newTitle = value[2].className.split('@');
+          let title = newTitle[1];
+
+          //console.log(value[2].title);
+          console.log(title);
+          //console.log("NEW VALUE: " + value[2].title.toString());
+          console.log("NEW VALUE: " + title.toString());
+          //console.log(value[2].title);
+          console.log(title);
           console.log(value[1].value );
 
-          let parts = value[2].title.split("#");
+          //let parts = value[2].title.split("#");
+          let parts = title.split("#");
           console.log(parts);
           console.log(parts);
           let x = <number>parts[0];
@@ -89,14 +158,23 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
           console.log("x: " + x + "y: " + y);
           console.log(value[1].value );
           
+
+         // value[2].className = "full";
+         
+          value[1].className = "tamanho-button-especial-full";
+          console.log("CLASS NAME: " + value[1].className);
+          //el.className = el.className ? [el.className, name].join(' ') : name;
+           
           //this.teclado.teclas[x] = []; 
           //this.teclado.teclas[x][y] = [];
-          //this.teclado.teclas[x][y] = "teste";//value[1].value;
+          if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = value[1].value ;
+          //this.teclado.teclas[y][x] = "O";//value[1].value;
 
 
           //console.log("Valor na tecla: " + this.teclado.teclas[x][y]);
 
-          console.log(JSON.stringify(this.teclado));
+          //console.log(JSON.stringify(this.teclado));
+          console.log(JSON.stringify(this.tecladoReplicant));
 
     }    
 
@@ -129,18 +207,26 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
    }
 
 
+   public saveKeyboardLayout(){
+
+   }
 
     private createEmptyKeyboard(){
      
       for (let i = 0; i < 5; i++) {
         this.teclado.teclas[i] = [[]];
+        this.tecladoReplicant.teclas[i] = [[]];
          let line = new Array();
+         let lineReplicant = new Array();
          line = [];
+         lineReplicant = [];
           for (let j = 0; j < 14; j++) {
-              line[j] = "X";
+              line[j] = "";
+              lineReplicant[j] = "";
           }
           //this.teclado.teclas.push(line);  
-          this.teclado.teclas[i] = line;  
+          this.teclado.teclas[i] = line;
+          this.tecladoReplicant.teclas[i] = lineReplicant;  
       }  
       
       for (let i = 0; i < 30; i++) {

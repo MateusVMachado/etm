@@ -24,7 +24,7 @@
                                         <input type="button" class="btn button-keyboard-menu" value="Deletar Teclado" />
                             </div>
                             <div class="col-md-1">
-                                    <input type="button" class="btn button-keyboard-menu" value="Salvar Teclado" />
+                                    <input type="button" class="btn button-keyboard-menu" value="Salvar Teclado" (click)="saveKeyboard()" />
                             </div>
                         <div class="col-md-1">                        
                             <select style="width: 200px; height: 40px;">
@@ -40,7 +40,6 @@
         </div>
 
 
-
         <div class="box-teclado">
             <div class="teclado-container-editor">
             <div style="z-index: 0">
@@ -48,7 +47,10 @@
         
                 <div class="col-md-12 line">
                     <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
-                    <div *ngIf="i <= 14" [dragula]='"master-bag"' (drag)="setCopyMode()" id="copy" >
+                    <div *ngIf="i <= 14" [dragula]='"master-bag"' (drag)="setCopyMode()" id="copy" 
+                            tooltip="Arraste a tecla para adicionar." (mouseenter)="onMouseOverMaster($event)" (mouseleave)="onMouseLeaveMaster($event)" 
+                            class="{{'@' + 'copyArea' + '$' + i.toString() + '#' + iR.toString()}}"
+                            >
         
                         <button *ngIf="key == '*tab'"
                         class="btn button-keyboard icon-keyboard" value="{{ key }}" >
@@ -136,8 +138,9 @@
                                 <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
                                         <div class="col-md-12 line" >
                                                 
-                                                <div class="tamanho-button-especial"  *ngFor="let key of row; index as i" style="display: inline-block;" 
-                                                    [dragula]='"master-bag"' id="content" (dblclick)="sayHello(i.toString() + '#' + iR.toString())" title="{{i.toString() + '#' + iR.toString()}}">
+                                                <div tooltip="Duplo clique para editar." class="tamanho-button-especial {{'@' + i.toString() + '#' + iR.toString()}}" 
+                                                    *ngFor="let key of row; index as i" 
+                                                    [dragula]='"master-bag"' id="content" (dblclick)="sayHello(i.toString() + '#' + iR.toString())">
                                                     <div></div>
                                                 </div>    
 

@@ -83,15 +83,73 @@
     vertical-align: middle;
     user-select: none;
     border: 1 solid transparent;
-    /*@include button-size($btn-padding-y, $btn-padding-x, $font-size-base, $btn-line-height, $btn-border-radius);
-    @include transition($btn-transition);
-  
-    // Share hover and focus styles
-    @include hover-focus {
-      text-decoration: none;
-    }*/
+
 }
 
+
+div[tooltip]:not([tooltip-persistent]):before {
+    pointer-events: none;
+    opacity: 0;
+}
+
+div[tooltip]:before {            
+     position : absolute;
+     padding: 3px;
+     white-space:nowrap;
+     transition: 100ms;
+     word-wrap: none;
+     top: -60%;
+     background-color: rgb(26, 216, 121);
+     color: white;
+     content : attr(tooltip);
+     opacity : 0;
+}
+
+div[tooltip]:hover:before {  
+    transition: opacity 2.5s;      
+    opacity : 1;
+
+}
+
+/*
+[title]:after{
+    content: attr(title);
+    padding: 3px;
+    position: absolute;
+    white-space:nowrap;
+    word-wrap: none;
+    background-color: rgb(26, 216, 121);
+    color: white;
+    left: 5%;
+    top: -60%;
+    opacity : 0;
+}
+
+[title]:hover:after{
+    transition: opacity 1.5s;      
+    opacity : 1;
+}
+*/
+
+.tamanho-button-especial-full{
+    background-color: rgb(94, 175, 221);
+    color:black;
+    height:48px;
+
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin-right: 6px; 
+
+    border-radius:  8px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1 solid transparent;
+    font-family: Exo;
+}
 
 .tamanho-button{
     width: calc((100% / 14) - 6px);
