@@ -78,6 +78,10 @@ export class TecladoService extends AppServiceBase {
         return this.http.get<OpenFACLayout>(this.backendAddress + '/keyboard');
     }
 
+    loadDataFromUser(email: string) {
+        return this.http.get<OpenFACLayout>(this.backendAddress + `/keyboardByUser?email=${email}`);
+    }
+
     loadSingleKeyboard(nameLayout: string){
         return this.http.get<OpenFACLayout>(this.backendAddress + `/getSingleKeyboard?nameLayout=${nameLayout}`);
     }

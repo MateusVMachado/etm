@@ -17,6 +17,7 @@ import { GeneralConfigService } from '../general-config/general-config.service';
 import { ConfigModel } from '../general-config/config.model';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../shared/services/auth.services';
 
 import { NbMenuItem } from '@nebular/theme';
 
@@ -53,7 +54,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
               private sideBarService: SideBarService,
-              private configService: GeneralConfigService) {
+              private configService: GeneralConfigService,
+              private authService: AuthService) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
   }
@@ -81,7 +83,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
       this.editorTecladoServiceSubscribe = 
                   this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
 
-            this.tecladoService.loadData().subscribe((data)=>{
+            //this.tecladoService.loadData().subscribe((data)=>{
+              let user = this.authService.getLocalUser();
+              this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
               if(data){
                 this.KeyboardData = data;
                 for(let i = 0; i < this.KeyboardData.length; i++){

@@ -10,6 +10,7 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
 import { KeyboardNamesList } from './keyboards-list.model';
+import { AuthService } from '../shared/services/auth.services';
 //import { GeneralConfigComponent } from '../general-config/general-config.component';
 
 @Component({
@@ -29,7 +30,8 @@ export class SidebarComponent implements AfterViewInit, OnInit {
               private sideBarService: SideBarService,
               private modalService: NgbModal,
               private editorTecladoService: EditorTecladoService,
-              private tecladoService: TecladoService)  {  
+              private tecladoService: TecladoService,
+              private authService: AuthService)  {  
   } 
 
   ngAfterViewInit(): void {
@@ -58,7 +60,8 @@ export class SidebarComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.sideBarService.loadKeyboardsNames().subscribe((result) => {
+    let user = this.authService.getLocalUser();
+    this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
         this.menu = this.generateMenuItem(result);
     });
   }

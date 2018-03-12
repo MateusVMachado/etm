@@ -24,7 +24,7 @@ import { GeneralConfigModule } from './components/general-config/general-config.
 import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
 import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
-
+import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -51,6 +51,7 @@ import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
     CKEditorComponent,
     SideBarService,
     GeneralConfigService,
+    LayoutEditorService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

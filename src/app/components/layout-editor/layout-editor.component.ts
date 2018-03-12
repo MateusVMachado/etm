@@ -1,11 +1,14 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { AuthService } from '../shared/services/auth.services';
+import { Component, OnInit, ViewChild, OnDestroy, Injector} from '@angular/core';
 import { Router } from '@angular/router';
 import { TecladoComponent } from '../teclado/teclado.component';
 import { TecladoModel } from '../teclado/teclado.model';
 import { TecladoService } from '../teclado/teclado.service';
 import { DragulaService } from 'ng2-dragula';
 import { OpenFACLayout, LayoutLine, LayoutButton } from './layout.model';
-
+import { AppBaseComponent } from '../shared/components/app-base.component';
+import { HttpClient } from '@angular/common/http';
+import { LayoutEditorService } from './layout-editor.service';
 
 @Component({
   selector: 'app-layout-editor',
@@ -14,7 +17,7 @@ import { OpenFACLayout, LayoutLine, LayoutButton } from './layout.model';
 })
 
 
-export class LayoutEditorComponent implements OnInit, OnDestroy {
+export class LayoutEditorComponent extends AppBaseComponent implements OnInit, OnDestroy {
     
     public masterKeys: TecladoModel = new TecladoModel(); 
     public teclado: TecladoModel = new TecladoModel();
@@ -25,8 +28,16 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
     public timerId: any;
 
     public aux: string;
+    private email: string;
 
-    constructor(private router: Router, private tecladoService: TecladoService, private dragulaService: DragulaService) {
+    constructor(private router: Router, 
+                private tecladoService: TecladoService, 
+                private dragulaService: DragulaService,
+                private authService: AuthService,
+                private injector: Injector,
+                private http: HttpClient,
+                private layoutEditorService: LayoutEditorService) {
+      super(injector);
 
       dragulaService.setOptions('master-bag', {
         accepts: function (el, target, source, sibling) {
@@ -36,7 +47,6 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
           let sourceParts = source.id.split('$');
           let theSource = sourceParts[0];
           return theSource === 'copy';
-          //return source.id === 'copy';
         },
         removeOnSpill: function (el, source) {
           return source.id === 'content';
@@ -163,17 +173,9 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
          
           value[1].className = "tamanho-button-especial-full";
           console.log("CLASS NAME: " + value[1].className);
-          //el.className = el.className ? [el.className, name].join(' ') : name;
-           
-          //this.teclado.teclas[x] = []; 
-          //this.teclado.teclas[x][y] = [];
+
           if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = value[1].value ;
-          //this.teclado.teclas[y][x] = "O";//value[1].value;
 
-
-          //console.log("Valor na tecla: " + this.teclado.teclas[x][y]);
-
-          //console.log(JSON.stringify(this.teclado));
           console.log(JSON.stringify(this.tecladoReplicant));
 
     }    
@@ -182,13 +184,13 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
       console.log("HELLOOOO from " + mystring);
     }
 
-    public populateLayout(type: string): OpenFACLayout{
+    public populateLayout(replicant: TecladoModel, email: string): OpenFACLayout{
       let openFacLayout = new OpenFACLayout(); 
-      openFacLayout.nameLayout = type;
-      openFacLayout.email = 'email.teste@email.com'; 
+      openFacLayout.nameLayout = replicant.type;
+      openFacLayout.email = email; 
 
       //let teclado = this.loadKeyboard(type);
-      let teclado; // FAZER ATRIBUIÇÃO DO TECLADO QUE ESTÀ SENDO GERADO
+      let teclado = replicant; // FAZER ATRIBUIÇÃO DO TECLADO QUE ESTÀ SENDO GERADO
       let qntyLines = teclado.teclas.length;
 
       openFacLayout.Lines = new Array<LayoutLine>();
@@ -208,6 +210,40 @@ export class LayoutEditorComponent implements OnInit, OnDestroy {
 
 
    public saveKeyboardLayout(){
+      // LOAD LAYOUT CONFIGURATION OBJECT
+      let finalKeyboard = new TecladoModel;
+      finalKeyboard.teclas = [];
+
+
+      this.tecladoReplicant.teclas.forEach(lines => {
+        let tam = 0;
+        let line = new Array();
+        line = [];
+          lines.forEach(tecla => {
+            if(tecla!=="") {
+              line.push(tecla);
+              tam += 1;
+            }  
+          });
+        
+        if(tam > 0) finalKeyboard.teclas.push(line);  
+      });
+
+      console.log("FINALKEYBOARD");
+      console.log(JSON.stringify(finalKeyboard) );
+      console.log("FINALKEYBOARD");
+
+      let user = this.authService.getLocalUser();
+      //let layout = this.populateLayout(this.tecladoReplicant, user.email);
+      let layout = this.populateLayout(finalKeyboard, user.email);
+      this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+
+      this.layoutEditorService.saveNewKeyboard(layout).subscribe((result)=>{
+        console.log("Teclado Inserido");
+      });
+      
+      // SALVA layout NO BANCO
+      console.log(JSON.stringify(layout) );
 
    }
 
