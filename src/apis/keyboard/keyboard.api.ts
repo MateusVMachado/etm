@@ -22,7 +22,7 @@ export class Keyboard extends BaseRoute {
 
     public getKeyboardNames(req: Request, res: Response, next: NextFunction){
         let teclado: KeyboardModel = new KeyboardModel();
-        this.getKeyboardNamesInDatabase(teclado, res);        
+        this.getKeyboardNamesInDatabase(teclado, req, res);        
     }
 
     public keyboard_api(req: Request, res: Response, next: NextFunction) {    
@@ -41,16 +41,36 @@ export class Keyboard extends BaseRoute {
             })
      }
 
-    public getKeyboardNamesInDatabase(teclado: KeyboardModel, res: Response){    
+    public getKeyboardNamesInDatabase(teclado: KeyboardModel, req: Request, res: Response){    
         let instance = this;
         let keyboardNames = new KeyboardNamesList();
-        res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {
+        res.locals.mongoAccess.coll[1].find({"email": req.query.email}).toArray(function(err, keyboard_list) {
             if(keyboard_list.length !== 0){
                 for(let i = 0; i < keyboard_list.length; i++){
                     keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
                 }
                 res.send(keyboardNames);
             }     
+        })
+    }
+
+    public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
+        let instance = this;
+        console.log(req.query.email);
+        if(req.query.email){
+            res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) {
+                if(keyboard_list.length !== 0){
+                    res.send(keyboard_list);
+                }  
+            })
+        }    
+    }
+
+    public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
+        let newKeyboard = req.body;
+        res.status(200).send();
+        res.locals.mongoAccess.coll[1].insert(newKeyboard, (err, result) => {
+            console.log("Keyboard inserido")
         })
     }
 
