@@ -15,48 +15,17 @@ export class EditorTecladoComponent implements OnInit {
 
     ngOnInit() { 
         this.initEditor = false;
-        
-            if(!this.initEditor){
-                this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
-                    console.log("ready? " + ready);
-                    this.initEditor = false;
-                    if(ready){
-                        setTimeout(() => {
-                            this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                            this.editorTecladoService.setHeight(this.tamanho);
-                            this.initEditor = true;
-                        }, 200);
-                    }
-                });
-                /*setTimeout(() => {
-                    this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                    this.editorTecladoService.setHeight(this.tamanho);
-                    this.initEditor = true;
-                }, 200);*/
-            }
-
-            
-            this.sidebarService.subscribeTosideBarSubject().subscribe(() => {
-                //this.tecladoService.emitTecladoReady(true);
-                /*this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
-                    console.log("ready ready? " + ready);
-                    this.initEditor = false;
-                    if(ready){
-                        setTimeout(() => {
-                            this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                            this.editorTecladoService.setHeight(this.tamanho);
-                            this.initEditor = true;
-                        }, 200);
-                    }
-                });*/
-            });
-            /*this.sidebarService.subscribeTosideBarSubject().subscribe(() => {
+        if(!this.initEditor){
+            this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
                 this.initEditor = false;
-                setTimeout(() => {
-                    this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                    this.editorTecladoService.setHeight(this.tamanho);
-                    this.initEditor = true;
-                }, 200)
-            })*/
+                if(ready){
+                    setTimeout(() => {
+                        this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                        this.editorTecladoService.setHeight(this.tamanho);
+                        this.initEditor = true;
+                    }, 200);
+                }
+            });
+        }
     }
 }
