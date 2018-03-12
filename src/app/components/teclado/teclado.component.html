@@ -24,7 +24,6 @@
                 class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
             </button>
 
-
             <input [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                     (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
               *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 

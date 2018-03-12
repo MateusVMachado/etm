@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { AfterViewChecked, Component, EventEmitter, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
 import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
@@ -25,7 +25,7 @@ import { NbMenuItem } from '@nebular/theme';
   templateUrl: './teclado.component.html',
   styleUrls: ['./teclado.component.css']
 })
-export class TecladoComponent implements OnInit, OnDestroy {
+export class TecladoComponent implements OnInit, OnDestroy, AfterViewChecked {
   public openFacLayout: OpenFACLayout;
   public activeLine: ActiveLineCol = new ActiveLineCol();
   public config: any = {};
@@ -66,6 +66,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   ngOnInit() { }
 
+  ngAfterViewChecked(): void {
+  }
+
   ngAfterViewInit(){
     this.teclado.teclas = [];
 
@@ -76,61 +79,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
           this.capsLock();
         }
     });
-
-    this.tecladoService.loadData().subscribe((data)=>{
-      console.log("load");
-      if(data){
-        this.KeyboardData = data;
-                for(let i = 0; i < this.KeyboardData.length; i++){
-                  if(this.KeyboardData[i].nameLayout === 'caps'){
-                      this.capsIndex = i;
-                  } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
-                    this.ptbrIndex = i;
-                  }   
-                }
-                
-        // CHECA QUAL TIPO DE TECLADO FOI ESCOLHIDO            
-        let lastUsed: number = 0;
-
-                this.configServiceSubscribe = 
-                      this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
-                      .subscribe((result: ConfigModel) => {
-                      this.config.lastKeyboard = result.lastKeyboard;
-                      this.scanTimeLines = result.openFacConfig.ScanTimeLines;
-                      this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
-
-                      let found = false;
-                      for(let i=0; i < this.KeyboardData.length; i++){
-                        if(this.KeyboardData[i].nameLayout === 'caps') continue;
-                        if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
-                          lastUsed = i;
-                          this.openFacLayout = (data[lastUsed]);
-                          found = true;
-                          break;
-                      }                                    
-                if(!found) this.openFacLayout = (data[0]);  
-
-          this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-        });
-      }
-    });
-
-    this.editorTecladoServiceSubscribe = 
-                this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
-                  this.configureAll(editor);
-            });
-
-              this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                                  for (let j = 0; j < this.KeyboardData.length; j++) {
-                                    if (this.KeyboardData[j].nameLayout === 'caps') continue;
-                                    if (result === this.KeyboardData[j].nameLayout) {
-                                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
-                                      this.configureSome(); 
-                                      this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
-                                      break;
-                                    }
-                                  }    
-              });
   
   }
 

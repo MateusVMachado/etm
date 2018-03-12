@@ -17,36 +17,46 @@ export class EditorTecladoComponent implements OnInit {
         this.initEditor = false;
         
             if(!this.initEditor){
-                /*this.tecladoService.subscribeToTecladoReady().subscribe(() => {
+                this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
+                    console.log("ready? " + ready);
+                    this.initEditor = false;
+                    if(ready){
+                        setTimeout(() => {
+                            this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                            this.editorTecladoService.setHeight(this.tamanho);
+                            this.initEditor = true;
+                        }, 200);
+                    }
+                });
+                /*setTimeout(() => {
                     this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
                     this.editorTecladoService.setHeight(this.tamanho);
                     this.initEditor = true;
-                });*/
-                setTimeout(() => {
-                    this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                    this.editorTecladoService.setHeight(this.tamanho);
-                    this.initEditor = true;
-                }, 200);
+                }, 200);*/
             }
 
             
-            /*this.sidebarService.subscribeTosideBarSubject().subscribe(() => {
-                this.sidebarService.subscribeTosideBarSubject().subscribe(() => {
-                    this.initEditor = false;
-                    setTimeout(() => {
-                        this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                        this.editorTecladoService.setHeight(this.tamanho);
-                        this.initEditor = true;
-                    }, 200)
-                });
-            });*/
             this.sidebarService.subscribeTosideBarSubject().subscribe(() => {
+                //this.tecladoService.emitTecladoReady(true);
+                /*this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
+                    console.log("ready ready? " + ready);
+                    this.initEditor = false;
+                    if(ready){
+                        setTimeout(() => {
+                            this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                            this.editorTecladoService.setHeight(this.tamanho);
+                            this.initEditor = true;
+                        }, 200);
+                    }
+                });*/
+            });
+            /*this.sidebarService.subscribeTosideBarSubject().subscribe(() => {
                 this.initEditor = false;
                 setTimeout(() => {
                     this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
                     this.editorTecladoService.setHeight(this.tamanho);
                     this.initEditor = true;
                 }, 200)
-            })
+            })*/
     }
 }
