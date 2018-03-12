@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
   private usuario: User;
   private imgUrl;
 
-  userMenu = [{ title: 'Log out', tag: 'sair' }, { title: 'Editar perfil', tag: 'perfil' }];
+  userMenu = [{ title: 'Editar perfil', tag: 'perfil' }, { title: 'Log out', tag: 'sair' }];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
