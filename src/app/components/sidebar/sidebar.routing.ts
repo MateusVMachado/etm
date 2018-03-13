@@ -25,9 +25,6 @@ const routes: Routes = [{
     {
       path: 'editor-teclado',
       component: EditorTecladoComponent,
-    },{
-      path: 'profile',
-      component: ProfileComponent,
     },
     {
       path: 'general-config',
@@ -37,6 +34,10 @@ const routes: Routes = [{
       path: 'layout-editor',
       component: LayoutEditorComponent,
     },
+    {
+      path: 'profile',
+      component: ProfileComponent,
+    }
   ],
 }];
 

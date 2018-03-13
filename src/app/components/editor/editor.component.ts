@@ -1,5 +1,6 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-editor',
@@ -7,24 +8,28 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
     styleUrls: ['./editor.component.css']
 })
 export class EditorComponent implements AfterViewInit {
-    @ViewChild('editor') editor: any;  
+    @ViewChild('editor') editor: any; 
+    @Input('tamanho') tamanhoDiv: number;
+   
     private editorConfig: any;
-    
-    ngAfterViewInit(): void {
-        this.editor.ckeditorInit(this.editorConfig || {});
+    private height: number;
+
+    ngOnInit(){
+        this.editorTecladoService.getHeight().subscribe((tamanho)=>{
+            this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
+        });
     }
+    
+    ngAfterViewInit(): void { }
 
     constructor(public editorTecladoService: EditorTecladoService){
-        this.editorConfig = { height: 170, language: 'pt-br'};
     }
 
-    config(){
-        this.editor.ckeditorInit(this.editorConfig || {});
-    }
 
     emitInstance($event){
         this.editorTecladoService.emitEditorInstance(this.editor.instance);
     }
+
 
 
 }

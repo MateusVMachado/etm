@@ -1,3 +1,5 @@
+import { ProfileComponent } from '../profile/profile.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileService } from '../profile/profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
@@ -19,13 +21,13 @@ export class HeaderComponent implements OnInit {
   private usuario: User;
   private imgUrl;
 
-  userMenu = [{ title: 'Log out' }];
+  userMenu = [{ title: 'Perfil', tag: 'perfil' }, { title: 'Log out', tag: 'sair' }];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private router: Router,
               private authService: AuthService,
-              private profileService: ProfileService
+              private modalService: NgbModal
             ) {}
 
   ngOnInit() {    
@@ -58,5 +60,18 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(["./auth"]);
   }
 
+  /*public showLargeModal() {
+      const activeModal = this.modalService.open(ProfileEditComponent, { size: 'lg', container: 'nb-layout' });
+  }*/
+
+  menuItem(item: any){
+    if(item.tag === 'sair'){
+      this.logout();
+    }else {
+      if(item.tag === 'perfil'){
+        this.router.navigate(["/pages/profile"]);
+      }
+    }
+  }
 
 }

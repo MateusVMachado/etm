@@ -1,4 +1,3 @@
-import { ProfileService } from '../profile/profile.service';
 import { ConfigModel } from '../general-config/config.model';
 import { User } from '../shared/models/user';
 import { GeneralConfigService } from '../general-config/general-config.service';
@@ -28,7 +27,6 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
                 protected router: Router,
                 private cookieService: CookieService,
                 private injector: Injector,
-                private profileService: ProfileService,
                 private configService: GeneralConfigService
                 ) { super(injector)}
 

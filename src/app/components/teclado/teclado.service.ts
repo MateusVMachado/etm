@@ -15,6 +15,7 @@ export class TecladoService extends AppServiceBase {
 
     teclado: TecladoModel = new TecladoModel();
     public tecladoSubject = new Subject<any>();  
+    public tecladoReady = new Subject<boolean>();
     
 
     public row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
@@ -34,11 +35,19 @@ export class TecladoService extends AppServiceBase {
 
     emitTecladoCommand(editor: any) {
         this.tecladoSubject.next(editor);
-      }
+    }
+
+    emitTecladoReady(isReady: boolean) {
+        this.tecladoReady.next(isReady);
+    }
     
-      subscribeToTecladoSubject() {
-          return this.tecladoSubject.asObservable();      
-      }
+    subscribeToTecladoSubject() {
+        return this.tecladoSubject.asObservable();      
+    }
+
+    subscribeToTecladoReady() {
+        return this.tecladoReady.asObservable();      
+    }
     
      convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
         keyboard.teclas = [];
