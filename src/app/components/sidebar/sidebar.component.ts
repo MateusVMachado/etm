@@ -55,6 +55,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
                               this.editorTecladoServiceSubscribe.unsubscribe();
                               this.router.navigate(['/pages/editor-teclado']);
                               this.sideBarService.emitSideBarCommand(result.item.target);
+                              this.tecladoService.emitTecladoReady(true);
                       }
             });  
     });
