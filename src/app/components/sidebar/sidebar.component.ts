@@ -1,5 +1,5 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
-//import { ConfigModalComponent } from '../config/config.component';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AfterViewInit, Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
 
@@ -12,7 +12,7 @@ import { NbMenuItem } from '@nebular/theme';
 import { KeyboardNamesList } from './keyboards-list.model';
 import { AuthService } from '../shared/services/auth.services';
 import { Subscription } from 'rxjs';
-//import { GeneralConfigComponent } from '../general-config/general-config.component';
+
 
 @Component({
   selector: 'app-pages',
@@ -61,24 +61,19 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
                               
                               this.sideBarService.emitSideBarCommand(result.item.target);
                               this.editorTecladoServiceSubscribe.unsubscribe();
-                              this.router.navigate(['/pages/editor-teclado']);
-                              //this.sideBarService.emitSideBarCommand(result.item.target);
+                              this.router.navigate(['/pages/editor-teclado'], { queryParams: { target: result.item.target } });
                       }
             });  
     });
   }
 
   ngOnDestroy() {
-    //Called once, before the instance is destroyed.
-    //Add 'implements OnDestroy' to the class.
+
     this.sidebarServiceSubscribe.unsubscribe();
   }
 
   ngOnInit() {
-    //let user = this.authService.getLocalUser();
-    //this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
-    //    this.menu = this.generateMenuItem(result);
-    //});
+
     this.loadSidebarKeyboardNames();
   }
 
@@ -89,9 +84,7 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
- // public showLargeModal() {
- //   const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
- // }
+
 
   
   private generateMenuItem(list: KeyboardNamesList){
@@ -128,7 +121,6 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
           {
             title: 'Configuração geral',
             icon: 'nb-grid-a',
-            //target: 'general-config',
             link: '/pages/general-config', 
           },
           {

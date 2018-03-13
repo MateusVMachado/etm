@@ -1,0 +1,31 @@
+<div style="background-color: white;">
+    <div class="modal-header">
+        <span>Deletar Teclado</span>
+        <button class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form (ngSubmit)="deleteKeyboardOnBack()" #form="ngForm" autocomplete="off">
+        <div class="modal-body">
+
+            <div class="from-group line">
+                <label for="name">Escolha o teclado a ser deletado</label>
+                
+
+                  
+                  
+                    <select style="width: 200px; height: 40px;" [(ngModel)]="keyboardToDelete" [ngModelOptions]="{standalone: true}">
+                        <option selected disabled>Teclados</option>
+                        <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
+                            {{keyboard}}
+                          </option>
+                    </select>
+
+            </div>    
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Deletar</button>
+            </div>
+        </div>
+    </form>
+</div>
