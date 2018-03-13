@@ -1,7 +1,7 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
 //import { ConfigModalComponent } from '../config/config.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
@@ -11,15 +11,17 @@ import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
 import { KeyboardNamesList } from './keyboards-list.model';
 import { AuthService } from '../shared/services/auth.services';
+import { Subscription } from 'rxjs';
 //import { GeneralConfigComponent } from '../general-config/general-config.component';
 
 @Component({
   selector: 'app-pages',
   templateUrl: './sidebar.component.html'
 })
-export class SidebarComponent implements AfterViewInit, OnInit {
+export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
+  public sidebarServiceSubscribe: Subscription;
 
   
   public menu: NbMenuItem[] = [];
@@ -32,6 +34,13 @@ export class SidebarComponent implements AfterViewInit, OnInit {
               private editorTecladoService: EditorTecladoService,
               private tecladoService: TecladoService,
               private authService: AuthService)  {  
+
+
+                this.sidebarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result)=>{
+                  if(result === 'reload'){
+                    this.loadSidebarKeyboardNames();
+                  }
+                });
   } 
 
   ngAfterViewInit(): void {
@@ -53,13 +62,27 @@ export class SidebarComponent implements AfterViewInit, OnInit {
                               this.sideBarService.emitSideBarCommand(result.item.target);
                               this.editorTecladoServiceSubscribe.unsubscribe();
                               this.router.navigate(['/pages/editor-teclado']);
-                              this.sideBarService.emitSideBarCommand(result.item.target);
+                              //this.sideBarService.emitSideBarCommand(result.item.target);
                       }
             });  
     });
   }
 
+  ngOnDestroy() {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.sidebarServiceSubscribe.unsubscribe();
+  }
+
   ngOnInit() {
+    //let user = this.authService.getLocalUser();
+    //this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
+    //    this.menu = this.generateMenuItem(result);
+    //});
+    this.loadSidebarKeyboardNames();
+  }
+
+  private loadSidebarKeyboardNames(){
     let user = this.authService.getLocalUser();
     this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
         this.menu = this.generateMenuItem(result);
@@ -78,7 +101,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     for(let j=0; j < data.length; j++){
       if(data[j] === 'caps') continue;
       let object = {
-        title: data[j],
+        title: (j+1).toString() + ' :  ' + data[j],
         target: data[j]
       } 
       this.jsonArray.push(object);

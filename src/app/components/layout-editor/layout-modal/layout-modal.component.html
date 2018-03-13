@@ -1,0 +1,27 @@
+<div style="background-color: white;" *ngIf="isKeyboardName">
+    <div class="modal-header">
+        <span>Configurações do Editor</span>
+        <button class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form (ngSubmit)="saveKeyboardName()" #form="ngForm" autocomplete="off">
+        <div class="modal-body">
+
+            <div class="from-group line">
+                <label for="name">Insira o nome do teclado</label>
+                <input type="text" id="name" name="name" [(ngModel)]="keyboardName" #name="ngModel" class="form-control" placeholder="Nome do teclado"
+                    [class.form-control-danger]="name.invalid && name.touched" [required]="true"
+                />
+                <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
+                Nome do teclado é obrigatório!
+            </small>
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Salvar</button>
+            </div>
+        </div>
+    </form>
+</div>

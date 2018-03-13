@@ -9,6 +9,10 @@ import { OpenFACLayout, LayoutLine, LayoutButton } from './layout.model';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { HttpClient } from '@angular/common/http';
 import { LayoutEditorService } from './layout-editor.service';
+import { SideBarService } from '../sidebar/sidebar.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LayoutModalComponent } from './layout-modal/layout-modal.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-layout-editor',
@@ -22,6 +26,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public masterKeys: TecladoModel = new TecladoModel(); 
     public teclado: TecladoModel = new TecladoModel();
     public tecladoReplicant: TecladoModel = new TecladoModel();
+    public finalKeyboardCopy: TecladoModel = new TecladoModel();
     private correctChoices: any;
     public matrixIndex: string;
     public spillMode: boolean = false;
@@ -30,13 +35,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public aux: string;
     private email: string;
 
+    private keyboardName: string;
+    private layoutEditorServiceSubscribe: Subscription;
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
                 private authService: AuthService,
                 private injector: Injector,
                 private http: HttpClient,
-                private layoutEditorService: LayoutEditorService) {
+                private layoutEditorService: LayoutEditorService,
+                private sidebarService: SideBarService,
+                private modalService: NgbModal) {
       super(injector);
 
       dragulaService.setOptions('master-bag', {
@@ -75,6 +85,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     ngOnDestroy() {
       this.dragulaService.destroy('master-bag'); 
+     // this.layoutEditorServiceSubscribe.unsubscribe();
     }
 
     ngOnInit() {
@@ -180,6 +191,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }    
 
+    public showModal(){
+        const activeModal = this.modalService.open(LayoutModalComponent, {size: 'lg', container: 'nb-layout'});
+    }
+
     public sayHello(mystring: string){
       console.log("HELLOOOO from " + mystring);
     }
@@ -211,6 +226,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
    public saveKeyboardLayout(){
       // LOAD LAYOUT CONFIGURATION OBJECT
+      let totalLines = 0;
       let finalKeyboard = new TecladoModel;
       finalKeyboard.teclas = [];
 
@@ -226,24 +242,56 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }  
           });
         
-        if(tam > 0) finalKeyboard.teclas.push(line);  
+        if(tam > 0) {
+            finalKeyboard.teclas.push(line);  
+            totalLines += 1;
+        }    
       });
 
-      console.log("FINALKEYBOARD");
-      console.log(JSON.stringify(finalKeyboard) );
-      console.log("FINALKEYBOARD");
+      if(totalLines === 0) {
+        this.messageService.error("Não é possivel salvar um teclado vazio!");
+        return;
+      }  
+      //console.log("FINALKEYBOARD");
+      //console.log(JSON.stringify(finalKeyboard) );
+      //console.log("FINALKEYBOARD");
 
-      let user = this.authService.getLocalUser();
-      //let layout = this.populateLayout(this.tecladoReplicant, user.email);
-      let layout = this.populateLayout(finalKeyboard, user.email);
-      this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
 
-      this.layoutEditorService.saveNewKeyboard(layout).subscribe((result)=>{
-        console.log("Teclado Inserido");
+      this.showModal();
+      this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
+        if(nameArrived){
+          this.keyboardName = nameArrived;
+        
+          console.log(this.keyboardName);
+          let user = this.authService.getLocalUser();
+          finalKeyboard.type = this.keyboardName;
+          let layout = this.populateLayout(finalKeyboard, user.email);
+          
+          this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
+            console.log("RESULT: " + result);
+            if(result === 'saved'){
+              console.log("Teclado Inserido");
+              this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+              this.sidebarService.emitSideBarCommand('reload');
+            } else if (result === 'alreadyExist'){
+              this.messageService.error("Esse nome de teclado já existe.");
+            } else if (result === 'maxNumber'){
+              this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+            }  
+          });
+          this.layoutEditorServiceSubscribe.unsubscribe();
+        }
       });
+
+      
+      //let user = this.authService.getLocalUser();
+      
+      //let layout = this.populateLayout(finalKeyboard, user.email);
+      
+
       
       // SALVA layout NO BANCO
-      console.log(JSON.stringify(layout) );
+      //console.log(JSON.stringify(layout) );
 
    }
 

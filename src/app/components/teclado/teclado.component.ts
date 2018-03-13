@@ -45,7 +45,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private timerId: number;
   private scanTimeLines: number;
   private scanTimeColumns: number;
-  
 
   public menu: NbMenuItem[];
   public jsonArray = new Array();
@@ -58,6 +57,22 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private authService: AuthService) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
+
+              this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+                console.log("RESULTADO: " + result);
+                if(result && this.KeyboardData){
+                      for (let j = 0; j < this.KeyboardData.length; j++) {
+                        if (this.KeyboardData[j].nameLayout === 'caps') continue;
+                        if (result === this.KeyboardData[j].nameLayout) {
+                          console.log("ACHOU");
+                          this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
+                          this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
+                          break;
+                        }
+                      }    
+                }         
+              });
+
   }
 
   ngOnDestroy(): void {
@@ -126,16 +141,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
               });
 
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                                  for (let j = 0; j < this.KeyboardData.length; j++) {
-                                    if (this.KeyboardData[j].nameLayout === 'caps') continue;
-                                    if (result === this.KeyboardData[j].nameLayout) {
-                                      this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
-                                      this.configureSome(); 
-                                      this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
-                                      break;
-                                    }
-                                  }    
+                    this.configureSome(); 
                 });
+
+                
               }
           })
 
