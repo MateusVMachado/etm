@@ -22,7 +22,9 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         this.zone = this.args[2];
 
         this.selection = this.editor.getSelection();
-        this.range = this.selection.getRanges()[0];
+        if(this.selection){
+            this.range = this.selection.getRanges()[0];
+        }
     }
 
     public Execute(Engine: IOpenFacEngine){
