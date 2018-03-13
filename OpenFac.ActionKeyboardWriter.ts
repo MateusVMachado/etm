@@ -132,25 +132,28 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public backspaceKey(){
         this.editor.focus();
         let sel = this.editor.getSelection();
-        let element = sel.getStartElement();
-        if(element){
-            sel.selectElement(element);  
-        } else {
-            return
-        }
-        let ranges = this.editor.getSelection().getRanges();
-        if(this.cursorPosition-2 < 0) return;
+        if(sel){
+            let element = sel.getStartElement();
+            if(element){
+                sel.selectElement(element);  
+            } else {
+                return
+            }
+            let ranges = this.editor.getSelection().getRanges();
+            if(this.cursorPosition-2 < 0) return;
 
-
-        ranges[0].setStart(element, this.cursorPosition-2);
-        ranges[0].setEnd(element, this.cursorPosition-1); //cursor
-        
-        if([ranges[0]]){
-            sel.selectRanges([ranges[0]]);
-        } else {
-            return;
+            if(ranges){
+                ranges[0].setStart(element, this.cursorPosition-2);
+                ranges[0].setEnd(element, this.cursorPosition-1); //cursor
+                
+                if([ranges[0]]){
+                    sel.selectRanges([ranges[0]]);
+                } else {
+                    return;
+                }
+            }
+            this.editor.insertHtml('');
         }
-        this.editor.insertHtml('');
     }
 
     public doGetCaretPosition(toReturn?:boolean) {
@@ -167,21 +170,26 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public setCaretPosition(pos) {
         this.editor.focus();
         let sel = this.editor.getSelection();
-        let element = sel.getStartElement();
-        if(element){
-            sel.selectElement(element);  
-        } else {
-            return
+        if(sel){
+            let element = sel.getStartElement();
+            if(element){
+                sel.selectElement(element);  
+            } else {
+                return
+            }
+            
+            let ranges = this.editor.getSelection().getRanges();
+            if(ranges){
+                ranges[0].setStart(element, pos);
+                ranges[0].setEnd(element, pos); //cursor
+                if([ranges[0]]){
+                    sel.selectRanges([ranges[0]]);
+                } else {
+                    return;
+                } 
+            }
         }
-        let ranges = this.editor.getSelection().getRanges();
-        ranges[0].setStart(element, pos);
-        ranges[0].setEnd(element, pos); //cursor
-        if([ranges[0]]){
-            sel.selectRanges([ranges[0]]);
-        } else {
-            return;
-        }  
         this.editor.focus();
-     }
+    }
     
 }
