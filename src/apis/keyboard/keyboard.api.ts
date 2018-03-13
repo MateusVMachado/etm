@@ -4,6 +4,7 @@ import { KeyboardModel } from '../../models/keyboard.model';
 import { OpenFACLayout, LayoutLine, LayoutButton } from '../../models/layout.model';
 import { KeyboardNamesList } from "./keyboard-list.model";
 
+
 export class Keyboard extends BaseRoute {
 
     constructor() {
@@ -22,7 +23,7 @@ export class Keyboard extends BaseRoute {
 
     public getKeyboardNames(req: Request, res: Response, next: NextFunction){
         let teclado: KeyboardModel = new KeyboardModel();
-        this.getKeyboardNamesInDatabase(teclado, res);        
+        this.getKeyboardNamesInDatabase(teclado, req, res);        
     }
 
     public keyboard_api(req: Request, res: Response, next: NextFunction) {    
@@ -41,10 +42,10 @@ export class Keyboard extends BaseRoute {
             })
      }
 
-    public getKeyboardNamesInDatabase(teclado: KeyboardModel, res: Response){    
+    public getKeyboardNamesInDatabase(teclado: KeyboardModel, req: Request, res: Response){    
         let instance = this;
         let keyboardNames = new KeyboardNamesList();
-        res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {
+        res.locals.mongoAccess.coll[1].find({"email": req.query.email}).toArray(function(err, keyboard_list) {
             if(keyboard_list.length !== 0){
                 for(let i = 0; i < keyboard_list.length; i++){
                     keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
@@ -53,6 +54,64 @@ export class Keyboard extends BaseRoute {
             }     
         })
     }
+
+    public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
+        let instance = this;
+        if(req.query.email){
+            res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) {
+                if(keyboard_list.length !== 0){
+                    res.send(keyboard_list);
+                }  
+            })
+        }    
+    }
+
+
+    public deleteKeyboard(req: Request, res: Response, next: NextFunction){
+        if(req.query.email){
+            res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
+                if(keyboard_list){
+                    res.locals.mongoAccess.coll[1].remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
+                    res.send('removed');
+                } else {
+                    res.send('notFound');   
+                }
+                
+            });         
+        }
+    }     
+    
+
+    public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
+        let newKeyboard = req.body;
+        res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
+            if(keyboard_list.length >= 8){
+                res.send('maxNumber');
+                return;
+            } else {
+                
+                res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout }).toArray(function(err, keyboard_list) {
+                    if(keyboard_list.length !== 0){
+                        res.send('alreadyExist');
+                    } else {
+                        res.locals.mongoAccess.coll[1].insert(newKeyboard, (err, result) => {
+                            console.log("Keyboard inserido");
+                            res.send('saved');
+                        })
+                    }
+                 })
+            }
+        })
+
+
+    }
+
+    public insertBasicAtRegister(req: Request,  res: Response, next: NextFunction){
+        res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br', req.body.email), (err, result) => {
+            console.log("Keyboard inserido")
+        })
+    }    
+
 
     public insertBasicIntoDatabase(teclado: KeyboardModel, res: Response){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
@@ -69,10 +128,15 @@ export class Keyboard extends BaseRoute {
         })
      } 
 
-    public populateLayout(type: string): OpenFACLayout{
+    public populateLayout(type: string, email?:string): OpenFACLayout{
         let openFacLayout = new OpenFACLayout(); 
         openFacLayout.nameLayout = type;
-        openFacLayout.email = 'email.teste@email.com'; 
+        if(email){
+            openFacLayout.email = email;    
+        } else {
+            openFacLayout.email = 'system@system.com'; 
+        }
+        
 
         let teclado = this.loadKeyboard(type);
         let qntyLines = teclado.teclas.length;
@@ -85,7 +149,7 @@ export class Keyboard extends BaseRoute {
                     openFacLayout.Lines[i].Buttons.push(new LayoutButton());
                     openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
                     openFacLayout.Lines[i].Buttons[j].Caption = 'caption';
-                    openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j];
+                    openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j];        
             }
         } 
 
