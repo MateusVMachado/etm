@@ -2,6 +2,8 @@ import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "../routes/route";
 import * as mongoSanitize from 'express-mongo-sanitize';
 import { UserModel } from '../models/user.model';
+import { Keyboard } from '../apis/keyboard/keyboard.api';
+
 
 export class Register extends BaseRoute {
     
