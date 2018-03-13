@@ -117,7 +117,19 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.insertHtml('&nbsp;');      
                 this.maxLength += 1;
                 this.doGetCaretPosition();
-                break;                                   
+                break;
+            case 'SPACE':
+                this.editor.focus();
+                this.editor.insertHtml('&nbsp;');      
+                this.maxLength += 1;
+                this.doGetCaretPosition();
+                break;                     
+            case 'PULA':
+                this.editor.focus();
+                this.editor.insertText('');    
+                this.doGetCaretPosition();
+                break;                 
+                                    
             default:
                 this.editor.focus();
                 this.editor.insertText(bt.Text);
