@@ -22,8 +22,8 @@ import { CKEditorComponent } from 'ng2-ckeditor';
 import { SideBarService } from './components/sidebar/sidebar.service';
 import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
-//import { GeneralConfigComponent } from './components/general-config/general-config.component';
-
+import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
+import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +35,8 @@ import { GeneralConfigService } from './components/general-config/general-config
     NgbModule.forRoot(),
     ThemeModule.forRoot(),
     CoreModule.forRoot(),
-    FormsModule
+    FormsModule,
+    DragulaModule,
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -47,6 +48,7 @@ import { GeneralConfigService } from './components/general-config/general-config
     CKEditorComponent,
     SideBarService,
     GeneralConfigService,
+    LayoutEditorService,
     ProfileService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],

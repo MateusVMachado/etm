@@ -51,6 +51,10 @@ export class NgxRegisterComponent extends AppBaseComponent {
             this.messageService.error(error.message, 'Oops..');
           }
       );
+
+      this.service.registerBasicKeyboard(usuario).subscribe((result)=>{
+
+      });
     }
     
     navigateTo(path: string) {

@@ -24,8 +24,8 @@ export class SideBarService extends AppServiceBase{
       return this.sideBarSubject.asObservable();      
   }
   
-  loadKeyboardsNames() {
-    return this.http.get<KeyboardNamesList>(this.backendAddress + '/keyboard/getKeyboardNames');
+  loadKeyboardsNames(email: string) {
+    return this.http.get<KeyboardNamesList>(this.backendAddress + `/keyboard/getKeyboardNames?email=${email}`);
   }
 
 }

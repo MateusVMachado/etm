@@ -1,7 +1,7 @@
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
-//import { ConfigModalComponent } from '../config/config.component';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
@@ -10,15 +10,18 @@ import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { TecladoService } from '../teclado/teclado.service';
 import { NbMenuItem } from '@nebular/theme';
 import { KeyboardNamesList } from './keyboards-list.model';
-//import { GeneralConfigComponent } from '../general-config/general-config.component';
+import { AuthService } from '../shared/services/auth.services';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-pages',
   templateUrl: './sidebar.component.html'
 })
-export class SidebarComponent implements AfterViewInit, OnInit {
+export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
+  public sidebarServiceSubscribe: Subscription;
 
   
   public menu: NbMenuItem[] = [];
@@ -29,7 +32,15 @@ export class SidebarComponent implements AfterViewInit, OnInit {
               private sideBarService: SideBarService,
               private modalService: NgbModal,
               private editorTecladoService: EditorTecladoService,
-              private tecladoService: TecladoService)  {  
+              private tecladoService: TecladoService,
+              private authService: AuthService)  {  
+
+
+                this.sidebarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result)=>{
+                  if(result === 'reload'){
+                    this.loadSidebarKeyboardNames();
+                  }
+                });
   } 
 
   ngAfterViewInit(): void {
@@ -40,9 +51,6 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => { 
-                      if ( result.item.target === 'general-config') {
-                        
-                      }
                       if ( result.item.target === 'dashboard') {
                         editor.focus();
                         this.editorTecladoServiceSubscribe.unsubscribe();
@@ -53,23 +61,30 @@ export class SidebarComponent implements AfterViewInit, OnInit {
                               
                               this.sideBarService.emitSideBarCommand(result.item.target);
                               this.editorTecladoServiceSubscribe.unsubscribe();
-                              this.router.navigate(['/pages/editor-teclado']);
-                              this.sideBarService.emitSideBarCommand(result.item.target);
-                              this.tecladoService.emitTecladoReady(true);
+                              this.router.navigate(['/pages/editor-teclado'], { queryParams: { target: result.item.target } });
                       }
             });  
     });
   }
 
+  ngOnDestroy() {
+
+    this.sidebarServiceSubscribe.unsubscribe();
+  }
+
   ngOnInit() {
-    this.sideBarService.loadKeyboardsNames().subscribe((result) => {
+
+    this.loadSidebarKeyboardNames();
+  }
+
+  private loadSidebarKeyboardNames(){
+    let user = this.authService.getLocalUser();
+    this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
         this.menu = this.generateMenuItem(result);
     });
   }
 
- // public showLargeModal() {
- //   const activeModal = this.modalService.open(ConfigModalComponent, { size: 'lg', container: 'nb-layout' });
- // }
+
 
   
   private generateMenuItem(list: KeyboardNamesList){
@@ -79,7 +94,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
     for(let j=0; j < data.length; j++){
       if(data[j] === 'caps') continue;
       let object = {
-        title: data[j],
+        title: (j+1).toString() + ' :  ' + data[j],
         target: data[j]
       } 
       this.jsonArray.push(object);
@@ -94,6 +109,11 @@ export class SidebarComponent implements AfterViewInit, OnInit {
         children: this.jsonArray
       },
       {
+        title: 'Dashboard',
+        icon: 'nb-home',
+        target: 'dashboard',
+      },
+      {
         title: 'Configuração',
         icon: 'nb-gear',
         target: 'config',
@@ -101,13 +121,12 @@ export class SidebarComponent implements AfterViewInit, OnInit {
           {
             title: 'Configuração geral',
             icon: 'nb-grid-a',
-            //target: 'general-config',
             link: '/pages/general-config', 
           },
           {
             title: 'Editor de layouts',
             icon: 'nb-keypad',
-            target: 'layout-editor',
+            link: '/pages/layout-editor',
           },
         ]
       }];

@@ -49,6 +49,10 @@ export class AuthService extends AppServiceBase {
         });
     }
 
+    registerBasicKeyboard(user: any) {
+        return  this.http.post(this.backendAddress + '/keyboard/insertBasicAtRegister', user, { responseType: 'text'});
+    }
+
     resetPassword() {
 
     }

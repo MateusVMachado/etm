@@ -1,6 +1,6 @@
 export class TecladoModel {
 
-    teclas: string[][];
+    teclas: any;
     type: string;
 
     constructor() {

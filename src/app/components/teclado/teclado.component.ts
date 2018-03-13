@@ -17,8 +17,11 @@ import { GeneralConfigService } from '../general-config/general-config.service';
 import { ConfigModel } from '../general-config/config.model';
 import { ActiveLineCol } from './activeLine.model';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../shared/services/auth.services';
+
 import * as $ from 'jquery';
 import { NbMenuItem } from '@nebular/theme';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-teclado',
@@ -38,23 +41,59 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private editorTecladoServiceSubscribe: Subscription;
   private sideBarServiceSubscribe: Subscription;
   private configServiceSubscribe: Subscription;
+  private routeSubscription: Subscription;
   private capsIndex: number;
   private ptbrIndex: number; 
   private timerId: number;
   private scanTimeLines: number;
   private scanTimeColumns: number;
-  
 
   public menu: NbMenuItem[];
   public jsonArray = new Array();
+
+  public target: any;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
               private sideBarService: SideBarService,
-              private configService: GeneralConfigService) {
+              private configService: GeneralConfigService,
+              private authService: AuthService,
+              private router: Router,
+              private route: ActivatedRoute,) {
 
               this.keyCommandService = new OpenFacKeyCommandService();
+        
+              this.routeSubscription = this.route.queryParams.subscribe(params => { // Defaults to 0 if no query param provided.
+                    this.target = params['target'];
+                    
+                    this.tecladoService.loadData().subscribe((data)=>{
+                      if(data){
+                        this.KeyboardData = data;
+                        for(let i = 0; i < this.KeyboardData.length; i++){
+                          if(this.KeyboardData[i].nameLayout === 'caps'){
+                              this.capsIndex = i;
+                          } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
+                            this.ptbrIndex = i;
+                          }   
+                        }
+                        let lastUsed: number = 0;
+                      } 
+
+                    if(this.target && this.KeyboardData){
+                      for (let j = 0; j < this.KeyboardData.length; j++) {
+                        if (this.KeyboardData[j].nameLayout === 'caps') continue;
+                        if (this.target === this.KeyboardData[j].nameLayout) {
+                          this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
+                          this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
+                          break;
+                        }
+                      }    
+                }    
+
+              });
+          });      
+      
   }
 
   ngOnDestroy(): void {
@@ -71,12 +110,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
     this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
-      console.log("subscribeToKeyCommandSubject");
         if(result === 'caps'){
           this.capsLock();
         }
     });
 
+    
     this.tecladoService.loadData().subscribe((data)=>{
       if(data){
         this.KeyboardData = data;
@@ -109,23 +148,24 @@ export class TecladoComponent implements OnInit, OnDestroy {
           if(!found) this.openFacLayout = (data[0]);  
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
           this.configureAll();
+          
+          // FREE MEMORY?
+          data = null;
+          this.KeyboardData = null;
+          
+
           this.tecladoService.emitTecladoReady(true);
+
           this.editorTecladoServiceSubscribe = 
                   this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
             this.configureAll(editor);
           });
+
           this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-            for (let j = 0; j < this.KeyboardData.length; j++) {
-              if (this.KeyboardData[j].nameLayout === 'caps') continue;
-              if (result === this.KeyboardData[j].nameLayout) {
-                this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
                 this.configureSome(); 
-                this.tecladoService.emitTecladoReady(true);
-                this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
-                break;
-              }
-            }    
+                this.tecladoService.emitTecladoReady(true);    
           });
+
         });
       }
     });
@@ -133,7 +173,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   private loadSingleKeyboardByName(nameLayout: string){
     this.tecladoService.loadSingleKeyboard(nameLayout).subscribe((data)=>{
-      console.log(data[0]);
+      
     });
 
   }

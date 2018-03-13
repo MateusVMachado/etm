@@ -52,6 +52,7 @@
     "nebular-icons": "1.0.6",
     "ng2-bootstrap-modal": "^1.0.1",
     "ng2-ckeditor": "^1.1.14",
+    "ng2-dragula": "^1.5.0",
     "ngx-cookie-service": "^1.0.10",
     "normalize.css": "7.0.0",
     "pace-js": "1.0.2",
