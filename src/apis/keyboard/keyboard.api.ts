@@ -57,7 +57,6 @@ export class Keyboard extends BaseRoute {
 
     public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
         let instance = this;
-        console.log(req.query.email);
         if(req.query.email){
             res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) {
                 if(keyboard_list.length !== 0){
@@ -66,6 +65,22 @@ export class Keyboard extends BaseRoute {
             })
         }    
     }
+
+
+    public deleteKeyboard(req: Request, res: Response, next: NextFunction){
+        if(req.query.email){
+            res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
+                if(keyboard_list){
+                    res.locals.mongoAccess.coll[1].remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
+                    res.send('removed');
+                } else {
+                    res.send('notFound');   
+                }
+                
+            });         
+        }
+    }     
+    
 
     public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
@@ -89,11 +104,10 @@ export class Keyboard extends BaseRoute {
         })
 
 
-        //res.status(200).send();
     }
 
-    public insertBasicAtRegister(teclado: KeyboardModel, req: Request,  res: Response){
-        res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br', req.query.email), (err, result) => {
+    public insertBasicAtRegister(req: Request,  res: Response, next: NextFunction){
+        res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br', req.body.email), (err, result) => {
             console.log("Keyboard inserido")
         })
     }    
@@ -135,7 +149,7 @@ export class Keyboard extends BaseRoute {
                     openFacLayout.Lines[i].Buttons.push(new LayoutButton());
                     openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
                     openFacLayout.Lines[i].Buttons[j].Caption = 'caption';
-                    openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j];
+                    openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j];        
             }
         } 
 
