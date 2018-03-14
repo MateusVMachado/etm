@@ -1,39 +1,66 @@
 <div class="card-profile container">
     <div class="row" style="border-bottom: 1px solid #e9e9e9; margin-bottom: 15px;">
-        <h4>Perfil: {{ user.fullName }}</h4>
+        <h4 style="margin-left: 15px;">Perfil: {{ usuario.fullName }}</h4>
     </div>
     <div class="label-detalhes">
         <div class="row">
             <div class="col-md-2">
                 <h5>Detalhes</h5>
             </div>
-            <div class="col-md-3">
-                <button class="btn edit-button"(click)="showLargeModal()"><i class="ion-edit"></i></button>
+        </div>
+    </div>
+    <div>
+        <div class="row line-margin">
+            <div class="col-md-1">
+                <label class="label-user-info" style="margin-left: 20px;">Avatar:</label>
             </div>
         </div>
-    </div>
-    <div class="row line-margin">
-        <div class="col-md-2">
-            <label class="label-user-info">Avatar:</label>
+        <div class="row line-margin">
+            <div class="col-md-5">
+                <div class="row">
+                    <img style="margin-left: 38px;" class="profile-img" [src]='imgUrl'/>
+                    <button class="btn edit-button"(click)="showLargeModal()"><i class="ion-edit"></i></button>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <img class="profile-img" [src]='imgUrl'/>
-        </div>
-    </div>
-    <div class="row line-margin">
-        <div class="col-md-2">
-            <label class="label-user-info">Nome Completo:</label>
-        </div>
-        <div class="col-md-6">
-            <label>{{ user.fullName }}</label>
-        </div>
-    </div>
-    <div class="row line-margin">
-        <div class="col-md-2">
-            <label class="label-user-info">Email:</label>
-        </div>
-        <div class="col-md-6">
-            <label>{{ user.email }}</label>
-        </div>
+        <form (ngSubmit)="save()" #form="ngForm" autocomplete="off">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="name">Nome</label>
+                    <input type="text" id="name" name="name" [(ngModel)]="user.name" #name="ngModel" class="form-control" placeholder="Nome completo"
+                        [class.form-control-danger]="name.invalid && name.touched" [required]="true"
+                    />
+                    <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
+                        Nome é obrigatório!
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="name">Email</label>
+                    <input type="text" id="email" name="email" [(ngModel)]="user.email" #name="ngModel" class="form-control" placeholder="Nome completo"
+                        disabled
+                    />
+                </div>
+                <div class="form-group line">
+                    <label for="password"> Nova Senha</label>
+                    <input type="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="form-control" placeholder="Nova Senha"
+                        [class.form-control-danger]="password.invalid && password.touched"
+                    />
+                </div>
+                <div class="form-group line" *ngIf="password.value">
+                    <label for="confirmPassword"> Confirmação de Senha</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" class="form-control" placeholder="Confirmação de Senha"
+                        [class.form-control-danger]="confirmPassword.invalid && confirmPassword.touched" [required]="true"
+                    />
+                    <small class="form-text error" *ngIf="confirmPassword.touched && password.value != confirmPassword.value">
+                        As senhas não coincidem!
+                    </small>
+                </div>
+                <div class="row">
+                    <div class="col-md-12" style="padding: 0;">
+                        <button class="btn btn-primary button-salvar" [disabled]="saved || !form.valid" style="margin-right: 15px">Salvar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>

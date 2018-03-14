@@ -30,16 +30,11 @@ export class ProfileEditComponent implements OnInit {
         this.imageFile = new Picture();
         this.saved = false;
         this.bigImage = false;
-        this.loadUser();
     }
 
     public save(){
         let usuario: User = new User();
         usuario = this.authService.getLocalUser();
-        usuario.fullName = this.user.name;
-        if(this.user.password && this.user.confirmPassword){
-            usuario.password = this.user.password
-        }
         if(this.imageFile.content){
             usuario.picture = this.imageFile;
         }
@@ -57,16 +52,9 @@ export class ProfileEditComponent implements OnInit {
         this.activeModal.close();
     }
 
-    private loadUser(){
-        let user: User = new User();
-        user = this.authService.getLocalUser();
-        this.user.name = user.fullName;
-        this.user.email = user.email;
-    }
-
     public onAddPicture(fileInput: any){
         
-        if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 100000) {
+        if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 1000000) {
             this.bigImage = false;
             var reader = new FileReader();
             reader.onload = () => {                
