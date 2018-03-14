@@ -50,7 +50,6 @@
 .teclado-container{
     height: 350px;
     overflow-y:scroll;
-    /*padding: 54px 24px 14px 24px;*/
     padding: 24px 14px;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
@@ -67,7 +66,6 @@
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
     0 2px 2px 0 rgba(0,0,0,.14), 
     0 1px 5px 0 rgba(0,0,0,.12);
-    /*background-color: rgb(102, 104, 103);*/
     background-color:  #364150;
 }
 .tamanho-button-especial{
@@ -114,25 +112,6 @@ div[tooltip]:hover:before {
 
 }
 
-/*
-[title]:after{
-    content: attr(title);
-    padding: 3px;
-    position: absolute;
-    white-space:nowrap;
-    word-wrap: none;
-    background-color: rgb(26, 216, 121);
-    color: white;
-    left: 5%;
-    top: -60%;
-    opacity : 0;
-}
-
-[title]:hover:after{
-    transition: opacity 1.5s;      
-    opacity : 1;
-}
-*/
 
 .tamanho-button-especial-full{
     background-color: rgb(94, 175, 221);
@@ -213,8 +192,6 @@ div[tooltip]:hover:before {
 
 
 .button-keyboard-down{
-    /*background-color: #2b3643; 
-    color: grey;*/
     background-color: rgb(236, 236, 236);
     color: black;
     max-height: 100%;
@@ -222,8 +199,6 @@ div[tooltip]:hover:before {
 }
 
 .button-keyboard-down:hover{
-    /*background-color: #2b3643; 
-    color: grey;*/
     background-color: rgb(26, 86, 216);
     color: white;
     max-height: 100%;
@@ -248,7 +223,6 @@ div[tooltip]:hover:before {
     color: black;
     background-color:  rgb(26, 86, 216);
     color: grey;
-    /*max-height: 100%;*/
     width: 100%;
 }
 
