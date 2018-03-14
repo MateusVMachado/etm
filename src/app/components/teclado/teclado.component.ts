@@ -62,21 +62,20 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,) {
 
+             
               this.keyCommandService = new OpenFacKeyCommandService();
-        
+   
+
+              
               this.routeSubscription = this.route.queryParams.subscribe(params => { // Defaults to 0 if no query param provided.
                     this.target = params['target'];
-                    
-                    this.tecladoService.loadData().subscribe((data)=>{
+             
+
+                    let user = this.authService.getLocalUser();
+                    this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
                       if(data){
                         this.KeyboardData = data;
-                        for(let i = 0; i < this.KeyboardData.length; i++){
-                          if(this.KeyboardData[i].nameLayout === 'caps'){
-                              this.capsIndex = i;
-                          } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
-                            this.ptbrIndex = i;
-                          }   
-                        }
+
                         let lastUsed: number = 0;
                       } 
 
@@ -84,6 +83,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       for (let j = 0; j < this.KeyboardData.length; j++) {
                         if (this.KeyboardData[j].nameLayout === 'caps') continue;
                         if (this.target === this.KeyboardData[j].nameLayout) {
+
                           this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
                           break;
@@ -93,7 +93,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
               });
           });      
-      
+  
+
   }
 
   ngOnDestroy(): void {
@@ -110,22 +111,18 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
     this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
+      console.log("subscribeToKeyCommandSubject");
         if(result === 'caps'){
           this.capsLock();
         }
     });
 
-    
-    this.tecladoService.loadData().subscribe((data)=>{
+    let user = this.authService.getLocalUser();
+
+    this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
       if(data){
         this.KeyboardData = data;
-        for(let i = 0; i < this.KeyboardData.length; i++){
-          if(this.KeyboardData[i].nameLayout === 'caps'){
-              this.capsIndex = i;
-          } else if (this.KeyboardData[i].nameLayout === 'pt-br'){
-            this.ptbrIndex = i;
-          }   
-        }
+
         let lastUsed: number = 0;
         this.configServiceSubscribe = 
                         this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
@@ -138,21 +135,21 @@ export class TecladoComponent implements OnInit, OnDestroy {
           let found = false;
           for(let i=0; i < this.KeyboardData.length; i++){
             if(this.KeyboardData[i].nameLayout === 'caps') continue;
-            if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
-              lastUsed = i;
-              this.openFacLayout = (data[lastUsed]);
-              found = true;
-              break;
-            }
+            //if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
+              if(this.target === this.KeyboardData[i].nameLayout){
+                  lastUsed = i;
+                  this.openFacLayout = (data[lastUsed]);
+                  found = true;
+                  break;
+              }
           }                                    
           if(!found) this.openFacLayout = (data[0]);  
+
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
           this.configureAll();
           
-          // FREE MEMORY?
-          data = null;
-          this.KeyboardData = null;
-          
+
+
 
           this.tecladoService.emitTecladoReady(true);
 

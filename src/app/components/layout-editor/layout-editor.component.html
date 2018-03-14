@@ -2,7 +2,7 @@
 <div styele="width: 100%; heigth: 100%; background-color: #364150">
 
 
-        <div class="box-teclado">
+        <div class="box-teclado-menu" style="height: 20%;">
                 <div class="teclado-container-menu">
                         <div class="row" style="padding-left:15px">
                                 <div class="col-md-1">
@@ -40,10 +40,10 @@
         </div>
 
 
-        <div class="box-teclado">
-            <div class="teclado-container-editor">
-            <div style="z-index: 0">
-                <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px">
+        <div class="box-teclado" style="height: 30%;">
+            <div class="teclado-container-editor" >
+            <div style="z-index: 0" >
+                <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px;">
         
                 <div class="col-md-12 line">
                     <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
@@ -132,7 +132,7 @@
         </div>
 
    
-                <div class="box-teclado-bottom" >
+                <div class="box-teclado-bottom" style="height: 30%;">
                         <div class="teclado-container ">
                         
                                 <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 

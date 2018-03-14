@@ -23,6 +23,8 @@
     max-height: 40%;
 }
 
+
+
 .box-teclado-bottom{
     height: 100%;
     padding-top: 20px;
@@ -34,6 +36,7 @@
 }
 
 .teclado-container-menu{
+    height: 20%;
     padding: 54px 24px 14px 24px;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
@@ -57,9 +60,9 @@
 }
 
 .teclado-container-editor{
-    height: 400px;
+    height: 30%;
     overflow-y:scroll;
-    padding: 14px 24px;
+    padding: 34px 24px;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
     0 2px 2px 0 rgba(0,0,0,.14), 
@@ -99,7 +102,7 @@ div[tooltip]:before {
      transition: 100ms;
      word-wrap: none;
      top: -60%;
-     background-color: rgb(26, 216, 121);
+     background-color: rgb(26, 86, 216);
      color: white;
      content : attr(tooltip);
      opacity : 0;
@@ -181,7 +184,7 @@ div[tooltip]:hover:before {
 .button-keyboard-menu:focus{
     padding: 0px 10px;
     white-space: normal;
-    background-color: rgb(26, 216, 121);
+    background-color: rgb(26, 86, 216);
     color: black;
     max-height: 100%;
     width: 100%;
@@ -190,7 +193,7 @@ div[tooltip]:hover:before {
 .button-keyboard-menu:hover{
     padding: 0px 10px;
     white-space: normal;
-    background-color: rgb(26, 216, 121);
+    background-color: rgb(26, 86, 216);
     color: black;
     max-height: 100%;
     width: 100%;
@@ -200,8 +203,8 @@ div[tooltip]:hover:before {
 
 .button-keyboard{
     white-space: normal;
-    background-color: white;
-    color: grey;
+    background-color: rgb(236, 236, 236);
+    color: black;
     max-height: 100%;
     width: 100%;
 }
@@ -210,31 +213,42 @@ div[tooltip]:hover:before {
 
 
 .button-keyboard-down{
-    background-color: #2b3643; 
-    color: grey;
+    /*background-color: #2b3643; 
+    color: grey;*/
+    background-color: rgb(236, 236, 236);
+    color: black;
+    max-height: 100%;
+    width: 100%;
+}
+
+.button-keyboard-down:hover{
+    /*background-color: #2b3643; 
+    color: grey;*/
+    background-color: rgb(26, 86, 216);
+    color: white;
     max-height: 100%;
     width: 100%;
 }
 
 .button-keyboard-down:focus{
     color: black;
-    background-color: rgb(26, 216, 121);
+    background-color: rgb(26, 86, 216);
     max-height: 100%;
     width: 100%;
 }
 
 .button-keyboard:focus{
     color: black;
-    background-color:  rgb(26, 216, 121);
+    background-color:  rgb(26, 86, 216);
     max-height: 100%;
     width: 100%;
 }
 
 .button-keyboard:hover{
     color: black;
-    background-color:  rgb(26, 216, 121);
+    background-color:  rgb(26, 86, 216);
     color: grey;
-    max-height: 100%;
+    /*max-height: 100%;*/
     width: 100%;
 }
 
