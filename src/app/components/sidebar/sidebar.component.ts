@@ -107,13 +107,6 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
         home: true,
         children: this.jsonArray
       },
-      /*
-      {
-        title: 'Dashboard',
-        icon: 'nb-home',
-        target: 'dashboard',
-      },
-      */
       {
         title: 'Configuração',
         icon: 'nb-gear',

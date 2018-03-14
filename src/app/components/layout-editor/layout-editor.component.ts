@@ -101,7 +101,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
     public setCopyMode(value){
-      //console.log(value[2].var);
+  
     }
 
     public setKeyboardState(value){
