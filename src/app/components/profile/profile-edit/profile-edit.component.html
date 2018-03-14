@@ -1,46 +1,19 @@
 <div style="background-color: white;">
     <div class="modal-header">
-        <span>Perfil</span>
+        <label>Imagem de perfil</label>
         <button class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <form (ngSubmit)="save()" #form="ngForm" autocomplete="off">
-        <div class="modal-body">
-            <div class="from-group line">
-                <label for="name">Imagem de perfil</label>
-                <input type="file" accept=".jpg, .png, .jpeg" (change)="onAddPicture($event)" id="picture" class="form-control"/>
-                <small class="form-text error" *ngIf="bigImage">
-                    A imagem não pode ter mais de 100KB
-                </small>
-            </div>
-            <div class="from-group line">
-                <label for="name">Nome</label>
-                <input type="text" id="name" name="name" [(ngModel)]="user.name" #name="ngModel" class="form-control" placeholder="Nome completo"
-                    [class.form-control-danger]="name.invalid && name.touched" [required]="true"
-                />
-                <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
-                Nome é obrigatório!
+        <div class="from-group line">
+            <input type="file" accept=".jpg, .png, .jpeg" (change)="onAddPicture($event)" id="picture" class="form-control"/>
+            <small class="form-text error" *ngIf="bigImage">
+                A imagem não pode ter mais de 1MB
             </small>
-            </div>
-            <div class="from-group line">
-                <label for="password"> Nova Senha</label>
-                <input type="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="form-control" placeholder="Nova Senha"
-                     [class.form-control-danger]="password.invalid && password.touched"
-                />
-            </div>
-            <div class="from-group line" *ngIf="password.value">
-                <label for="confirmPassword"> Confirmação de Senha</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" class="form-control" placeholder="Confirmação de Senha"
-                     [class.form-control-danger]="confirmPassword.invalid && confirmPassword.touched" [required]="true"
-                />
-                <small class="form-text error" *ngIf="confirmPassword.touched && password.value != confirmPassword.value">
-                    As senhas não coincidem!
-                </small>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Salvar</button>
-            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" [disabled]="saved || bigImage">Salvar</button>
         </div>
     </form>
 </div>
