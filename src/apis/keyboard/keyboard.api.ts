@@ -45,7 +45,7 @@ export class Keyboard extends BaseRoute {
     public getKeyboardNamesInDatabase(teclado: KeyboardModel, req: Request, res: Response){    
         let instance = this;
         let keyboardNames = new KeyboardNamesList();
-        res.locals.mongoAccess.coll[1].find({"email": req.query.email}).toArray(function(err, keyboard_list) {
+        res.locals.mongoAccess.coll[1].find({ $or: [{"email": req.query.email}, {"email": "system"}] }).toArray(function(err, keyboard_list) {
             if(keyboard_list.length !== 0){
                 for(let i = 0; i < keyboard_list.length; i++){
                     keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
@@ -58,7 +58,7 @@ export class Keyboard extends BaseRoute {
     public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
         let instance = this;
         if(req.query.email){
-            res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) {
+            res.locals.mongoAccess.coll[1].find( { $or: [{ "email": req.query.email }, { "email": "system" }]}).toArray(function(err, keyboard_list) {
                 if(keyboard_list.length !== 0){
                     res.send(keyboard_list);
                 }  
@@ -89,8 +89,7 @@ export class Keyboard extends BaseRoute {
                 res.send('maxNumber');
                 return;
             } else {
-                
-                res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout }).toArray(function(err, keyboard_list) {
+                res.locals.mongoAccess.coll[1].find( { $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email}] }).toArray(function(err, keyboard_list) {
                     if(keyboard_list.length !== 0){
                         res.send('alreadyExist');
                     } else {
