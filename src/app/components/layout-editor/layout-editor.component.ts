@@ -101,7 +101,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
     public setCopyMode(value){
-      console.log(value[2].var);
+  
     }
 
     public setKeyboardState(value){
@@ -160,7 +160,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
           if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = value[1].value ;
-
+          console.log(JSON.stringify(this.tecladoReplicant) );
 
 
     }    
@@ -297,14 +297,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     private addLine(){
         let line = new Array();
+        let lineReplicant = new Array();
+        line = [];
+        lineReplicant = [];
         for (let j = 0; j < 14; j++) {
             line.push('');
+            lineReplicant[j] = '';
         }
         this.teclado.teclas.push(line);  
+        this.tecladoReplicant.teclas[this.tecladoReplicant.teclas.length] = lineReplicant;
+        
     }  
     
     private removeLine(){
       this.teclado.teclas.pop();  
+      this.tecladoReplicant.teclas.pop();
     }  
 
 }

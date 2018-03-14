@@ -90,7 +90,6 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
   private generateMenuItem(list: KeyboardNamesList){
     let data = list.KeyboardsNames;
     this.jsonArray = [];
-    console.log(data.length);
     for(let j=0; j < data.length; j++){
       if(data[j] === 'caps') continue;
       let object = {
@@ -107,11 +106,6 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
         link: '/pages/editor-teclado', 
         home: true,
         children: this.jsonArray
-      },
-      {
-        title: 'Dashboard',
-        icon: 'nb-home',
-        target: 'dashboard',
       },
       {
         title: 'Configuração',
