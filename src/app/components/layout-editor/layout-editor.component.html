@@ -26,12 +26,15 @@
                             <div class="col-md-1">
                                     <input type="button" class="btn button-keyboard-menu" value="Salvar Teclado" (click)="saveKeyboardLayout()" />
                             </div>
-                        <div class="col-md-1">                        
-                            <select style="width: 200px; height: 40px;">
+                        <div class="col-md-1">          
+                        
+                                
+                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="sayHello()">
                                 <option selected disabled>Teclados</option>
-                                <option value="volvo">pt-br</option>
-                                <option value="saab">teste01</option>
-                                <option value="opel">teste02</option>
+                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
+                                        {{keyboard}}
+                                </option>
+                        
                             </select>
                         </div>
  
