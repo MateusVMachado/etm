@@ -126,7 +126,7 @@ export class Server {
     this.app.use(logger("dev"));
 
     //mount json form parser
-    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.json({limit:'2mb', type:'application/json'}));
 
     //mount query string parser
     this.app.use(bodyParser.urlencoded({
@@ -150,8 +150,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-      //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Origin', 'http://etm.korp.com.br');
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      //res.setHeader('Access-Control-Allow-Origin', 'http://etm.korp.com.br');
       //res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.129:4200');
 
       // Request methods you wish to allow
