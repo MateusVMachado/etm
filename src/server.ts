@@ -145,7 +145,7 @@ export class Server {
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
       if (err.name === 'UnauthorizedError') {
-        res.status(401).send('invalid token...');
+        res.status(401).send('UnauthorizedError');
       } else{
         err.status = 404;
         next(err);
