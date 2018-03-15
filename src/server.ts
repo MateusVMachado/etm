@@ -5,12 +5,15 @@ import * as logger from "morgan"; // Para modo desenvolvimento apenas
 import * as path from "path";
 import * as errorHandler from "errorhandler"; // Para modo desenvolvimento apenas
 import * as helmet from 'helmet';
+import * as jwt from 'express-jwt';
+import * as unless from 'express-unless';
 
 import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
 import * as promise from 'promise';
 import { promisify } from "util";
 import { Login } from './apis/login/login.api';
+import { backendConfig } from  './backend.config';
 
 /**
  * The server.
@@ -136,6 +139,16 @@ export class Server {
     //mount cookie parser middleware
     this.app.use(cookieParser("SECRET_GOES_HERE"));
 
+    //jwt verify
+    this.app.use(jwt({ secret: backendConfig.secret,
+      getToken: function fromHeaderOrQuerystring (req) {
+        console.log("jwt onlyKeyboard: " + JSON.stringify(req.headers));
+        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+            return req.headers.authorization.split(' ')[1];
+        }
+        return null;
+    }}).unless({path: ['/login']}));
+
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
       err.status = 404;
@@ -150,8 +163,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-      //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Origin', 'http://etm.korp.com.br');
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      //res.setHeader('Access-Control-Allow-Origin', 'http://etm.korp.com.br');
       //res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.129:4200');
 
       // Request methods you wish to allow
