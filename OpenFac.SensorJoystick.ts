@@ -1,5 +1,6 @@
 import { IOpenFacSensor } from './OpenFac.Sensor.Interface';
 import { OpenFacSensorBase } from './OpenFac.SensorBase';
+import { TecladoService } from '../../src/app/components/teclado/teclado.service';
 
 export class Button{
 
@@ -28,14 +29,16 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     private keyPressed: String;
     private controllerName: String;
     private worker: any;
+    private tecladoService: any;
   
     //public main_gamepad: number = 1;
     private mainGamepad: number = -1;
 
     private lastPressedButton: Number;
 
-    constructor(document: any) {
+    constructor(private args: any) {
         super();
+        this.tecladoService = this.args[0];
         this.lastPressedButton = -1;
     }
 
@@ -200,6 +203,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
    }
 
    public executeDoAction(msg){
+      this.tecladoService.emitTecladoCommand("pressed");
       this.DoAction(0);
    }
 
