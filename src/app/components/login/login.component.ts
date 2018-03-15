@@ -45,7 +45,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
             if(this.user.rememberMe){
               window.localStorage.setItem('JWTtoken', res.accessToken);
             }
-            this.authService.getUser(usuario.email).subscribe((res:User) => {
+            this.authService.getUser(usuario.email, usuario.jwt).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt)
               this.router.navigate(['./pages/teclados']);
             });

@@ -57,8 +57,11 @@ export class AuthService extends AppServiceBase {
 
     }
 
-    getDefaultHeaders() {
+    getDefaultHeaders(jwt?: string) {
         let user = this.getLocalUser();
+        if(!user.jwt){
+            user.jwt = jwt;
+        }
         return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
@@ -74,8 +77,8 @@ export class AuthService extends AppServiceBase {
         return this.user;
     }
 
-    public getUser(email:string) {
-        return this.http.get(this.backendAddress + `/user?email=${email}`, this.getDefaultHeaders());
+    public getUser(email:string, jwt?: string) {
+        return this.http.get(this.backendAddress + `/user?email=${email}`, this.getDefaultHeaders(jwt));
     }
 
     public setUser(user: User, jwt?: string){
