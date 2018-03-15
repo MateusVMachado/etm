@@ -126,7 +126,7 @@ export class Server {
     this.app.use(logger("dev"));
 
     //mount json form parser
-    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.json({limit:'2mb', type:'application/json'}));
 
     //mount query string parser
     this.app.use(bodyParser.urlencoded({
