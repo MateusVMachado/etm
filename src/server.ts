@@ -140,14 +140,7 @@ export class Server {
     this.app.use(cookieParser("SECRET_GOES_HERE"));
 
     //jwt verify
-    this.app.use(jwt({ secret: backendConfig.secret,
-      getToken: function fromHeaderOrQuerystring (req) {
-        console.log("jwt onlyKeyboard: " + JSON.stringify(req.headers));
-        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-            return req.headers.authorization.split(' ')[1];
-        }
-        return null;
-    }}).unless({path: ['/login']}));
+    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login']}));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
