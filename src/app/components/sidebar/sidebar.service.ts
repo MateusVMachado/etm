@@ -1,3 +1,4 @@
+import { AuthService } from '../shared/services/auth.services';
 import { Injectable, Injector } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject, Subscription } from 'rxjs';
@@ -12,7 +13,7 @@ export class SideBarService extends AppServiceBase{
   
   public sideBarSubject = new Subject<any>();  
 
-  constructor(protected injector: Injector, private http: HttpClient) { 
+  constructor(protected injector: Injector, private http: HttpClient, private authService: AuthService) { 
     super(injector);
   }
 
@@ -25,7 +26,12 @@ export class SideBarService extends AppServiceBase{
   }
   
   loadKeyboardsNames(email: string) {
-    return this.http.get<KeyboardNamesList>(this.backendAddress + `/keyboard/getKeyboardNames?email=${email}`);
+    return this.http.get<KeyboardNamesList>(this.backendAddress + `/keyboard/getKeyboardNames?email=${email}`, this.getDefaultHeaders());
   }
+
+  getDefaultHeaders() {
+        let user = this.authService.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
+    }
 
 }
