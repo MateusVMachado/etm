@@ -20,7 +20,7 @@ export class AuthService extends AppServiceBase {
     }
 
     authenticate(user: User) {
-        return this.http.post<LoginAuthenticateModel>(this.backendAddress + '/login', user, this.getDefaultHeaders());
+        return this.http.post<LoginAuthenticateModel>(this.backendAddress + '/login', user);
     }
 
     isAuthenticated() {
@@ -85,5 +85,14 @@ export class AuthService extends AppServiceBase {
         this.user = user;
         this.user.jwt = jwt;
         this.userSubject.next(this.user);
+    }
+
+    public getJWT(){
+        return this.user.jwt;
+    }
+
+    public setJWT(jwt){
+        console.log("set JWT");
+        this.user.jwt = jwt;
     }
 }
