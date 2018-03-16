@@ -32,26 +32,26 @@ export class GeneralConfigService extends AppServiceBase{
         configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         configOpenFAC.lastKeyboard = keyboardName;
         
-        return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text' });
+        return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}});
     }
 
     public saveOnlyLastKeyboard(keyboardName?:string){
         let user = this.authService.getLocalUser();
-        return this.http.post(this.backendAddress + `/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, { responseType: 'text' });
+        return this.http.post(this.backendAddress + `/configuration?email=${user.email}&onlyKeyboard=${keyboardName}`, '' , this.getDefaultHeaders());
     }
 
     public getConfiguration(email: string){
         return this.http.get<ConfigModel>(this.backendAddress + `/configuration?email=${email}`, this.getDefaultHeaders());
     }
 
-    private getDefaultHeaders() {
-        let user = this.authService.getLocalUser();
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
-    }
-
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {
         let user = this.authService.getLocalUser();
         return this.http.get(this.backendAddress + `/configuration?email=${user.email}`, this.getDefaultHeaders());
+    }
+
+    private getDefaultHeaders() {
+        let user = this.authService.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
 }

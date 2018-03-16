@@ -64,7 +64,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private configService: GeneralConfigService,
               private authService: AuthService,
               private router: Router,
-              private route: ActivatedRoute,) {
+              private route: ActivatedRoute) {
 
              
               this.keyCommandService = new OpenFacKeyCommandService();

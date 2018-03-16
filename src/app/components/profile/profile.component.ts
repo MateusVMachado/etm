@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { ProfileService } from './profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
@@ -10,15 +12,20 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-    user: User;
+    usuario: User;
+    user: any = {};
     imgUrl: any;
-    constructor(private modalService: NgbModal, private authService: AuthService) { }
+    constructor(private modalService: NgbModal, 
+                private authService: AuthService, 
+                private profileService: ProfileService,
+                private router: Router) { }
     
     ngOnInit() {
-        this.user = new User();
-        //this.user = this.authService.getLocalUser();
+        this.usuario = this.authService.getLocalUser();
+        this.user.name = this.usuario.fullName;
+        this.user.email = this.usuario.email;
         this.authService.getObservableUser().subscribe(result =>{
-            this.user = result;
+            this.usuario = result;
             if(result.picture.content){
                 this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
             }else{
@@ -31,4 +38,14 @@ export class ProfileComponent implements OnInit {
         const activeModal = this.modalService.open(ProfileEditComponent, { size: 'lg', container: 'nb-layout' });
     }
 
+    public save(){
+        this.usuario = this.authService.getLocalUser();
+        this.usuario.fullName = this.user.name;
+        if(this.user.password && this.user.confirmPassword){
+            this.usuario.password = this.user.password
+        }
+        this.profileService.updateUser(this.usuario).subscribe(() =>{
+            this.authService.setUser(this.usuario);
+        });
+    }
 }

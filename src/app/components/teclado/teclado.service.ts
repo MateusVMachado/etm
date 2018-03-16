@@ -1,3 +1,4 @@
+import { AuthService } from '../shared/services/auth.services';
 import { Injectable, Injector } from '@angular/core';
 import { TecladoModel } from './teclado.model';
 
@@ -28,7 +29,7 @@ export class TecladoService extends AppServiceBase {
     public csRow: string[] = ['*cpslck', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ç',  ':', '*arrowup', '*kbdrtrn'];
     public ctRow: string[] = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '\"', '*arrowleft', '*arrowdown', '*arrowright'];
 
-    constructor(protected injector: Injector, private http: HttpClient) {
+    constructor(protected injector: Injector, private http: HttpClient, private authService: AuthService) {
         super(injector);
       }
 
@@ -84,15 +85,20 @@ export class TecladoService extends AppServiceBase {
     }
 
     loadData() {
-        return this.http.get<OpenFACLayout>(this.backendAddress + '/keyboard');
+        return this.http.get<OpenFACLayout>(this.backendAddress + '/keyboard', this.getDefaultHeaders());
     }
 
     loadDataFromUser(email: string) {
-        return this.http.get<OpenFACLayout>(this.backendAddress + `/keyboardByUser?email=${email}`);
+        return this.http.get<OpenFACLayout>(this.backendAddress + `/keyboardByUser?email=${email}`, this.getDefaultHeaders());
     }
 
     loadSingleKeyboard(nameLayout: string, email: string){
-        return this.http.get<OpenFACLayout>(this.backendAddress + `/getSingleKeyboard?nameLayout=${nameLayout}&email=${email}`);
+        return this.http.get<OpenFACLayout>(this.backendAddress + `/getSingleKeyboard?nameLayout=${nameLayout}&email=${email}`, this.getDefaultHeaders());
+    }
+
+    getDefaultHeaders() {
+        let user = this.authService.getLocalUser();
+        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
 }
