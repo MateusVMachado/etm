@@ -217,6 +217,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                       }
             
+                        $(el).removeAttr('tooltip');
                     
 
                      let formula = (14*x)+(y);
@@ -250,7 +251,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                       }
             
-                    
+                      $(el1).removeAttr('tooltip');
+
                       let formula = (14*x)+(y);
                        $("[id=content]")[formula].appendChild(el1);
                      
@@ -366,10 +368,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
 
 
-          console.log(value);
-          console.log("FONTE: " + value[3].className + " ID: " + value[3].id);    
-          console.log("RECEPTACULO: " + value[2].className + " ID: " + value[2].id);
-
           if(value[3].id === 'copy'){  
               sourceParts = value[3].className.split('$')[1].split('#');
               sourceX = sourceParts[0];
@@ -387,15 +385,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           }    
 
 
-          console.log("source from : [" + sourceX + ',' + sourceY + '] ');
-          console.log("drain to : [" + drainX + ',' + drainY + '] ');
-    
-                console.log("MARK4");
-                console.log(value[2]);
-
                 let trueValue, copyObj, objClass, trueObj, toSource;
                 if(value[3].id === "copy"){
-                  console.log("COPY!");
                     trueValue = $($(value[3]).find('input')[0]).val();
                     copyObj = $(value[3]).find('input')[0];
                     objClass = $(value[3]).find('input')[0].className;
@@ -409,11 +400,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     } else {
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                       this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
-                      console.log(trueValue);
                     } 
                     
                 } else if ( value[3].id === "content"){
-                    console.log("CONTENT!");
                     trueValue = $($(value[2]).find('input')[0]).val();
                     copyObj = $(value[2]).find('input')[0];
                     objClass = $(value[2]).find('input')[0].className;
@@ -426,22 +415,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     } else {
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                       this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
-                      console.log(trueValue);
                     } 
 
-                    console.log(trueValue);
                 }    
 
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
-
-                console.log("source from : [" + sourceX + ',' + sourceY + '] ');
-                console.log("drain to : [" + drainX + ',' + drainY + '] ');
-                
-
-
-                    console.log("TRUE VALUE: " + trueValue);
-
 
 
           console.log(JSON.stringify(this.tecladoReplicant) );
@@ -486,7 +465,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    }
 
 
-   public saveKeyboardLayout(){
+   public saveAsKeyboardLayout(){
+ 
+   }
+
+
+   public saveKeyboardLayout(saveAs: boolean){
+     if(!saveAs){
+            if(this.keyboardToEdit === 'pt-br'){
+              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!");
+              return;
+            }
+      }      
       // LOAD LAYOUT CONFIGURATION OBJECT
       let totalLines = 0;
       let finalKeyboard = new TecladoModel;
@@ -516,33 +506,53 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }  
 
 
+      if(saveAs){
+              this.showModal(LayoutModalComponent);
+              this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
+                if(nameArrived){
+                  this.keyboardName = nameArrived;
+                
 
-      this.showModal(LayoutModalComponent);
-      this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
-        if(nameArrived){
-          this.keyboardName = nameArrived;
+                  let user = this.authService.getLocalUser();
+                  finalKeyboard.type = this.keyboardName;
+                  let layout = this.populateLayout(finalKeyboard, user.email);
+                  
+                  this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
         
+                    if(result === 'saved'){
+            
+                      this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                      this.sidebarService.emitSideBarCommand('reload');
+                    } else if (result === 'alreadyExist'){
+                      this.messageService.error("Esse nome de teclado já existe.");
+                    } else if (result === 'maxNumber'){
+                      this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                    }  
+                  });
+                  this.layoutEditorServiceSubscribe.unsubscribe();
+                }
+              });
+     } else {
 
-          let user = this.authService.getLocalUser();
-          finalKeyboard.type = this.keyboardName;
-          let layout = this.populateLayout(finalKeyboard, user.email);
-          
-          this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
- 
-            if(result === 'saved'){
-     
-              this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
-              this.sidebarService.emitSideBarCommand('reload');
-            } else if (result === 'alreadyExist'){
-              this.messageService.error("Esse nome de teclado já existe.");
-            } else if (result === 'maxNumber'){
-              this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
-            }  
-          });
-          this.layoutEditorServiceSubscribe.unsubscribe();
-        }
-      });
+            let user = this.authService.getLocalUser();
+            finalKeyboard.type = this.keyboardToEdit;
+            let layout = this.populateLayout(finalKeyboard, user.email);
+            
+            this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
 
+              if(result === 'updated'){
+
+                this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                this.sidebarService.emitSideBarCommand('reload');
+              } else if (result === 'alreadyExist'){
+                this.messageService.error("Esse nome de teclado já existe.");
+              } else if (result === 'maxNumber'){
+                this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+              }  
+            });
+
+       //JUST UPDATE
+     }
 
    }
 
