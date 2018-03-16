@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TecladoComponent } from '../teclado/teclado.component';
 import { TecladoModel } from '../teclado/teclado.model';
 import { TecladoService } from '../teclado/teclado.service';
-import { DragulaService } from 'ng2-dragula';
+import { DragulaService, dragula } from 'ng2-dragula';
 import { OpenFACLayout, LayoutLine, LayoutButton } from './layout.model';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +14,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
 import { Subscription } from 'rxjs';
+import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
+
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-layout-editor',
@@ -39,6 +42,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private keyboardName: string;
     private layoutEditorServiceSubscribe: Subscription;
 
+    public keyboardToEdit: string;
+    public keyboardItems: KeyboardNamesList = new KeyboardNamesList();
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -47,8 +53,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private http: HttpClient,
                 private layoutEditorService: LayoutEditorService,
                 private sidebarService: SideBarService,
-                private modalService: NgbModal) {
+                private modalService: NgbModal,
+                private sideBarService: SideBarService) {
       super(injector);
+
+      let user = this.authService.getLocalUser();
+      this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
+          this.keyboardItems = result;
+      });
 
       dragulaService.setOptions('master-bag', {
         accepts: function (el, target, source, sibling) {
@@ -65,13 +77,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       });
 
 
-      dragulaService.over.subscribe((value)=> {
-        this.onOver(value);
+      dragulaService.remove.subscribe((value)=> {
+        this.onRemove(value);
       })
 
-      dragulaService.drag.subscribe((value) => {
-        this.onDrag(value);
-    });
 
       dragulaService.drop.subscribe((value) => {
           this.onDrop(value);
@@ -88,21 +97,186 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     ngOnInit() {
 
+      let self = this;
+
+      $('#newKeyboard').on('click', function(){
+        $("[id=content]").each(function(index){
+          $(this).children().remove();
+        })
+
+        self.keyboardToEdit = "";
+        for(let i = 0 ; i< self.tecladoReplicant.teclas.length; i++){
+            for( let j = 0 ; j < self.tecladoReplicant.teclas[i].length; j++){
+               self.tecladoReplicant.teclas[i][j] = "";
+            }
+        }
+
+
+      });
+
+    }
+
+
+    public updateReplicant(){
+      let replicantFromDatabase = new TecladoModel();
+
+      let user = this.authService.getLocalUser();
+      this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email).subscribe((data)=>{
+        
+        this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
+
+
+      var counter = 0;
+
+      var drake = dragula({});
+
+
+      let totalLength = 0;
+
+
+      this.masterKeys.teclas.forEach(element => {
+        element.forEach(element => {
+            totalLength += 1;
+        });
+      });
+
+
+      var elem2;
+      elem2 = $("[id=copy]")[1].cloneNode(true);
       
+      $("[id=content]").each(function(index){
+        $(this).children().remove();
+      })
+
+
+      for(let i = 0 ; i< this.tecladoReplicant.teclas.length; i++){
+        for( let j = 0 ; j < this.tecladoReplicant.teclas[i].length; j++){
+          this.tecladoReplicant.teclas[i][j] = "";
+        }
+      }
+
+      for(let i = 0 ; i< replicantFromDatabase.teclas.length; i++){
+        for( let j = 0 ; j < replicantFromDatabase.teclas[i].length; j++){
+          this.tecladoReplicant.teclas[i][j] = replicantFromDatabase.teclas[i][j];
+        }
+      }
+
+
+
+      let sEl = $("[id=copy]").clone();
+      
+
+       let coordinatesMap = new Array();
+       let valuesArray = new Array();
+       valuesArray.push("");
+       for(let j = 0 ; j< this.tecladoReplicant.teclas.length; j++){
+          for( let k = 0 ; k < this.tecladoReplicant.teclas[j].length; k++){
+             if(this.tecladoReplicant.teclas[j][k] !== "") {
+               let map = new Array();
+               map.push(this.tecladoReplicant.teclas[j][k]);
+               map.push(j);
+               map.push(k);
+               coordinatesMap.push(map);
+               valuesArray.push(this.tecladoReplicant.teclas[j][k]);
+             } 
+          }
+       }     
+
+
+       for(let i = 0; i< totalLength ; i++){
+
+            if(sEl[i].firstElementChild.tagName === "BUTTON"){
+              let index = $.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
+
+              if(index && index !== -1){
+                  let valor = $( $(sEl[i]).find('button')[0] ).val();
+
+
+                  for(let cm = 0; cm < coordinatesMap.length; cm++ ){
+                    if(coordinatesMap[cm][0] === valor){
+                      let x = coordinatesMap[cm][1];
+                      let y = coordinatesMap[cm][2];
+                      this.tecladoReplicant.teclas[x][y] = valor;
+                      
+                      let el = sEl[i].cloneNode(true);
+        
+                      if(!$(el).find('input')[0]){
+        
+                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        
+                      }  else {
+                        
+                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                      }
+            
+                        $(el).removeAttr('tooltip');
+                    
+
+                     let formula = (14*x)+(y);
+                      $("[id=content]")[formula].appendChild(el);
+
+                      continue;
+                    }
+                  }                  
+              }    
+            } else {
+              let index = $.inArray($( $(sEl[i]).find('input')[0] ).val(), valuesArray);
+
+              if(index && index !== -1){
+                  let valor = $( $(sEl[i]).find('input')[0] ).val();
+
+
+                  for(let cm = 0; cm < coordinatesMap.length; cm++ ){
+                    if(coordinatesMap[cm][0] === valor){
+                      let x = coordinatesMap[cm][1];
+                      let y = coordinatesMap[cm][2];
+                      this.tecladoReplicant.teclas[x][y] = valor;
+                      
+                      let el1 = sEl[i].cloneNode(true);
+        
+                      if(!$(el1).find('input')[0]){
+        
+                        $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        
+                      }  else {
+                        
+                        $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                      }
+            
+                      $(el1).removeAttr('tooltip');
+
+                      let formula = (14*x)+(y);
+                       $("[id=content]")[formula].appendChild(el1);
+                     
+                       continue;
+                    }
+
+                  }                    
+              }    
+            } 
+
+       }
+       
+
+      })
+
     }
-
-
-    public setTimeToDisappear(value){
-
-    }
-
-    public clearTip(value){
-
-    }
-
-    public setCopyMode(value){
   
-    }
+
+
+    private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
+      keyboard.teclas = [];
+      layout.Lines.forEach(element => {
+          let line = [];
+          element.Buttons.forEach(element => {
+              line.push(element.Text);
+          });
+          keyboard.teclas.push(line);
+          
+      });
+      keyboard.type = layout.nameLayout;
+  }
+
 
     public setKeyboardState(value){
 
@@ -118,49 +292,83 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
 
-    public onMouseOverMaster(){
+    private onRemove(value){
+        let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
+        if(value[3].id === 'copy'){  
+          sourceParts = value[3].className.split('$')[1].split('#');
+          sourceX = sourceParts[0];
+          sourceY = sourceParts[1];
+      } else if ( value[3].id === 'content'){
+          sourceParts = value[3].className.split(' ')[0].split('#');
+          sourceX = sourceParts[0];
+          sourceY = sourceParts[1];
+      }   
 
-    }
-
-    public onMouseLeaveMaster(){
-
-    }
-
-    private onOver(value) {
-
-      this.setTimeToDisappear(value);
-    } 
-
-    private onDrag(value) {
-      let valueParts = value[2].id.split('$');
-      let theValue = valueParts[0];
-      if(theValue === 'copy') this.setCopyMode(value);
-      if(theValue === 'content') this.setKeyboardState(value);
-
-
-    }    
+      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+      
+    }  
 
     private onDrop(value) {
       if (value[2] == null) {//dragged outside any of the bags
 
           return;
       }    
-          let newTitle = value[2].className.split('@');
-          let title = newTitle[1];
+          let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
 
 
-          let parts = title.split("#");
+          if(value[3].id === 'copy'){  
+              sourceParts = value[3].className.split('$')[1].split('#');
+              sourceX = sourceParts[0];
+              sourceY = sourceParts[1];
+          } else if ( value[3].id === 'content'){
+              sourceParts = value[3].className.split(' ')[0].split('#');
+              sourceX = sourceParts[0];
+              sourceY = sourceParts[1];
+          }   
 
-          let x = <number>parts[0];
-          let y = <number>parts[1];
+          if(value[2].id === 'content'){
+              drainParts = value[2].className.split(' ')[0].split('#');
+              drainX = drainParts[0];
+              drainY = drainParts[1];
+          }    
 
 
-         
-          value[1].className = "tamanho-button-especial-full";
+                let trueValue, copyObj, objClass, trueObj, toSource;
+                if(value[3].id === "copy"){
+                    trueValue = $($(value[3]).find('input')[0]).val();
+                    copyObj = $(value[3]).find('input')[0];
+                    objClass = $(value[3]).find('input')[0].className;
+                    $(value[2]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                    
+                    if($(value[2]).children().length > 1) { 
+                        value[1].remove();  
+                        trueValue = $($(value[2]).find('input')[0]).val();
+                        this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                        this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                    } else {
+                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                    } 
+                    
+                } else if ( value[3].id === "content"){
+                    trueValue = $($(value[2]).find('input')[0]).val();
+                    copyObj = $(value[2]).find('input')[0];
+                    objClass = $(value[2]).find('input')[0].className;
+
+                    if($(value[2]).children().length > 1) { 
+                      value[1].remove();  
+                      trueValue = $($(value[2]).find('input')[0]).val();
+                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                    } else {
+                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                    } 
+
+                }    
 
 
-          if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = value[1].value ;
-          console.log(JSON.stringify(this.tecladoReplicant) );
+                objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
 
 
     }    
@@ -170,7 +378,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
     public sayHello(mystring: string){
-  
+      console.log(this.keyboardToEdit);
+
     }
 
     public populateLayout(replicant: TecladoModel, email: string): OpenFACLayout{
@@ -201,7 +410,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    }
 
 
-   public saveKeyboardLayout(){
+   public saveKeyboardLayout(saveAs: boolean){
+     if(!saveAs){
+            if(this.keyboardToEdit === 'pt-br'){
+              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!");
+              return;
+            }
+      }      
       // LOAD LAYOUT CONFIGURATION OBJECT
       let totalLines = 0;
       let finalKeyboard = new TecladoModel;
@@ -231,33 +446,52 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }  
 
 
+      if(saveAs){
+              this.showModal(LayoutModalComponent);
+              this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
+                if(nameArrived){
+                  this.keyboardName = nameArrived;
+                
 
-      this.showModal(LayoutModalComponent);
-      this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
-        if(nameArrived){
-          this.keyboardName = nameArrived;
+                  let user = this.authService.getLocalUser();
+                  finalKeyboard.type = this.keyboardName;
+                  let layout = this.populateLayout(finalKeyboard, user.email);
+                  
+                  this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
         
+                    if(result === 'saved'){
+            
+                      this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                      this.sidebarService.emitSideBarCommand('reload');
+                    } else if (result === 'alreadyExist'){
+                      this.messageService.error("Esse nome de teclado já existe.");
+                    } else if (result === 'maxNumber'){
+                      this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                    }  
+                  });
+                  this.layoutEditorServiceSubscribe.unsubscribe();
+                }
+              });
+     } else {
 
-          let user = this.authService.getLocalUser();
-          finalKeyboard.type = this.keyboardName;
-          let layout = this.populateLayout(finalKeyboard, user.email);
-          
-          this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
- 
-            if(result === 'saved'){
-     
-              this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
-              this.sidebarService.emitSideBarCommand('reload');
-            } else if (result === 'alreadyExist'){
-              this.messageService.error("Esse nome de teclado já existe.");
-            } else if (result === 'maxNumber'){
-              this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
-            }  
-          });
-          this.layoutEditorServiceSubscribe.unsubscribe();
-        }
-      });
+            let user = this.authService.getLocalUser();
+            finalKeyboard.type = this.keyboardToEdit;
+            let layout = this.populateLayout(finalKeyboard, user.email);
+            
+            this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
 
+              if(result === 'updated'){
+
+                this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                this.sidebarService.emitSideBarCommand('reload');
+              } else if (result === 'alreadyExist'){
+                this.messageService.error("Esse nome de teclado já existe.");
+              } else if (result === 'maxNumber'){
+                this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+              }  
+            });
+
+     }
 
    }
 
@@ -283,7 +517,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
       var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
       var sRow: string[] = ['*cpslck', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA'];
-      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '\'', '*arrowleft', '*arrowright', '*arrowup'];
+      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup'];
       var zRow: string[] = ['*arrowdown', '*space'];
 
        this.masterKeys.teclas.push(row);

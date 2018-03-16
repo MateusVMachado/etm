@@ -42,9 +42,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private sideBarServiceSubscribe: Subscription;
   private configServiceSubscribe: Subscription;
   private routeSubscription: Subscription;
+  private tecladoServiceSubscription: Subscription;
   private capsIndex: number;
   private ptbrIndex: number; 
   private timerId: number;
+  private timeoutId: any;
   private scanTimeLines: number;
   private scanTimeColumns: number;
 
@@ -52,6 +54,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
   public jsonArray = new Array();
 
   public target: any;
+
+  public ledOn: boolean = false;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -65,7 +69,14 @@ export class TecladoComponent implements OnInit, OnDestroy {
              
               this.keyCommandService = new OpenFacKeyCommandService();
    
-
+              this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result)=>{
+                if(result === "pressed"){
+                  this.ledOn = true;
+                  console.log(this.ledOn);
+                  clearInterval(this.timeoutId);
+                  this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 1000) ;
+                }
+              })
               
               this.routeSubscription = this.route.queryParams.subscribe(params => { // Defaults to 0 if no query param provided.
                     this.target = params['target'];
@@ -97,11 +108,17 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   }
 
+  private turnLEDoff(){
+    this.ledOn = false;
+    console.log(this.ledOn);
+  }
+
   ngOnDestroy(): void {
      this.keyCommandServiceSubscribe.unsubscribe();
      this.editorTecladoServiceSubscribe.unsubscribe();
      this.sideBarServiceSubscribe.unsubscribe();
      this.configServiceSubscribe.unsubscribe();
+     this.tecladoServiceSubscription.unsubscribe();
   }
 
   ngOnInit() { }
@@ -169,7 +186,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   private loadSingleKeyboardByName(nameLayout: string){
-    this.tecladoService.loadSingleKeyboard(nameLayout).subscribe((data)=>{
+    let user = this.authService.getLocalUser();
+    this.tecladoService.loadSingleKeyboard(nameLayout, user.email).subscribe((data)=>{
       
     });
 
@@ -273,7 +291,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
     clearInterval(this.timerId);
     
     //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
-    OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick);
+    let configJoystickArray = [this.tecladoService];
+    OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+
     OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
     
     this.config = new OpenFacConfig('config.file', this.openFacLayout); 

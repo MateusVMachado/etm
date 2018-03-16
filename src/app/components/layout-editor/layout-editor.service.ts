@@ -16,6 +16,10 @@ export class LayoutEditorService extends AppServiceBase {
         super(injector);
     }
 
+    public saveUpdateKeyboard(layout: OpenFACLayout, email: string){
+        return this.http.post(this.backendAddress + `/keyboard/insertUpdateKeyboard?nameLayout=${layout.nameLayout}&email=${email}` , layout, { responseType: 'text' });
+    }   
+
     public saveNewKeyboard(layout: OpenFACLayout, email: string){
         return this.http.post(this.backendAddress + `/keyboard/insertNewKeyboard?nameLayout=${layout.nameLayout}&email=${email}` , layout, { responseType: 'text', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.user.jwt} });
     }

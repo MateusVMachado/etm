@@ -1,6 +1,7 @@
 <!--{{openFacLayout.Lines}}-->
 <div class="container-fluid teclado-container" id="teclado-container">
   <div style="z-index: 0">
+    
     <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
 
       <div class="col-md-12 line">
@@ -92,4 +93,5 @@
         </div>
       </div>
     </div>
+    <div *ngIf="ledOn" style="width: 10px; height: 10px; background-color: rgb(9, 240, 9); position: relative; margin-top: -20px;margin-bottom: 20px; margin-left: -15px; float: right"></div>
   </div>
