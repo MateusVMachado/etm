@@ -81,13 +81,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         this.onRemove(value);
       })
 
-      dragulaService.over.subscribe((value)=> {
-        this.onOver(value);
-      })
-
-      dragulaService.drag.subscribe((value) => {
-        //this.onDrag(value);
-    });
 
       dragulaService.drop.subscribe((value) => {
           this.onDrop(value);
@@ -118,7 +111,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
         }
 
-        console.log(JSON.stringify(self.tecladoReplicant) );
 
       });
 
@@ -265,7 +257,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
        }
        
-       console.log(JSON.stringify( this.tecladoReplicant ) );
 
       })
 
@@ -291,17 +282,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       keyboard.type = layout.nameLayout;
   }
 
-    public setTimeToDisappear(value){
-
-    }
-
-    public clearTip(value){
-
-    }
-
-    public setCopyMode(value){
-  
-    }
 
     public setKeyboardState(value){
 
@@ -317,22 +297,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
 
-    public onMouseOverMaster(){
-
-    }
-
-    public onMouseLeaveMaster(){
-
-    }
-
-    private onOver(value) {
-
-      this.setTimeToDisappear(value);
-    } 
-
-
     private onRemove(value){
-        console.log(value);
         let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
         if(value[3].id === 'copy'){  
           sourceParts = value[3].className.split('$')[1].split('#');
@@ -345,20 +310,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }   
 
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-      console.log(JSON.stringify(this.tecladoReplicant) );
       
-
-    }
-
-
-    private onDrag(value) {
-      let valueParts = value[2].id.split('$');
-      let theValue = valueParts[0];
-      if(theValue === 'copy') this.setCopyMode(value);
-      if(theValue === 'content') this.setKeyboardState(value);
-
-
-    }    
+    }  
 
     private onDrop(value) {
       if (value[2] == null) {//dragged outside any of the bags
@@ -423,9 +376,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
 
 
-          console.log(JSON.stringify(this.tecladoReplicant) );
-          console.log(value);
-
     }    
 
     public showModal(component){
@@ -462,11 +412,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
    public deleteKeyboardLayout(){
     this.showModal(DeleteLayoutModalComponent);
-   }
-
-
-   public saveAsKeyboardLayout(){
- 
    }
 
 
@@ -551,7 +496,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               }  
             });
 
-       //JUST UPDATE
      }
 
    }
