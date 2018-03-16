@@ -14,7 +14,7 @@ export class Keyboard extends BaseRoute {
 
     public getSingleKeyboardByName(req: Request, res: Response, next: NextFunction){
         let instance = this;
-        res.locals.mongoAccess.coll[1].find({nameLayout: req.query.nameLayout}).toArray(function(err, keyboard) {
+        res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": req.query.email} ] } ).toArray(function(err, keyboard) {
             res.send(keyboard);
         })
 
@@ -67,6 +67,7 @@ export class Keyboard extends BaseRoute {
     }
 
 
+
     public deleteKeyboard(req: Request, res: Response, next: NextFunction){
         if(req.query.email){
             res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
@@ -99,6 +100,24 @@ export class Keyboard extends BaseRoute {
                         })
                     }
                  })
+            }
+        })
+
+
+    }
+
+    public insertUpdateKeyboard(req: Request, res: Response, next: NextFunction){
+        let newKeyboard = req.body;
+        res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
+            if(keyboard_list.length >= 8){
+                res.send('maxNumber');
+                return;
+            } else {
+                        res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
+                            console.log("Keyboard atualizado");
+                            res.send('updated');
+                        })
+
             }
         })
 
