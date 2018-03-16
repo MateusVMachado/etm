@@ -263,11 +263,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
   
 
-    
-    private loadSingleKeyboardByName(nameLayout: string){
-
-  
-    }
 
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       keyboard.teclas = [];
