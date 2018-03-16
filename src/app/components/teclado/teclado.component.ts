@@ -186,7 +186,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   private loadSingleKeyboardByName(nameLayout: string){
-    this.tecladoService.loadSingleKeyboard(nameLayout).subscribe((data)=>{
+    let user = this.authService.getLocalUser();
+    this.tecladoService.loadSingleKeyboard(nameLayout, user.email).subscribe((data)=>{
       
     });
 

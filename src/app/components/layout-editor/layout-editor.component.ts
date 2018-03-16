@@ -82,7 +82,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       })
 
       dragulaService.drag.subscribe((value) => {
-        this.onDrag(value);
+        //this.onDrag(value);
     });
 
       dragulaService.drop.subscribe((value) => {
@@ -100,6 +100,38 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     ngOnInit() {
 
+      let self = this;
+
+      $('#newKeyboard').on('click', function(){
+        $("[id=content]").each(function(index){
+          $(this).children().remove();
+        })
+
+        for(let i = 0 ; i< self.tecladoReplicant.teclas.length; i++){
+            for( let j = 0 ; j < self.tecladoReplicant.teclas[i].length; j++){
+               self.tecladoReplicant.teclas[i][j] = "";
+            }
+        }
+
+        console.log(JSON.stringify(self.tecladoReplicant) );
+
+      });
+
+    }
+
+
+    public updateReplicant(){
+      let replicantFromDatabase = new TecladoModel();
+
+      let user = this.authService.getLocalUser();
+      this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email).subscribe((data)=>{
+        
+        this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
+
+     
+      console.log("REPLICANT FROM DATABASE");
+      console.log(JSON.stringify(replicantFromDatabase) );
+   
       var counter = 0;
 
       var drake = dragula({});
@@ -108,55 +140,181 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let totalLength = 0;
 
 
-      this.tecladoReplicant.teclas.forEach(element => {
+      //this.tecladoReplicant.teclas.forEach(element => {
+      //  element.forEach(element => {
+      //      totalLength += 1;
+      //  });
+      //});
+      this.masterKeys.teclas.forEach(element => {
         element.forEach(element => {
             totalLength += 1;
         });
       });
 
-      $('#loadKeyboard').on('change', function() {       
-          var elem2;
-          elem2 = $("[id=copy]")[1].cloneNode(true);
-          
-          $("[id=content]").each(function(index){
-            $(this).children().remove();
-          })
 
-          let sEl = $("[id=copy]").clone();
+      var elem2;
+      elem2 = $("[id=copy]")[1].cloneNode(true);
+      
+      $("[id=content]").each(function(index){
+        $(this).children().remove();
+      })
 
-          for(let i = 0; i< totalLength; i++){
-            if(!sEl[i]) break;
-            let pieces =  sEl[i].className.split(' ');
-            console.log(pieces[0]);
-            if( pieces[0] === 'btn' ){
-               break; 
-            } 
-            //sEl[i] é o elemento a ser copiado e $("[id=content]")[i] é o receptor 
+      //for(let i = 0 ; i< self.tecladoReplicant.teclas.length; i++){
+      //  for( let j = 0 ; j < self.tecladoReplicant.teclas[i].length; j++){
+      //     self.tecladoReplicant.teclas[i][j] = "";
+      //  }
+      //}
 
-            sEl[i].removeAttribute('tooltip');
-            console.log(sEl[i].className);
+      for(let i = 0 ; i< this.tecladoReplicant.teclas.length; i++){
+        for( let j = 0 ; j < this.tecladoReplicant.teclas[i].length; j++){
+          this.tecladoReplicant.teclas[i][j] = "";
+        }
+      }
 
-            let el = sEl[i].cloneNode(true);
+      for(let i = 0 ; i< replicantFromDatabase.teclas.length; i++){
+        for( let j = 0 ; j < replicantFromDatabase.teclas[i].length; j++){
+          this.tecladoReplicant.teclas[i][j] = replicantFromDatabase.teclas[i][j];
+        }
+      }
 
-            if(!$(el).find('input')[0]){
+      console.log("TECLADO REPLICANT:");
+      console.log(JSON.stringify(this.tecladoReplicant) );
 
-              console.log($(el).find('button')[0].className);
-              $(el).find('button')[0].className = 'tamanho-button-especial-full'
-              
-            }  else {
-              
-              $(el).find('input')[0].className = 'tamanho-button-especial-full'
-           }
+      let sEl = $("[id=copy]").clone();
+      
 
-            $("[id=content]")[i].appendChild(el);
-            
+      //for(let i = 0; i< totalLength; i++){
+         ///////////////////////////////////
+        //PARTE NOVA AQUI!!!!!!          //
+       ///////////////////////////////////
+       let coordinatesMap = new Array();
+       let valuesArray = new Array();
+       valuesArray.push("");
+       for(let j = 0 ; j< this.tecladoReplicant.teclas.length; j++){
+          for( let k = 0 ; k < this.tecladoReplicant.teclas[j].length; k++){
+             if(this.tecladoReplicant.teclas[j][k] !== "") {
+               let map = new Array();
+               map.push(this.tecladoReplicant.teclas[j][k]);
+               map.push(j);
+               map.push(k);
+               coordinatesMap.push(map);
+               valuesArray.push(this.tecladoReplicant.teclas[j][k]);
+             } 
           }
- 
+       }     
+
+       console.log("COORDINATES MAP:");
+       console.log(JSON.stringify(coordinatesMap) );
+       console.log("VALUES ARRAY: ");
+       console.log(JSON.stringify(valuesArray) );
+
+       console.log("TOTAL LENGHT: " + totalLength);
+       for(let i = 0; i< totalLength ; i++){
+
+            if(sEl[i].firstElementChild.tagName === "BUTTON"){
+              let index = $.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
+              //let index = valuesArray.indexOf($( $(sEl[i]).find('button')[0] ).val());
+              //let index = valuesArray.find(x => x === ($( $(sEl[i]).find('button')[0] ).val()).toString() );
+              if(index && index !== -1){
+                  let valor = $( $(sEl[i]).find('button')[0] ).val();
+                  console.log("VALOR: " + valor);
+                  console.log("INDEX: " + index);
+                  console.log(valor + " esta na posição: " + index );
+                  console.log(JSON.stringify(valuesArray));
+
+                  for(let cm = 0; cm < coordinatesMap.length; cm++ ){
+                    if(coordinatesMap[cm][0] === valor){
+                      let x = coordinatesMap[cm][1];
+                      let y = coordinatesMap[cm][2];
+                      this.tecladoReplicant.teclas[x][y] = valor;
+                      
+                      let el = sEl[i].cloneNode(true);
+        
+                      if(!$(el).find('input')[0]){
+        
+                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        
+                      }  else {
+                        
+                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                      }
+            
+                    
+
+                     let formula = (14*x)+(y);
+                      $("[id=content]")[formula].appendChild(el);
+                      console.log("INSERIU1");
+                      continue;
+                    }
+                  }                  
+              }    
+            } else {
+              let index = $.inArray($( $(sEl[i]).find('input')[0] ).val(), valuesArray);
+              //let index = valuesArray.indexOf($( $(sEl[i]).find('input')[0]).val());
+              //let index = valuesArray.find(x => x === ($( $(sEl[i]).find('input')[0] ).val()).toString() );
+              if(index && index !== -1){
+                  let valor = $( $(sEl[i]).find('input')[0] ).val();
+                  console.log("VALOR: " + valor);
+                  console.log("INDEX: " + index);   
+                  console.log(valor + " esta na posição: " + index );
+                  console.log(JSON.stringify(valuesArray));
+
+                  for(let cm = 0; cm < coordinatesMap.length; cm++ ){
+                    if(coordinatesMap[cm][0] === valor){
+                      let x = coordinatesMap[cm][1];
+                      let y = coordinatesMap[cm][2];
+                      this.tecladoReplicant.teclas[x][y] = valor;
+                      
+                      let el1 = sEl[i].cloneNode(true);
+        
+                      if(!$(el1).find('input')[0]){
+        
+                        $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        
+                      }  else {
+                        
+                        $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                      }
+            
+                    
+                      let formula = (14*x)+(y);
+                       $("[id=content]")[formula].appendChild(el1);
+                       console.log("INSERIU2");
+                       continue;
+                    }
+                   // console.log(coordinatesMap[cm]);
+                  }                    
+              }    
+            } 
+            
+          //}
+       }
+       
+       console.log(JSON.stringify( this.tecladoReplicant ) );
 
       })
 
     }
+  
 
+    
+    private loadSingleKeyboardByName(nameLayout: string){
+
+  
+    }
+
+    private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
+      keyboard.teclas = [];
+      layout.Lines.forEach(element => {
+          let line = [];
+          element.Buttons.forEach(element => {
+              line.push(element.Text);
+          });
+          keyboard.teclas.push(line);
+          
+      });
+      keyboard.type = layout.nameLayout;
+  }
 
     public setTimeToDisappear(value){
 
@@ -211,37 +369,136 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
           return;
       }    
-          
-          let newTitle = value[2].className.split('@');
-          let title = newTitle[1];
-          let parts = title.split("#");
-          let x = <number>parts[0];
-          let y = <number>parts[1];
+          let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
 
-          if($(value[1]).find('input')[0] !== undefined){
-            if($(value[1]).find('button')[0]){
-                  $(value[1]).find('button')[0].className = 'tamanho-button-especial-full'
-                  console.log( $(value[2]).find("div")[0].className );
-                  if($(value[2]).children().length > 1 && $(value[2]).find("div")[0].className !== 'none') value[1].remove();
-                  if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $(value[1]).find('button').val();
-            } else {
-                  $(value[1]).find('input')[0].className = 'tamanho-button-especial-full'
-                  console.log( $(value[2]).find("div")[0].className );
-                  if($(value[2]).children().length > 1 && $(value[2]).find("div")[0].className !== 'none') value[1].remove();
-                  if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $(value[1]).find('input').val();
-            } 
-            
-          }  else if ($(value[1]).find('input')[0] !== undefined) {
-                 $(value[1]).find('input')[0].className = 'tamanho-button-especial-full'
-                 console.log( $(value[2]).find("div")[0].className ); 
-                 if($(value[2]).children().length > 1 && $(value[2]).find("div")[0].className !== 'none') value[1].remove();
-                 if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $(value[1]).find('input').val();
-          } else {
-                value[1].className = "tamanho-button-especial-full";
-                console.log( $(value[2]).find("div")[0].className );
-                if($(value[2]).children().length > 1 && $(value[2]).find("div")[0].className !== 'none') value[1].remove();
-                if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = value[1].value;
-         }
+
+          console.log(value);
+          console.log("FONTE: " + value[3].className + " ID: " + value[3].id);    
+          console.log("RECEPTACULO: " + value[2].className + " ID: " + value[2].id);
+
+          if(value[3].id === 'copy'){  
+              sourceParts = value[3].className.split('$')[1].split('#');
+              sourceX = sourceParts[0];
+              sourceY = sourceParts[1];
+          } else if ( value[3].id === 'content'){
+              sourceParts = value[3].className.split(' ')[0].split('#');
+              sourceX = sourceParts[0];
+              sourceY = sourceParts[1];
+          }   
+
+          if(value[2].id === 'content'){
+              drainParts = value[2].className.split(' ')[0].split('#');
+              drainX = drainParts[0];
+              drainY = drainParts[1];
+          }    
+
+
+          console.log("source from : [" + sourceX + ',' + sourceY + '] ');
+          console.log("drain to : [" + drainX + ',' + drainY + '] ');
+          //console.log(value[3]);
+
+
+          //return;
+          //let newTitle = value[2].className.split('@');
+          //let title = newTitle[1];
+          //let parts = title.split("#");
+          //let x = <number>parts[0];
+          //let y = <number>parts[1];
+
+          //if($(value[1]).find('input')[0] !== undefined){
+          //  if($(value[1]).find('button')[0]){
+          //        console.log("MARK1");
+          //        $(value[1]).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+          //        console.log( $(value[2]).find("div")[0].className );
+          //        if($(value[2]).children().length > 1 && $(value[2]).find("div")[0].className !== 'none') value[1].remove();
+          //        //if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $(value[1]).find('button').val();
+          //        if(this.tecladoReplicant.teclas[drainY][drainX] === "") this.tecladoReplicant.teclas[drainY][drainX] = $(value[3]).find('button').val();
+          //        this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+          //  } else {
+          //    console.log("MARK2");
+          //        $(value[1]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+          //        console.log( $(value[2]).find("div")[0].className );
+          //        if($(value[2]).children().length > 1 && $(value[2]).find("div")[0].className !== 'none') value[1].remove();
+          //        //if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $(value[1]).find('input').val();
+          //        if(this.tecladoReplicant.teclas[drainY][drainX] === "") this.tecladoReplicant.teclas[drainY][drainX] = $(value[3]).find('input').val();
+          //        this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+          //  } 
+
+          //} else {
+                console.log("MARK4");
+                console.log(value[2]);
+
+                let trueValue, copyObj, objClass, trueObj, toSource;
+                if(value[3].id === "copy"){
+                  console.log("COPY!");
+                    trueValue = $($(value[3]).find('input')[0]).val();
+                    copyObj = $(value[3]).find('input')[0];
+                    objClass = $(value[3]).find('input')[0].className;
+                    $(value[2]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                    this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                    this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                    console.log(trueValue);
+                } else if ( value[3].id === "content"){
+                    console.log("CONTENT!");
+                    trueValue = $($(value[2]).find('input')[0]).val();
+                    copyObj = $(value[2]).find('input')[0];
+                    objClass = $(value[2]).find('input')[0].className;
+                    //$(value[3]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                    this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                    this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                    //toSource = false;
+                    console.log(trueValue);
+                }    
+
+
+                objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                
+                //if($(trueObj).children().length > 1 && $(trueObj).find("div")[0].className !== 'none') value[trueObj].remove();
+                console.log("source from : [" + sourceX + ',' + sourceY + '] ');
+                console.log("drain to : [" + drainX + ',' + drainY + '] ');
+                
+                  //console.log(value[2]);
+                  //let buttonParts = value[2].className.split(' ');
+                  //console.log(buttonParts);
+                  //let coordinates = buttonParts[1].split('@')[1].split('#');
+                  //let x = coordinates[0];
+                  //let y = coordinates[1];
+                  //console.log("COORDINATES: " + coordinates);
+                  //console.log($(value[2]).find('button')[0].className);
+                  let members; //$(value[2]).find('button')[0].className.split(' ');
+                  //console.log(members.length);
+                  //if(members[members.length-1] === "gu-transit") {
+                  //if(false){  
+                  //    $(value[2]).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                      //if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $( $(value[2]).find('button')[0] ).val();
+                  //    if(this.tecladoReplicant.teclas[drainY][drainX] === "") this.tecladoReplicant.teclas[drainY][drainX] = $( $(value[2]).find('input')[0] ).val();
+                  //    this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                  //} else {
+                    //if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $( $(value[1]).find('button')[0] ).val();
+                    console.log("TRUE VALUE: " + trueValue);
+
+                    //if(this.tecladoReplicant.teclas[drainY][drainX] === "") 
+                    //if(!toSource){
+                      //this.tecladoReplicant.teclas[drainY][drainX] = "";
+                      //this.tecladoReplicant.teclas[sourceY][sourceX] = trueValue;  
+                    //} else {
+                    //  this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                    //  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                   // }
+                    
+                  //}    
+                  
+                  //if(this.tecladoReplicant.teclas[y][x] === "") this.tecladoReplicant.teclas[y][x] = $( $(value[1]).find('button')[0] ).val();
+                  
+                  
+                //}  else {
+                //  console.log("MARK5");
+                //    value[1].className = "tamanho-button-especial-full";
+                //    if($(value[2]).children().length > 1 && this.tecladoReplicant.teclas[drainY][drainX] !== '') value[1].remove();
+                //    if(this.tecladoReplicant.teclas[drainY][drainX] === "") this.tecladoReplicant.teclas[drainY][drainX] = value[3].value;
+                //    this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                //}    
+         //}
 
           console.log(JSON.stringify(this.tecladoReplicant) );
 
@@ -366,7 +623,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
       var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
       var sRow: string[] = ['*cpslck', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA'];
-      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '\'', '*arrowleft', '*arrowright', '*arrowup'];
+      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup'];
       var zRow: string[] = ['*arrowdown', '*space'];
 
        this.masterKeys.teclas.push(row);
