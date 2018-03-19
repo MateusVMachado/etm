@@ -49,9 +49,4 @@ export class GeneralConfigService extends AppServiceBase{
         return this.http.get(this.backendAddress + `/configuration?email=${user.email}`);
     }
 
-    private getDefaultHeaders() {
-        let user = this.authService.getLocalUser();
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
-    }
-
 }

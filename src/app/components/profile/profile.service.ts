@@ -13,11 +13,7 @@ export class ProfileService extends AppServiceBase {
     }
 
     updateUser(user: User) {
-        return this.http.post(this.backendAddress + '/updateUser', user, this.getDefaultHeaders());
+        return this.http.post(this.backendAddress + '/updateUser', user);
     }
 
-    getDefaultHeaders() {
-        let user = this.authService.getLocalUser();
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
-    }
 }

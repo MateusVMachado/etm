@@ -28,19 +28,16 @@ export class InterceptorService implements HttpInterceptor{
                 Authorization: `Bearer ${authService.getJWT()}`
             }
         });
-
-        console.log(JSON.stringify(request.headers));
-
         return next.handle(request);
     }
 
     handle400Error(error) {
-        /*if (error && error.status === 400 && error.error && error.error.error === 'invalid_grant') {
+       /* if (error && error.status === 400 && error.error && error.error.error === 'invalid_grant') {
             // If we get a 400 and the error message is 'invalid_grant', the token is no longer valid so logout.
             return
-        }*/
+        }
 
-        return Observable.throw(error);
+        return Observable.throw(error);*/
     }
 
     handle401Error(req: HttpRequest<any>, next: HttpHandler) {

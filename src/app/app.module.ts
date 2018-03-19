@@ -1,4 +1,4 @@
-//import { ConfigTecladoModule } from './components/config/config.module';
+import { TecladoService } from './components/teclado/teclado.service';
 import { InterceptorService } from './components/shared/services/interceptor.service';
 import { ProfileService } from './components/profile/profile.service';
 import { ProfileModule } from './components/profile/profile.module';
@@ -52,6 +52,8 @@ import { LayoutEditorService } from './components/layout-editor/layout-editor.se
     GeneralConfigService,
     LayoutEditorService,
     ProfileService,
+    TecladoService,
+    GeneralConfigService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
