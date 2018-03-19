@@ -28,7 +28,6 @@ export class OpenFacSensorFactory {
         helper.args = args;                                                        
     
         OpenFacSensorFactory.dicTypes.set(sensorName, helper);                                                        
-        //OpenFacSensorFactory.dicTypes.set(sensorName, type);
     }
 
    
