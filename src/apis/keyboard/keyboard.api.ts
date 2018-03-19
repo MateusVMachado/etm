@@ -14,9 +14,15 @@ export class Keyboard extends BaseRoute {
 
     public getSingleKeyboardByName(req: Request, res: Response, next: NextFunction){
         let instance = this;
-        res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": req.query.email} ] } ).toArray(function(err, keyboard) {
-            res.send(keyboard);
-        })
+        if(req.query.nameLayout === "pt-br"){
+            res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": "system"} ] } ).toArray(function(err, keyboard) {
+                res.send(keyboard);
+            })    
+        } else {
+            res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": req.query.email} ] } ).toArray(function(err, keyboard) {
+                res.send(keyboard);
+            })
+        }    
 
     }
 
@@ -86,7 +92,7 @@ export class Keyboard extends BaseRoute {
     public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
-            if(keyboard_list.length >= 8){
+            if(keyboard_list.length >= 7){
                 res.send('maxNumber');
                 return;
             } else {
@@ -120,8 +126,16 @@ export class Keyboard extends BaseRoute {
 
             }
         })
+    }
 
-
+    public insertUpdateOnlyKeyboard(req: Request, res: Response, next: NextFunction){
+        let newKeyboard = req.body;
+        res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
+                        res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
+                            console.log("Keyboard atualizado");
+                            res.send('updated');
+                        })
+        })
     }
 
     public insertBasicAtRegister(req: Request,  res: Response, next: NextFunction){
@@ -152,7 +166,7 @@ export class Keyboard extends BaseRoute {
         if(email){
             openFacLayout.email = email;    
         } else {
-            openFacLayout.email = 'system@system.com'; 
+            openFacLayout.email = 'system'; 
         }
         
 
