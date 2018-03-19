@@ -207,12 +207,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(!$(el).find('input')[0]){
         
                         $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        console.log($($(el).find('button')[0]).val());
+                    
                         
                       }  else {
                         
                         $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                      console.log($($(el).find('input')[0]).val()); 
+                     
 
                       }
             
@@ -244,12 +244,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(!$(el1).find('input')[0]){
         
                         $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        console.log($($(el1).find('button')[0]).val());
+                        
                         
                       }  else {
                         
                         $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        console.log($($(el1).find('input')[0]).val());
+                        
 
                       }
             
