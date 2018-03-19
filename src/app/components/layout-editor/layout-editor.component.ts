@@ -45,6 +45,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public keyboardToEdit: string;
     public keyboardItems: KeyboardNamesList = new KeyboardNamesList();
 
+    private editMode: boolean = false;
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -100,6 +102,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let self = this;
 
       $('#newKeyboard').on('click', function(){
+        self.editMode = false;
         $("[id=content]").each(function(index){
           $(this).children().remove();
         })
@@ -118,6 +121,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     public updateReplicant(){
+      this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
 
       let user = this.authService.getLocalUser();
@@ -203,10 +207,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(!$(el).find('input')[0]){
         
                         $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                    
                         
                       }  else {
                         
                         $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                     
+
                       }
             
                         $(el).removeAttr('tooltip');
@@ -238,9 +245,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                         $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         
+                        
                       }  else {
                         
                         $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        
+
                       }
             
                       $(el1).removeAttr('tooltip');
@@ -310,7 +320,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     private onDrop(value) {
       if (value[2] == null) {//dragged outside any of the bags
-
           return;
       }    
           let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
@@ -335,41 +344,90 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 let trueValue, copyObj, objClass, trueObj, toSource;
                 if(value[3].id === "copy"){
+                  
                     trueValue = $($(value[3]).find('input')[0]).val();
                     copyObj = $(value[3]).find('input')[0];
                     objClass = $(value[3]).find('input')[0].className;
                     $(value[2]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
                     
-                    if($(value[2]).children().length > 1) { 
+                    if($(value[2]).children().length > 2 ) {   
                         value[1].remove();  
-                        trueValue = $($(value[2]).find('input')[0]).val();
+                        trueValue = $($(value[1])[0]).val();
                         this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                        this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                     } else {
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                       this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
                     } 
                     
                 } else if ( value[3].id === "content"){
-                    trueValue = $($(value[2]).find('input')[0]).val();
-                    copyObj = $(value[2]).find('input')[0];
-                    objClass = $(value[2]).find('input')[0].className;
+                    trueValue = $($(value[1])[0]).val();
+                    copyObj = $(value[1])[0];
+                    objClass = $(value[1])[0].className;
 
-                    if($(value[2]).children().length > 1) { 
+                    if($(value[2]).children().length > 2) { 
                       value[1].remove();  
-                      trueValue = $($(value[2]).find('input')[0]).val();
+                      trueValue = $($(value[1])[0]).val();
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                     } else {
-                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+
+                      trueValue = $( $(value[1]).children()[0] ).val();
+                      if($(value[2]).children().length > 2  ) { 
+                          value[1].remove();
+                          this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                      } else {
+        
+                        if( $(value[1]).find('input')[0]) {
+                          trueValue = $($($(value[1])[0]).find('input')[0]).val();
+                          if(this.editMode){
+                            if($(value[2]).children().length > 1) {
+                                value[1].remove();
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            } else {
+                              
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                            }    
+                          } else {
+                            if($(value[2]).children().length > 2) {
+                              value[1].remove();
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            } else {
+                              
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                            } 
+                          }  
+  
+                        } else {
+
+                          trueValue = $($(value[1])[0]).val();
+                            if(this.editMode){
+                              if($(value[2]).children().length > 1) {
+                                  value[1].remove();
+                                  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              } else {
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                              }    
+                            } else {
+                              if($(value[2]).children().length > 2) {
+                                  value[1].remove();
+                                  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              } else {
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                              }   
+                            }  
+
+                        }   
+                      } 
                     } 
 
                 }    
 
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
-
 
     }    
 
