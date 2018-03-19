@@ -17,6 +17,7 @@ import { Subscription } from 'rxjs';
 import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
 
 import * as $ from 'jquery';
+import { SaveModalComponent } from './save-layout/save-modal.component';
 
 @Component({
   selector: 'app-layout-editor',
@@ -505,9 +506,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
       if(saveAs){
+            console.log("SAVE AS");
               this.showModal(LayoutModalComponent);
               this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
-                if(nameArrived){
+                if(nameArrived && nameArrived !== 'confirm' && nameArrived !== 'refuse'){
                   this.keyboardName = nameArrived;
                 
 
@@ -531,23 +533,29 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
               });
      } else {
-
-            let user = this.authService.getLocalUser();
-            finalKeyboard.type = this.keyboardToEdit;
-            let layout = this.populateLayout(finalKeyboard, user.email);
+      console.log("SAVE");
+           this.showModal(SaveModalComponent);
+           this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((result)=>{
+             if(result === "confirm"){
+                    let user = this.authService.getLocalUser();
+                    finalKeyboard.type = this.keyboardToEdit;
+                    let layout = this.populateLayout(finalKeyboard, user.email);
+                    
+                    this.layoutEditorService.updateOnlyKeyboard(layout, user.email).subscribe((result)=>{
+        
+                      if(result === 'updated'){
+        
+                        this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                        this.sidebarService.emitSideBarCommand('reload');
+                      } else if (result === 'alreadyExist'){
+                        this.messageService.error("Esse nome de teclado já existe.");
+                      } else if (result === 'maxNumber'){
+                        this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                      }  
+                    });
+             }
+           })
             
-            this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
-
-              if(result === 'updated'){
-
-                this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
-                this.sidebarService.emitSideBarCommand('reload');
-              } else if (result === 'alreadyExist'){
-                this.messageService.error("Esse nome de teclado já existe.");
-              } else if (result === 'maxNumber'){
-                this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
-              }  
-            });
 
      }
 
