@@ -140,7 +140,8 @@ export class Server {
     this.app.use(cookieParser("SECRET_GOES_HERE"));
 
     //jwt verify
-    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/register', '/keyboard/insertNewKeyboard', '/keyboard/insertUpdateKeyboard']}));
+    //this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/register', '/keyboard/insertNewKeyboard', '/keyboard/insertUpdateKeyboard']}));
+    //this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/register']}));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -160,8 +161,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-      //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Origin', 'http://etm.korp.com.br');
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      //res.setHeader('Access-Control-Allow-Origin', 'http://etm.korp.com.br');
       //res.setHeader('Access-Control-Allow-Origin', 'http://192.168.1.129:4200');
 
       // Request methods you wish to allow
