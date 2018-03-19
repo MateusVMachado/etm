@@ -36,9 +36,9 @@
                         <div class="col-md-1">          
                         
                                 
-                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()">
+                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()" (click)="reloadList()">
                                 <option selected disabled>Teclados</option>
-                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
+                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard">
                                         {{keyboard}}
                                 </option>
                         
@@ -127,9 +127,8 @@
         
                                 <button 
                                     *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard tamanho-button3" 
-                                    value="SPACE" >
-                                <mat-icon 
-                                        class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
+                                    value="SPACE" >SPACE
+                         
                                 </button>
         
                         

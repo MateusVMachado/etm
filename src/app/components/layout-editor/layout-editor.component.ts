@@ -10,13 +10,14 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 import { HttpClient } from '@angular/common/http';
 import { LayoutEditorService } from './layout-editor.service';
 import { SideBarService } from '../sidebar/sidebar.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
 import { Subscription } from 'rxjs';
 import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
 
 import * as $ from 'jquery';
+import { SaveModalComponent } from './save-layout/save-modal.component';
 
 @Component({
   selector: 'app-layout-editor',
@@ -45,7 +46,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public keyboardToEdit: string;
     public keyboardItems: KeyboardNamesList = new KeyboardNamesList();
 
+    public keyboardItemsToReload: KeyboardNamesList = new KeyboardNamesList();
+
     private editMode: boolean = false;
+    private newKeyboard: boolean = true;
+
+    private layoutEditorServiceSubscribe2: Subscription;
+    private modal: NgbModalRef;
+    private keyboardNamesSubscribe: Subscription;
 
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
@@ -60,7 +68,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       super(injector);
 
       let user = this.authService.getLocalUser();
-      this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
+      this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
           this.keyboardItems = result;
       });
 
@@ -102,6 +110,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let self = this;
 
       $('#newKeyboard').on('click', function(){
+        self.newKeyboard = true;
         self.editMode = false;
         $("[id=content]").each(function(index){
           $(this).children().remove();
@@ -121,14 +130,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     public updateReplicant(){
+      this.newKeyboard = false;
       this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
 
       let user = this.authService.getLocalUser();
-      this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email).subscribe((data)=>{
+      this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email, user.jwt).subscribe((data)=>{
         
         this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
 
+        
 
       var counter = 0;
 
@@ -270,6 +281,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       })
 
+
+      
     }
   
 
@@ -343,6 +356,36 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 let trueValue, copyObj, objClass, trueObj, toSource;
+
+                if($(value).find('button')){
+                  
+                  
+                  trueValue = $($(value[1])[0]).val() ;
+
+                  if(!this.editMode){
+                          if($(value[2]).children().length > 2 ) {   
+                            value[1].remove();  
+                            trueValue = $($(value[1])[0]).val() ;
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          } else {
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                          } 
+                          $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                  } else {
+                          if($(value[2]).children().length > 1 ) {   
+                            value[1].remove();  
+                            trueValue = $($(value[1])[0]).val() ;
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          } else {
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                          } 
+                          $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                  }        
+                  return;
+                }
+
                 if(value[3].id === "copy"){
                   
                     trueValue = $($(value[3]).find('input')[0]).val();
@@ -433,7 +476,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     public showModal(component){
         const activeModal = this.modalService.open(component, {size: 'lg', container: 'nb-layout'});
+        this.modal = activeModal;
     }
+
+    public closeModal(){
+      this.modal.close();
+  } 
 
     public sayHello(mystring: string){
       console.log(this.keyboardToEdit);
@@ -465,13 +513,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
    public deleteKeyboardLayout(){
     this.showModal(DeleteLayoutModalComponent);
+    
+
+    this.keyboardItems.KeyboardsNames.push(this.keyboardName);
+    this.keyboardToEdit = this.keyboardName;
    }
 
 
    public saveKeyboardLayout(saveAs: boolean){
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
-              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!");
+              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!\nPor favor, utilize a opção \"Salvar Como\"");
               return;
             }
       }      
@@ -504,10 +556,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }  
 
 
-      if(saveAs){
+      if(saveAs || this.newKeyboard){
               this.showModal(LayoutModalComponent);
               this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
-                if(nameArrived){
+                if(nameArrived && nameArrived !== 'confirm' && nameArrived !== 'refuse'){
                   this.keyboardName = nameArrived;
                 
 
@@ -522,7 +574,36 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
                       this.sidebarService.emitSideBarCommand('reload');
                     } else if (result === 'alreadyExist'){
-                      this.messageService.error("Esse nome de teclado já existe.");
+
+                      this.showModal(SaveModalComponent);
+                      this.layoutEditorServiceSubscribe2 = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((result)=>{
+                        if(result === "confirm"){
+                               let user = this.authService.getLocalUser();
+                               finalKeyboard.type = this.keyboardToEdit;
+                              
+                               let layout = this.populateLayout(finalKeyboard, user.email);
+                               layout.nameLayout = this.keyboardName;
+
+                              
+                               this.layoutEditorService.updateOnlyKeyboard(layout, user.email).subscribe((result)=>{
+                                 if(result === 'updated'){
+                                  
+                                   this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                                   this.sidebarService.emitSideBarCommand('reload');
+
+                                   this.keyboardItems.KeyboardsNames.push(this.keyboardName);
+
+                                 } else if (result === 'maxNumber'){
+                                   this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                                 }  
+                               });
+                               
+                               this.layoutEditorServiceSubscribe2.unsubscribe();
+                        }
+                      })
+
+
+
                     } else if (result === 'maxNumber'){
                       this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
                     }  
@@ -530,28 +611,51 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   this.layoutEditorServiceSubscribe.unsubscribe();
                 }
               });
-     } else {
 
-            let user = this.authService.getLocalUser();
-            finalKeyboard.type = this.keyboardToEdit;
-            let layout = this.populateLayout(finalKeyboard, user.email);
-            
-            this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
+     } else if(!this.newKeyboard){
+     
+           this.showModal(SaveModalComponent);
+           this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((result)=>{
+             if(result === "confirm"){
+                    let user = this.authService.getLocalUser();
+                    finalKeyboard.type = this.keyboardToEdit;
+                    let layout = this.populateLayout(finalKeyboard, user.email);
+                    
+                    this.layoutEditorService.updateOnlyKeyboard(layout, user.email).subscribe((result)=>{
+        
+                      if(result === 'updated'){
+        
+                        this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                        this.sidebarService.emitSideBarCommand('reload');
 
-              if(result === 'updated'){
+                        this.keyboardItems.KeyboardsNames.push(this.keyboardName);
+             
 
-                this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
-                this.sidebarService.emitSideBarCommand('reload');
-              } else if (result === 'alreadyExist'){
-                this.messageService.error("Esse nome de teclado já existe.");
-              } else if (result === 'maxNumber'){
-                this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
-              }  
-            });
+                      } else if (result === 'maxNumber'){
+                        this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                      }  
+                    });
+
+
+             }
+           })
+          
 
      }
 
    }
+
+  public reloadList(){
+
+      this.keyboardNamesSubscribe.unsubscribe();
+      let user = this.authService.getLocalUser();
+      this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
+            this.keyboardItems = result;
+     
+      });
+
+   }
+
 
     private createEmptyKeyboard(){
      
