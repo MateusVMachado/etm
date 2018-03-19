@@ -72,9 +72,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
               this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result)=>{
                 if(result === "pressed"){
                   this.ledOn = true;
-                  console.log(this.ledOn);
                   clearInterval(this.timeoutId);
-                  this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 1000) ;
+                  this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 500) ;
                 }
               })
               
@@ -110,7 +109,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   private turnLEDoff(){
     this.ledOn = false;
-    console.log(this.ledOn);
   }
 
   ngOnDestroy(): void {
@@ -183,14 +181,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
         });
       }
     });
-  }
-
-  private loadSingleKeyboardByName(nameLayout: string){
-    let user = this.authService.getLocalUser();
-    this.tecladoService.loadSingleKeyboard(nameLayout, user.email).subscribe((data)=>{
-      
-    });
-
   }
 
 

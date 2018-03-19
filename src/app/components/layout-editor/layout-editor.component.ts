@@ -135,7 +135,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let replicantFromDatabase = new TecladoModel();
 
       let user = this.authService.getLocalUser();
-      this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email).subscribe((data)=>{
+      this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email, user.jwt).subscribe((data)=>{
         
         this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
 
@@ -356,6 +356,36 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 let trueValue, copyObj, objClass, trueObj, toSource;
+
+                if($(value).find('button')){
+                  
+                  
+                  trueValue = $($(value[1])[0]).val() ;
+
+                  if(!this.editMode){
+                          if($(value[2]).children().length > 2 ) {   
+                            value[1].remove();  
+                            trueValue = $($(value[1])[0]).val() ;
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          } else {
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                          } 
+                          $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                  } else {
+                          if($(value[2]).children().length > 1 ) {   
+                            value[1].remove();  
+                            trueValue = $($(value[1])[0]).val() ;
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          } else {
+                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                          } 
+                          $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                  }        
+                  return;
+                }
+
                 if(value[3].id === "copy"){
                   
                     trueValue = $($(value[3]).find('input')[0]).val();
@@ -493,7 +523,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    public saveKeyboardLayout(saveAs: boolean){
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
-              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!");
+              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!\nPor favor, utilize a opção \"Salvar Como\"");
               return;
             }
       }      

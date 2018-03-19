@@ -38,8 +38,6 @@ export class DeleteLayoutModalComponent extends AppBaseComponent implements OnIn
 
     public deleteKeyboardOnBack(){
         let user = this.authService.getLocalUser();
-
-        console.log(this.keyboardToDelete);
         this.layoutEditorService.deleteKeyboard(this.keyboardToDelete, user.email).subscribe((result)=>{
             if(result === 'removed'){
                 this.messageService.success("O teclado foi removido.");
