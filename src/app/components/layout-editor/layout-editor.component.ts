@@ -45,6 +45,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public keyboardToEdit: string;
     public keyboardItems: KeyboardNamesList = new KeyboardNamesList();
 
+    private editMode: boolean = false;
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -100,6 +102,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let self = this;
 
       $('#newKeyboard').on('click', function(){
+        self.editMode = false;
         $("[id=content]").each(function(index){
           $(this).children().remove();
         })
@@ -118,6 +121,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     public updateReplicant(){
+      this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
 
       let user = this.authService.getLocalUser();
@@ -203,10 +207,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(!$(el).find('input')[0]){
         
                         $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        console.log($($(el).find('button')[0]).val());
                         
                       }  else {
                         
                         $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                      console.log($($(el).find('input')[0]).val()); 
+
                       }
             
                         $(el).removeAttr('tooltip');
@@ -237,10 +244,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(!$(el1).find('input')[0]){
         
                         $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        console.log($($(el1).find('button')[0]).val());
                         
                       }  else {
                         
                         $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        console.log($($(el1).find('input')[0]).val());
+
                       }
             
                       $(el1).removeAttr('tooltip');
@@ -309,8 +319,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
 
     private onDrop(value) {
+      console.log(this.editMode);
+      console.log("ON DROP");
       if (value[2] == null) {//dragged outside any of the bags
-
+        console.log("NULO");
           return;
       }    
           let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
@@ -335,34 +347,117 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 let trueValue, copyObj, objClass, trueObj, toSource;
                 if(value[3].id === "copy"){
+                  console.log("MARK1");
                     trueValue = $($(value[3]).find('input')[0]).val();
                     copyObj = $(value[3]).find('input')[0];
                     objClass = $(value[3]).find('input')[0].className;
                     $(value[2]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
                     
-                    if($(value[2]).children().length > 1) { 
+                    if($(value[2]).children().length > 2 ) { 
+                      console.log("MARK1-A");
+                        console.log($(value[2]).children().length);
                         value[1].remove();  
-                        trueValue = $($(value[2]).find('input')[0]).val();
+                        console.log($($(value[1])[0]).val() );
+                        //trueValue = $($(value[1]).find('input')[0]).val();
+                        trueValue = $($(value[1])[0]).val();
                         this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                        this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                        //this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                     } else {
+                      console.log("MARK1-B");
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                       this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
                     } 
                     
                 } else if ( value[3].id === "content"){
-                    trueValue = $($(value[2]).find('input')[0]).val();
-                    copyObj = $(value[2]).find('input')[0];
-                    objClass = $(value[2]).find('input')[0].className;
+                  console.log("MARK2");
 
-                    if($(value[2]).children().length > 1) { 
+
+                    trueValue = $($(value[1])[0]).val();
+                    //copyObj = $(value[2]).find('input')[0];
+                    copyObj = $(value[1])[0];
+                    //objClass = $(value[2]).find('input')[0].className;
+                    objClass = $(value[1])[0].className;
+
+                    if($(value[2]).children().length > 2) { 
+                      console.log($(value[2]).children().length);
                       value[1].remove();  
-                      trueValue = $($(value[2]).find('input')[0]).val();
+                      //trueValue = $($(value[2]).find('input')[0]).val();
+                      trueValue = $($(value[1])[0]).val();
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                      //this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                     } else {
-                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                      console.log("MARK3");
+                      //console.log($(value[1]).children()[0]);
+                      //console.log($( $(value[2]).children()[0] ).val() + ' | ' + $( $(value[2]).children()[1] ).val() + ' | ' + $( $(value[2]).children()[2] ).val())
+                      trueValue = $( $(value[1]).children()[0] ).val();
+                      console.log("LEN: " + $(value[2]).children().length);
+                      if($(value[2]).children().length > 2  ) { 
+                        console.log("MARK3-A");
+                          value[1].remove();
+                          this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                      } else {
+                        console.log("MARK3-B");
+                        //console.log("LEN: " + $(value[2]).children().length);
+                        console.log( $(value[1])[0] );
+                        //console.log($( $(value[1]).find('input')[0] ).val() );
+                      
+                        if( $(value[1]).find('input')[0]) {
+                          console.log("MARK3-B1");
+                          trueValue = $($($(value[1])[0]).find('input')[0]).val();
+                          if(this.editMode){
+                            if($(value[2]).children().length > 1) {
+                                value[1].remove();
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            } else {
+                              
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                            }    
+                          } else {
+                            if($(value[2]).children().length > 2) {
+                              value[1].remove();
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            } else {
+                              
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                            } 
+                          }  
+
+                          //console.log("LEN: " + $(value[2]).children().length);
+                          //console.log( $($(value[1])[0]).find('input')[0]  );
+                          //console.log( $(value[1])[0] );
+                          //  trueValue = $($($(value[1])[0]).find('input')[0]).val();
+                          //  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                          //  this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                        } else {
+                          console.log("MARK3-B2");
+                          trueValue = $($(value[1])[0]).val();
+                          console.log("LEN: " + $(value[2]).children().length);
+                            if(this.editMode){
+                              if($(value[2]).children().length > 1) {
+                                  value[1].remove();
+                                  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              } else {
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                              }    
+                            } else {
+                              if($(value[2]).children().length > 2) {
+                                  value[1].remove();
+                                  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              } else {
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                              }   
+                            }  
+                            //console.log($(value[1])[0]);
+                            //trueValue = $($(value[1])[0]).val();
+                            //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            //this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                        }   
+                      } 
                     } 
 
                 }    
@@ -370,7 +465,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
 
-
+                console.log(JSON.stringify(this.tecladoReplicant));
     }    
 
     public showModal(component){
