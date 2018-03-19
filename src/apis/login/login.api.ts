@@ -23,7 +23,6 @@ export class Login extends BaseRoute{
         res.locals.mongoAccess.coll[0].find({"email": req.body['email']}).toArray(function(err, user_list) {         
                 if(user_list.length !== 0){
                     console.log("USER FOUND!");
-                    console.log(user_list);
 
                     if (req.body['email'] === user_list[0]['email'] && 
                         req.body['password'] === user_list[0]['password']) {

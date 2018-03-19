@@ -6,7 +6,6 @@ import * as path from "path";
 import * as errorHandler from "errorhandler"; // Para modo desenvolvimento apenas
 import * as helmet from 'helmet';
 import * as jwt from 'express-jwt';
-import * as unless from 'express-unless';
 
 import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
@@ -140,7 +139,7 @@ export class Server {
     this.app.use(cookieParser("SECRET_GOES_HERE"));
 
     //jwt verify
-    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login']}));
+    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/register']}));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
