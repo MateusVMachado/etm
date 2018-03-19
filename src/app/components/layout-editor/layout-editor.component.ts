@@ -506,7 +506,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
       if(saveAs){
-            console.log("SAVE AS");
               this.showModal(LayoutModalComponent);
               this.layoutEditorServiceSubscribe = this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((nameArrived)=>{
                 if(nameArrived && nameArrived !== 'confirm' && nameArrived !== 'refuse'){
@@ -533,7 +532,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
               });
      } else {
-      console.log("SAVE");
            this.showModal(SaveModalComponent);
            this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((result)=>{
              if(result === "confirm"){
