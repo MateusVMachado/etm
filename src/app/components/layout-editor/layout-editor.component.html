@@ -36,9 +36,9 @@
                         <div class="col-md-1">          
                         
                                 
-                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()">
+                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()" (click)="reloadList()">
                                 <option selected disabled>Teclados</option>
-                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
+                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard">
                                         {{keyboard}}
                                 </option>
                         
