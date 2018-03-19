@@ -26,12 +26,7 @@ export class SideBarService extends AppServiceBase{
   }
   
   loadKeyboardsNames(email: string) {
-    return this.http.get<KeyboardNamesList>(this.backendAddress + `/keyboard/getKeyboardNames?email=${email}`, this.getDefaultHeaders());
+    return this.http.get<KeyboardNamesList>(this.backendAddress + `/keyboard/getKeyboardNames?email=${email}`);
   }
-
-  getDefaultHeaders() {
-        let user = this.authService.getLocalUser();
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
-    }
 
 }

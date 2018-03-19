@@ -85,20 +85,15 @@ export class TecladoService extends AppServiceBase {
     }
 
     loadData() {
-        return this.http.get<OpenFACLayout>(this.backendAddress + '/keyboard', this.getDefaultHeaders());
+        return this.http.get<OpenFACLayout>(this.backendAddress + '/keyboard');
     }
 
     loadDataFromUser(email: string) {
-        return this.http.get<OpenFACLayout>(this.backendAddress + `/keyboardByUser?email=${email}`, this.getDefaultHeaders());
+        return this.http.get<OpenFACLayout>(this.backendAddress + `/keyboardByUser?email=${email}`);
     }
 
     loadSingleKeyboard(nameLayout: string, email: string){
         return this.http.get<OpenFACLayout>(this.backendAddress + `/getSingleKeyboard?nameLayout=${nameLayout}&email=${email}`, this.getDefaultHeaders());
-    }
-
-    getDefaultHeaders() {
-        let user = this.authService.getLocalUser();
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
 }

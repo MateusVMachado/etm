@@ -15,9 +15,6 @@ import { FormsModule } from '@angular/forms';
     declarations: [
         TecladoComponent
     ],
-    providers: [
-        TecladoService
-    ],
     exports: [
         TecladoComponent
     ],

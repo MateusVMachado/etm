@@ -1,4 +1,5 @@
-//import { ConfigTecladoModule } from './components/config/config.module';
+import { TecladoService } from './components/teclado/teclado.service';
+import { InterceptorService } from './components/shared/services/interceptor.service';
 import { ProfileService } from './components/profile/profile.service';
 import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
@@ -7,7 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './nebular-core.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -40,6 +41,7 @@ import { LayoutEditorService } from './components/layout-editor/layout-editor.se
   ],
   bootstrap: [AppComponent],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
     CookieService,
     StateService,
     AuthService,
@@ -50,6 +52,8 @@ import { LayoutEditorService } from './components/layout-editor/layout-editor.se
     GeneralConfigService,
     LayoutEditorService,
     ProfileService,
+    TecladoService,
+    GeneralConfigService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
