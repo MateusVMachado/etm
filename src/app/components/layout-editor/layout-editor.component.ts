@@ -18,6 +18,7 @@ import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
 
 import * as $ from 'jquery';
 import { SaveModalComponent } from './save-layout/save-modal.component';
+import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
 
 @Component({
   selector: 'app-layout-editor',
@@ -139,8 +140,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
         this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
 
-        
-
+      
       var counter = 0;
 
       var drake = dragula({});
@@ -288,6 +288,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
+      if(!layout) return;
       keyboard.teclas = [];
       layout.Lines.forEach(element => {
           let line = [];
@@ -651,7 +652,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let user = this.authService.getLocalUser();
       this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
             this.keyboardItems = result;
-     
+            this.updateReplicant();
       });
 
    }
@@ -706,8 +707,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
     
     private removeLine(){
-      this.teclado.teclas.pop();  
-      this.tecladoReplicant.teclas.pop();
+      if(this.teclado.teclas.length > 5){
+          this.teclado.teclas.pop();  
+          this.tecladoReplicant.teclas.pop();
+      } else {
+        this.messageService.error("O mínimo de linhas no modo edição é 5.");
+      }   
     }  
+
+
+
+    public editCaptionNText(){
+        this.showModal(CaptionTextModalComponent);
+    }
 
 }

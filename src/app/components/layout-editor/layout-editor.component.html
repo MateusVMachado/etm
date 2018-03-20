@@ -149,7 +149,7 @@
                                                 
                                                 <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
                                                     *ngFor="let key of row; index as i" 
-                                                    [dragula]='"master-bag"' id="content" (dblclick)="sayHello(i.toString() + '#' + iR.toString())">
+                                                    [dragula]='"master-bag"' id="content" (dblclick)="editCaptionNText()">
                                                     <div class="none"></div>
                                                 </div>    
 

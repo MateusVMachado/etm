@@ -6,6 +6,7 @@ import { DragulaModule } from  'ng2-dragula/ng2-dragula';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
 import { SaveModalComponent } from './save-layout/save-modal.component';
+import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { SaveModalComponent } from './save-layout/save-modal.component';
     LayoutEditorComponent,
     LayoutModalComponent,
     DeleteLayoutModalComponent,
-    SaveModalComponent
+    SaveModalComponent,
+    CaptionTextModalComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
@@ -24,7 +26,8 @@ import { SaveModalComponent } from './save-layout/save-modal.component';
   entryComponents: [
     LayoutModalComponent,
     DeleteLayoutModalComponent,
-    SaveModalComponent
+    SaveModalComponent,
+    CaptionTextModalComponent
   ]
 })
 export class LayoutEditorModule { }
