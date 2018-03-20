@@ -47,7 +47,8 @@ export class NgxRegisterComponent extends AppBaseComponent {
             this.messageService.success(res.message).then(res => {
               this.router.navigate(['./auth/login']);
             });
-          }, (error: any) => {            
+          }, (error) => {
+            console.log(JSON.stringify(error))       
             this.messageService.error(error.message, 'Oops..');
           }
       );

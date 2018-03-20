@@ -1,0 +1,19 @@
+{
+    "HelloWorld": "Hola mundo!",
+    "LOGIN_TITULO": "Entrar",
+    "LOGIN_SUBTITULO": "¡Hola! Entre con su email",
+    "INPUT_SENHA": "Contraseña",
+    "SENHA_OBRIGATORIA": "¡La contraseña es obligatoria!",
+    "EMAIL_OBRIGATORIO": "¡E-mail es obligatorio!",
+    "EMAIL_REAL": "¡El e-mail debe ser válido!",
+    "REMEMBER_ME": "Recuérdame",
+    "FORGOT_PASSWORD": "¿Se olvidó?",
+    "BTN_ENTRAR": "Entrar",
+    "LOGIN_TEXTO_CRIAR_CONTA": "¿No tienes una cuenta?",
+    "LOGIN_LINK_CRIAR_CONTA": "Crear una",
+    "EMAIL_JA_CADASTRADO": "Esse email já foi cadastrado!",
+    "CADASTRO_CONCLUIDO": "Usuário cadastrado com sucesso!",
+    "DADOS_INVALIDOS": "Email ou senha inválidos",
+    "NAO_AUTENTICADO": "Você precisa se autenticar",
+    "NAO_AUTORIZADO": "Você não está autorizado a fazer isso"
+}

@@ -15,8 +15,9 @@ import { LoginAuthenticateModel } from "./login-authenticate.model";
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit  {
-    @ViewChild('form') form: NgForm;
+export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
+  
+  @ViewChild('form') form: NgForm;
     user: any = {
       email: '',
       password: 'inserir',
@@ -28,13 +29,15 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
                 private cookieService: CookieService,
                 private injector: Injector,
                 private configService: GeneralConfigService
-                ) { super(injector)}
+                ) { super(injector) }
 
     public ngAfterViewInit(){
       // WORKAROUND PARA RESOLVER PROBLEMA DO BOTÃO DE ENTRAR 
       // NÃO SER ATIVADO COM O AUTOFILL DO BROWSER
       this.user.password = 'inserir'; 
-    }                
+    }    
+    
+    ngOnInit(): void { }
 
     public login(): void {
         let usuario: User = new User();
@@ -50,7 +53,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
               this.router.navigate(['./pages/teclados']);
             });
           }, (error) =>{
-            this.messageService.error('Usuário ou senha inválidos', 'Oops..');
+            this.messageService.error(error.error.message, 'Oops..');
           }
        );
     }
