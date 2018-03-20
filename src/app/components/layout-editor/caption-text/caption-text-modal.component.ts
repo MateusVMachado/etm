@@ -14,6 +14,7 @@ export class CaptionTextModalComponent implements OnInit {
 
     public buttonText: string;
     public buttonCaption: string;
+    
 
     constructor(private activeModal: NgbActiveModal,
                 private layoutEditorService: LayoutEditorService) { }
@@ -24,7 +25,11 @@ export class CaptionTextModalComponent implements OnInit {
 
 
     public saveButtonConfiguration(){
-        console.log(this.buttonText + " " + this.buttonCaption);
+        let payload = new Array();    
+        payload.push(this.buttonText);
+        payload.push(this.buttonCaption);
+        this.layoutEditorService.emitLayoutEditorPayload(payload);        
+        this.closeModal();
     }
 
     public saveKeyboardName(){

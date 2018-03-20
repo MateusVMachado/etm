@@ -55,6 +55,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private layoutEditorServiceSubscribe2: Subscription;
     private modal: NgbModalRef;
     private keyboardNamesSubscribe: Subscription;
+    private payloadSubscription: Subscription;
 
     private globColumnQnty = 14;
 
@@ -99,6 +100,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.onDrop(value);
       });
 
+
       this.createEmptyKeyboard();
       
 
@@ -108,6 +110,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     ngOnDestroy() {
       this.dragulaService.destroy('master-bag'); 
       this.reStartBoard();
+      
 
     }
 
@@ -231,7 +234,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
               if(index && index !== -1){
                   let valor = $( $(sEl[i]).find('button')[0] ).val();
-
+  
 
                   for(let cm = 0; cm < coordinatesMap.length; cm++ ){
                     if(coordinatesMap[cm][0] === valor){
@@ -303,16 +306,27 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }
 
                   }                    
-              }    
+              } else {
+                  //if(this.tecladoReplicant.teclas[x][y] !== ""){
+                  // let x = coordinatesMap[cm][1];
+                  //  let y = coordinatesMap[cm][2];
+                  //  let formula = (this.globColumnQnty*x)+(y);
+                  //}
+                  
+              } 
+
             } 
+
+
 
        }
        
+  
+       console.log(JSON.stringify(this.tecladoReplicant));
+
 
       })
 
-      console.clear();
-      console.log(JSON.stringify(this.tecladoReplicant));   
     }
   
 
@@ -326,8 +340,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         let line = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         let textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         for(let j = 0; j < layout.Lines[i].Buttons.length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          line.push(layout.Lines[i].Buttons[j].Text); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          textL.push(layout.Lines[i].Buttons[j].Caption); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          line.push(layout.Lines[i].Buttons[j].Caption); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          textL.push(layout.Lines[i].Buttons[j].Text); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         keyboard.teclas.push(line); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         keyboard.text.push(textL); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
@@ -382,7 +396,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
 
     private onDrop(value) {
-      console.clear();
+
 
       if (value[2] == null) {//dragged outside any of the bags
           return;
@@ -411,7 +425,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 if($(value).find('button')){
                   
-                  console.log(value[3].id);
+
                   trueValue = $($(value[1])[0]).val() ;
                   
                   if(!this.editMode){
@@ -424,11 +438,26 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           } else {
                             trueValue = $($(value[1])[0]).val() ;
                             console.log("MARK2");
-                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                            this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                             
-                            this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                            this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            //this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                            //this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
+                            //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+
+                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                              this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
+                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+
+                                this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            } else {
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            }    
+                            
                           } 
                           $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
                   } else {
@@ -440,26 +469,35 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                           } else {
                             console.log("MARK4");
-                            console.log(value[1])
+
                             if($(value[1]).find('input')[0]){
                               trueValue = $($(value[1]).find('input')[0]).val();
                             } else if($(value[1]).find('button')[0]){
                               trueValue = $($(value[1]).find('button')[0]).val();
                             }
 
-                            console.log("TRUEVALUE: " + trueValue);
+   
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                             this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
-                            this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                            this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
 
-                            console.log(JSON.stringify(this.tecladoReplicant));     
+                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                                this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            } else {
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            }  
+                            //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+       
                           } 
                           $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
                   }   
-                  
-                  console.log(JSON.stringify(this.tecladoReplicant));     
+   
+                  console.log(JSON.stringify(this.tecladoReplicant));
+
                   return;
                 }
 
@@ -481,8 +519,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                       this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                       
-                      this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                      if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                          this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      } else {
+                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      }  
+                      //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                     } 
                     
                 } else if ( value[3].id === "content"){
@@ -506,8 +552,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                           this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                           
-                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                          this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                              this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          } else {
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          }  
+                          //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                       } else {
         
                         if( $(value[1]).find('input')[0]) {
@@ -524,8 +577,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                               this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                               
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                              this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                              if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              } else {
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              }  
+                              //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                             }    
                           } else {
                             if($(value[2]).children().length > 2) {
@@ -538,8 +599,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                               this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                              this.tecladoReplicant.text[drainY][drainX] = trueValue;  ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+
+                              if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              } else {
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              }  
+                              //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              //this.tecladoReplicant.text[drainY][drainX] = trueValue;  ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
                             } 
                           }  
   
@@ -557,8 +626,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                                 
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                                if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                } else {
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                }  
+                                //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                               }    
                             } else {
                               if($(value[2]).children().length > 2) {
@@ -571,8 +648,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                                if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                } else {
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                }  
+                                //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                               }   
                             }  
 
@@ -584,6 +669,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+       
                 console.log(JSON.stringify(this.tecladoReplicant));
     }    
 
@@ -788,12 +874,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    }
 
   public reloadList(){
-
+      
       this.keyboardNamesSubscribe.unsubscribe();
       let user = this.authService.getLocalUser();
       this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
             this.keyboardItems = result;
-            //this.updateReplicant();
       });
 
    }
@@ -807,18 +892,25 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         this.tecladoReplicant.teclas[i] = [[]];
         this.tecladoReplicant.text[i] = [[]]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
          let line = new Array();
+         let textL = new Array(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
          let lineReplicant = new Array();
+         let textReplicant = new Array(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
          line = [];
+         textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
          lineReplicant = [];
+         textReplicant = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
           for (let j = 0; j < 14; j++) {
               line[j] = "";
+              textL[j] = "";  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
               lineReplicant[j] = "";
+              textReplicant[j] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
           }
 
           this.teclado.teclas[i] = line;
-          this.teclado.text[i] = line; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          this.teclado.text[i] = textL; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
           this.tecladoReplicant.teclas[i] = lineReplicant; 
-          this.tecladoReplicant.text[i] = lineReplicant;  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          this.tecladoReplicant.text[i] = textReplicant;  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
       }  
       
 
@@ -866,8 +958,75 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
-    public editCaptionNText(){
+    public editCaptionNText(event){
         this.showModal(CaptionTextModalComponent);
-    }
 
+        this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
+              let buttonText = "";
+              buttonText = result[0];
+              let buttonCaption = "";
+              buttonCaption = result[1];
+
+              if(buttonText === undefined) buttonText = "";
+              if(buttonCaption === undefined) buttonCaption = "";
+
+              let parts = event.target.className.split(' ');
+              //$.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
+              console.log(parts[1].indexOf('#'));
+      
+              if(parts[0].indexOf('#') !== -1){
+                console.log("BRANCA");
+                let x = <number>parts[0].split('#')[0];
+                let y = <number>parts[0].split('#')[1];
+                
+                console.log(event.target.className);
+                console.log(x + ' - ' + y);
+                
+                let formula = this.globColumnQnty*Number(y)+Number(x);
+                console.log("FORMULA: " + formula);
+                let sEl = $("[id=copy]").clone();
+
+                
+
+                let el = sEl[<number>formula].cloneNode(true);
+                
+                $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                $($(el).find('input')[0]).attr('value', buttonCaption);
+
+                
+                this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                this.tecladoReplicant.text[y][x] = buttonText;
+
+                $(el).removeAttr('tooltip');
+                
+               
+                $("[id=content]")[formula].appendChild(el);
+
+                console.log(JSON.stringify(this.tecladoReplicant));
+
+              } else {
+                console.log("AZUL");
+                console.log(event.target);
+                let x = parts[1].split('#')[0];
+                let y = parts[1].split('#')[1];
+
+                $($(event.target)[0]).attr('value', buttonCaption);
+                console.log("RESULT: " + buttonCaption + ' ' + buttonText);
+
+                this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                this.tecladoReplicant.text[y][x] = buttonText;
+
+
+                console.log(JSON.stringify(this.tecladoReplicant));
+       
+                //ATRIBUI NOVO CAPTIOn
+                //console.log($($(event.target)[0]).attr('value', buttonCaption) );
+              }
+              console.log(event.target.className);
+              this.payloadSubscription.unsubscribe();
+        })
+
+
+      }
+      
 }

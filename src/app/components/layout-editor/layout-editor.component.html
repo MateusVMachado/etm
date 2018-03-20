@@ -17,12 +17,8 @@
                                 <div class="col-md-1">
                                             <input type="button" class="btn button-keyboard-menu" value="Inserir Imagem" />
                                 </div>
-                                <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Editar Texto" />
-                                 </div>        
-                                 <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Editar Caption" />
-                                </div>
+
+                                
                                 <div class="col-md-1">
                                         <input type="button" class="btn button-keyboard-menu" value="Deletar Teclado" (click)="deleteKeyboardLayout()"/>
                             </div>
@@ -149,7 +145,7 @@
                                                 
                                                 <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
                                                     *ngFor="let key of row; index as i" 
-                                                    [dragula]='"master-bag"' id="content" (dblclick)="editCaptionNText()">
+                                                    [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)">
                                                     <div class="none"></div>
                                                 </div>    
 

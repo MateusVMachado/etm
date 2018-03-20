@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 export class LayoutEditorService extends AppServiceBase {
 
     public layoutEditorSubject = new Subject<any>(); 
+    public layoutEditorPayloadSubject = new Subject<any>(); 
     private user = this.authService.getLocalUser(); 
 
     constructor(protected injector: Injector, private http: HttpClient, private authService: AuthService){
@@ -40,5 +41,14 @@ export class LayoutEditorService extends AppServiceBase {
     public subscribeToLayoutEditorSubject() {
           return this.layoutEditorSubject.asObservable();      
     }
+
+    public emitLayoutEditorPayload(editor: any) {
+        this.layoutEditorPayloadSubject.next(editor);
+    }
+      
     
+    public subscribeToLayoutEditorPayloadSubject() {
+          return this.layoutEditorPayloadSubject.asObservable();      
+    }
+
 }

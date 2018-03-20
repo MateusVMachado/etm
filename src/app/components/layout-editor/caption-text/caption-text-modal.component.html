@@ -9,16 +9,17 @@
         <div class="modal-body">
 
             <div class="from-group line">
-                <label for="name">Insira o texto do botão</label>
-                <input tooltip="hello" matTooltip="Tooltip!" type="text" id="name" name="name" [(ngModel)]="buttonText" #name="ngModel" class="form-control" placeholder="Texto do botão"
-                    [class.form-control-danger]="name.invalid && name.touched" 
-                />
+
+                <label for="name">Insira o caption do botão</label>
+                   <input type="text" id="name" name="name" [(ngModel)]="buttonCaption" #name="ngModel" class="form-control" placeholder="Caption do botão"
+                        [class.form-control-danger]="name.invalid && name.touched" />
+
             <br>
-            <label for="name">Insira o caption do botão</label>
-                <input type="text" id="name" name="name" [(ngModel)]="buttonCaption" #name="ngModel" class="form-control" placeholder="Caption do botão"
-                    [class.form-control-danger]="name.invalid && name.touched" 
-                />
-                
+
+                <label for="name">Insira o texto do botão</label>
+                    <input tooltip="hello" matTooltip="Tooltip!" type="text" id="name" name="name" [(ngModel)]="buttonText" #name="ngModel" class="form-control" placeholder="Texto do botão"
+                    [class.form-control-danger]="name.invalid && name.touched" />
+
             </div>
 
 
