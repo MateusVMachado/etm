@@ -59,6 +59,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     private globColumnQnty = 14;
 
+    private lastKind: string;
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -227,6 +229,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        }     
 
 
+       console.log(JSON.stringify(coordinatesMap) );
        for(let i = 0; i< totalLength ; i++){
 
             if(sEl[i].firstElementChild.tagName === "BUTTON"){
@@ -235,7 +238,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               if(index && index !== -1){
                   let valor = $( $(sEl[i]).find('button')[0] ).val();
   
-
+                  
                   for(let cm = 0; cm < coordinatesMap.length; cm++ ){
                     if(coordinatesMap[cm][0] === valor){
                       let x = coordinatesMap[cm][1];
@@ -247,12 +250,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                       if(!$(el).find('input')[0]){
         
-                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        //$(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+
                     
                         
                       }  else {
                         
-                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        //$(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
                      
 
                       }
@@ -265,7 +271,49 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       $("[id=content]")[formula].appendChild(el);
 
                       continue;
-                    }
+                    } /*else { ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let x = coordinatesMap[cm][1]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let y = coordinatesMap[cm][2]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let formula = this.globColumnQnty*Number(y)+Number(x); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      console.log("FORMULA: " + formula); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let sEl = $("[id=copy]").clone(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+ 
+                      let el = sEl[<number>formula].cloneNode(true); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                      console.log(sEl.length); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                      
+                      console.log(el); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      if($(el).find('input')[0]){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        console.log("MARK-ALPHA"); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + ''; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        $($(el).find('input')[0]).attr('value', coordinatesMap[cm][0]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      } else if($(el).find('button')[0]){////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        console.log("MARK-OMEGA"); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + ''; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                         
+                        if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                        $($(el).find('button')[0]).text(coordinatesMap[cm][0]);////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        $($(el).find('button')[0]).attr('value', coordinatesMap[cm][0]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        
+                      }
+                           
+                      this.tecladoReplicant.teclas[y][x] = coordinatesMap[cm][0];////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                      this.tecladoReplicant.text[y][x] = coordinatesMap[cm][0];////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      
+                      $(el).removeAttr('tooltip');////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                      
+                     
+                      $("[id=content]")[formula].appendChild(el);////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      cm += 1; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      continue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+
+
+
+
+                    }*/
+
                   }                  
               }    
             } else {
@@ -286,12 +334,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                       if(!$(el1).find('input')[0]){
         
-                        $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        //$(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
                         
                         
                       }  else {
                         
-                        $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        //$(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
                         
 
                       }
@@ -303,7 +353,48 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                        $("[id=content]")[formula].appendChild(el1);
                      
                        continue;
-                    }
+
+                    } /*else { ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+
+                      let x = coordinatesMap[cm][1];////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let y = coordinatesMap[cm][2]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let formula = this.globColumnQnty*Number(y)+Number(x); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      console.log("FORMULA: " + formula); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      let sEl = $("[id=copy]").clone(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                      let el = sEl[<number>formula].cloneNode(true); ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+
+                      console.log(sEl.length); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                      
+                      console.log(el); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      if($(el).find('input')[0]){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        console.log("MARK-ALPHA"); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        $($(el).find('input')[0]).attr('value', coordinatesMap[cm][0]);
+                      } else if($(el).find('button')[0]){
+                        console.log("MARK-OMEGA");
+                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                        
+                        if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();
+                        $($(el).find('button')[0]).text(coordinatesMap[cm][0]);
+                        $($(el).find('button')[0]).attr('value', coordinatesMap[cm][0]);
+                        
+                      }
+                           
+                      this.tecladoReplicant.teclas[y][x] = coordinatesMap[cm][0];
+                      this.tecladoReplicant.text[y][x] = coordinatesMap[cm][0];
+      
+                      $(el).removeAttr('tooltip');
+                      
+                     
+                      $("[id=content]")[formula].appendChild(el);
+                      cm += 1; 
+                      continue;
+
+
+
+                    }*/
 
                   }                    
               } else {
@@ -396,8 +487,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
 
     private onDrop(value) {
-
-
+      console.clear();
+      console.log("ON DROP");
       if (value[2] == null) {//dragged outside any of the bags
           return;
       }    
@@ -425,7 +516,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 if($(value).find('button')){
                   
-
+                  this.lastKind = $(value[1])[0].id ; 
                   trueValue = $($(value[1])[0]).val() ;
                   
                   if(!this.editMode){
@@ -444,7 +535,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             //this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                             //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){ 
                               this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
@@ -493,7 +584,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
        
                           } 
+                          
                           $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                          if($($(value[1])[0]).find('input')[0]) 
+                                  $($(value[1])[0]).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
+                          console.log($(value[1])[0].className);
                   }   
    
                   console.log(JSON.stringify(this.tecladoReplicant));
@@ -502,6 +597,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
 
                 if(value[3].id === "copy"){
+                  
+                  this.lastKind = value[3].id ; 
+
+
                   console.log("MARK5");
                     trueValue = $($(value[3]).find('input')[0]).val();
                     copyObj = $(value[3]).find('input')[0];
@@ -532,6 +631,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     } 
                     
                 } else if ( value[3].id === "content"){
+
+                  this.lastKind = value[3].id ; 
+                  
                   console.log("MARK8");
                     trueValue = $($(value[1])[0]).val();
                     copyObj = $(value[1])[0];
@@ -741,7 +843,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         teclasLine = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         textLine = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
         for(let j=0; j < this.tecladoReplicant.teclas[i].length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-           if(this.tecladoReplicant.teclas[i][j] !== ""){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+           if(this.tecladoReplicant.teclas[i][j] !== "" && this.tecladoReplicant.teclas[i][j] !== " "){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
              teclasLine.push(this.tecladoReplicant.teclas[i][j]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
              textLine.push(this.tecladoReplicant.text[i][j]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
              tam += 1; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
@@ -916,9 +1018,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
       var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
-      var sRow: string[] = ['*cpslck', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA'];
-      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup'];
-      var zRow: string[] = ['*arrowdown', '*space'];
+      var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', ''];
+      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup', ''];
+      var zRow: string[] = ['*arrowdown', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
 
        this.masterKeys.teclas.push(row);
        this.masterKeys.teclas.push(pRow);
@@ -962,14 +1064,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         this.showModal(CaptionTextModalComponent);
 
         this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
+
+          //$("[id=copy]").each(function(index){
+          //  console.log($(this).children()[0].className.split(' ')[0]);
+          //})
               let buttonText = "";
               buttonText = result[0];
               let buttonCaption = "";
               buttonCaption = result[1];
 
-              if(buttonText === undefined) buttonText = "";
-              if(buttonCaption === undefined) buttonCaption = "";
+              if(buttonText === undefined) buttonText = " ";
+              if(buttonCaption === undefined) buttonCaption = " ";
 
+              console.log(event.target.className);
+              
               let parts = event.target.className.split(' ');
               //$.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
               console.log(parts[1].indexOf('#'));
@@ -986,12 +1094,30 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 console.log("FORMULA: " + formula);
                 let sEl = $("[id=copy]").clone();
 
-                
-
+                //let el;
+                //if(formula >= sEl.length){
+                  //el = sEl[0].cloneNode(true);
+                //} else {
                 let el = sEl[<number>formula].cloneNode(true);
+                //}
+                console.log(sEl.length);
                 
-                $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                $($(el).find('input')[0]).attr('value', buttonCaption);
+                
+                console.log(el);
+                if($(el).find('input')[0]){
+                  console.log("MARK-ALPHA");
+                  $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                  $($(el).find('input')[0]).attr('value', buttonCaption);
+                } else if($(el).find('button')[0]){
+                  console.log("MARK-OMEGA");
+                  $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+                  
+                  if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();
+                  $($(el).find('button')[0]).text(buttonCaption);
+                  $($(el).find('button')[0]).attr('value', buttonCaption);
+                  
+                }
+                
 
                 
                 this.tecladoReplicant.teclas[y][x] = buttonCaption;
@@ -1001,26 +1127,68 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 
                
                 $("[id=content]")[formula].appendChild(el);
-
                 console.log(JSON.stringify(this.tecladoReplicant));
 
               } else {
+                console.clear();
+
+
+
                 console.log("AZUL");
+
                 console.log(event.target);
                 let x = parts[1].split('#')[0];
                 let y = parts[1].split('#')[1];
 
-                $($(event.target)[0]).attr('value', buttonCaption);
-                console.log("RESULT: " + buttonCaption + ' ' + buttonText);
 
+                console.log("TECLA: " + $($(event.target)[0]).val().toString())
+                let tecla = $($(event.target)[0]).val().toString();
+                console.log("TECLA DEPOIS: " + $($(event.target)[0]).val().toString())
+                if(tecla === '*bckspc' || tecla === '*tab' || tecla === '*kbdrtrn' || tecla === 'PULA'
+                    || tecla === '*arrowleft' || tecla === '*arrowright' || tecla === '*arrowup'
+                    || tecla === '*arrowdown' || tecla === '*space' || tecla === "" ) {
+                  console.log("TECLA ESPECIAL");
+                  this.messageService.error("Não é possível alterar teclas especiais.");
+                  this.payloadSubscription.unsubscribe();
+                  return;
+                }
+              
+
+                console.log(event.target);
+                $($(event.target)[0]).attr('value', buttonCaption);
+                //this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                //this.tecladoReplicant.text[y][x] = buttonText;
                 this.tecladoReplicant.teclas[y][x] = buttonCaption;
                 this.tecladoReplicant.text[y][x] = buttonText;
 
 
+                //console.log($(event.target)[0]);
+                
+               
+                //console.log("RESULT: " + buttonCaption + ' ' + buttonText);
+
+
+                //console.log( event.target.id);
+
+                /*
+                if(!this.editMode){
+                  console.log("ALPHA");
+                  this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                  this.tecladoReplicant.text[y][x] = buttonText;
+                } else {
+                  console.log("ÔMEGA");
+                  this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                  this.tecladoReplicant.text[y][x] = buttonText;
+                }
+                */
+
+                // TECLAS ARRASTADAS E EDITADAS SALVAM DA SEGUINTE FORMA
+                //this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                //this.tecladoReplicant.text[y][x] = buttonText;
+
+
                 console.log(JSON.stringify(this.tecladoReplicant));
-       
-                //ATRIBUI NOVO CAPTIOn
-                //console.log($($(event.target)[0]).attr('value', buttonCaption) );
+
               }
               console.log(event.target.className);
               this.payloadSubscription.unsubscribe();

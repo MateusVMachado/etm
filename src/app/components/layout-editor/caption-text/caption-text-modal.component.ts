@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutEditorService } from '../layout-editor.service';
 
@@ -7,7 +7,7 @@ import { LayoutEditorService } from '../layout-editor.service';
     templateUrl: './caption-text-modal.component.html',
     styleUrls: ['./caption-text-modal.component.css']
 })
-export class CaptionTextModalComponent implements OnInit {
+export class CaptionTextModalComponent implements OnInit, OnDestroy {
     public isKeyboardName: boolean = true;
     
     public keyboardName: string;
@@ -23,13 +23,26 @@ export class CaptionTextModalComponent implements OnInit {
 
     }
 
+    ngOnDestroy() {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        console.log("DESTROYED");
+        this.saveButtonConfiguration(true);
+    }
 
-    public saveButtonConfiguration(){
+    public saveButtonConfiguration(stat?){
         let payload = new Array();    
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
+
+        
         this.layoutEditorService.emitLayoutEditorPayload(payload);        
-        this.closeModal();
+        if(stat){
+            return;
+        } else {
+            this.closeModal();
+        }
+        
     }
 
     public saveKeyboardName(){
@@ -37,7 +50,8 @@ export class CaptionTextModalComponent implements OnInit {
         this.closeModal();
     }
 
-    public closeModal() {
+    public closeModal(stat?) {
+        this.saveButtonConfiguration(true)
         this.activeModal.close();
     }
     
