@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutEditorService } from '../layout-editor.service';
+import { CaptionTextService } from './caption-text.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-caption-text-modal',
@@ -14,10 +16,22 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
 
     public buttonText: string;
     public buttonCaption: string;
-    
+    private captionSubscribe: Subscription;
 
     constructor(private activeModal: NgbActiveModal,
-                private layoutEditorService: LayoutEditorService) { }
+                private layoutEditorService: LayoutEditorService,
+                private captionTextService: CaptionTextService) {
+                    
+                    this.buttonCaption = "Caption 1";
+                    //this.buttonText = "Text 1";
+                    this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
+                        console.log("RESULT: " + JSON.stringify(result) );
+                        
+                        this.buttonCaption = result[0].target.value;
+                        this.buttonText = result[1];
+                    })
+
+                 }
 
     ngOnInit() { 
 
@@ -28,6 +42,7 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
         //Add 'implements OnDestroy' to the class.
         console.log("DESTROYED");
         this.saveButtonConfiguration(true);
+        this.captionSubscribe.unsubscribe();
     }
 
     public saveButtonConfiguration(stat?){

@@ -19,6 +19,7 @@ import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
 import * as $ from 'jquery';
 import { SaveModalComponent } from './save-layout/save-modal.component';
 import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
+import { CaptionTextService } from './caption-text/caption-text.service';
 
 @Component({
   selector: 'app-layout-editor',
@@ -70,7 +71,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private layoutEditorService: LayoutEditorService,
                 private sidebarService: SideBarService,
                 private modalService: NgbModal,
-                private sideBarService: SideBarService) {
+                private sideBarService: SideBarService,
+                private captionTextService: CaptionTextService) {
       super(injector);       
                   
       let user = this.authService.getLocalUser();
@@ -132,7 +134,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         for(let i = 0 ; i< self.tecladoReplicant.teclas.length; i++){
             for( let j = 0 ; j < self.tecladoReplicant.teclas[i].length; j++){
                self.tecladoReplicant.teclas[i][j] = "";
-               self.tecladoReplicant.text[i][j] = ""; ////////////////////////ADICIONADO RECENTE /////////////////////////////////////
+               self.tecladoReplicant.text[i][j] = ""; 
             }
         }
 
@@ -153,7 +155,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       for(let i = 0 ; i< this.tecladoReplicant.teclas.length; i++){
           for( let j = 0 ; j < this.tecladoReplicant.teclas[i].length; j++){
             this.tecladoReplicant.teclas[i][j] = "";
-            this.tecladoReplicant.text[i][j] = ""; ////////////////////////ADICIONADO RECENTE /////////////////////////////////////
+            this.tecladoReplicant.text[i][j] = ""; 
           }
       }
 
@@ -196,14 +198,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       for(let i = 0 ; i< this.tecladoReplicant.teclas.length; i++){
         for( let j = 0 ; j < this.tecladoReplicant.teclas[i].length; j++){
           this.tecladoReplicant.teclas[i][j] = "";
-          this.tecladoReplicant.text[i][j] = ""; ////////////////////////ADICIONADO RECENTE /////////////////////////////////////
+          this.tecladoReplicant.text[i][j] = ""; 
         }
       }
 
       for(let i = 0 ; i< replicantFromDatabase.teclas.length; i++){
         for( let j = 0 ; j < replicantFromDatabase.teclas[i].length; j++){
           this.tecladoReplicant.teclas[i][j] = replicantFromDatabase.teclas[i][j];
-          this.tecladoReplicant.text[i][j] = replicantFromDatabase.text[i][j]; ////////////////////////ADICIONADO RECENTE /////////////////////////////////////
+          this.tecladoReplicant.text[i][j] = replicantFromDatabase.text[i][j]; 
         }
       }
 
@@ -254,7 +256,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let x = coordinatesMap[cm][1];
                       let y = coordinatesMap[cm][2];
                       this.tecladoReplicant.teclas[x][y] = valor;
-                      this.tecladoReplicant.text[x][y] = valor; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      this.tecladoReplicant.text[x][y] = valor; 
                       
                       let el = sEl[i].cloneNode(true);
         
@@ -321,7 +323,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let x = coordinatesMap[cm][1];
                       let y = coordinatesMap[cm][2];
                       this.tecladoReplicant.teclas[x][y] = valor;
-                      this.tecladoReplicant.text[x][y] = valor; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      this.tecladoReplicant.text[x][y] = valor; 
 
                       let el1 = sEl[i].cloneNode(true);
         
@@ -404,8 +406,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              $("[id=content]")[formula].appendChild(el3);
          }
        }
-       //this.tecladoReplicant.teclas[i][j] = 
-       //this.tecladoReplicant.text[i][j] = 
 
        console.log("NOT FOUND ARRAY: ");
        console.log(JSON.stringify(notFoundArray));
@@ -421,32 +421,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       if(!layout) return;
       keyboard.teclas = [];
-      keyboard.text = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      keyboard.text = []; 
 
-      for(let i = 0; i < layout.Lines.length; i++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let line = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        for(let j = 0; j < layout.Lines[i].Buttons.length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          line.push(layout.Lines[i].Buttons[j].Caption); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          textL.push(layout.Lines[i].Buttons[j].Text); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        keyboard.teclas.push(line); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        keyboard.text.push(textL); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-      } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      for(let i = 0; i < layout.Lines.length; i++){ 
+        let line = []; 
+        let textL = []; 
+        for(let j = 0; j < layout.Lines[i].Buttons.length; j++){ 
+          line.push(layout.Lines[i].Buttons[j].Caption); 
+          textL.push(layout.Lines[i].Buttons[j].Text); 
+        } 
+        keyboard.teclas.push(line); 
+        keyboard.text.push(textL); 
+      } 
 
       keyboard.type = layout.nameLayout
 
-      //layout.Lines.forEach(element => {
-      //    let line = [];
-      //    element.Buttons.forEach(element => {
-      //        line.push(element.Text);
-      //    });
-      //    keyboard.teclas.push(line);
-      //    keyboard.text.push(line);
-      //    
-      //});
-      //keyboard.type = layout.nameLayout;
-    
     }
 
 
@@ -460,7 +449,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let x = <number>parts[0];
       let y = <number>parts[1];
       this.tecladoReplicant.teclas[y][x] = "";
-      this.tecladoReplicant.text[y][x] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      this.tecladoReplicant.text[y][x] = ""; 
 
     }
 
@@ -478,7 +467,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }   
 
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-      this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      this.tecladoReplicant.text[sourceY][sourceX] = ""; 
       
     }  
 
@@ -802,7 +791,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
                   openFacLayout.Lines[i].Buttons[j].Caption = teclado.teclas[i][j]; 
                   openFacLayout.Lines[i].Buttons[j].Text = teclado.text[i][j]; 
-                  //openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j]; 
           }
       } 
 
@@ -829,51 +817,31 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let totalLines = 0;
       let finalKeyboard = new TecladoModel;
       finalKeyboard.teclas = [];
-      finalKeyboard.text = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      finalKeyboard.text = []; 
 
 
-      for(let i = 0; i< this.tecladoReplicant.teclas.length; i++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let tam = 0; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let teclasLine = new Array(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let textLine = new Array(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        teclasLine = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        textLine = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        for(let j=0; j < this.tecladoReplicant.teclas[i].length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-           if(this.tecladoReplicant.teclas[i][j] !== "" && this.tecladoReplicant.teclas[i][j] !== " "){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-             teclasLine.push(this.tecladoReplicant.teclas[i][j]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-             textLine.push(this.tecladoReplicant.text[i][j]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-             tam += 1; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-           } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      for(let i = 0; i< this.tecladoReplicant.teclas.length; i++){ 
+        let tam = 0; 
+        let teclasLine = new Array(); 
+        let textLine = new Array(); 
+        teclasLine = []; 
+        textLine = []; 
+        for(let j=0; j < this.tecladoReplicant.teclas[i].length; j++){ 
+           if(this.tecladoReplicant.teclas[i][j] !== "" && this.tecladoReplicant.teclas[i][j] !== " "){ 
+             teclasLine.push(this.tecladoReplicant.teclas[i][j]); 
+             textLine.push(this.tecladoReplicant.text[i][j]); 
+             tam += 1; 
+           } 
 
-        }////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        }
 
-        if(tam > 0) { ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          finalKeyboard.teclas.push(teclasLine);  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          finalKeyboard.text.push(textLine);////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          totalLines += 1;////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        }    ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-
-      }////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-
-
-      /*
-      this.tecladoReplicant.teclas.forEach(lines => {
-        let tam = 0;
-        let line = new Array();
-        line = [];
-          lines.forEach(tecla => {
-            if(tecla!=="") {
-              line.push(tecla);
-              tam += 1;
-            }  
-          });
-        
-        if(tam > 0) {
-            finalKeyboard.teclas.push(line);  
-            totalLines += 1;
+        if(tam > 0) { 
+          finalKeyboard.teclas.push(teclasLine);  
+          finalKeyboard.text.push(textLine);
+          totalLines += 1;
         }    
-      });
-      */
+
+      }
 
 
       if(totalLines === 0) {
@@ -986,29 +954,29 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
      
       for (let i = 0; i < 5; i++) {
         this.teclado.teclas[i] = [[]];
-        this.teclado.text[i] = [[]]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        this.teclado.text[i] = [[]]; 
         this.tecladoReplicant.teclas[i] = [[]];
-        this.tecladoReplicant.text[i] = [[]]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        this.tecladoReplicant.text[i] = [[]]; 
          let line = new Array();
-         let textL = new Array(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+         let textL = new Array(); 
          let lineReplicant = new Array();
-         let textReplicant = new Array(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+         let textReplicant = new Array(); 
          line = [];
-         textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+         textL = []; 
          lineReplicant = [];
-         textReplicant = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+         textReplicant = []; 
           for (let j = 0; j < 14; j++) {
               line[j] = "";
-              textL[j] = "";  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+              textL[j] = "";  
               lineReplicant[j] = "";
-              textReplicant[j] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+              textReplicant[j] = ""; 
 
           }
 
           this.teclado.teclas[i] = line;
-          this.teclado.text[i] = textL; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          this.teclado.text[i] = textL; 
           this.tecladoReplicant.teclas[i] = lineReplicant; 
-          this.tecladoReplicant.text[i] = textReplicant;  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          this.tecladoReplicant.text[i] = textReplicant;  
       }  
       
 
@@ -1037,18 +1005,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             lineReplicant[j] = '';
         }
         this.teclado.teclas.push(line);  
-        this.teclado.text.push(line); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////  
+        this.teclado.text.push(line); 
         this.tecladoReplicant.teclas[this.tecladoReplicant.teclas.length] = lineReplicant;
-        this.tecladoReplicant.text[this.tecladoReplicant.text.length] = lineReplicant; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        this.tecladoReplicant.text[this.tecladoReplicant.text.length] = lineReplicant; 
         
     }  
     
     private removeLine(){
       if(this.teclado.teclas.length > 5){
           this.teclado.teclas.pop();
-          this.teclado.text.pop();  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          this.teclado.text.pop();  
           this.tecladoReplicant.teclas.pop();
-          this.tecladoReplicant.text.pop(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          this.tecladoReplicant.text.pop(); 
       } else {
         this.messageService.error("O mínimo de linhas no modo edição é 5.");
       }   
@@ -1057,13 +1025,38 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     public editCaptionNText(event){
+        
+        
         this.showModal(CaptionTextModalComponent);
+        
+      
+        let parts = event.target.className.split(' ');
+        console.log(parts);
+        let text;
+        if(parts[0].indexOf('#') !== -1){
+          let x = <number>parts[0].split('#')[0];
+          let y = <number>parts[0].split('#')[1];
+
+          text = this.tecladoReplicant.text[y][x];
+          console.log(text);
+        } else {
+          let x = <number>parts[1].split('#')[0];
+          let y = <number>parts[1].split('#')[1];
+
+          text = this.tecladoReplicant.text[y][x];
+          console.log(text);
+        }
+
+        let payload = new Array();
+        payload.push(event);
+        payload.push(text)
+
+
+        this.captionTextService.emitCaptionText(payload);
 
         this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
 
-          //$("[id=copy]").each(function(index){
-          //  console.log($(this).children()[0].className.split(' ')[0]);
-          //})
+
               let buttonText = "";
               buttonText = result[0];
               let buttonCaption = "";
@@ -1075,7 +1068,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               console.log(event.target.className);
               
               let parts = event.target.className.split(' ');
-              //$.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
+ 
               console.log(parts[1].indexOf('#'));
       
               if(parts[0].indexOf('#') !== -1){
@@ -1090,12 +1083,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 console.log("FORMULA: " + formula);
                 let sEl = $("[id=copy]").clone();
 
-                //let el;
-                //if(formula >= sEl.length){
-                  //el = sEl[0].cloneNode(true);
-                //} else {
+ 
                 let el = sEl[<number>formula].cloneNode(true);
-                //}
+
                 console.log(sEl.length);
                 
                 
@@ -1149,38 +1139,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   return;
                 }
               
-
                 console.log(event.target);
                 $($(event.target)[0]).attr('value', buttonCaption);
-                //this.tecladoReplicant.teclas[y][x] = buttonCaption;
-                //this.tecladoReplicant.text[y][x] = buttonText;
+
                 this.tecladoReplicant.teclas[y][x] = buttonCaption;
                 this.tecladoReplicant.text[y][x] = buttonText;
-
-
-                //console.log($(event.target)[0]);
-                
-               
-                //console.log("RESULT: " + buttonCaption + ' ' + buttonText);
-
-
-                //console.log( event.target.id);
-
-                /*
-                if(!this.editMode){
-                  console.log("ALPHA");
-                  this.tecladoReplicant.teclas[y][x] = buttonCaption;
-                  this.tecladoReplicant.text[y][x] = buttonText;
-                } else {
-                  console.log("ÔMEGA");
-                  this.tecladoReplicant.teclas[y][x] = buttonCaption;
-                  this.tecladoReplicant.text[y][x] = buttonText;
-                }
-                */
-
-                // TECLAS ARRASTADAS E EDITADAS SALVAM DA SEGUINTE FORMA
-                //this.tecladoReplicant.teclas[y][x] = buttonCaption;
-                //this.tecladoReplicant.text[y][x] = buttonText;
 
 
                 console.log(JSON.stringify(this.tecladoReplicant));

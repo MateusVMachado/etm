@@ -11,14 +11,14 @@
             <div class="from-group line">
 
                 <label for="name">Insira o caption do botão</label>
-                   <input type="text" id="name" name="name" [(ngModel)]="buttonCaption" #name="ngModel" class="form-control" placeholder="Caption do botão"
-                        [class.form-control-danger]="name.invalid && name.touched" />
+                   <input type="text" id="name1" name1="name1" [(ngModel)]="buttonCaption" #name1="ngModel" class="form-control" placeholder="Caption do botão"
+                        [class.form-control-danger]="name1.invalid && name1.touched" [ngModelOptions]="{standalone: true}"/>
 
             <br>
 
                 <label for="name">Insira o texto do botão</label>
-                    <input tooltip="hello" matTooltip="Tooltip!" type="text" id="name" name="name" [(ngModel)]="buttonText" #name="ngModel" class="form-control" placeholder="Texto do botão"
-                    [class.form-control-danger]="name.invalid && name.touched" />
+                    <input  type="text" id="name2" name2="name2" [(ngModel)]="buttonText" #name2="ngModel" class="form-control" placeholder="Texto do botão"
+                    [class.form-control-danger]="name2.invalid && name2.touched" [ngModelOptions]="{standalone: true}"/>
 
             </div>
 
