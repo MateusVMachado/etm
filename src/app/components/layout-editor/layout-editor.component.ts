@@ -210,7 +210,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
       let sEl = $("[id=copy]").clone();
-      
+      let sElArray = new Array();
+      for(let i = 0; i< totalLength ; i++){
+        if($(sEl[i]).find('button')[0]){
+          sElArray.push($( $(sEl[i]).find('button')[0] ).val()); 
+        } else if($(sEl[i]).find('input')[0]){
+          sElArray.push($( $(sEl[i]).find('input')[0] ).val()); 
+        } 
+      }
+
+      let notFoundArray = new Array();
 
        let coordinatesMap = new Array();
        let valuesArray = new Array();
@@ -231,7 +240,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
        console.log(JSON.stringify(coordinatesMap) );
        for(let i = 0; i< totalLength ; i++){
-
+        let ok = false;
             if(sEl[i].firstElementChild.tagName === "BUTTON"){
               let index = $.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
 
@@ -241,6 +250,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   
                   for(let cm = 0; cm < coordinatesMap.length; cm++ ){
                     if(coordinatesMap[cm][0] === valor){
+                      ok = true;
                       let x = coordinatesMap[cm][1];
                       let y = coordinatesMap[cm][2];
                       this.tecladoReplicant.teclas[x][y] = valor;
@@ -266,55 +276,36 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         $(el).removeAttr('tooltip');
                     
 
-                     //let formula = (14*x)+(y);
                      let formula = (this.globColumnQnty*x)+(y);
                       $("[id=content]")[formula].appendChild(el);
 
                       continue;
-                    } /*else { ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let x = coordinatesMap[cm][1]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let y = coordinatesMap[cm][2]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let formula = this.globColumnQnty*Number(y)+Number(x); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      console.log("FORMULA: " + formula); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let sEl = $("[id=copy]").clone(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
- 
-                      let el = sEl[<number>formula].cloneNode(true); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                    } 
+                    if(!ok){
+                      let found = false;
+                      for(let i = 0; i < notFoundArray.length; i++ ){
+                        console.log(notFoundArray[i][0]);
 
-                      console.log(sEl.length); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-
-                      
-                      console.log(el); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      if($(el).find('input')[0]){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        console.log("MARK-ALPHA"); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + ''; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        $($(el).find('input')[0]).attr('value', coordinatesMap[cm][0]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      } else if($(el).find('button')[0]){////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        console.log("MARK-OMEGA"); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + ''; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                         
-                        if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
-                        $($(el).find('button')[0]).text(coordinatesMap[cm][0]);////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        $($(el).find('button')[0]).attr('value', coordinatesMap[cm][0]); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        
+                        if(coordinatesMap[cm][0] === notFoundArray[i][0]){
+                            found = true;  
+                            break;
+                        }    
                       }
-                           
-                      this.tecladoReplicant.teclas[y][x] = coordinatesMap[cm][0];////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
-                      this.tecladoReplicant.text[y][x] = coordinatesMap[cm][0];////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-      
-                      $(el).removeAttr('tooltip');////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
-                      
-                     
-                      $("[id=content]")[formula].appendChild(el);////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      cm += 1; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      continue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+                      let index2 = $.inArray(coordinatesMap[cm][0], sElArray);
+
+                        if(!found && index2 === -1 ){ 
+                        let map = new Array();
+                        map.push(coordinatesMap[cm][0]);
+                        map.push(cm);
+
+                        notFoundArray.push(map);
+                      }  
+                    }
 
 
+                  }
 
-
-
-                    }*/
-
-                  }                  
               }    
             } else {
               let index = $.inArray($( $(sEl[i]).find('input')[0] ).val(), valuesArray);
@@ -322,9 +313,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               if(index && index !== -1){
                   let valor = $( $(sEl[i]).find('input')[0] ).val();
 
+                  let ok = false;
 
                   for(let cm = 0; cm < coordinatesMap.length; cm++ ){
                     if(coordinatesMap[cm][0] === valor){
+                      ok = true;
                       let x = coordinatesMap[cm][1];
                       let y = coordinatesMap[cm][2];
                       this.tecladoReplicant.teclas[x][y] = valor;
@@ -348,53 +341,31 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             
                       $(el1).removeAttr('tooltip');
 
-                      //let formula = (14*x)+(y);
                       let formula = (this.globColumnQnty*x)+(y);
                        $("[id=content]")[formula].appendChild(el1);
                      
                        continue;
 
-                    } /*else { ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                    } 
 
-                      let x = coordinatesMap[cm][1];////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let y = coordinatesMap[cm][2]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let formula = this.globColumnQnty*Number(y)+Number(x); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      console.log("FORMULA: " + formula); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      let sEl = $("[id=copy]").clone(); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-
-                      let el = sEl[<number>formula].cloneNode(true); ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
-
-                      console.log(sEl.length); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-
-                      
-                      console.log(el); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                      if($(el).find('input')[0]){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        console.log("MARK-ALPHA"); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        $($(el).find('input')[0]).attr('value', coordinatesMap[cm][0]);
-                      } else if($(el).find('button')[0]){
-                        console.log("MARK-OMEGA");
-                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        
-                        if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();
-                        $($(el).find('button')[0]).text(coordinatesMap[cm][0]);
-                        $($(el).find('button')[0]).attr('value', coordinatesMap[cm][0]);
-                        
+                    if(!ok){
+                      let found = false;
+                      for(let i = 0; i < notFoundArray.length; i++ ){
+                        console.log(notFoundArray[i][0]);
+                        if(coordinatesMap[cm][0] === notFoundArray[i][0]){
+                            found = true;  
+                            break;
+                        }    
                       }
-                           
-                      this.tecladoReplicant.teclas[y][x] = coordinatesMap[cm][0];
-                      this.tecladoReplicant.text[y][x] = coordinatesMap[cm][0];
-      
-                      $(el).removeAttr('tooltip');
-                      
-                     
-                      $("[id=content]")[formula].appendChild(el);
-                      cm += 1; 
-                      continue;
+                      let index2 = $.inArray(coordinatesMap[cm][0], sElArray);
+                        if(!found && index2 === -1 ){ 
+                        let map = new Array();
+                        map.push(coordinatesMap[cm][0]);
+                        map.push(cm);
 
-
-
-                    }*/
+                        notFoundArray.push(map);
+                      }  
+                    }
 
                   }                    
               } else {
@@ -411,8 +382,33 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
        }
-       
-  
+
+       console.log("SUB1");
+       if(notFoundArray.length > 0 ){
+         for(let i = 0; i< notFoundArray.length; i++){
+            let el3 = sEl[0].cloneNode(true);
+            let x = coordinatesMap[notFoundArray[i][1]][1];
+            let y = coordinatesMap[notFoundArray[i][1]][2];
+            
+            console.log(x + "#" + y);
+            
+            if(!$(el3).find('input')[0]){
+              $(el3).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+              $($(el3).find('button')[0]).attr('value', coordinatesMap[notFoundArray[i][1]][0] );
+            }  else {
+              $(el3).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+              $($(el3).find('input')[0]).attr('value', coordinatesMap[notFoundArray[i][1]][0] );
+            }
+            $(el3).removeAttr('tooltip');
+            let formula = (this.globColumnQnty*x)+(y);
+             $("[id=content]")[formula].appendChild(el3);
+         }
+       }
+       //this.tecladoReplicant.teclas[i][j] = 
+       //this.tecladoReplicant.text[i][j] = 
+
+       console.log("NOT FOUND ARRAY: ");
+       console.log(JSON.stringify(notFoundArray));
        console.log(JSON.stringify(this.tecladoReplicant));
 
 
