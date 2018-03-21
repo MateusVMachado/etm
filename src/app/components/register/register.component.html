@@ -43,16 +43,16 @@
         </div>
         <div class="form-group accept-group col-sm-12">
             <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="true">
-                Aceito os <a href="#" target="_blank"><strong>Termos de uso</strong></a>
+                {{ messageService.getTranslation('TERMO_DE_USO_TEXTO') }} <a href="#" target="_blank"><strong>{{ messageService.getTranslation('TERMO_DE_USO_LINK') }}</strong></a>
             </nb-checkbox>
         </div>
         <button [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
-          Registrar
+          {{ messageService.getTranslation('BTN_REGISTRAR') }}
         </button>
     </form>
     <div class="links">
         <small class="form-text">
-          Já tem uma conta? <a (click)="navigateTo('./auth/login')"><label style="cursor:pointer; color:#4799eb" >Entrar</label></a>
+          {{ messageService.getTranslation('TEXTO_JA_TENHO_UMA_CONTA') }} <a (click)="navigateTo('./auth/login')"><label style="cursor:pointer; color:#4799eb" >{{ messageService.getTranslation('LINK_JA_TENHO_UMA_CONTA') }}</label></a>
         </small>
     </div>
 </nb-auth-block>

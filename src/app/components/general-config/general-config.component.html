@@ -1,21 +1,22 @@
 <div class="modal-header">
-  <span>Configurações</span>
+  <span>{{ messageService.getTranslation('CONFIGURACAO_GERAL_TITULO') }}</span>
 
 </div>
 <form (ngSubmit)="setConfiguration()" #form="ngForm" autocomplete="off">
   <div >
                   <div class="form-group">
-                    <label for="linguagem" class="label-margin-bottom">Linguagem</label>
+                    <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('INPUT_LINGUAGEM') }}</label>
                     <select class="form-control input" name="linguagem" [(ngModel)]="config.linguagem" id="linguagem" #linguagem="ngModel" [required]="true">
                         <option value="pt-br">Português (BR)</option>
                         <option value="en">Inglês</option>
+                        <option value="es">Espanhol</option>
                     </select>
                     <small class="form-text error" *ngIf="linguagem.invalid && linguagem.touched && linguagem.errors?.required">
                         Linguagem é obrigatório
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="linguagem" class="label-margin-bottom">Layout do teclado</label>
+                    <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('INPUT_LAYOUT') }}</label>
                     <select class="form-control input" name="layout" [(ngModel)]="config.layout" id="layout" #layout="ngModel" [required]="true">
                         <option value="QWERTY">QWERTY</option>
                     </select>
@@ -24,7 +25,7 @@
                     </small>
                 </div>
                 <div class="form-group">
-                    <label class="label-margin-bottom label-margin-top">Sensor</label>
+                    <label class="label-margin-bottom label-margin-top">{{ messageService.getTranslation('INPUT_SENSOR') }}</label>
                     <select class="form-control input" name="sensor" [(ngModel)]="config.sensor" id="sensor" #sensor="ngModel" [required]="true">
                         <option value="mic">Microfone</option>
                         <option value="joy">Joystick</option>
@@ -35,7 +36,7 @@
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="tipoVarredura" class="label-margin-bottom label-margin-top">Tipo de varredura</label>
+                    <label for="tipoVarredura" class="label-margin-bottom label-margin-top">{{ messageService.getTranslation('INPUT_TIPO_VARREDURA') }}</label>
                     <select class="form-control input" name="tipoVarredura" [(ngModel)]="config.tipoVarredura" id="tipoVarredura" #tipoVarredura="ngModel" [required]="true">
                         <option value="manual">Manual</option>
                         <option value="automatico">Automático</option>
@@ -45,7 +46,7 @@
                     </small>
                 </div>
                 <div class="form-group" *ngIf="tipoVarredura.valid && tipoVarredura.value === 'automatico'">
-                    <label for="tmpVarreduraLns" class="label-margin-bottom label-margin-top" style="display: block;">Tempo de varredura linhas (em segundos)</label>
+                    <label for="tmpVarreduraLns" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TIPO_VARREDURA_LINHAS') }}</label>
                     <input step="0.1" type="number" class="form-control input" name="tmpVarreduraLns" [(ngModel)]="config.tmpVarreduraLns" id="tmpVarreduraLns" #tmpVarreduraLns="ngModel" [required]="true">
                     <small class="form-text error" *ngIf="tmpVarreduraLns.invalid && tmpVarreduraLns.touched && tmpVarreduraLns.errors?.required">
                         Tempo de varredura é obrigatório
@@ -53,7 +54,7 @@
                 </div>
 
                 <div class="form-group" *ngIf="tipoVarredura.valid && tipoVarredura.value === 'automatico'">
-                  <label for="tmpVarreduraCls" class="label-margin-bottom label-margin-top" style="display: block;">Tempo de varredura colunas (em segundos)</label>
+                  <label for="tmpVarreduraCls" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TIPO_VARREDURA_COLUNAS') }}</label>
                   <input step="0.1" type="number" class="form-control input" name="tmpVarreduraCls" [(ngModel)]="config.tmpVarreduraCls" id="tmpVarreduraCls" #tmpVarreduraCls="ngModel" [required]="true">
                   <small class="form-text error" *ngIf="tmpVarreduraCls.invalid && tmpVarreduraCls.touched && tmpVarreduraCls.errors?.required">
                       Tempo de varredura é obrigatório
@@ -63,7 +64,7 @@
 
   </div>          
   <div class="modal-footer">
-    <button [disabled]=" !form.valid " class="btn btn-md btn-primary">Salvar</button>
+    <button [disabled]=" !form.valid " class="btn btn-md btn-primary">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
   </div>
 
 </form>
