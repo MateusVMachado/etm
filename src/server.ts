@@ -139,7 +139,7 @@ export class Server {
     this.app.use(cookieParser("SECRET_GOES_HERE"));
 
     //jwt verify
-    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/register', '/keyboard/insertBasicIntoDatabase']}));
+    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/register']}));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
