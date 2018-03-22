@@ -1,6 +1,6 @@
 <div style="background-color: white;">
     <div class="modal-header">
-        <span>Deletar Teclado</span>
+        <span>{{ messageService.getTranslation('MODAL_DELETAR_TITULO') }}</span>
         <button class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -10,10 +10,6 @@
 
             <div class="from-group line">
                 <label for="name">Escolha o teclado a ser deletado</label>
-                
-
-                  
-                  
                     <select style="width: 200px; height: 40px;" [(ngModel)]="keyboardToDelete" [ngModelOptions]="{standalone: true}">
                         <option selected disabled>Teclados</option>
                         <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >

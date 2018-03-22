@@ -4,54 +4,44 @@
 
         <div class="box-teclado-menu" style="height: 20%;">
                 <div class="teclado-container-menu">
-                        <div class="row" style="padding-left:15px">
-                                <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Novo" style="word-break: normal" id="newKeyboard"/>
-                                    </div> 
-                                <div class="col-md-1">
-                                    <input type="button" class="btn button-keyboard-menu" value="Adicionar Linha" style="word-break: normal" (click)="addLine()"/>
-                                </div>    
-                                <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Remover Linha" (click)="removeLine()"/>
-                                </div>    
-                                <div class="col-md-1">
-                                            <input type="button" class="btn button-keyboard-menu" value="Inserir Imagem" />
-                                </div>
-                                <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Editar Texto" />
-                                 </div>        
-                                 <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Editar Caption" />
-                                </div>
-                                <div class="col-md-1">
-                                        <input type="button" class="btn button-keyboard-menu" value="Deletar Teclado" (click)="deleteKeyboardLayout()"/>
-                            </div>
-                            <div class="col-md-1">
-                                    <input type="button" class="btn button-keyboard-menu" value="Salvar" (click)="saveKeyboardLayout()" />
-                            </div>
-                            <div class="col-md-1">
-                                    <input type="button" class="btn button-keyboard-menu" value="Salvar Como" (click)="saveKeyboardLayout(true)" />
-                            </div>
+                    <div class="row" style="padding-left:15px">
+                        <div class="col-md-1">
+                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_NOVO') }}" style="word-break: normal" id="newKeyboard"/>
+                        </div> 
+                        <div class="col-md-1">
+                            <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_ADD_LINHA') }}" style="word-break: normal" (click)="addLine()"/>
+                        </div>    
+                        <div class="col-md-1">
+                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_DEL_LINHA') }}" (click)="removeLine()"/>
+                        </div>    
+                        <div class="col-md-1">
+                                    <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_ADD_IMG') }}" />
+                        </div>
+                        <div class="col-md-1">
+                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_DEL_TEC') }}" (click)="deleteKeyboardLayout()"/>
+                        </div>
+                        <div class="col-md-1">
+                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_SALVAR') }}" (click)="saveKeyboardLayout()" />
+                        </div>
+                        <div class="col-md-1">
+                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_SALVAR_COMO') }}" (click)="saveKeyboardLayout(true)" />
+                        </div>
 
-                        <div class="col-md-1">          
-                        
-                                
+                        <div class="col-md-1">   
                             <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()">
-                                <option selected disabled>Teclados</option>
+                                <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
                                 <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
                                         {{keyboard}}
                                 </option>
-                        
                             </select>
-                        </div>
- 
-                        </div>        
+                        </div> 
+                    </div>
             </div>
         </div>
 
 
         <div class="box-teclado" style="height: 30%;">
-            <div class="teclado-container-editor" >
+            <div class="teclado-container-editor">
             <div style="z-index: 0" >
                 <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px;">
         
@@ -74,15 +64,11 @@
                         <mat-icon 
                             class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
                         </button>
-        
-                    
-                            <input  style="text-align: center;"
-                            *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
-                                                    && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-                                                    && key != '*arrowdown' && key != '*arrowright'" 
-                            type="button" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard-down" value="{{ key }}" />
-                         
-        
+                        <input  style="text-align: center;"
+                        *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                                && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                                && key != '*arrowdown' && key != '*arrowright'" 
+                        type="button" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard-down" value="{{ key }}" />
                         <button 
                         *ngIf="key == '*bckspc'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
                         <mat-icon 
@@ -122,17 +108,12 @@
                         <mat-icon 
                             class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
                         </button>
-        
-        
-        
-                                <button 
-                                    *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard tamanho-button3" 
-                                    value="SPACE" >
-                                <mat-icon 
-                                        class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
-                                </button>
-        
-                        
+                        <button 
+                            *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard tamanho-button3" 
+                            value="SPACE" >
+                        <mat-icon 
+                                class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
+                        </button>
                     </div>
                     </div>
                 </div>
