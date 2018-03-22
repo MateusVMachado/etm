@@ -25,6 +25,7 @@ import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
 import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
 import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
+import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -54,6 +55,7 @@ import { LayoutEditorService } from './components/layout-editor/layout-editor.se
     ProfileService,
     TecladoService,
     GeneralConfigService,
+    CaptionTextService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
