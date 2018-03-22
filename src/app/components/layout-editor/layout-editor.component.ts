@@ -215,17 +215,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let sElArray = new Array();
       for(let i = 0; i< totalLength ; i++){
         if($(sEl[i]).find('button')[0]){
-          sElArray.push($( $(sEl[i]).find('button')[0] ).val()); 
+          sElArray.push($( $(sEl[i]).find('button')[0] ).val().toString().toLowerCase()); 
         } else if($(sEl[i]).find('input')[0]){
-          sElArray.push($( $(sEl[i]).find('input')[0] ).val()); 
+          sElArray.push($( $(sEl[i]).find('input')[0] ).val().toString().toLowerCase()); 
         } 
       }
+
 
       let notFoundArray = new Array();
 
        let coordinatesMap = new Array();
        let valuesArray = new Array();
+       let valuesArrayLower = new Array();
        valuesArray.push("");
+       valuesArrayLower.push("");
        for(let j = 0 ; j< this.tecladoReplicant.teclas.length; j++){
           for( let k = 0 ; k < this.tecladoReplicant.teclas[j].length; k++){
              if(this.tecladoReplicant.teclas[j][k] !== "") {
@@ -235,6 +238,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                map.push(k);
                coordinatesMap.push(map);
                valuesArray.push(this.tecladoReplicant.teclas[j][k]);
+               valuesArrayLower.push(this.tecladoReplicant.teclas[j][k].toString().toLowerCase());
              } 
           }
        }     
@@ -244,24 +248,28 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        for(let i = 0; i< totalLength ; i++){
         let ok = false;
             if(sEl[i].firstElementChild.tagName === "BUTTON"){
-              let index = $.inArray($( $(sEl[i]).find('button')[0] ).val(), valuesArray);
+              let index = $.inArray(($( $(sEl[i]).find('button')[0] ).clone()).val().toString().toLowerCase(), valuesArrayLower);
 
               if(index && index !== -1){
-                  let valor = $( $(sEl[i]).find('button')[0] ).val();
-  
+                  //let valor = $( $(sEl[i]).find('button')[0] ).val();
+                  let valor = valuesArray[index];
+                  console.log("VALORRRR: " + valor);
                   
                   for(let cm = 0; cm < coordinatesMap.length; cm++ ){
-                    if(coordinatesMap[cm][0] === valor){
+                    if(coordinatesMap[cm][0].toString().toLowerCase() === valor.toString().toLowerCase()){
                       ok = true;
                       let x = coordinatesMap[cm][1];
                       let y = coordinatesMap[cm][2];
                       this.tecladoReplicant.teclas[x][y] = valor;
                       this.tecladoReplicant.text[x][y] = valor; 
                       
+                      
+
                       let el = sEl[i].cloneNode(true);
         
                       if(!$(el).find('input')[0]){
         
+                        $($(el).find('button')[0]).attr('value', valor);
                         //$(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
 
@@ -269,6 +277,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         
                       }  else {
                         
+                        $($(el).find('input')[0]).attr('value', valor);
                         //$(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
                      
@@ -288,14 +297,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       for(let i = 0; i < notFoundArray.length; i++ ){
                         console.log(notFoundArray[i][0]);
 
-                        if(coordinatesMap[cm][0] === notFoundArray[i][0]){
+                        if(coordinatesMap[cm][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
                             found = true;  
                             break;
                         }    
                       }
 
-                      let index2 = $.inArray(coordinatesMap[cm][0], sElArray);
-
+                      let index2 = $.inArray(coordinatesMap[cm][0].toString().toLowerCase(), sElArray);
+                      
                         if(!found && index2 === -1 ){ 
                         let map = new Array();
                         map.push(coordinatesMap[cm][0]);
@@ -310,31 +319,37 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
               }    
             } else {
-              let index = $.inArray($( $(sEl[i]).find('input')[0] ).val(), valuesArray);
+              let index = $.inArray(($( $(sEl[i]).find('input')[0] ).clone()).val().toString().toLowerCase(), valuesArrayLower);
 
               if(index && index !== -1){
-                  let valor = $( $(sEl[i]).find('input')[0] ).val();
+                  //let valor = $( $(sEl[i]).find('input')[0] ).val();
+                  let valor = valuesArray[index];
+                  console.log("VALORRRR: " + valor);
 
                   let ok = false;
 
                   for(let cm = 0; cm < coordinatesMap.length; cm++ ){
-                    if(coordinatesMap[cm][0] === valor){
+                    if(coordinatesMap[cm][0].toString().toLowerCase() === valor.toString().toLowerCase()){
                       ok = true;
                       let x = coordinatesMap[cm][1];
                       let y = coordinatesMap[cm][2];
                       this.tecladoReplicant.teclas[x][y] = valor;
                       this.tecladoReplicant.text[x][y] = valor; 
 
+                      
+
                       let el1 = sEl[i].cloneNode(true);
         
                       if(!$(el1).find('input')[0]){
         
+                        $($(el1).find('button')[0]).attr('value', valor);
                         //$(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
                         
                         
                       }  else {
                         
+                        $($(el1).find('input')[0]).attr('value', valor);
                         //$(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
                         
@@ -354,12 +369,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let found = false;
                       for(let i = 0; i < notFoundArray.length; i++ ){
                         console.log(notFoundArray[i][0]);
-                        if(coordinatesMap[cm][0] === notFoundArray[i][0]){
+                        if(coordinatesMap[cm][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
                             found = true;  
                             break;
                         }    
                       }
-                      let index2 = $.inArray(coordinatesMap[cm][0], sElArray);
+                      let index2 = $.inArray(coordinatesMap[cm][0].toString().toLowerCase(), sElArray);
+                      
                         if(!found && index2 === -1 ){ 
                         let map = new Array();
                         map.push(coordinatesMap[cm][0]);
@@ -471,32 +487,43 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
     }  
 
+
+
     private onDrop(value) {
       console.clear();
       console.log("ON DROP");
       if (value[2] == null) {//dragged outside any of the bags
           return;
       }    
-          let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
+          let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, isContent = false, isCopy = false;
 
 
           if(value[3].id === 'copy'){  
+              isCopy = true;
               sourceParts = value[3].className.split('$')[1].split('#');
+              console.log("SOURCE PARTS: " + sourceParts);
               sourceX = sourceParts[0];
               sourceY = sourceParts[1];
           } else if ( value[3].id === 'content'){
+              isContent = true;
               sourceParts = value[3].className.split(' ')[0].split('#');
+              console.log("SOURCE PARTS: " + sourceParts);
               sourceX = sourceParts[0];
               sourceY = sourceParts[1];
           }   
 
           if(value[2].id === 'content'){
+              isContent = true;
+              console.log(value);
+              console.log(value[2].className);
               drainParts = value[2].className.split(' ')[0].split('#');
+              console.log("DRAIN PARTS: " + drainParts);
               drainX = drainParts[0];
               drainY = drainParts[1];
           }    
 
 
+            console.log("CONTENT: " + isContent + " COPY: " + isCopy);
                 let trueValue, copyObj, objClass, trueObj, toSource;
 
                 if($(value).find('button')){
@@ -520,13 +547,24 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             //this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                             //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){ 
-                              this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
-                              this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                            if(this.tecladoReplicant.text[sourceY][sourceX]!== "" && this.tecladoReplicant.teclas[sourceY][sourceX]!== ""){ 
+                              if(isContent && !isCopy){
+                                  console.log("MARK2-A");
+                                  this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
+                                  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                                this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              } else if (isContent && isCopy){
+                                console.log("MARK2-C");
+                                  this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                                  //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              }
                             } else {
+                              console.log("MARK2-B");
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
 
@@ -553,17 +591,37 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             }
 
    
-                            this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                            this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                           // if(isContent && !isCopy){
+                           //   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                           //   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                           // }  
 
+                            console.log("TRUE VALUE: " + trueValue);
+                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""  && this.tecladoReplicant.teclas[sourceY][sourceX]!== ""){
+                              console.log("MARK4-C");
+                                  if(isContent && !isCopy){
+                                    console.log("MARK4-A");
+                                    this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.teclas[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                                  
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                } else if (isContent && isCopy){
+                                    console.log("MARK4-B");
+                                    //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                    this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
-                            if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                            } else {
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                            }  
+                                    //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                }
+                              } else {
+                                console.log("MARK4-B");
+                                  this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                  this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+  
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              }    
                             //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
                             //this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
 
