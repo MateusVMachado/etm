@@ -99,6 +99,12 @@ export class IndexRoute extends BaseRoute {
       keyboard.insertBasicAtRegister(req,res,next);  
     });
 
+    router.post("/keyboard/insertBasicIntoDatabase", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      backLogger.logRequests(req);
+      keyboard.insertBasicIntoDatabase(req,res,next);  
+    });
+
     router.post("/keyboard/deleteKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       backLogger.logRequests(req);
