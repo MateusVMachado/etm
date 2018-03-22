@@ -291,28 +291,40 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                       continue;
                     } 
-                    if(!ok){
-                      let found = false;
-                      for(let i = 0; i < notFoundArray.length; i++ ){
-                
+                    
 
-                        if(coordinatesMap[cm][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
-                            found = true;  
-                            break;
-                        }    
+                    if(!ok){
+
+                      let found = false;
+                      for(let k = 0; k < coordinatesMap.length; k++){
+                        let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
+                        console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+                       
+                        
+                        for(let i = 0; i < notFoundArray.length; i++ ){
+
+  
+                          if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
+                              found = true;  
+                              break;
+                          }
+                        }     
+
+                       
+                        if(!found && index2 === -1 ){ 
+                          let map = new Array();
+                          console.log("INSIDE:");
+                          console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+                          map.push(coordinatesMap[k][0]);
+                          map.push(k);
+  
+                          notFoundArray.push(map);
+                        }  
                       }
 
-                      let index2 = $.inArray(coordinatesMap[cm][0].toString().toLowerCase(), sElArray);
-                      
-                        if(!found && index2 === -1 ){ 
-                        let map = new Array();
-                        map.push(coordinatesMap[cm][0]);
-                        map.push(cm);
-
-                        notFoundArray.push(map);
-                      }  
                     }
 
+                 
 
                   }
 
@@ -359,29 +371,42 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let formula = (this.globColumnQnty*x)+(y);
                        $("[id=content]")[formula].appendChild(el1);
                      
-                       continue;
+                      continue;
 
                     } 
-
+                    
                     if(!ok){
-                      let found = false;
-                      for(let i = 0; i < notFoundArray.length; i++ ){
-         
-                        if(coordinatesMap[cm][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
-                            found = true;  
-                            break;
-                        }    
-                      }
-                      let index2 = $.inArray(coordinatesMap[cm][0].toString().toLowerCase(), sElArray);
-                      
-                        if(!found && index2 === -1 ){ 
-                        let map = new Array();
-                        map.push(coordinatesMap[cm][0]);
-                        map.push(cm);
 
-                        notFoundArray.push(map);
-                      }  
+                      let found = false;
+                      for(let k = 0; k < coordinatesMap.length; k++){
+                        let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
+                        console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+                       
+                        
+                        for(let i = 0; i < notFoundArray.length; i++ ){
+
+  
+                          if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
+                              found = true;  
+                              break;
+                          }
+                        }     
+
+                       
+                        if(!found && index2 === -1 ){ 
+                          let map = new Array();
+                          console.log("INSIDE:");
+                          console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+                          map.push(coordinatesMap[k][0]);
+                          map.push(k);
+  
+                          notFoundArray.push(map);
+                        }  
+                      }
+
                     }
+
+
 
                   }                    
               } 
@@ -413,7 +438,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
          }
        }
 
-
+       console.log("NOT FOUND ARRAY: ");
+       console.log(JSON.stringify(notFoundArray));
+       console.log("COORDINATES MAP: ");
+       console.log(JSON.stringify(coordinatesMap));
+       console.log(JSON.stringify(this.tecladoReplicant));
 
       })
 
@@ -608,7 +637,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                   }   
    
-       
+                  console.log(JSON.stringify(this.tecladoReplicant));
 
                   return;
                 }
@@ -782,7 +811,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
-       
+                console.log(JSON.stringify(this.tecladoReplicant));
              
     }    
 
