@@ -43,7 +43,7 @@ export class Keyboard extends BaseRoute {
                 if(keyboard_list.length !== 0){
                     res.send(keyboard_list);
                 } else {
-                    instance.insertBasicIntoDatabase(teclado, res);
+                    //instance.insertBasicIntoDatabase(teclado, res);
                 }         
             })
      }
@@ -145,19 +145,19 @@ export class Keyboard extends BaseRoute {
     }    
 
 
-    public insertBasicIntoDatabase(teclado: KeyboardModel, res: Response){
+    public insertBasicIntoDatabase(req: Request,  res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
             console.log("Keyboard inserido")
         })
-        res.locals.mongoAccess.coll[1].insert(this.populateLayout('caps'), (err, result) => {
-            console.log("Keyboard inserido")
-        })
-        res.locals.mongoAccess.coll[1].insert(this.populateLayout('user'), (err, result) => {
-            console.log("Keyboard inserido")
-        })
-        res.locals.mongoAccess.coll[1].insert(this.populateLayout('exp'), (err, result) => {
-            console.log("Keyboard inserido")
-        })
+        //res.locals.mongoAccess.coll[1].insert(this.populateLayout('caps'), (err, result) => {
+        //    console.log("Keyboard inserido")
+        //})
+        //res.locals.mongoAccess.coll[1].insert(this.populateLayout('user'), (err, result) => {
+        //    console.log("Keyboard inserido")
+        //})
+        //res.locals.mongoAccess.coll[1].insert(this.populateLayout('exp'), (err, result) => {
+        //    console.log("Keyboard inserido")
+        //})
      } 
 
     public populateLayout(type: string, email?:string): OpenFACLayout{
@@ -180,8 +180,8 @@ export class Keyboard extends BaseRoute {
             for( let j = 0 ; j < teclado.teclas[i].length; j++){
                     openFacLayout.Lines[i].Buttons.push(new LayoutButton());
                     openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
-                    openFacLayout.Lines[i].Buttons[j].Caption = 'caption';
-                    openFacLayout.Lines[i].Buttons[j].Text = teclado.teclas[i][j];        
+                    openFacLayout.Lines[i].Buttons[j].Caption = teclado.teclas[i][j];        
+                    openFacLayout.Lines[i].Buttons[j].Text = teclado.text[i][j];        
             }
         } 
 
@@ -195,13 +195,13 @@ export class Keyboard extends BaseRoute {
         
         var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
         var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
-        var sRow: string[] = ['*cpslck', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn'];
+        var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn'];
         var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '\''];
         var zRow: string[] = ['*space'];
     
         var crow: string[] = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '*bckspc'];
         var cpRow: string[] = ['*tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'];
-        var csRow: string[] = ['*cpslck', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ç',  ':', '*kbdrtrn'];
+        var csRow: string[] = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ç',  ':', '*kbdrtrn'];
         var ctRow: string[] = ['Z', 'X', 'C', 'V', 'B', 'N', 'M', '<', '>', '?', '\"'];
         var czRow: string[] = ['*space'];
 
@@ -224,6 +224,12 @@ export class Keyboard extends BaseRoute {
             teclado.teclas.push(sRow);
             teclado.teclas.push(tRow);
             teclado.teclas.push(zRow);
+
+            teclado.text.push(row);
+            teclado.text.push(pRow);
+            teclado.text.push(sRow);
+            teclado.text.push(tRow);
+            teclado.text.push(zRow);
             teclado.type = 'pt-br';
         } else if ( type === 'caps') {
             teclado.teclas.push(crow);
@@ -231,6 +237,13 @@ export class Keyboard extends BaseRoute {
             teclado.teclas.push(csRow);
             teclado.teclas.push(ctRow);
             teclado.teclas.push(czRow);
+
+            teclado.text.push(crow);
+            teclado.text.push(cpRow);
+            teclado.text.push(csRow);
+            teclado.text.push(ctRow);
+            teclado.text.push(czRow);
+            
             teclado.type = 'caps';
         } else if ( type === 'user') {
             teclado.teclas.push(user);
@@ -238,12 +251,23 @@ export class Keyboard extends BaseRoute {
             teclado.teclas.push(suser);
             teclado.teclas.push(tuser);
             teclado.teclas.push(zuser);
+
+            teclado.text.push(user);
+            teclado.text.push(puser);
+            teclado.text.push(suser);
+            teclado.text.push(tuser);
+            teclado.text.push(zuser);
             teclado.type = 'user';
         } else if ( type === 'exp') {
             teclado.teclas.push(exp);
             teclado.teclas.push(pexp);
             teclado.teclas.push(sexp);
             teclado.teclas.push(texp);
+
+            teclado.text.push(exp);
+            teclado.text.push(pexp);
+            teclado.text.push(sexp);
+            teclado.text.push(texp);
             teclado.type = 'exp';
         }
     
