@@ -22,10 +22,8 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
                 private layoutEditorService: LayoutEditorService,
                 private captionTextService: CaptionTextService) {
                     
-                    this.buttonCaption = "Caption 1";
-                    //this.buttonText = "Text 1";
+
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
-                        console.log("RESULT: " + JSON.stringify(result) );
                         
                         this.buttonCaption = result[0].target.value;
                         this.buttonText = result[1];
@@ -40,7 +38,6 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
-        console.log("DESTROYED");
         this.saveButtonConfiguration(true);
         this.captionSubscribe.unsubscribe();
     }
