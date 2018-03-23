@@ -13,13 +13,17 @@ import { SideBarService } from '../sidebar/sidebar.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
-import { Subscription } from 'rxjs';
+import { Subscription, TimeInterval } from 'rxjs';
 import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
 
 import * as $ from 'jquery';
 import { SaveModalComponent } from './save-layout/save-modal.component';
 import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
 import { CaptionTextService } from './caption-text/caption-text.service';
+
+import * as moment from 'moment';
+
+import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession.model';
 
 @Component({
   selector: 'app-layout-editor',
@@ -61,6 +65,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private globColumnQnty = 14;
 
     private lastKind: string;
+    private userSession: UserSessionModel;
+    private timeInterval: TimeIntervalUnit;
 
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
@@ -75,6 +81,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private captionTextService: CaptionTextService) {
       super(injector);       
                   
+      this.userSession = new UserSessionModel();
+      let timeInterval = new TimeIntervalUnit();
+
+
+      timeInterval.inTime = moment().format("HH:mm:ss");
+
+
       let user = this.authService.getLocalUser();
       this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
           this.keyboardItems = result;
@@ -114,8 +127,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     ngOnDestroy() {
       this.dragulaService.destroy('master-bag'); 
       this.reStartBoard();
-      
-
+      this.timeInterval.outTime = moment().format('HH:mm:ss');
+      this.userSession.layoutEditorIntervals.push(this.timeInterval);
+      //SEND USER SESSION TO BACKEND 
     }
 
     ngOnInit() {
@@ -298,7 +312,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let found = false;
                       for(let k = 0; k < coordinatesMap.length; k++){
                         let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
-                        console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+    
                        
                         
                         for(let i = 0; i < notFoundArray.length; i++ ){
@@ -313,8 +327,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                        
                         if(!found && index2 === -1 ){ 
                           let map = new Array();
-                          console.log("INSIDE:");
-                          console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+
                           map.push(coordinatesMap[k][0]);
                           map.push(k);
   
@@ -380,7 +393,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let found = false;
                       for(let k = 0; k < coordinatesMap.length; k++){
                         let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
-                        console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+   
                        
                         
                         for(let i = 0; i < notFoundArray.length; i++ ){
@@ -395,8 +408,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                        
                         if(!found && index2 === -1 ){ 
                           let map = new Array();
-                          console.log("INSIDE:");
-                          console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+
                           map.push(coordinatesMap[k][0]);
                           map.push(k);
   
@@ -437,12 +449,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              $("[id=content]")[formula].appendChild(el3);
          }
        }
-
-       console.log("NOT FOUND ARRAY: ");
-       console.log(JSON.stringify(notFoundArray));
-       console.log("COORDINATES MAP: ");
-       console.log(JSON.stringify(coordinatesMap));
-       console.log(JSON.stringify(this.tecladoReplicant));
 
       })
 
@@ -637,7 +643,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                   }   
    
-                  console.log(JSON.stringify(this.tecladoReplicant));
 
                   return;
                 }
@@ -811,7 +816,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
-                console.log(JSON.stringify(this.tecladoReplicant));
+   
              
     }    
 
