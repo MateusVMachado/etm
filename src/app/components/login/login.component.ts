@@ -49,11 +49,17 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
               window.localStorage.setItem('JWTtoken', res.accessToken);
             }
             this.authService.getUser(usuario.email, usuario.jwt).subscribe((res:User) => {
-              this.authService.setUser(res, usuario.jwt)
-              this.router.navigate(['./pages/teclados']);
+              this.authService.setUser(res, usuario.jwt);
+              this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
+                this.messageService.setLanguage(result.language);
+                this.router.navigate(['./pages/teclados']);
+              });
             });
           }, (error) =>{
-            this.messageService.error(error.error.message, 'Oops..');
+            if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
+              let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
+              this.messageService.error(message, 'Oops..');
+            }
           }
        );
     }

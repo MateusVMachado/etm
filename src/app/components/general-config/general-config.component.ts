@@ -41,10 +41,16 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
 
     public setConfiguration(){
         this.submitted = true;
+        let message;
         this.configService.saveConfiguration(this.config, 'pt-br').subscribe(result => {
-          this.messageService.success("As configurações foram salvas...");
+            this.messageService.setLanguage(this.config.linguagem);
+            setTimeout(()=> {
+                message = this.messageService.getTranslation('MENSAGEM_CONFIGURACOES_SALVAS');
+                this.messageService.success(message);
+            }, 200);   
         }, (error: any) => {
-            this.messageService.error("Ocorreu um problema ao salvar suas configurações", "Oops..");
+            message = this.messageService.getTranslation('MENSAGEM_ERRO_SALVAR_CONFIGS');
+            this.messageService.error(message, "Oops..");
         });
     } 
 
@@ -60,7 +66,8 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
             this.config.tmpVarreduraCls = result.openFacConfig.ScanTimeColumns;
             this.config.lastKeyboard = result.lastKeyboard;
         }, (error: any) => {
-            this.messageService.error("Ocorreu um problema ao buscar suas configurações", "Oops..");
+            let message = this.messageService.getTranslation('MENSAGEM_ERRO_BUSCAR_CONFIGS');
+            this.messageService.error(message, "Oops..");
         });
     }
 }

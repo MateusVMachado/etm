@@ -1,10 +1,18 @@
+import { Subscription } from 'rxjs/Rx';
+import { HeaderService } from './header.service';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileService } from '../profile/profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, Input, NgZone, OnInit } from '@angular/core';
+import {
+    Component,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+} from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeStyle } from '@angular/platform-browser';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
@@ -14,13 +22,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.scss'],
   templateUrl: './header.component.html'
 })
-export class HeaderComponent extends AppBaseComponent implements OnInit {
-
+export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestroy {
 
   @Input() position = 'normal';
   private readonly base64Token = ';base64,';
   private usuario: User;
   private imgUrl;
+  private headerSubscription: Subscription;
 
   userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title: this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
 
@@ -29,10 +37,16 @@ export class HeaderComponent extends AppBaseComponent implements OnInit {
               private router: Router,
               private authService: AuthService,
               private modalService: NgbModal,
-              private injector: Injector
-            ) { super(injector) }
+              private injector: Injector,
+              private headerService: HeaderService
+            ) { super(injector) 
+                this.headerSubscription = this.headerService.subscribeTosideBarSubject().subscribe(()=>{
+                  console.log(this.messageService.getTranslation('HEADER_ITEM_PERFIL'));
+                  this.userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'Perfil' }, { title: this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
+                });
+            }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.authService.getObservableUser().subscribe(result =>{
       this.usuario = result;
       if(result.picture.content){
@@ -62,9 +76,9 @@ export class HeaderComponent extends AppBaseComponent implements OnInit {
     this.router.navigate(["./auth"]);
   }
 
-  /*public showLargeModal() {
-      const activeModal = this.modalService.open(ProfileEditComponent, { size: 'lg', container: 'nb-layout' });
-  }*/
+   ngOnDestroy(): void {
+    this.headerSubscription.unsubscribe();
+  }
 
   menuItem(item: any){
     if(item.tag === 'sair'){

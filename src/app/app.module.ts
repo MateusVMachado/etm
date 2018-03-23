@@ -1,4 +1,5 @@
 //import { ConfigTecladoModule } from './components/config/config.module';
+import { HeaderService } from './components/header/header.service';
 import { ProfileService } from './components/profile/profile.service';
 import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
@@ -60,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MessageService,
     CKEditorComponent,
     SideBarService,
+    HeaderService,
     GeneralConfigService,
     LayoutEditorService,
     ProfileService,

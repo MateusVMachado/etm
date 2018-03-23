@@ -1,5 +1,4 @@
 {
-    "HelloWorld": "Hola mundo!",
     "LOGIN_TITULO": "Registrarse",
     "LOGIN_SUBTITULO": "¡Hola! Entre con su email",
     "INPUT_SENHA": "Contraseña",
@@ -71,13 +70,20 @@
     "MODAL_SALVAR_TITULO": "Configuración del editor",
     "MODAL_SALVAR_INPUT": "Introduzca el nombre del teclado",
     "MODAL_SALVAR_INPUT_PLACEHOLDER": "Nombre del teclado",
-    "NOME_TECLADO_OBRIGATORIO": "El nombre del teclado es obligatorio!",
+    "NOME_TECLADO_OBRIGATORIO": "¡El nombre del teclado es obligatorio!",
     "MODAL_DELETAR_TITULO": "Eliminar teclado",
     "MODAL_DELETAR_INPUT": "Seleccione el teclado que desea borrar",
-
-    "EMAIL_JA_CADASTRADO": "Esse email já foi cadastrado!",
-    "CADASTRO_CONCLUIDO": "Usuário cadastrado com sucesso!",
-    "DADOS_INVALIDOS": "Email ou senha inválidos",
-    "NAO_AUTENTICADO": "Você precisa se autenticar",
-    "NAO_AUTORIZADO": "Você não está autorizado a fazer isso"
+    "BTN_DELETAR": "Borrar",
+    "MENSAGEM_TECLADO_REMOVIDO": "Se ha eliminado el teclado.",
+    "MENSAGEM_SALVAR_TECLADO_VAZIO": "¡No es posible guardar un teclado vacío!",
+    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "¡No es posible sobrescribir un teclado del sistema!",
+    "MENSAGEM_TECLADO_SALVO": "¡Layout Salvo! Se han suprimido todas las filas y columnas en blanco.",
+    "MENSAGEM_TECLADO_JA_EXISTE": "Este nombre de teclado ya existe.",
+    "MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA": "El máximo de teclados por usuarios es 8, por favor elimine alguno existente para insertar uno nuevo.",
+    "MENSAGEM_CONFIGURACOES_SALVAS": "La configuración se ha guardado...",
+    "MENSAGEM_ERRO_SALVAR_CONFIGS": "Se ha producido un problema al guardar la configuración",
+    "MENSAGEM_ERRO_BUSCAR_CONFIGS": "Se ha producido un problema al buscar su configuración",
+    "MENSAGEM_EMAIL_JA_CADASTRADO": "¡Ese correo electrónico ya ha sido registrado!",
+    "MENSAGEM_CADASTRO_CONCLUIDO": "¡El usuario registrado con éxito!",
+    "MENSAGEM_DADOS_INVALIDOS": "Correo electrónico o contraseña no válida"
 }

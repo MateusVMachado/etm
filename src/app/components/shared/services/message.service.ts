@@ -1,13 +1,21 @@
+import { HeaderService } from '../../header/header.service';
 import { Injectable } from '@angular/core';
 import swal from 'sweetalert';
 import { TranslateService } from "@ngx-translate/core";
+import {SideBarService} from "../../sidebar/sidebar.service" 
 
 @Injectable()
 export class MessageService {
 
-    constructor(private translateService: TranslateService) {
-        translateService.setDefaultLang('pt');
-        translateService.use('en');
+    constructor(private translateService: TranslateService, private sidebarService: SideBarService, 
+        private headerService: HeaderService) {
+        translateService.setDefaultLang('pt-br');
+    }
+
+    setLanguage(idioma: string){
+        this.translateService.use(idioma);
+        this.sidebarService.emitSideBarCommand('reload');
+        this.headerService.emitHeaderCommand('reload');
     }
 
     info(message: string, title?: string): any { 

@@ -75,10 +75,17 @@
     "NOME_TECLADO_OBRIGATORIO": "Keyboard name is required!",
     "MODAL_DELETAR_TITULO": "Delete Keyboard",
     "MODAL_DELETAR_INPUT": "Choose the keyboard to be deleted",
-    
-    "EMAIL_JA_CADASTRADO": "Esse email já foi cadastrado!",
-    "CADASTRO_CONCLUIDO": "Usuário cadastrado com sucesso!",
-    "DADOS_INVALIDOS": "Email ou senha inválidos",
-    "NAO_AUTENTICADO": "Você precisa se autenticar",
-    "NAO_AUTORIZADO": "Você não está autorizado a fazer isso"
+    "BTN_DELETAR": "Delete",
+    "MENSAGEM_TECLADO_REMOVIDO": "The keyboard has been removed.",
+    "MENSAGEM_SALVAR_TECLADO_VAZIO": "It is not possible to save an empty keyboard!",
+    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "It is not possible to overwrite a system keyboard!",
+    "MENSAGEM_TECLADO_SALVO": "Layout Saved! All blank rows and columns have been deleted.",
+    "MENSAGEM_TECLADO_JA_EXISTE": "This keyboard name already exists.",
+    "MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA": "The maximum number of keyboards per user is 8, please delete any existing ones to enter a new one.",
+    "MENSAGEM_CONFIGURACOES_SALVAS": "Settings have been saved...",
+    "MENSAGEM_ERRO_SALVAR_CONFIGS": "There was a problem saving your settings",
+    "MENSAGEM_ERRO_BUSCAR_CONFIGS": "There was a problem fetching your settings",
+    "MENSAGEM_EMAIL_JA_CADASTRADO": "This email has already been registered!",
+    "MENSAGEM_CADASTRO_CONCLUIDO": "User registered successfully!",
+    "MENSAGEM_DADOS_INVALIDOS": "Invalid email or password"
 }

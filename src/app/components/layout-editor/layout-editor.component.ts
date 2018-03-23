@@ -413,7 +413,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    public saveKeyboardLayout(saveAs: boolean){
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
-              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!");
+              let message = this.messageService.getTranslation('MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA');
+              this.messageService.error(message);
               return;
             }
       }      
@@ -441,7 +442,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       });
 
       if(totalLines === 0) {
-        this.messageService.error("Não é possivel salvar um teclado vazio!");
+        let message = this.messageService.getTranslation('MENSAGEM_SALVAR_TECLADO_VAZIO')
+        this.messageService.error(message);
         return;
       }  
 
@@ -458,15 +460,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   let layout = this.populateLayout(finalKeyboard, user.email);
                   
                   this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
-        
+                    let message;
                     if(result === 'saved'){
-            
-                      this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                      message = this.messageService.getTranslation('MENSAGEM_TECLADO_SALVO');
+                      this.messageService.success(message);
                       this.sidebarService.emitSideBarCommand('reload');
                     } else if (result === 'alreadyExist'){
-                      this.messageService.error("Esse nome de teclado já existe.");
+                      message = this.messageService.getTranslation('MENSAGEM_TECLADO_JA_EXISTE');
+                      this.messageService.error(message);
                     } else if (result === 'maxNumber'){
-                      this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                      message = this.messageService.getTranslation('MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA');
+                      this.messageService.error(message);
                     }  
                   });
                   this.layoutEditorServiceSubscribe.unsubscribe();
@@ -479,15 +483,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             let layout = this.populateLayout(finalKeyboard, user.email);
             
             this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
-
+              let message;
               if(result === 'updated'){
-
-                this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                  message = this.messageService.getTranslation('MENSAGEM_TECLADO_SALVO');
+                  this.messageService.success(message);
                 this.sidebarService.emitSideBarCommand('reload');
               } else if (result === 'alreadyExist'){
-                this.messageService.error("Esse nome de teclado já existe.");
+                message = this.messageService.getTranslation('MENSAGEM_TECLADO_JA_EXISTE');
+                this.messageService.error(message);
               } else if (result === 'maxNumber'){
-                this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
+                message = this.messageService.getTranslation('MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA');
+                this.messageService.error(message);
               }  
             });
 

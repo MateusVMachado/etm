@@ -1,5 +1,4 @@
 {
-    "HelloWorld": "Olá mundo!",
     "LOGIN_TITULO": "Entrar",
     "LOGIN_SUBTITULO": "Olá! Entre com seu e-mail",
     "INPUT_SENHA": "Senha",
@@ -75,11 +74,17 @@
     "NOME_TECLADO_OBRIGATORIO": "Nome do teclado é obrigatório!",
     "MODAL_DELETAR_TITULO": "Deletar Teclado",
     "MODAL_DELETAR_INPUT": "Escolha o teclado a ser deletado",
-
-
-    "EMAIL_JA_CADASTRADO": "Esse email já foi cadastrado!",
-    "CADASTRO_CONCLUIDO": "Usuário cadastrado com sucesso!",
-    "DADOS_INVALIDOS": "Email ou senha inválidos",
-    "NAO_AUTENTICADO": "Você precisa se autenticar",
-    "NAO_AUTORIZADO": "Você não está autorizado a fazer isso"
+    "BTN_DELETAR": "Deletar",
+    "MENSAGEM_TECLADO_REMOVIDO": "O teclado foi removido.",
+    "MENSAGEM_SALVAR_TECLADO_VAZIO": "Não é possivel salvar um teclado vazio!",
+    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "Não é possivel sobrescrever um teclado do sistema!",
+    "MENSAGEM_TECLADO_SALVO": "Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.",
+    "MENSAGEM_TECLADO_JA_EXISTE": "Esse nome de teclado já existe.",
+    "MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA": "O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.",
+    "MENSAGEM_CONFIGURACOES_SALVAS": "As configurações foram salvas...",
+    "MENSAGEM_ERRO_SALVAR_CONFIGS": "Ocorreu um problema ao salvar suas configurações",
+    "MENSAGEM_ERRO_BUSCAR_CONFIGS": "Ocorreu um problema ao buscar suas configurações",
+    "MENSAGEM_EMAIL_JA_CADASTRADO": "Esse email já foi cadastrado!",
+    "MENSAGEM_CADASTRO_CONCLUIDO": "Usuário cadastrado com sucesso!",
+    "MENSAGEM_DADOS_INVALIDOS": "Email ou senha inválidos"
 }
