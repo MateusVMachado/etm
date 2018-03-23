@@ -77,7 +77,7 @@
     "BTN_DELETAR": "Deletar",
     "MENSAGEM_TECLADO_REMOVIDO": "O teclado foi removido.",
     "MENSAGEM_SALVAR_TECLADO_VAZIO": "Não é possivel salvar um teclado vazio!",
-    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "Não é possivel sobrescrever um teclado do sistema!",
+    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "Não é possivel sobrescrever um teclado do sistema!\nPor favor, utilize a opção \"Salvar Como\"",
     "MENSAGEM_TECLADO_SALVO": "Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.",
     "MENSAGEM_TECLADO_JA_EXISTE": "Esse nome de teclado já existe.",
     "MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA": "O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.",

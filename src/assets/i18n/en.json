@@ -78,7 +78,7 @@
     "BTN_DELETAR": "Delete",
     "MENSAGEM_TECLADO_REMOVIDO": "The keyboard has been removed.",
     "MENSAGEM_SALVAR_TECLADO_VAZIO": "It is not possible to save an empty keyboard!",
-    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "It is not possible to overwrite a system keyboard!",
+    "MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA": "It is not possible to overwrite a system keyboard!\nPlease use the \"Save As \" option",
     "MENSAGEM_TECLADO_SALVO": "Layout Saved! All blank rows and columns have been deleted.",
     "MENSAGEM_TECLADO_JA_EXISTE": "This keyboard name already exists.",
     "MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA": "The maximum number of keyboards per user is 8, please delete any existing ones to enter a new one.",

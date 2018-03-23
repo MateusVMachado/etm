@@ -45,10 +45,11 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
         this.authService.authenticate(usuario).subscribe(
           (res: LoginAuthenticateModel) => {
             usuario.jwt = res.accessToken;
+            this.authService.setJWT(usuario.jwt);
             if(this.user.rememberMe){
               window.localStorage.setItem('JWTtoken', res.accessToken);
             }
-            this.authService.getUser(usuario.email, usuario.jwt).subscribe((res:User) => {
+            this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
               this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
                 this.messageService.setLanguage(result.language);

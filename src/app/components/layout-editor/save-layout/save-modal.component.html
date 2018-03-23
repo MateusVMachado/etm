@@ -1,0 +1,23 @@
+<div style="background-color: white;">
+    <div class="modal-header">
+        <span>Confirmação</span>
+        <button class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+   
+        <div class="modal-body">
+
+            <div class="from-group line">
+                <label for="name">Essa ação irá sobrescrever o teclado antigo. Tem certeza que deseja continuar?</label>
+                <br><br>
+                <button style="float:right; padding: 10px; margin: 6px; width: 100px;" id="name"  value="Não" (click)="sendRefutation()">Não</button> 
+                <button style="float:right; padding: 10px; margin: 6px; width: 100px;" id="name"  value="Sim" (click)="sendConfirmation()">Sim</button>
+                <br>
+
+            </div>
+
+
+        </div>
+
+</div>

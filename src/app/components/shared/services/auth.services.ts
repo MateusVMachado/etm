@@ -20,7 +20,7 @@ export class AuthService extends AppServiceBase {
     }
 
     authenticate(user: User) {
-        return this.http.post<LoginAuthenticateModel>(this.backendAddress + '/login', user, this.getDefaultHeaders());
+        return this.http.post<LoginAuthenticateModel>(this.backendAddress + '/login', user);
     }
 
     isAuthenticated() {
@@ -36,7 +36,7 @@ export class AuthService extends AppServiceBase {
                 }
                 this.getUser(jwt.decode(token).sub).subscribe((usuario: User) =>{
                     this.setUser(usuario, token);
-                });
+                });  
             }
             return true
         }
@@ -44,7 +44,7 @@ export class AuthService extends AppServiceBase {
     }
 
     register(user: any) {
-        return  this.http.post(this.backendAddress + '/register', user, this.getDefaultHeaders()).catch(error=>{
+        return  this.http.post(this.backendAddress + '/register', user).catch(error=>{
             return this.handleError(error)
         });
     }
@@ -55,14 +55,6 @@ export class AuthService extends AppServiceBase {
 
     resetPassword() {
 
-    }
-
-    getDefaultHeaders(jwt?: string) {
-        let user = this.getLocalUser();
-        if(!user.jwt){
-            user.jwt = jwt;
-        }
-        return { headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + user.jwt}};
     }
 
     setToken(value: any) {
@@ -77,13 +69,23 @@ export class AuthService extends AppServiceBase {
         return this.user;
     }
 
-    public getUser(email:string, jwt?: string) {
-        return this.http.get(this.backendAddress + `/user?email=${email}`, this.getDefaultHeaders(jwt));
+    public getUser(email:string) {
+        return this.http.get(this.backendAddress + `/user?email=${email}`);
     }
 
     public setUser(user: User, jwt?: string){
         this.user = user;
-        this.user.jwt = jwt;
+        if(jwt){
+            user.jwt = jwt;
+        }
         this.userSubject.next(this.user);
+    }
+
+    public getJWT(){
+        return this.user.jwt;
+    }
+
+    public setJWT(jwt){
+        this.user.jwt = jwt;
     }
 }

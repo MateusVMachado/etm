@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 export class LayoutEditorService extends AppServiceBase {
 
     public layoutEditorSubject = new Subject<any>(); 
+    public layoutEditorPayloadSubject = new Subject<any>(); 
     private user = this.authService.getLocalUser(); 
 
     constructor(protected injector: Injector, private http: HttpClient, private authService: AuthService){
@@ -18,6 +19,10 @@ export class LayoutEditorService extends AppServiceBase {
 
     public saveUpdateKeyboard(layout: OpenFACLayout, email: string){
         return this.http.post(this.backendAddress + `/keyboard/insertUpdateKeyboard?nameLayout=${layout.nameLayout}&email=${email}` , layout, { responseType: 'text' });
+    }   
+
+    public updateOnlyKeyboard(layout: OpenFACLayout, email: string){
+        return this.http.post(this.backendAddress + `/keyboard/insertUpdateOnlyKeyboard?nameLayout=${layout.nameLayout}&email=${email}` , layout, { responseType: 'text' });
     }   
 
     public saveNewKeyboard(layout: OpenFACLayout, email: string){
@@ -36,5 +41,14 @@ export class LayoutEditorService extends AppServiceBase {
     public subscribeToLayoutEditorSubject() {
           return this.layoutEditorSubject.asObservable();      
     }
+
+    public emitLayoutEditorPayload(editor: any) {
+        this.layoutEditorPayloadSubject.next(editor);
+    }
+      
     
+    public subscribeToLayoutEditorPayloadSubject() {
+          return this.layoutEditorPayloadSubject.asObservable();      
+    }
+
 }

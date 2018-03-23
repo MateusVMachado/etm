@@ -1,0 +1,31 @@
+<div style="background-color: white;" *ngIf="isKeyboardName">
+    <div class="modal-header">
+        <span>Configurações do Botão</span>
+        <button class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form (ngSubmit)="saveButtonConfiguration()" #form="ngForm" autocomplete="off">
+        <div class="modal-body">
+
+            <div class="from-group line">
+
+                <label for="name">Insira o nome que irá aparecer em cima do botão</label>
+                   <input type="text" id="name1" name1="name1" [(ngModel)]="buttonCaption" #name1="ngModel" class="form-control" placeholder="Nome do botão"
+                        [class.form-control-danger]="name1.invalid && name1.touched" [ngModelOptions]="{standalone: true}"/>
+
+            <br>
+
+                <label for="name">Insira o texto do botão que será inserido no editor de texto ao pressionar</label>
+                    <input  type="text" id="name2" name2="name2" [(ngModel)]="buttonText" #name2="ngModel" class="form-control" placeholder="Texto do botão"
+                    [class.form-control-danger]="name2.invalid && name2.touched" [ngModelOptions]="{standalone: true}"/>
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Salvar</button>
+            </div>
+        </div>
+    </form>
+</div>

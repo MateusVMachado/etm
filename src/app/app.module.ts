@@ -1,4 +1,5 @@
-//import { ConfigTecladoModule } from './components/config/config.module';
+import { TecladoService } from './components/teclado/teclado.service';
+import { InterceptorService } from './components/shared/services/interceptor.service';
 import { HeaderService } from './components/header/header.service';
 import { ProfileService } from './components/profile/profile.service';
 import { ProfileModule } from './components/profile/profile.module';
@@ -8,7 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { CoreModule } from './nebular-core.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +28,7 @@ import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
 import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -54,6 +56,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [AppComponent],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
     CookieService,
     StateService,
     AuthService,
@@ -65,6 +68,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     GeneralConfigService,
     LayoutEditorService,
     ProfileService,
+    TecladoService,
+    GeneralConfigService,
+    CaptionTextService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

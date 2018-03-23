@@ -1,5 +1,5 @@
 
-<div styele="width: 100%; heigth: 100%; background-color: #364150">
+<div id="mainPage" >
 
 
         <div class="box-teclado-menu" style="height: 20%;">
@@ -17,6 +17,8 @@
                         <div class="col-md-1">
                                     <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_ADD_IMG') }}" />
                         </div>
+
+                                
                         <div class="col-md-1">
                                 <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_DEL_TEC') }}" (click)="deleteKeyboardLayout()"/>
                         </div>
@@ -28,9 +30,9 @@
                         </div>
 
                         <div class="col-md-1">   
-                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()">
+                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()" (click)="reloadList()">
                                 <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
-                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
+                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard">
                                         {{keyboard}}
                                 </option>
                             </select>
@@ -110,9 +112,8 @@
                         </button>
                         <button 
                             *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard tamanho-button3" 
-                            value="SPACE" >
-                        <mat-icon 
-                                class="mat-icon material-icons" role="img" aria-hidden="true">keyboard</mat-icon>
+                                    value="{{key}}" >SPACE
+                         
                         </button>
                     </div>
                     </div>
@@ -131,7 +132,7 @@
                                                 
                                                 <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
                                                     *ngFor="let key of row; index as i" 
-                                                    [dragula]='"master-bag"' id="content" (dblclick)="sayHello(i.toString() + '#' + iR.toString())">
+                                                    [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)">
                                                     <div class="none"></div>
                                                 </div>    
 

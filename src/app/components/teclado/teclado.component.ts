@@ -72,9 +72,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
               this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result)=>{
                 if(result === "pressed"){
                   this.ledOn = true;
-                  console.log(this.ledOn);
                   clearInterval(this.timeoutId);
-                  this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 1000) ;
+                  this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 500) ;
                 }
               })
               
@@ -110,7 +109,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   private turnLEDoff(){
     this.ledOn = false;
-    console.log(this.ledOn);
   }
 
   ngOnDestroy(): void {
@@ -185,14 +183,26 @@ export class TecladoComponent implements OnInit, OnDestroy {
     });
   }
 
-  private loadSingleKeyboardByName(nameLayout: string){
-    let user = this.authService.getLocalUser();
-    this.tecladoService.loadSingleKeyboard(nameLayout, user.email).subscribe((data)=>{ });
-  }
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
       this.teclado.teclas = [];
+      this.teclado.text = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+      for(let i = 0 ; i < layout.Lines.length; i++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        let line = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        let textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          line.push(layout.Lines[i].Buttons[j].Caption); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+          textL.push(layout.Lines[i].Buttons[j].Text); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        this.teclado.teclas.push(line);  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+        this.teclado.text.push(textL); ///////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      this.teclado.type = layout.nameLayout; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+
+
+      /*
       layout.Lines.forEach(element => {
           let line = [];
           element.Buttons.forEach(element => {
@@ -202,6 +212,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
           
       });
       this.teclado.type = layout.nameLayout;
+      */
   }
 
   public capsLock() {

@@ -17,10 +17,7 @@ import { GeneralConfigService } from './general-config.service';
   ],
   exports: [
     GeneralConfigComponent
-],
-  providers: [
-   GeneralConfigService,
-  ]
+]
 })
 export class GeneralConfigModule { }
 
