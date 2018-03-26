@@ -65,7 +65,8 @@ export class HeaderComponent extends AppServiceBase implements OnInit {
 
   logout() {
     this.sendNow().subscribe(()=>{
-
+      window.localStorage.removeItem('JWTtoken')
+      this.router.navigate(["./auth"]);
     }); 
     window.localStorage.removeItem('JWTtoken')
     this.router.navigate(["./auth"]);

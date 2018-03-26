@@ -26,6 +26,7 @@ import { GeneralConfigService } from './components/general-config/general-config
 import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
 import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
+import { BackLoggerService } from './components/shared/services/backLogger.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -56,6 +57,7 @@ import { CaptionTextService } from './components/layout-editor/caption-text/capt
     TecladoService,
     GeneralConfigService,
     CaptionTextService,
+    BackLoggerService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

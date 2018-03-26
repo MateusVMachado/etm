@@ -24,6 +24,8 @@ import { CaptionTextService } from './caption-text/caption-text.service';
 import * as moment from 'moment';
 
 import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession.model';
+import { BackLoggerService } from '../shared/services/backLogger.service';
+
 
 @Component({
   selector: 'app-layout-editor',
@@ -65,6 +67,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private globColumnQnty = 14;
 
     private lastKind: string;
+    
     private userSession: UserSessionModel;
     private timeInterval: TimeIntervalUnit;
 
@@ -78,17 +81,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private sidebarService: SideBarService,
                 private modalService: NgbModal,
                 private sideBarService: SideBarService,
-                private captionTextService: CaptionTextService) {
+                private captionTextService: CaptionTextService,
+                private backLoggerService: BackLoggerService) {
       super(injector);       
                   
+      console.log("CREATED");
+
       this.userSession = new UserSessionModel();
-      let timeInterval = new TimeIntervalUnit();
+      this.userSession.layoutEditorIntervals = new Array();
+      this.timeInterval = new TimeIntervalUnit();
 
-
-      timeInterval.inTime = moment().format("HH:mm:ss");
+      this.timeInterval.inTime = moment().format("HH:mm:ss");
 
 
       let user = this.authService.getLocalUser();
+      this.userSession.user = user.email;            
+
       this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
           this.keyboardItems = result;
       });
@@ -113,7 +121,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       })
 
 
-      dragulaService.drop.subscribe((value) => {
+      dragulaService.drop.subscribe((value) => {  
           this.onDrop(value);
       });
 
@@ -129,6 +137,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.reStartBoard();
       this.timeInterval.outTime = moment().format('HH:mm:ss');
       this.userSession.layoutEditorIntervals.push(this.timeInterval);
+      this.backLoggerService.sendLayoutIntervalNow(this.userSession).subscribe(()=>{   });
+      console.log("DESTROYED");
       //SEND USER SESSION TO BACKEND 
     }
 
@@ -156,6 +166,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       });
 
     }
+
 
 
     public reStartBoard(){

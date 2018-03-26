@@ -10,7 +10,7 @@
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                   (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'" *ngIf="key == '*tab'"
-              class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                   (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'" class="mat-icon material-icons"
                 role="img" aria-hidden="true">keyboard_tab</mat-icon>
@@ -19,7 +19,7 @@
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                   (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*cpslck'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*cpslck'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
@@ -30,12 +30,12 @@
               *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
                                       && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
                                       && key != '*arrowdown' && key != '*arrowright'" 
-              type="button" class="btn button-keyboard" value="{{ key }}" (click)="getValue($event)" />
+              type="button" class="btn button-keyboard" value="{{ key }}" />
 
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                               (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
@@ -44,7 +44,7 @@
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*arrowup'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*arrowup'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
@@ -52,7 +52,7 @@
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*arrowdown'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*arrowdown'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
@@ -61,7 +61,7 @@
             
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*arrowleft'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*arrowleft'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
@@ -70,7 +70,7 @@
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*arrowright'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*arrowright'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
@@ -79,7 +79,7 @@
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                       (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key == '*kbdrtrn'" class="btn button-keyboard icon-keyboard" value="{{ key }}" (click)="getValue($event)">
+              *ngIf="key == '*kbdrtrn'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
               <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
@@ -87,7 +87,7 @@
               <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                   (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                   *ngIf="key == '*space'" class="btn button-keyboard icon-keyboard tamanho-button3" 
-                             value="SPACE" (click)="getValue($event)">espaço
+                             value="SPACE" >espaço
               </button>
           </div>
         </div>
