@@ -1,42 +1,42 @@
 
 <nb-auth-block>
-    <h2 class="title">Entrar</h2>
-    <small class="form-text sub-title" style="margin-top: 8px;">Olá! Entre com o seu usuário ou email</small>
+    <h2 class="title">{{ messageService.getTranslation('LOGIN_TITULO') }}</h2>
+    <small class="form-text sub-title" style="margin-top: 8px;">{{ messageService.getTranslation('LOGIN_SUBTITULO')}}</small>
     <form (ngSubmit)="login()" #form="ngForm" autocomplete="nope" style="margin-top: 8px;">
         <div class="form-group">
-            <label for="input-email" class="sr-only">E-mail</label>
-            <input name="email" [(ngModel)]="user.email" id="input-email" pattern=".+@.+\..+" class="form-control" placeholder="E-mail"
+            <label for="input-email" class="sr-only">{{ messageService.getTranslation('INPUT_EMAIL')}}</label>
+            <input name="email" [(ngModel)]="user.email" id="input-email" pattern=".+@.+\..+" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_EMAIL')}}"
                 #email="ngModel" [class.form-control-danger]="email.invalid && email.touched" autofocus [required]="true">
             <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
-            E-mail é obrigatório!
+            {{ messageService.getTranslation('EMAIL_OBRIGATORIO') }}
           </small>
             <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.pattern">
-            O e-mail deve ser válido!
+            {{ messageService.getTranslation('EMAIL_REAL') }}
           </small>
         </div>
         <div class="form-group">
-            <label for="input-password" class="sr-only">Senha</label>
-            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="Senha"
+            <label for="input-password" class="sr-only">{{ messageService.getTranslation('INPUT_SENHA')}}</label>
+            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_SENHA')}}"
                 #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="true" [minlength]="4"
                 [maxlength]="20">
             <small class="form-text error" *ngIf="password.invalid && password.touched && password.errors?.required">
-                A senha é obrigatória!            
-          </small>
+                {{ messageService.getTranslation('SENHA_OBRIGATORIA')}}            
+            </small>
             <small class="form-text error" *ngIf="password.invalid && password.touched && (password.errors?.minlength || password.errors?.maxlength)">
-            A senha deve conter de {{4}} a {{20}} caracteres
-          </small>
+                {{ messageService.getTranslation('SENHA_TAMANHO')}}
+            </small>
         </div>
         <div class="form-group accept-group col-sm-12">
-            <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">Mantenha-me conectado</nb-checkbox>
-            <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">Esqueceu?</a>
+            <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">{{ messageService.getTranslation('REMEMBER_ME')}}</nb-checkbox>
+            <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">{{ messageService.getTranslation('FORGOT_PASSWORD')}}</a>
         </div>
         <button style="cursor:pointer;" [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
-          Entrar
+          {{ messageService.getTranslation('BTN_ENTRAR')}}
         </button>
     </form>
     <div class="links" style="margin-top: 16px; text-align: center;">
         <small class="form-text">
-          Não tem uma conta? <a (click)="navigateTo('./auth/register')"><label style="cursor:pointer; color:#4799eb">Crie uma!</label></a>
+          {{ messageService.getTranslation('LOGIN_TEXTO_CRIAR_CONTA')}} <a (click)="navigateTo('./auth/register')"><label style="cursor:pointer; color:#4799eb">{{ messageService.getTranslation('LOGIN_LINK_CRIAR_CONTA')}}</label></a>
         </small>
     </div>
 </nb-auth-block>

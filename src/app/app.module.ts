@@ -1,5 +1,6 @@
 import { TecladoService } from './components/teclado/teclado.service';
 import { InterceptorService } from './components/shared/services/interceptor.service';
+import { HeaderService } from './components/header/header.service';
 import { ProfileService } from './components/profile/profile.service';
 import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
@@ -8,7 +9,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { CoreModule } from './nebular-core.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,7 +26,13 @@ import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
 import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
 import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +46,13 @@ import { CaptionTextService } from './components/layout-editor/caption-text/capt
     CoreModule.forRoot(),
     FormsModule,
     DragulaModule,
+    TranslateModule.forRoot({
+      loader: {
+          provide: TranslateLoader,
+          useFactory: (HttpLoaderFactory),
+          deps: [HttpClient]
+      }
+  })
   ],
   bootstrap: [AppComponent],
   providers: [
@@ -50,6 +64,7 @@ import { CaptionTextService } from './components/layout-editor/caption-text/capt
     MessageService,
     CKEditorComponent,
     SideBarService,
+    HeaderService,
     GeneralConfigService,
     LayoutEditorService,
     ProfileService,

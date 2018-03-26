@@ -15,8 +15,9 @@ import { LoginAuthenticateModel } from "./login-authenticate.model";
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit  {
-    @ViewChild('form') form: NgForm;
+export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
+  
+  @ViewChild('form') form: NgForm;
     user: any = {
       email: '',
       password: 'inserir',
@@ -28,13 +29,15 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
                 private cookieService: CookieService,
                 private injector: Injector,
                 private configService: GeneralConfigService
-                ) { super(injector)}
+                ) { super(injector) }
 
     public ngAfterViewInit(){
       // WORKAROUND PARA RESOLVER PROBLEMA DO BOTÃO DE ENTRAR 
       // NÃO SER ATIVADO COM O AUTOFILL DO BROWSER
       this.user.password = 'inserir'; 
-    }                
+    }    
+    
+    ngOnInit(): void { }
 
     public login(): void {
         let usuario: User = new User();
@@ -48,10 +51,16 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
             }
             this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
-              this.router.navigate(['./pages/teclados']);
+              this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
+                this.messageService.setLanguage(result.language);
+                this.router.navigate(['./pages/teclados']);
+              });
             });
           }, (error) =>{
-            this.messageService.error('Usuário ou senha inválidos', 'Oops..');
+            if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
+              let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
+              this.messageService.error(message, 'Oops..');
+            }
           }
        );
     }

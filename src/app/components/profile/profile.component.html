@@ -1,18 +1,18 @@
 <div class="card-profile container">
     <div class="row" style="border-bottom: 1px solid #e9e9e9; margin-bottom: 15px;">
-        <h4 style="margin-left: 15px;">Perfil: {{ usuario.fullName }}</h4>
+        <h4 style="margin-left: 15px;">{{ messageService.getTranslation('PERFIL_TITULO') }}: {{ usuario.fullName }}</h4>
     </div>
     <div class="label-detalhes">
         <div class="row">
             <div class="col-md-2">
-                <h5>Detalhes</h5>
+                <h5>{{ messageService.getTranslation('PERFIL_SUBTITULO') }}</h5>
             </div>
         </div>
     </div>
     <div>
         <div class="row line-margin">
             <div class="col-md-1">
-                <label class="label-user-info" style="margin-left: 20px;">Avatar:</label>
+                <label class="label-user-info" style="margin-left: 20px;">{{ messageService.getTranslation('INPUT_AVATAR') }}:</label>
             </div>
         </div>
         <div class="row line-margin">
@@ -26,38 +26,38 @@
         <form (ngSubmit)="save()" #form="ngForm" autocomplete="off">
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" id="name" name="name" [(ngModel)]="user.name" #name="ngModel" class="form-control" placeholder="Nome completo"
-                        [class.form-control-danger]="name.invalid && name.touched" [required]="true"
+                    <label for="name">{{ messageService.getTranslation('INPUT_NOME') }}</label>
+                    <input type="text" id="name" name="name" [(ngModel)]="user.name" #name="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_NOME') }}"
+                        [class.form-control-danger]="name.invalid && name.touched && name.errors?.required" required
                     />
                     <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
-                        Nome é obrigatório!
+                        {{ messageService.getTranslation('NOME_OBRIGATORIO') }}
                     </small>
                 </div>
                 <div class="form-group">
-                    <label for="name">Email</label>
-                    <input type="text" id="email" name="email" [(ngModel)]="user.email" #name="ngModel" class="form-control" placeholder="Nome completo"
+                    <label for="name">{{ messageService.getTranslation('INPUT_EMAIL') }}</label>
+                    <input type="text" id="email" name="email" [(ngModel)]="user.email" #name="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_EMAIL') }}"
                         disabled
                     />
                 </div>
                 <div class="form-group line">
-                    <label for="password"> Nova Senha</label>
-                    <input type="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="form-control" placeholder="Nova Senha"
+                    <label for="password">{{ messageService.getTranslation('INPUT_NOVA_SENHA') }}</label>
+                    <input type="password" id="password" name="password" [(ngModel)]="user.password" #password="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_NOVA_SENHA') }}"
                         [class.form-control-danger]="password.invalid && password.touched"
                     />
                 </div>
                 <div class="form-group line" *ngIf="password.value">
-                    <label for="confirmPassword"> Confirmação de Senha</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" class="form-control" placeholder="Confirmação de Senha"
+                    <label for="confirmPassword">{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="user.confirmPassword" #confirmPassword="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}"
                         [class.form-control-danger]="confirmPassword.invalid && confirmPassword.touched" [required]="true"
                     />
                     <small class="form-text error" *ngIf="confirmPassword.touched && password.value != confirmPassword.value">
-                        As senhas não coincidem!
+                        {{ messageService.getTranslation('SENHAS_NAO_BATEM') }}
                     </small>
                 </div>
                 <div class="row">
                     <div class="col-md-12" style="padding: 0;">
-                        <button class="btn btn-primary button-salvar" [disabled]="saved || !form.valid" style="margin-right: 15px">Salvar</button>
+                        <button class="btn btn-primary button-salvar" [disabled]="saved || !form.valid" style="margin-right: 15px">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
                     </div>
                 </div>
             </div>

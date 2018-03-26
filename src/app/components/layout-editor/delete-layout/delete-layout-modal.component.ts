@@ -40,7 +40,8 @@ export class DeleteLayoutModalComponent extends AppBaseComponent implements OnIn
         let user = this.authService.getLocalUser();
         this.layoutEditorService.deleteKeyboard(this.keyboardToDelete, user.email).subscribe((result)=>{
             if(result === 'removed'){
-                this.messageService.success("O teclado foi removido.");
+                let message = this.messageService.getTranslation('MENSAGEM_TECLADO_REMOVIDO');
+                this.messageService.success(message);
                 this.sideBarService.emitSideBarCommand('reload');
 
                 let user = this.authService.getLocalUser();
@@ -57,9 +58,7 @@ export class DeleteLayoutModalComponent extends AppBaseComponent implements OnIn
         
     }
 
-    private loadSidebarKeyboardNames(){
-
-      }
+    private loadSidebarKeyboardNames(){}
 
 
     public saveKeyboardName(){

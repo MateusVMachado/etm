@@ -1,6 +1,6 @@
 <div style="background-color: white;">
     <div class="modal-header">
-        <label>Imagem de perfil</label>
+        <label>{{ messageService.getTranslation('PERFIL_MODAL_TITULO') }}</label>
         <button class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -9,11 +9,11 @@
         <div class="from-group line">
             <input type="file" accept=".jpg, .png, .jpeg" (change)="onAddPicture($event)" id="picture" class="form-control"/>
             <small class="form-text error" *ngIf="bigImage">
-                A imagem não pode ter mais de 1MB
+                {{ messageService.getTranslation('IMAGEM_TAMANHO_ULTRAPASSADO') }}
             </small>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" [disabled]="saved || bigImage">Salvar</button>
+            <button class="btn btn-primary" [disabled]="saved || bigImage">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
         </div>
     </form>
 </div>
