@@ -40,9 +40,8 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
               private injector: Injector,
               private headerService: HeaderService
             ) { super(injector) 
-                this.headerSubscription = this.headerService.subscribeTosideBarSubject().subscribe(()=>{
-                  console.log(this.messageService.getTranslation('HEADER_ITEM_PERFIL'));
-                  this.userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'Perfil' }, { title: this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
+                this.headerSubscription = this.headerService.subscribeToHeaderSubject().subscribe(()=>{
+                    this.userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title: this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
                 });
             }
 
@@ -81,12 +80,12 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   }
 
   menuItem(item: any){
+    console.log("menu item: " + JSON.stringify(item));
     if(item.tag === 'sair'){
       this.logout();
-    }else {
-      if(item.tag === 'perfil'){
-        this.router.navigate(["/pages/profile"]);
-      }
+    }else if (item.tag === 'perfil'){
+      console.log("else");
+      this.router.navigate(["/pages/profile"]);
     }
   }
 

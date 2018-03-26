@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Subject } from "rxjs/Subject";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class HeaderService {
-    public headerSubject = new Subject<any>();  
+    public header: any;
+    public headerSubject = new BehaviorSubject<any>(this.header);  
 
     emitHeaderCommand(command: any) {
-        this.headerSubject.next();
+        this.header = command;
+        this.headerSubject.next(this.header);
     }
 
-    subscribeTosideBarSubject() {
+    subscribeToHeaderSubject() {
         return this.headerSubject.asObservable();      
     }
 }
