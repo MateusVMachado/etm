@@ -1,17 +1,17 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { LayoutEditorComponent } from './layout-editor.component';
+import { ProfileComponent } from './profile.component';
 
 export const routes: Routes = [
     {
-        path: '',  component: LayoutEditorComponent,
+        path: '',  component: ProfileComponent,
         children: [{
-            path: 'layout-editor',
-            component: LayoutEditorComponent,
+            path: 'perfil',
+            component: ProfileComponent,
         },
         {
             path: '',
-            redirectTo: 'layout-editor',
+            redirectTo: 'perfil',
             pathMatch: 'full',
         }],
     }

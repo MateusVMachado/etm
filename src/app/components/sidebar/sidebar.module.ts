@@ -17,14 +17,17 @@ const PAGES_COMPONENTS = [
     SidebarRoutingModule,
     ThemeModule,
     DashboardModule,
-    EditorTecladoModule,
-    ProfileModule,
-    GeneralConfigModule,
-    LayoutEditorModule
+    //EditorTecladoModule,
+    //ProfileModule,
+    //GeneralConfigModule,
+    //LayoutEditorModule
   ],
   declarations: [
     ...PAGES_COMPONENTS,
   ],
+  providers: [
+    //EditorTecladoService
+  ]
 })
 export class SidebarModule {
 }

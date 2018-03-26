@@ -1,3 +1,6 @@
+import { LayoutEditorService } from './layout-editor.service';
+import { CaptionTextService } from './caption-text/caption-text.service';
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { ThemeModule } from '../../theme.module';
 import { LayoutEditorComponent } from './layout-editor.component';
@@ -7,11 +10,13 @@ import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
 import { SaveModalComponent } from './save-layout/save-modal.component';
 import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
+import { routes } from "./layout-editor.routing";
 
 @NgModule({
   imports: [
     ThemeModule,
     DragulaModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [
     LayoutEditorComponent,
@@ -28,6 +33,10 @@ import { CaptionTextModalComponent } from './caption-text/caption-text-modal.com
     DeleteLayoutModalComponent,
     SaveModalComponent,
     CaptionTextModalComponent
+  ],
+  providers: [
+    CaptionTextService,
+    LayoutEditorService
   ]
 })
 export class LayoutEditorModule { }

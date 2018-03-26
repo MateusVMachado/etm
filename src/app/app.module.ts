@@ -1,3 +1,4 @@
+//import { TecladoService } from './components/teclado/teclado.service';
 import { TecladoService } from './components/teclado/teclado.service';
 import { InterceptorService } from './components/shared/services/interceptor.service';
 import { HeaderService } from './components/header/header.service';
@@ -65,12 +66,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     CKEditorComponent,
     SideBarService,
     HeaderService,
-    GeneralConfigService,
-    LayoutEditorService,
     ProfileService,
     TecladoService,
     GeneralConfigService,
-    CaptionTextService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })
