@@ -13,9 +13,11 @@ export class MessageService {
     }
 
     setLanguage(idioma: string){
-        this.translateService.use(idioma);
-        this.sidebarService.emitSideBarCommand('reload');
-        this.headerService.emitHeaderCommand('reload');
+        this.translateService.use(idioma).subscribe(() => {
+            this.sidebarService.emitSideBarCommand('reload');
+            this.headerService.emitHeaderCommand('reload');
+        });
+        
     }
 
     info(message: string, title?: string): any { 

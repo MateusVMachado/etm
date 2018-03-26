@@ -41,9 +41,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
               private headerService: HeaderService
             ) { super(injector) 
                 this.headerSubscription = this.headerService.subscribeToHeaderSubject().subscribe(()=>{
-                  setTimeout(() => {
                     this.userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title: this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
-                  }, 500);
                 });
             }
 

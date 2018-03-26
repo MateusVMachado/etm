@@ -40,9 +40,7 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
 
                 this.sidebarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result)=>{
                   if(result === 'reload'){
-                    setTimeout(() => {
                       this.loadSidebarKeyboardNames();
-                    }, 200);
                   }
                 });
   } 
