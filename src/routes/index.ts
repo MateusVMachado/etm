@@ -130,7 +130,24 @@ export class IndexRoute extends BaseRoute {
       logger.logSessionEnd(req,res,next);
       
     });
-    
+
+    router.post("/setLayoutEditorIntervals", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+   
+      logger.logLayoutIntervals(req,res,next);
+    });
+
+    router.post("/setKeyboardIntervals", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+   
+      logger.logKeyboardIntervals(req,res,next);
+    });
+
+    router.post("/setConfigIntervals", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+   
+      logger.logConfigIntervals(req,res,next);
+    });
 
 
     
