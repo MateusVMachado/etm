@@ -18,5 +18,7 @@ export class UserSessionModel {
     keyboardUsage: string;
     layoutEditorIntervals: Array<TimeIntervalUnit>;
     layoutEditorUsage: string;  
+    latitude: string;
+    longitude: string;
 
 }
