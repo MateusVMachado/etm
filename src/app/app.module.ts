@@ -29,6 +29,8 @@ import { LayoutEditorService } from './components/layout-editor/layout-editor.se
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
+import { BackLoggerService } from './components/shared/services/backLogger.service';
+import { AppServiceBase } from './components/shared/services/app-service-base.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -62,6 +64,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthService,
     AuthGuard,
     MessageService,
+    AppServiceBase,
     CKEditorComponent,
     SideBarService,
     HeaderService,
@@ -71,6 +74,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     TecladoService,
     GeneralConfigService,
     CaptionTextService,
+    BackLoggerService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

@@ -8,10 +8,12 @@ import { environment } from '../../../../environments/environment';
 export class AppServiceBase {
 
     
-    protected backendAddress: string;
-    protected frontendAddress: string;
+    public backendAddress: string;
+    public frontendAddress: string;
 
     constructor(protected injector: Injector){
+      
+
         if(environment.production){
             this.backendAddress = 'http://etm-api.korp.com.br/';
             this.frontendAddress = 'http://etm.korp.com.br/';
@@ -31,4 +33,7 @@ export class AppServiceBase {
             return new ErrorObservable(error.error);
         }          
     }
+
+    
+    
 }

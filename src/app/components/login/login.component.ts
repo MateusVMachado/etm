@@ -9,6 +9,8 @@ import 'rxjs/add/operator/catch';
 import { CookieService } from 'ngx-cookie-service';
 import { NgForm } from '@angular/forms';
 import { LoginAuthenticateModel } from "./login-authenticate.model";
+import { UserAndGPS } from '../shared/models/userSession.model';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
 
 @Component({
     selector: 'nb-login',
@@ -24,26 +26,46 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
       rememberMe: ''
     };
 
+    public latitude: number;
+    public longitude: number;
+
     constructor(protected authService: AuthService,
                 protected router: Router,
                 private cookieService: CookieService,
-                private injector: Injector,
+                protected injector: Injector,
                 private configService: GeneralConfigService
                 ) { super(injector) }
 
+    public ngOnInit(){
+
+    }            
+
     public ngAfterViewInit(){
+
       // WORKAROUND PARA RESOLVER PROBLEMA DO BOTÃO DE ENTRAR 
       // NÃO SER ATIVADO COM O AUTOFILL DO BROWSER
       this.user.password = 'inserir'; 
-    }    
+    }          
     
-    ngOnInit(): void { }
+    public geolocationSuccess(position){
+        let newUserAndGPS = new UserAndGPS();
 
-    public login(): void {
+        this.latitude = position.coords.latitude;
+        this.longitude = position.coords.longitude;
+
+        newUserAndGPS.latitude = this.latitude.toString();
+        newUserAndGPS.longitude = this.longitude.toString();
+
         let usuario: User = new User();
+
+
+        newUserAndGPS.email = this.user.email;
+        newUserAndGPS.password = this.user.password;
+
         usuario = this.user;
-        this.authService.authenticate(usuario).subscribe(
-          (res: LoginAuthenticateModel) => {
+        //this.authService.authenticate(usuario).subscribe(
+        this.authService.authenticate(newUserAndGPS).subscribe(
+          (res: any) => {
             usuario.jwt = res.accessToken;
             this.authService.setJWT(usuario.jwt);
             if(this.user.rememberMe){
@@ -63,6 +85,43 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
             }
           }
        );
+    }
+
+    public geolocationFailure(){
+      let newUserAndGPS = new UserAndGPS();
+
+      let usuario: User = new User();
+      newUserAndGPS.email = this.user.email;
+      newUserAndGPS.password = this.user.password;
+
+      usuario = this.user;
+      this.authService.authenticate(newUserAndGPS).subscribe(
+        (res: any) => {
+          usuario.jwt = res.accessToken;
+          this.authService.setJWT(usuario.jwt);
+          if(this.user.rememberMe){
+            window.localStorage.setItem('JWTtoken', res.accessToken);
+          }
+          this.authService.getUser(usuario.email).subscribe((res:User) => {
+            this.authService.setUser(res, usuario.jwt);
+            this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
+              this.messageService.setLanguage(result.language);
+              this.router.navigate(['./pages/teclados']);
+            });
+          });
+        }, (error) =>{
+          if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
+            let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
+            this.messageService.error(message, 'Oops..');
+          }
+        }
+     );
+    }
+
+    public login(): void {
+
+      navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this) ); 
+      
     }
 
     navigateTo(path: string) {
