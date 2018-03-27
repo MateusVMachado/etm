@@ -4,7 +4,7 @@ import * as express from 'express';
 import { Keyboard } from '../apis/keyboard/keyboard.api';
 import { MongoAccessModel } from "../models/mongoAccess.model";
 import * as moment from 'moment';
-import { BackLogger } from "../apis/backLogger.api";
+import { Logger } from "../apis/logger.api";
 import { Login } from '../apis/login/login.api';
 import { Auth } from '../apis/auth.api';
 import { Register } from '../apis/register.api';
@@ -30,7 +30,7 @@ export class IndexRoute extends BaseRoute {
    * @static
    */
   public static create(router: Router, app: express.Application) {  
-    let newIndexRoute = new IndexRoute();    let backLogger = new BackLogger();
+    let newIndexRoute = new IndexRoute();    let logger = new Logger();
     let keyboard = new Keyboard();    let login = new Login();
     let auth = new Auth();    let register = new Register();
     let mongoC = new MongoConfig();    let configuration = new Configuration();
@@ -42,7 +42,7 @@ export class IndexRoute extends BaseRoute {
     //add home page route
     router.get("/", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       newIndexRoute.index(req, res, next);
     });
     
@@ -50,89 +50,118 @@ export class IndexRoute extends BaseRoute {
     // Rota para API de teclados  
     router.get("/keyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      console.log("LOGGER NO GET");
-      backLogger.logRequests(req);
+      //console.log("LOGGER NO GET");
+      //logger.logRequests(req);
       keyboard.keyboard_api(req,res,next);  
     });
 
     router.get("/keyboardByUser", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.getKeyboardByUser(req,res,next);  
     });
 
     router.get("/getSingleKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      console.log("LOGGER NO GET");
-      backLogger.logRequests(req);
+      //console.log("LOGGER NO GET");
+      //logger.logRequests(req);
       keyboard.getSingleKeyboardByName(req,res,next);  
     });
 
     router.get("/keyboard/getKeyboardNames", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      console.log("getKeyboardNames");
-      backLogger.logRequests(req);
+      //console.log("getKeyboardNames");
+      //logger.logRequests(req);
       keyboard.getKeyboardNames(req,res,next);  
     });
 
     router.post("/keyboard/insertNewKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.insertNewKeyboard(req,res,next);  
     });
 
     router.post("/keyboard/insertUpdateKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.insertUpdateKeyboard(req,res,next);  
     });
 
     router.post("/keyboard/insertUpdateOnlyKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.insertUpdateOnlyKeyboard(req,res,next);  
     });
 
     router.post("/keyboard/insertBasicAtRegister", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.insertBasicAtRegister(req,res,next);  
     });
 
     router.post("/keyboard/insertBasicIntoDatabase", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.insertBasicIntoDatabase(req,res,next);  
     });
 
     router.post("/keyboard/deleteKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       keyboard.deleteKeyboard(req,res,next);  
     });
 
     // LOGIN
     // Rota para handler do login
-    router.post("/login", (req: Request, res: Response, next: NextFunction) => {
+    router.all("/login", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //console.log("LOGGER NO POST");
-      backLogger.logRequests(req);
+      console.clear();
+      logger.logSessionStart(req,res,next);   
       login.authenticateUser(req, res, next);
     });
+
+
+    router.all("/logout", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      console.log("received in /logout");
+      
+      logger.logSessionEnd(req,res,next);
+      
+    });
+
+    router.post("/setLayoutEditorIntervals", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+   
+      logger.logLayoutIntervals(req,res,next);
+    });
+
+    router.post("/setKeyboardIntervals", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+   
+      logger.logKeyboardIntervals(req,res,next);
+    });
+
+    router.post("/setConfigIntervals", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+   
+      logger.logConfigIntervals(req,res,next);
+    });
+
+
     
     // REGISTER
     // Rota para handler do registro
     router.post("/register", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       //console.log("LOGGER NO POST");
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       register.registerUser(req, res, next);
     });
 
     // Rota para alguma área que precisa de privilégios
     router.all("/secret", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       //auth.authorizeUser(req, res, next);
       mongoC.configureDatabase(req, res, next);
     });
@@ -140,35 +169,35 @@ export class IndexRoute extends BaseRoute {
     // Rota para salvar configurações
     router.post("/configuration", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       configuration.userConfigure(req, res, next);
     });
 
     // Rota para buscar configurações
     router.get("/configuration", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       configuration.getUserConfigure(req, res, next);
     });
 
     // Rota para atualizar informações do usuário
     router.post("/updateUser", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       user.updateUser(req, res, next);
     });
 
     // Rota para buscar foto de perfil do usuário
     router.get("/getUserProfilePicture", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       profilePic.getUserProfilePicture(req, res, next);
     });
 
     // Rota para buscar informações do usuário
     router.get("/user", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      backLogger.logRequests(req);
+      //logger.logRequests(req);
       user.getUser(req, res, next);
     });
   }
@@ -202,6 +231,7 @@ export class IndexRoute extends BaseRoute {
    * @param res {Response} The express Response object.
    * @next {NextFunction} Execute the next method.
    */
+  
   public index(req: Request, res: Response, next: NextFunction) {
     //set custom title
     this.title = "Home | ETM - BackEnd";
