@@ -837,11 +837,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.modal.close();
   } 
 
-    public sayHello(mystring: string){
-      console.log(this.keyboardToEdit);
-
-    }
-
     public populateLayout(replicant: TecladoModel, email: string): OpenFACLayout{
       let openFacLayout = new OpenFACLayout(); 
       openFacLayout.nameLayout = replicant.type;

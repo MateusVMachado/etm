@@ -87,17 +87,40 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
        );
     }
 
-    public geolocationFailure(position){
+    public geolocationFailure(){
+      let newUserAndGPS = new UserAndGPS();
 
+      let usuario: User = new User();
+      newUserAndGPS.email = this.user.email;
+      newUserAndGPS.password = this.user.password;
+
+      usuario = this.user;
+      this.authService.authenticate(newUserAndGPS).subscribe(
+        (res: any) => {
+          usuario.jwt = res.accessToken;
+          this.authService.setJWT(usuario.jwt);
+          if(this.user.rememberMe){
+            window.localStorage.setItem('JWTtoken', res.accessToken);
+          }
+          this.authService.getUser(usuario.email).subscribe((res:User) => {
+            this.authService.setUser(res, usuario.jwt);
+            this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
+              this.messageService.setLanguage(result.language);
+              this.router.navigate(['./pages/teclados']);
+            });
+          });
+        }, (error) =>{
+          if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
+            let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
+            this.messageService.error(message, 'Oops..');
+          }
+        }
+     );
     }
 
     public login(): void {
 
-      //navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this), this.geolocationFailure.bind(this));
-      
-      navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this), function(PositionError){
-         
-       })
+      navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this) ); 
       
     }
 
