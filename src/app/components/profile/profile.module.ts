@@ -1,6 +1,7 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { RouterModule } from '@angular/router';
 import { ProfileService } from './profile.service';
-import { ProfileEditModule } from './profile-edit/profile-edit.module';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
 import { FormsModule } from '@angular/forms';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
@@ -10,19 +11,23 @@ import { routes } from "./profile.routing";
 
 @NgModule({
     declarations: [
-        ProfileComponent
+        ProfileComponent,
+        ProfileEditComponent
     ],
     imports: [ 
         CommonModule,
         FormsModule,
-        ProfileEditModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        BootstrapModalModule
     ],
     providers: [
-        //ProfileService
+        ProfileService
     ],
     schemas: [ 
         CUSTOM_ELEMENTS_SCHEMA 
+    ], 
+    entryComponents: [
+        ProfileEditComponent
     ]
 })
 export class ProfileModule {}

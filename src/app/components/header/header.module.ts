@@ -1,5 +1,5 @@
-import { HeaderComponent } from '../index';
 import { NgModule } from "@angular/core";
+import { HeaderComponent } from "./header.component";
 
 @NgModule({
   imports: [ ],

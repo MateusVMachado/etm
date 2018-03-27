@@ -1,7 +1,6 @@
 import { AuthService } from '../shared/services/auth.services';
 import { RequestMethod, RequestOptions } from '@angular/http';
 import { ConfigModel } from './config.model';
-import { CookieService } from 'ngx-cookie-service';
 import { HttpClient } from '@angular/common/http';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
 import { Injectable } from '@angular/core';

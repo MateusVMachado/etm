@@ -6,7 +6,6 @@ import { Component, ViewChild, OnInit, Injector, AfterViewInit } from '@angular/
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.services';
 import 'rxjs/add/operator/catch';
-import { CookieService } from 'ngx-cookie-service';
 import { NgForm } from '@angular/forms';
 import { LoginAuthenticateModel } from "./login-authenticate.model";
 
@@ -26,7 +25,6 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
 
     constructor(protected authService: AuthService,
                 protected router: Router,
-                private cookieService: CookieService,
                 private injector: Injector,
                 private configService: GeneralConfigService
                 ) { super(injector) }

@@ -9,7 +9,7 @@ import { EditorTecladoComponent } from '../editor-teclado/editor-teclado.compone
 import { GeneralConfigComponent } from '../general-config/general-config.component';
 import { LayoutEditorComponent } from '../layout-editor/layout-editor.component';
 
-const routes: Routes = [{
+export const routes: Routes = [{
   path: '',
   component: SidebarComponent,
   children: [
@@ -41,9 +41,3 @@ const routes: Routes = [{
   ],
 }];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class SidebarRoutingModule {
-}
