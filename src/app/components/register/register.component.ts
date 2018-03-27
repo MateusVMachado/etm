@@ -3,6 +3,7 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
+import { Message } from '@angular/compiler/src/i18n/i18n_ast';
 import { User } from '../shared/models/user';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { HttpResponse } from '@angular/common/http/src/response';
@@ -44,11 +45,15 @@ export class NgxRegisterComponent extends AppBaseComponent {
       usuario = this.user;
       this.service.register(usuario).subscribe(
           (res: any) => {
-            this.messageService.success(res.message).then(res => {
+            let message = this.messageService.getTranslation('MENSAGEM_CADASTRO_CONCLUIDO');
+            this.messageService.success(message).then(res => {
               this.router.navigate(['./auth/login']);
             });
-          }, (error: any) => {            
-            this.messageService.error(error.message, 'Oops..');
+          }, (error) => {
+            if(error.message === "MENSAGEM_EMAIL_JA_CADASTRADO"){
+              let message = this.messageService.getTranslation('MENSAGEM_EMAIL_JA_CADASTRADO');
+              this.messageService.error(message, 'Oops..');
+            }
           }
       );
     }

@@ -1,9 +1,19 @@
+import { Subscription } from 'rxjs/Rx';
+import { HeaderService } from './header.service';
+import { AppBaseComponent } from '../shared/components/app-base.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileService } from '../profile/profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, NgZone, OnInit, Injector } from '@angular/core';
+import {
+    Component,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+} from '@angular/core';
 import { DomSanitizer, SafeHtml, SafeStyle } from '@angular/platform-browser';
 
 import { NbMenuService, NbSidebarService } from '@nebular/theme';
@@ -11,34 +21,39 @@ import { Router } from '@angular/router';
 
 import { HttpClient } from '@angular/common/http';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { viewClassName } from '@angular/compiler';
+
 
 @Component({
   selector: 'app-header',
   styleUrls: ['./header.component.scss'],
   templateUrl: './header.component.html'
 })
-export class HeaderComponent extends AppServiceBase implements OnInit {
-
-
+export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestroy {
+  
   @Input() position = 'normal';
   private readonly base64Token = ';base64,';
   private usuario: User;
   private imgUrl;
+  private headerSubscription: Subscription;
 
-  userMenu = [{ title: 'Perfil', tag: 'perfil' }, { title: 'Log out', tag: 'sair' }];
+  userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title:  this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private router: Router,
               private authService: AuthService,
               private modalService: NgbModal,
-              private http: HttpClient,
-              protected injector: Injector
-            ) {
-              super(injector);
+              protected injector: Injector,
+			        private http: HttpClient,
+              private headerService: HeaderService
+            ) { super(injector) 
+                this.headerSubscription = this.headerService.subscribeToHeaderSubject().subscribe(()=>{
+                    this.userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title: this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
+                });
             }
 
-  ngOnInit() {    
+  ngOnInit() {
     this.authService.getObservableUser().subscribe(result =>{
       this.usuario = result;
       if(result.picture.content){
@@ -75,17 +90,20 @@ export class HeaderComponent extends AppServiceBase implements OnInit {
   public sendNow(){
     let user = this.authService.getLocalUser();
     let payload = { "user" : user.email };
-    return this.http.get(this.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
+    return this.http.get(this.appServiceBase.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
+  }
+   ngOnDestroy(): void {
+    this.headerSubscription.unsubscribe();
   }
 
 
   menuItem(item: any){
+    console.log("menu item: " + JSON.stringify(item));
     if(item.tag === 'sair'){
       this.logout();
-    }else {
-      if(item.tag === 'perfil'){
-        this.router.navigate(["/pages/profile"]);
-      }
+    }else if (item.tag === 'perfil'){
+      console.log("else");
+      this.router.navigate(["/pages/profile"]);
     }
   }
 

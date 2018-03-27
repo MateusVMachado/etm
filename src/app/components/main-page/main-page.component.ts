@@ -17,13 +17,14 @@ import 'rxjs/add/operator/delay';
 
 import { HttpClient } from '@angular/common/http';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AppBaseComponent } from '../shared/components/app-base.component';
 // TODO: move layouts into the framework
 @Component({
   selector: 'app-main-page',
   styleUrls: ['./main-page.component.scss'],
   templateUrl: './main-page.component.html' ,
 })
-export class MainPageComponent extends AppServiceBase implements OnDestroy {
+export class MainPageComponent extends AppBaseComponent implements OnDestroy {
 
   @HostListener('window:unload', [ '$event' ])
   unloadHandler(event) {
@@ -130,7 +131,7 @@ export class MainPageComponent extends AppServiceBase implements OnDestroy {
   public sendNow(){
     let user = this.authService.getLocalUser();
     let payload = { "user" : user.email };
-    return this.http.get(this.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
+    return this.http.get(this.appServiceBase.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
   }
 
 

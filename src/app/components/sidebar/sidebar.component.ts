@@ -1,7 +1,8 @@
+import { AppBaseComponent } from '../shared/components/app-base.component';
 import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, Component, OnInit, OnChanges, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, Injector, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { SideBarService } from './sidebar.service';
@@ -18,7 +19,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-pages',
   templateUrl: './sidebar.component.html'
 })
-export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
+export class SidebarComponent extends AppBaseComponent implements AfterViewInit, OnInit, OnDestroy {
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
   public sidebarServiceSubscribe: Subscription;
@@ -33,12 +34,13 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
               private modalService: NgbModal,
               private editorTecladoService: EditorTecladoService,
               private tecladoService: TecladoService,
-              private authService: AuthService)  {  
-
+              private authService: AuthService,
+              private injector: Injector)  {  
+                super(injector)
 
                 this.sidebarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result)=>{
                   if(result === 'reload'){
-                    this.loadSidebarKeyboardNames();
+                      this.loadSidebarKeyboardNames();
                   }
                 });
   } 
@@ -100,7 +102,7 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
     }
     
     let myJson = [{
-        title: 'Teclado',
+        title: this.messageService.getTranslation('SIDEBAR_ITEM_TECLADO'),
         icon: 'nb-home', 
         target: 'hello',
         link: '/pages/editor-teclado', 
@@ -108,17 +110,17 @@ export class SidebarComponent implements AfterViewInit, OnInit, OnDestroy {
         children: this.jsonArray
       },
       {
-        title: 'Configuração',
+        title: this.messageService.getTranslation('SIDEBAR_ITEM_CONFIGURACAO'),
         icon: 'nb-gear',
         target: 'config',
         children: [
           {
-            title: 'Configuração geral',
+            title: this.messageService.getTranslation('SIDEBAR_SUBITEM_CONFIG_GERAL'),
             icon: 'nb-grid-a',
             link: '/pages/general-config', 
           },
           {
-            title: 'Editor de layouts',
+            title: this.messageService.getTranslation('SIDEBAR_SUBITEM_CONFIG_LAYOUT'),
             icon: 'nb-keypad',
             link: '/pages/layout-editor',
           },

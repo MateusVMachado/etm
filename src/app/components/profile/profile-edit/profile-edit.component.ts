@@ -1,9 +1,10 @@
+import { AppBaseComponent } from '../../shared/components/app-base.component';
 import { NbUser } from '@nebular/auth/models/user';
 import { Picture } from '../../shared/models/picture';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../shared/services/auth.services';
 import { User } from '../../shared/models/user';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, OnInit, ViewChild } from '@angular/core';
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import 'rxjs/add/operator/map';
@@ -13,7 +14,7 @@ import 'rxjs/add/operator/map';
     templateUrl: './profile-edit.component.html',
     styleUrls: ['./profile-edit.component.css']
 })
-export class ProfileEditComponent implements OnInit {
+export class ProfileEditComponent extends AppBaseComponent implements OnInit {
     private readonly base64Token = ';base64,';
     public bigImage: boolean;
     user: any = {}
@@ -23,8 +24,9 @@ export class ProfileEditComponent implements OnInit {
     constructor(private activeModal: NgbActiveModal, 
                 private modalService: NgbModal,
                 private authService: AuthService,
-                private profileService: ProfileService
-                ) { }
+                private profileService: ProfileService,
+                private injector: Injector
+                ) { super(injector) }
     
     ngOnInit() {
         this.imageFile = new Picture();

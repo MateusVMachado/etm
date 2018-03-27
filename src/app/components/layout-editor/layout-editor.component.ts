@@ -295,7 +295,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         //$(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
 
-                    
+                        
                         
                       }  else {
                         
@@ -330,8 +330,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
                               found = true;  
                               break;
-                          }
-                        }     
+                    }
+                  }                  
 
                        
                         if(!found && index2 === -1 ){ 
@@ -341,7 +341,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           map.push(k);
   
                           notFoundArray.push(map);
-                        }  
+              }    
                       }
 
                     }
@@ -393,7 +393,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let formula = (this.globColumnQnty*x)+(y);
                        $("[id=content]")[formula].appendChild(el1);
                      
-                      continue;
+                       continue;
 
                     } 
                     
@@ -411,7 +411,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
                               found = true;  
                               break;
-                          }
+                    }
                         }     
 
                        
@@ -422,22 +422,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           map.push(k);
   
                           notFoundArray.push(map);
-                        }  
+                  }                    
                       }
 
                     }
 
 
 
-                  }                    
-              } 
+              }    
+            } 
             } 
 
 
 
        }
 
-   
+       
        if(notFoundArray.length > 0 ){
          for(let i = 0; i< notFoundArray.length; i++){
             let el3 = sEl[0].cloneNode(true);
@@ -483,7 +483,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       keyboard.type = layout.nameLayout
 
-    }
+  }
 
 
     public setKeyboardState(value){
@@ -675,16 +675,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     } else {
   
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                        this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                       
 
                       if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
                           this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                           this.tecladoReplicant.text[sourceY][sourceX] = ""; 
-                      } else {
+                    } else {
                           this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           this.tecladoReplicant.text[drainY][drainX] = trueValue; 
-                      }  
+                    } 
 
                     } 
                     
@@ -710,12 +710,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
      
                           value[1].remove();
                           this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                          this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                           
                           if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
                               this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                               this.tecladoReplicant.text[sourceY][sourceX] = ""; 
-                          } else {
+                    } else {
                               this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                           }  
@@ -729,7 +729,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             if($(value[2]).children().length > 1) {
        
                                 value[1].remove();
-                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                             } else {
           
@@ -755,7 +755,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             } else {
        
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                              this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
@@ -764,7 +764,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               } else {
                                   this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                   this.tecladoReplicant.text[drainY][drainX] = trueValue; 
-                              }  
+                    } 
          
                             } 
                           }  
@@ -790,7 +790,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 } else {
                                     this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                     this.tecladoReplicant.text[drainY][drainX] = trueValue; 
-                                }  
+                }    
 
                               }    
                             } else {
@@ -816,7 +816,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               }   
                             }  
 
-                        }   
+    }    
                       } 
                     } 
 
@@ -877,7 +877,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    public saveKeyboardLayout(saveAs: boolean){
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
-              this.messageService.error("Não é possivel sobrescrever um teclado do sistema!\nPor favor, utilize a opção \"Salvar Como\"");
+              let message = this.messageService.getTranslation('MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA');
+              this.messageService.error(message);
               return;
             }
       }      
@@ -899,21 +900,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              teclasLine.push(this.tecladoReplicant.teclas[i][j]); 
              textLine.push(this.tecladoReplicant.text[i][j]); 
              tam += 1; 
-           } 
+            }  
 
         }
 
         if(tam > 0) { 
           finalKeyboard.teclas.push(teclasLine);  
           finalKeyboard.text.push(textLine);
-          totalLines += 1;
+            totalLines += 1;
         }    
 
       }
 
 
       if(totalLines === 0) {
-        this.messageService.error("Não é possivel salvar um teclado vazio!");
+        let message = this.messageService.getTranslation('MENSAGEM_SALVAR_TECLADO_VAZIO')
+        this.messageService.error(message);
         return;
       }  
 
@@ -930,10 +932,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   let layout = this.populateLayout(finalKeyboard, user.email);
                   
                   this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
-        
+                    let message;
                     if(result === 'saved'){
-            
-                      this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                      message = this.messageService.getTranslation('MENSAGEM_TECLADO_SALVO');
+                      this.messageService.success(message);
                       this.sidebarService.emitSideBarCommand('reload');
                     } else if (result === 'alreadyExist'){
 
@@ -950,15 +952,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                this.layoutEditorService.updateOnlyKeyboard(layout, user.email).subscribe((result)=>{
                                  if(result === 'updated'){
                                   
-                                   this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+                                   message = this.messageService.getTranslation('MENSAGEM_TECLADO_SALVO');
+                      			   this.messageService.success(message);
                                    this.sidebarService.emitSideBarCommand('reload');
 
                                    this.keyboardItems.KeyboardsNames.push(this.keyboardName);
 
-                                 } else if (result === 'maxNumber'){
-                                   this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
-                                 }  
-                               });
+                    } else if (result === 'maxNumber'){
+                      message = this.messageService.getTranslation('MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA');
+                      this.messageService.error(message);
+                    }  
+                  });
                                
                                this.layoutEditorServiceSubscribe2.unsubscribe();
                         }
@@ -979,31 +983,33 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
            this.showModal(SaveModalComponent);
            this.layoutEditorService.subscribeToLayoutEditorSubject().subscribe((result)=>{
              if(result === "confirm"){
-                    let user = this.authService.getLocalUser();
-                    finalKeyboard.type = this.keyboardToEdit;
-                    let layout = this.populateLayout(finalKeyboard, user.email);
-                    
-                    this.layoutEditorService.updateOnlyKeyboard(layout, user.email).subscribe((result)=>{
-        
-                      if(result === 'updated'){
-        
-                        this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
-                        this.sidebarService.emitSideBarCommand('reload');
+            let user = this.authService.getLocalUser();
+            finalKeyboard.type = this.keyboardToEdit;
+            let layout = this.populateLayout(finalKeyboard, user.email);
+            
+            this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
+              let message;
+              if(result === 'updated'){
+                this.messageService.success("Layout Salvo! Todas as linhas e colunas em branco foram suprimidas.");
+				message = this.messageService.getTranslation('MENSAGEM_TECLADO_SALVO');
+                this.messageService.success(message);
+				this.keyboardItems.KeyboardsNames.push(this.keyboardName);
+                this.sidebarService.emitSideBarCommand('reload');
+              } else if (result === 'alreadyExist'){
+                message = this.messageService.getTranslation('MENSAGEM_TECLADO_JA_EXISTE');
+                this.messageService.error(message);
+              } else if (result === 'maxNumber'){
+                message = this.messageService.getTranslation('MENSAGEM_QNTD_TECLADOS_ULTRAPASSADA');
+                this.messageService.error(message);
+              }  
+            });
 
-                        this.keyboardItems.KeyboardsNames.push(this.keyboardName);
-             
 
-                      } else if (result === 'maxNumber'){
-                        this.messageService.error("O máximo de teclados por usuários é 8, por favor delete algum existente para inserir um novo.");
-                      }  
-                    });
-
-
-             }
+     }
            })
           
 
-     }
+   }
 
    }
 
@@ -1043,7 +1049,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
           this.teclado.teclas[i] = line;
           this.teclado.text[i] = textL; 
-          this.tecladoReplicant.teclas[i] = lineReplicant; 
+          this.tecladoReplicant.teclas[i] = lineReplicant;  
           this.tecladoReplicant.text[i] = textReplicant;  
       }  
       
@@ -1083,11 +1089,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(this.teclado.teclas.length > 5){
           this.teclado.teclas.pop();
           this.teclado.text.pop();  
-          this.tecladoReplicant.teclas.pop();
+      this.tecladoReplicant.teclas.pop();
           this.tecladoReplicant.text.pop(); 
       } else {
         this.messageService.error("O mínimo de linhas no modo edição é 5.");
-      }   
+    }  
     }  
 
 

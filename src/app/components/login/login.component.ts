@@ -10,14 +10,16 @@ import { CookieService } from 'ngx-cookie-service';
 import { NgForm } from '@angular/forms';
 import { LoginAuthenticateModel } from "./login-authenticate.model";
 import { UserAndGPS } from '../shared/models/userSession.model';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
 
 @Component({
     selector: 'nb-login',
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit  {
-    @ViewChild('form') form: NgForm;
+export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
+  
+  @ViewChild('form') form: NgForm;
     user: any = {
       email: '',
       password: 'inserir',
@@ -30,19 +32,13 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
     constructor(protected authService: AuthService,
                 protected router: Router,
                 private cookieService: CookieService,
-                private injector: Injector,
+                protected injector: Injector,
                 private configService: GeneralConfigService
-                ) { 
-                  
-                  super(injector);
-                  //navigator.geolocation.getCurrentPosition(function(position) {
-                    
-                  //  this.latitude = position.coords.latitude;
-                  //  this.longitude = position.coords.longitude;
-                  // });
-                
-                }
+                ) { super(injector) }
 
+    public ngOnInit(){
+
+    }            
 
     public ngAfterViewInit(){
 
@@ -77,10 +73,16 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
             }
             this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
-              this.router.navigate(['./pages/teclados']);
+              this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
+                this.messageService.setLanguage(result.language);
+                this.router.navigate(['./pages/teclados']);
+              });
             });
           }, (error) =>{
-            this.messageService.error('Usuário ou senha inválidos', 'Oops..');
+            if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
+              let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
+              this.messageService.error(message, 'Oops..');
+            }
           }
        );
     }

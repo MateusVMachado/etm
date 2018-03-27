@@ -1,6 +1,6 @@
 <div style="background-color: white;" *ngIf="isKeyboardName">
     <div class="modal-header">
-        <span>Configurações do Editor</span>
+        <span>{{ messageService.getTranslation('MODAL_SALVAR_TITULO') }}</span>
         <button class="close" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -9,18 +9,18 @@
         <div class="modal-body">
 
             <div class="from-group line">
-                <label for="name">Insira o nome do teclado</label>
-                <input type="text" id="name" name="name" [(ngModel)]="keyboardName" #name="ngModel" class="form-control" placeholder="Nome do teclado"
+                <label for="name">{{ messageService.getTranslation('MODAL_SALVAR_INPUT') }}</label>
+                <input type="text" id="name" name="name" [(ngModel)]="keyboardName" #name="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('MODAL_SALVAR_INPUT_PLACEHOLDER') }}"
                     [class.form-control-danger]="name.invalid && name.touched" [required]="true"
                 />
                 <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
-                Nome do teclado é obrigatório!
-            </small>
+                    {{ messageService.getTranslation('NOME_TECLADO_OBRIGATORIO') }}
+                </small>
             </div>
 
 
             <div class="modal-footer">
-                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Salvar</button>
+                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
             </div>
         </div>
     </form>

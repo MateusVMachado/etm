@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { AppBaseComponent } from '../shared/components/app-base.component';
+import { AuthService } from '../shared/services/auth.services';
+import { Component, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,13 +8,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./request-password.component.scss'],
   templateUrl: './request-password.component.html',
 })
-export class RequestPasswordComponent {
+export class RequestPasswordComponent extends AppBaseComponent {
   submitted = false;
   user: any = {};
 
-  constructor(protected router: Router) {}
+  constructor(protected router: Router, 
+              protected authService: AuthService,
+              private injector: Injector) { super(injector)}
 
-  requestPass(): void {}
+  requestPass(): void { }
 
   navigateTo(path: string) {
     this.router.navigate([path]);
