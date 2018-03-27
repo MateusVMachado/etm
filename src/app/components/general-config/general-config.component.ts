@@ -39,8 +39,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         private backLoggerService: BackLoggerService
         ) {  
             super(injector); 
-        
-            console.log("CONFIG CREATED");
+
              
             this.userSession = new UserSessionModel();
             this.userSession.configIntervals = new Array();
@@ -59,7 +58,6 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         this.timeInterval.outTime = moment().format('HH:mm:ss');
         this.userSession.configIntervals.push(this.timeInterval);
         this.backLoggerService.sendConfigIntervalNow(this.userSession).subscribe(()=>{   });
-        console.log("CONFIG DESTROYED");
     }
 
     ngOnInit() {

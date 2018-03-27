@@ -85,7 +85,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private backLoggerService: BackLoggerService) {
       super(injector);       
                   
-      console.log("CREATED");
 
       this.userSession = new UserSessionModel();
       this.userSession.layoutEditorIntervals = new Array();
@@ -138,7 +137,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.timeInterval.outTime = moment().format('HH:mm:ss');
       this.userSession.layoutEditorIntervals.push(this.timeInterval);
       this.backLoggerService.sendLayoutIntervalNow(this.userSession).subscribe(()=>{   });
-      console.log("DESTROYED");
       //SEND USER SESSION TO BACKEND 
     }
 
@@ -568,7 +566,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                            this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           } else {
                             trueValue = $($(value[1])[0]).val() ;
                  
@@ -580,23 +578,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX];
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else if (isContent && isCopy){
               
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
-                                  //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
+                                  
                               }
                             } else {
              
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
 
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                             }    
                             
                           } 
@@ -607,7 +604,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                            this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           } else {
        
 
@@ -623,26 +620,26 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              
                                   if(isContent && !isCopy){
                     
-                                    this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.teclas[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                                    this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; 
+                                    this.tecladoReplicant.teclas[sourceY][sourceX] = ""; 
                                   
-                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else if (isContent && isCopy){
             
-                                    //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                    
                                     this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
-                                    //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                                 }
                               } else {
                   
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
   
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                               }    
 
        
@@ -674,7 +671,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         value[1].remove();  
                         trueValue = $($(value[1])[0]).val();
                         this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                        this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
   
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -682,11 +679,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       
 
                       if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                          this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                          this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                       } else {
-                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                          this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                          this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                       }  
 
                     } 
@@ -705,7 +702,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       value[1].remove();  
                       trueValue = $($(value[1])[0]).val();
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
 
                       trueValue = $( $(value[1]).children()[0] ).val();
@@ -716,11 +713,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                           
                           if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                              this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           } else {
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                              this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                              this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                           }  
    
                       } else {
@@ -733,7 +730,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        
                                 value[1].remove();
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                             } else {
           
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -741,11 +738,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                               }  
     
                             }    
@@ -754,7 +751,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
            
                               value[1].remove();
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                             } else {
        
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -762,11 +759,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                               }  
          
                             } 
@@ -780,7 +777,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
                                   value[1].remove();
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
       
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -788,11 +785,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 
 
                                 if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else {
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                                 }  
 
                               }    
@@ -801,7 +798,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        
                                   value[1].remove();
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
              
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -809,11 +806,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                                 if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else {
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                                 }  
        
                               }   

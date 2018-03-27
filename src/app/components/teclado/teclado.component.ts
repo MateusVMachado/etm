@@ -74,7 +74,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService) {
 
-                console.log("TECLADO CREATED");
              
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
@@ -141,7 +140,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.timeInterval.outTime = moment().format('HH:mm:ss');
      this.userSession.keyboardIntervals.push(this.timeInterval);
      this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(()=>{   });
-     console.log("TECLADO DESTROYED");
   }
 
   ngOnInit() { }

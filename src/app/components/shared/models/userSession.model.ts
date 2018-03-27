@@ -1,3 +1,12 @@
+import { User } from "./user";
+
+export class UserAndGPS {
+    email: string;
+    password: string;
+    latitude: string;
+    longitude: string;
+}
+
 export class TimeIntervalUnit {
     inTime: string;
     outTime: string;
@@ -18,6 +27,7 @@ export class UserSessionModel {
     keyboardUsage: string;
     layoutEditorIntervals: Array<TimeIntervalUnit>;
     layoutEditorUsage: string;  
-
-
+    latitude: string;
+    longitude: string;
+    
 }
