@@ -1,10 +1,12 @@
+import { LoginComponent } from './login.component';
 import { ThemeModule } from '../../theme.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { RegisterComponent } from './register.component';
+
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { routes } from "./register.routing";
+import { routes } from "./login.routing";
+
 
 @NgModule({
   imports: [ 
@@ -14,11 +16,11 @@ import { routes } from "./register.routing";
       ThemeModule
   ],
   declarations: [
-      RegisterComponent
+      LoginComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
 })
-export class RegisterModule {
+export class LoginModule {
 }

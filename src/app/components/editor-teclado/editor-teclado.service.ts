@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject'
 
 @Injectable()
 export class EditorTecladoService {
 
-  
   public editorInstanceSubject = new Subject<any>();  
   private tamanho: number;
   private tamanhoSubject = new BehaviorSubject<number>(this.tamanho)
@@ -17,7 +17,7 @@ export class EditorTecladoService {
   
 
   subscribeToEditorSubject() {
-      return this.editorInstanceSubject.asObservable();      
+    return this.editorInstanceSubject.asObservable();      
   }
 
   setHeight(tam: number){

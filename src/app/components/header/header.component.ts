@@ -79,11 +79,9 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   }
 
   menuItem(item: any){
-    console.log("menu item: " + JSON.stringify(item));
     if(item.tag === 'sair'){
       this.logout();
     }else if (item.tag === 'perfil'){
-      console.log("else");
       this.router.navigate(["/pages/profile"]);
     }
   }

@@ -47,10 +47,8 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
 
   ngAfterViewInit(): void {
  
-
     this.editorTecladoServiceSubscribe = 
           this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) =>{
-    
         this.menuServiceSubscribe = this.menuService.onItemClick()
             .subscribe((result) => { 
                       if ( result.item.target === 'dashboard') {
@@ -58,12 +56,11 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
                         this.editorTecladoServiceSubscribe.unsubscribe();
                         this.router.navigate(['/pages/dashboard']);
                       } else {
-                              // PARTE DO TECLADO
-                              editor.focus();
-                              
-                              this.sideBarService.emitSideBarCommand(result.item.target);
-                              this.editorTecladoServiceSubscribe.unsubscribe();
-                              this.router.navigate(['/pages/editor-teclado'], { queryParams: { target: result.item.target } });
+                        // PARTE DO TECLADO
+                        editor.focus();
+                        this.sideBarService.emitSideBarCommand(result.item.target);
+                        this.editorTecladoServiceSubscribe.unsubscribe();
+                        this.router.navigate(['/pages/editor-teclado'], { queryParams: { target: result.item.target } });
                       }
             });  
     });

@@ -126,7 +126,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
     this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
-      console.log("subscribeToKeyCommandSubject");
         if(result === 'caps'){
           this.capsLock();
         }

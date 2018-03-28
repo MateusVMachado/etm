@@ -14,7 +14,7 @@ import { LoginAuthenticateModel } from "./login-authenticate.model";
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
+export class LoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
   
   @ViewChild('form') form: NgForm;
     user: any = {

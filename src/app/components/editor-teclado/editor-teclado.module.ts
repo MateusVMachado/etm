@@ -16,8 +16,6 @@ import { routes } from "./editor-teclado.routing";
         EditorModule, 
         RouterModule.forChild(routes) 
     ],
-    providers: [
-        EditorTecladoService
-    ]
+    providers: []
 })
 export class EditorTecladoModule {}

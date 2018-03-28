@@ -20,7 +20,7 @@ export const routes: Routes = [{
     },
     {
       path: 'dashboard',
-      component: DashboardComponent,
+      loadChildren: 'app/components/dashboard/dashboard.module#DashboardModule'
     },
     {
       path: 'editor-teclado',

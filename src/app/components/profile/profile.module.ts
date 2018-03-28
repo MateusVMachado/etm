@@ -1,3 +1,4 @@
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BootstrapModalModule } from 'ng2-bootstrap-modal';
 import { RouterModule } from '@angular/router';
@@ -21,7 +22,8 @@ import { routes } from "./profile.routing";
         BootstrapModalModule
     ],
     providers: [
-        ProfileService
+        ProfileService,
+        NgbModal        
     ],
     schemas: [ 
         CUSTOM_ELEMENTS_SCHEMA 

@@ -1,10 +1,11 @@
+import { RequestPasswordComponent } from './request-password.component';
 import { ThemeModule } from '../../theme.module';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { RegisterComponent } from './register.component';
+
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { routes } from "./register.routing";
+import { routes } from "./request-password.routing";
 
 @NgModule({
   imports: [ 
@@ -14,11 +15,11 @@ import { routes } from "./register.routing";
       ThemeModule
   ],
   declarations: [
-      RegisterComponent
+      RequestPasswordComponent
   ],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ]
 })
-export class RegisterModule {
+export class RequestPasswordModule {
 }

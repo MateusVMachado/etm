@@ -1,7 +1,5 @@
-import { ProfileEditComponent } from './components/profile/profile-edit/profile-edit.component';
 import { InterceptorService } from './components/shared/services/interceptor.service';
 import { HeaderService } from './components/header/header.service';
-import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -62,7 +60,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HeaderService,
     GeneralConfigService,
     { provide: APP_BASE_HREF, useValue: '/' }
-  ],
+  ]
 })
 export class AppModule {
 }
