@@ -26,6 +26,7 @@ import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession
 import { BackLoggerService } from '../shared/services/backLogger.service';
 
 import * as moment from 'moment';
+import { AudioService } from '../shared/services/audio.service';
 
 @Component({
   selector: 'app-teclado',
@@ -72,9 +73,13 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private backLoggerService: BackLoggerService) {
+              private backLoggerService: BackLoggerService,
+              private audioService: AudioService) {
 
+              //this.audioService.main();
              
+              
+
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
               this.timeInterval = new TimeIntervalUnit();

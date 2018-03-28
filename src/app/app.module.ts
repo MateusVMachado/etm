@@ -31,6 +31,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
 import { BackLoggerService } from './components/shared/services/backLogger.service';
 import { AppServiceBase } from './components/shared/services/app-service-base.service';
+import { AudioService } from './components/shared/services/audio.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -75,6 +76,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     GeneralConfigService,
     CaptionTextService,
     BackLoggerService,
+    AudioService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
 })

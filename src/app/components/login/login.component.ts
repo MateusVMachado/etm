@@ -37,7 +37,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
                 ) { super(injector) }
 
     public ngOnInit(){
-
+     
     }            
 
     public ngAfterViewInit(){
@@ -120,9 +120,18 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
 
     public login(): void {
 
-      navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this) ); 
-      
-    }
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
+          {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
+        } else {
+          this.geolocationFailure();
+        }
+          
+
+         
+
+    }    
+    
 
     navigateTo(path: string) {
       this.router.navigate([path]);
