@@ -4,6 +4,7 @@ import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.A
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
 import { OpenFacActionKeyboardWriter } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardWriter';
 import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.SensorJoystick';
+import { OpenFacSensorMicrophone } from '../../../../node_modules/openfac/OpenFac.SensorMicrophone';
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
 import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
 import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
@@ -26,7 +27,6 @@ import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession
 import { BackLoggerService } from '../shared/services/backLogger.service';
 
 import * as moment from 'moment';
-import { AudioService } from '../shared/services/audio.service';
 
 @Component({
   selector: 'app-teclado',
@@ -65,6 +65,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private userSession: UserSessionModel;
   private timeInterval: TimeIntervalUnit;
 
+  public once = true;
+
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
@@ -73,13 +75,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private backLoggerService: BackLoggerService,
-              private audioService: AudioService) {
+              private backLoggerService: BackLoggerService) {
 
               //this.audioService.main();
              
               
-
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
               this.timeInterval = new TimeIntervalUnit();
@@ -214,32 +214,20 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
       this.teclado.teclas = [];
-      this.teclado.text = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      this.teclado.text = [];
 
-      for(let i = 0 ; i < layout.Lines.length; i++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let line = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          line.push(layout.Lines[i].Buttons[j].Caption); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          textL.push(layout.Lines[i].Buttons[j].Text); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        this.teclado.teclas.push(line);  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        this.teclado.text.push(textL); ///////////////////////ADICIONADO RECENTE ////////////////////////////////////
-      } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-      this.teclado.type = layout.nameLayout; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      for(let i = 0 ; i < layout.Lines.length; i++){ 
+        let line = []; 
+        let textL = []; 
+        for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ 
+          line.push(layout.Lines[i].Buttons[j].Caption); 
+          textL.push(layout.Lines[i].Buttons[j].Text); 
+        } 
+        this.teclado.teclas.push(line);  
+        this.teclado.text.push(textL); 
+      } 
+      this.teclado.type = layout.nameLayout; 
 
-
-      /*
-      layout.Lines.forEach(element => {
-          let line = [];
-          element.Buttons.forEach(element => {
-              line.push(element.Text);
-          });
-          this.teclado.teclas.push(line);
-          
-      });
-      this.teclado.type = layout.nameLayout;
-      */
   }
 
   public capsLock() {
@@ -318,23 +306,33 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   private configureAll(editorInstance?: any) {
-    if(editorInstance){
-      let configArray = [editorInstance, this.keyCommandService, this.zone];
-      OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
-    }
-    clearInterval(this.timerId);
-    
-    //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
-    let configJoystickArray = [this.tecladoService];
-    OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+        if(editorInstance){
+          let configArray = [editorInstance, this.keyCommandService, this.zone];
+          OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
+        }
+        clearInterval(this.timerId);
+        
+        
+        let configJoystickArray = [this.tecladoService];
+        let configMicrophoneArray = [this.tecladoService];
+        
+        OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+      
+        OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone, configMicrophoneArray);
+      
+        OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
+        
+        this.config = new OpenFacConfig('config.file', this.openFacLayout); 
+        this.engine = new OpenFacEngine(this.config);
+        this.engine.DoCallBack(this.DoCallBack.bind(this));
+        if(this.once) {
+          this.once = false;
+          this.engine.Start(false);
+        } else {
+          this.engine.Start(true);
+        }  
 
-    OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
-    
-    this.config = new OpenFacConfig('config.file', this.openFacLayout); 
-    this.engine = new OpenFacEngine(this.config);
-    this.engine.DoCallBack(this.DoCallBack.bind(this));
-    this.engine.Start();
-    this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }
 
   private timer1_Tick(): void {

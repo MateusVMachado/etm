@@ -124,12 +124,10 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
           navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
           {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
         } else {
+          
           this.geolocationFailure();
         }
           
-
-         
-
     }    
     
 
