@@ -13,13 +13,19 @@ import { SideBarService } from '../sidebar/sidebar.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
-import { Subscription } from 'rxjs';
+import { Subscription, TimeInterval } from 'rxjs';
 import { KeyboardNamesList } from '../sidebar/keyboards-list.model';
 
 import * as $ from 'jquery';
 import { SaveModalComponent } from './save-layout/save-modal.component';
 import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
 import { CaptionTextService } from './caption-text/caption-text.service';
+
+import * as moment from 'moment';
+
+import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession.model';
+import { BackLoggerService } from '../shared/services/backLogger.service';
+
 
 @Component({
   selector: 'app-layout-editor',
@@ -61,6 +67,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private globColumnQnty = 14;
 
     private lastKind: string;
+    
+    private userSession: UserSessionModel;
+    private timeInterval: TimeIntervalUnit;
 
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
@@ -72,10 +81,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private sidebarService: SideBarService,
                 private modalService: NgbModal,
                 private sideBarService: SideBarService,
-                private captionTextService: CaptionTextService) {
+                private captionTextService: CaptionTextService,
+                private backLoggerService: BackLoggerService) {
       super(injector);       
                   
+
+      this.userSession = new UserSessionModel();
+      this.userSession.layoutEditorIntervals = new Array();
+      this.timeInterval = new TimeIntervalUnit();
+
+      this.timeInterval.inTime = moment().format("HH:mm:ss");
+
+
       let user = this.authService.getLocalUser();
+      this.userSession.user = user.email;            
+
       this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
           this.keyboardItems = result;
       });
@@ -100,7 +120,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       })
 
 
-      dragulaService.drop.subscribe((value) => {
+      dragulaService.drop.subscribe((value) => {  
           this.onDrop(value);
       });
 
@@ -114,8 +134,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     ngOnDestroy() {
       this.dragulaService.destroy('master-bag'); 
       this.reStartBoard();
-      
-
+      this.timeInterval.outTime = moment().format('HH:mm:ss');
+      this.userSession.layoutEditorIntervals.push(this.timeInterval);
+      this.backLoggerService.sendLayoutIntervalNow(this.userSession).subscribe(()=>{   });
+      //SEND USER SESSION TO BACKEND 
     }
 
     ngOnInit() {
@@ -142,6 +164,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       });
 
     }
+
 
 
     public reStartBoard(){
@@ -298,7 +321,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let found = false;
                       for(let k = 0; k < coordinatesMap.length; k++){
                         let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
-                        console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+    
                        
                         
                         for(let i = 0; i < notFoundArray.length; i++ ){
@@ -313,8 +336,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                        
                         if(!found && index2 === -1 ){ 
                           let map = new Array();
-                          console.log("INSIDE:");
-                          console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+
                           map.push(coordinatesMap[k][0]);
                           map.push(k);
   
@@ -380,7 +402,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let found = false;
                       for(let k = 0; k < coordinatesMap.length; k++){
                         let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
-                        console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+   
                        
                         
                         for(let i = 0; i < notFoundArray.length; i++ ){
@@ -395,8 +417,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                        
                         if(!found && index2 === -1 ){ 
                           let map = new Array();
-                          console.log("INSIDE:");
-                          console.log("COORDINATE: " + JSON.stringify(coordinatesMap[k][0]) + ' FOUND: ' + index2 );
+
                           map.push(coordinatesMap[k][0]);
                           map.push(k);
   
@@ -437,12 +458,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              $("[id=content]")[formula].appendChild(el3);
          }
        }
-
-       console.log("NOT FOUND ARRAY: ");
-       console.log(JSON.stringify(notFoundArray));
-       console.log("COORDINATES MAP: ");
-       console.log(JSON.stringify(coordinatesMap));
-       console.log(JSON.stringify(this.tecladoReplicant));
 
       })
 
@@ -551,7 +566,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                            this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           } else {
                             trueValue = $($(value[1])[0]).val() ;
                  
@@ -563,23 +578,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX];
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else if (isContent && isCopy){
               
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
-                                  //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
+                                  
                               }
                             } else {
              
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
 
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                             }    
                             
                           } 
@@ -590,7 +604,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                            this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                            this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           } else {
        
 
@@ -606,26 +620,26 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              
                                   if(isContent && !isCopy){
                     
-                                    this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.teclas[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE //////////////////////////////////// 
+                                    this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; 
+                                    this.tecladoReplicant.teclas[sourceY][sourceX] = ""; 
                                   
-                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else if (isContent && isCopy){
             
-                                    //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                    
                                     this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
-                                    //this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                                 }
                               } else {
                   
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
   
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                               }    
 
        
@@ -637,7 +651,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                   }   
    
-                  console.log(JSON.stringify(this.tecladoReplicant));
 
                   return;
                 }
@@ -658,7 +671,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         value[1].remove();  
                         trueValue = $($(value[1])[0]).val();
                         this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                        this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                        this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
   
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -666,11 +679,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       
 
                       if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                          this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                          this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
-                          this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                          this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                          this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                          this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                     } 
 
                     } 
@@ -689,7 +702,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       value[1].remove();  
                       trueValue = $($(value[1])[0]).val();
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                      this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
 
                       trueValue = $( $(value[1]).children()[0] ).val();
@@ -700,11 +713,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                           
                           if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                              this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                              this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                              this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                           }  
    
                       } else {
@@ -717,7 +730,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        
                                 value[1].remove();
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                                this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                             } else {
           
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -725,11 +738,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                               }  
     
                             }    
@@ -738,7 +751,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
            
                               value[1].remove();
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                              this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                              this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                             } else {
        
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -746,11 +759,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                  this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                     } 
          
                             } 
@@ -764,7 +777,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
                                   value[1].remove();
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
       
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -772,11 +785,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 
 
                                 if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else {
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                 }    
 
                               }    
@@ -785,7 +798,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        
                                   value[1].remove();
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                  this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
              
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -793,11 +806,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                                 if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
-                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else {
-                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+                                    this.tecladoReplicant.text[sourceY][sourceX] = ""; 
+                                    this.tecladoReplicant.text[drainY][drainX] = trueValue; 
                                 }  
        
                               }   
@@ -811,7 +824,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
-                console.log(JSON.stringify(this.tecladoReplicant));
+   
              
     }    
 
@@ -823,11 +836,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public closeModal(){
       this.modal.close();
   } 
-
-    public sayHello(mystring: string){
-      console.log(this.keyboardToEdit);
-
-    }
 
     public populateLayout(replicant: TecladoModel, email: string): OpenFACLayout{
       let openFacLayout = new OpenFACLayout(); 

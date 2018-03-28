@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import * as jwt from 'jsonwebtoken';
+import { UserAndGPS } from '../models/userSession.model';
 
 @Injectable()
 export class AuthService extends AppServiceBase {
@@ -18,9 +19,9 @@ export class AuthService extends AppServiceBase {
     constructor(protected injector: Injector, private http: HttpClient) {
         super(injector);
     }
-
-    authenticate(user: User) {
-        return this.http.post<LoginAuthenticateModel>(this.backendAddress + '/login', user);
+    
+    authenticate(user: UserAndGPS) {
+        return this.http.get(this.backendAddress + `/login?email=${user.email}&password=${user.password}&latitude=${user.latitude}&longitude=${user.longitude}`);
     }
 
     isAuthenticated() {

@@ -23,6 +23,8 @@ import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
+import { BackLoggerService } from './components/shared/services/backLogger.service';
+import { AppServiceBase } from './components/shared/services/app-service-base.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -55,10 +57,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     AuthService,
     AuthGuard,
     MessageService,
+    AppServiceBase,
     CKEditorComponent,
     SideBarService,
     HeaderService,
     GeneralConfigService,
+    BackLoggerService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ]
 })

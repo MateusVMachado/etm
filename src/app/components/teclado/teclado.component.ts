@@ -22,6 +22,10 @@ import { AuthService } from '../shared/services/auth.services';
 import * as $ from 'jquery';
 import { NbMenuItem } from '@nebular/theme';
 import { Router, ActivatedRoute } from '@angular/router';
+import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession.model';
+import { BackLoggerService } from '../shared/services/backLogger.service';
+
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-teclado',
@@ -57,6 +61,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   public ledOn: boolean = false;
 
+  private userSession: UserSessionModel;
+  private timeInterval: TimeIntervalUnit;
+
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
@@ -64,9 +71,21 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private configService: GeneralConfigService,
               private authService: AuthService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private backLoggerService: BackLoggerService) {
 
              
+              this.userSession = new UserSessionModel();
+              this.userSession.keyboardIntervals = new Array();
+              this.timeInterval = new TimeIntervalUnit();
+
+              this.timeInterval.inTime = moment().format("HH:mm:ss");
+
+
+              let user = this.authService.getLocalUser();
+              this.userSession.user = user.email; 
+
+
               this.keyCommandService = new OpenFacKeyCommandService();
    
               this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result)=>{
@@ -117,6 +136,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.sideBarServiceSubscribe.unsubscribe();
      this.configServiceSubscribe.unsubscribe();
      this.tecladoServiceSubscription.unsubscribe();
+
+     this.timeInterval.outTime = moment().format('HH:mm:ss');
+     this.userSession.keyboardIntervals.push(this.timeInterval);
+     this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(()=>{   });
   }
 
   ngOnInit() { }
