@@ -72,7 +72,6 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         this.submitted = true;
         let message;
         this.configService.saveConfiguration(this.config, 'pt-br').subscribe(result => {
-            this.messageService.setLanguage(this.config.linguagem);
             setTimeout(()=> {
                 message = this.messageService.getTranslation('MENSAGEM_CONFIGURACOES_SALVAS');
                 this.messageService.success(message);
@@ -87,7 +86,6 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         let user: User = new User();
         user = this.authService.getLocalUser();
         this.configService.getConfiguration(user.email).subscribe((result: ConfigModel) => {
-            this.config.linguagem = result.language;
             this.config.layout = result.openFacConfig.KeyboardLayout;
             this.config.sensor = result.openFacConfig.ActiveSensor;
             this.config.tipoVarredura = result.openFacConfig.ScanType;

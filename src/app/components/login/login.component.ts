@@ -37,7 +37,16 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
                 ) { super(injector) }
 
     public ngOnInit(){
-
+      let idiomaCookie = window.localStorage.getItem('Language');
+      let idiomaBrowser = window.navigator.language;
+      if(idiomaCookie){
+        this.messageService.setLanguage(idiomaCookie);
+      }else if(idiomaBrowser === 'en' || idiomaBrowser === 'pt-BR' || idiomaBrowser === 'es'){
+         if(idiomaBrowser === 'pt-BR'){
+          idiomaBrowser = 'pt-br'
+        }
+        this.messageService.setLanguage(idiomaBrowser);
+      }
     }            
 
     public ngAfterViewInit(){
@@ -74,7 +83,6 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
             this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
               this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
-                this.messageService.setLanguage(result.language);
                 this.router.navigate(['./pages/teclados']);
               });
             });
@@ -104,10 +112,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
           }
           this.authService.getUser(usuario.email).subscribe((res:User) => {
             this.authService.setUser(res, usuario.jwt);
-            this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
-              this.messageService.setLanguage(result.language);
-              this.router.navigate(['./pages/teclados']);
-            });
+            this.router.navigate(['./pages/teclados']);
           });
         }, (error) =>{
           if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
@@ -119,9 +124,12 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
     }
 
     public login(): void {
-
       navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this) ); 
-      
+    }
+
+    changeLanguage(event){
+      this.messageService.setLanguage(event.toElement.id);
+      window.localStorage.setItem('Language', event.toElement.id);
     }
 
     navigateTo(path: string) {
