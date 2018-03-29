@@ -1,0 +1,12 @@
+.rzslider {
+
+        transition: left linear 0.4s;
+}
+.rzslider:hover{
+    transition: none; 
+}
+
+.rzslider:noanimate{
+            transition: none; 
+    
+}   

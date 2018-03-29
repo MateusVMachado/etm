@@ -8,11 +8,15 @@ import { Injectable } from '@angular/core';
 import { OpenFACConfig, OpenFACLayout } from "openfac/OpenFac.ConfigContract";
 import { User } from '../shared/models/user';
 import { Injector } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class GeneralConfigService extends AppServiceBase{
     public config: any = {};
     private http: HttpClient;
+
+    public generalConfigPayloadSubject = new Subject<any>();  
+
 
     public configuration = {};
     constructor(protected injector: Injector,  private authService: AuthService) {
@@ -20,7 +24,7 @@ export class GeneralConfigService extends AppServiceBase{
         this.http = this.injector.get(HttpClient);
     }
 
-    public saveConfiguration(config?: any, keyboardName?:string){
+    public saveConfiguration(config?: any, keyboardName?:string, level?:number){
         let user = this.authService.getLocalUser();
         let configOpenFAC: ConfigModel = new ConfigModel();
         configOpenFAC.language = config.linguagem;
@@ -31,7 +35,9 @@ export class GeneralConfigService extends AppServiceBase{
         configOpenFAC.user = user.email;
         configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         configOpenFAC.lastKeyboard = keyboardName;
+        configOpenFAC.level = level;
         
+
         return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text'});
     }
 
@@ -47,6 +53,16 @@ export class GeneralConfigService extends AppServiceBase{
     public returnLastUsed(lastUsed: number, openFacLayout: OpenFACLayout, data: any) {
         let user = this.authService.getLocalUser();
         return this.http.get(this.backendAddress + `/configuration?email=${user.email}`);
+    }
+
+
+    public emitGeneralConfigPayload(editor: any) {
+        this.generalConfigPayloadSubject.next(editor);
+    }
+      
+    
+    public subscribeToGeneralConfigPayloadSubject() {
+          return this.generalConfigPayloadSubject.asObservable();      
     }
 
 }

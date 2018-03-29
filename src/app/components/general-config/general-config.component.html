@@ -1,7 +1,9 @@
+
+
 <div class="modal-header">
   <span>{{ messageService.getTranslation('CONFIGURACAO_GERAL_TITULO') }}</span>
-
 </div>
+
 <form (ngSubmit)="setConfiguration()" #form="ngForm" autocomplete="off">
   <div >
                   <div class="form-group">
@@ -61,6 +63,23 @@
                   </small>
               </div>
 
+              <div >
+                    <label for="linguagem" class="label-margin-bottom">Opções do Microfone </label>
+                    <mat-slide-toggle [(ngModel)]="micOptOn" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+              </div>
+
+              <div *ngIf="micOptOn" style="margin-left: 40px;">
+                    <label for="linguagem" class="label-margin-bottom">Sensibilidade</label>
+                    <mat-slider class="rzslider" min="0.00" max="1.00" step="0.01" value="{{level}}" style="width: 300px;" [(ngModel)]="level"
+                         [ngModelOptions]="{standalone: true}"></mat-slider>
+                    <label for="linguagem" class="label-margin-bottom">{{level.toFixed(2)}}</label>
+                    <br>
+                    <mat-slide-toggle [(ngModel)]="micOptOn2" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                    <label for="linguagem" class="label-margin-bottom">Filtro de ruído</label>
+                    <br>
+                    <mat-slide-toggle [(ngModel)]="micOptOn3" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                    <label for="linguagem" class="label-margin-bottom">Detecção de palavra-chave (experimental)</label>
+              </div>
 
   </div>          
   <div class="modal-footer">

@@ -15,6 +15,8 @@ import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession
 
 import * as moment from 'moment';
 import { BackLoggerService } from '../shared/services/backLogger.service';
+import { Subscription } from 'rxjs';
+
 
 @Component({
     selector: 'app-modal-config',
@@ -27,8 +29,16 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
     public submitted: boolean;
     public config: any = {};
 
+    public micOptOn: boolean;
+    public level: number = 0.30;
+
+
     private userSession: UserSessionModel;
     private timeInterval: TimeIntervalUnit;
+
+    private levelSubscription: Subscription;
+
+    private configServiceSubscribe: Subscription;
 
     constructor( 
         private router: Router, 
@@ -48,8 +58,21 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
             this.timeInterval.inTime = moment().format("HH:mm:ss");
 
 
+
             let user = this.authService.getLocalUser();
             this.userSession.user = user.email; 
+
+            //this.levelSubscription =  this.configService.subscribeToGeneralConfigPayloadSubject().subscribe((result)=>{
+            //    if(result) {
+            //        this.level = result;
+            //    }    
+            //});
+
+
+            this.configServiceSubscribe = this.configService.getConfiguration(user.email).subscribe((result)=>{
+                this.level = result.level;
+            })
+
         }
 
     ngOnDestroy() {
@@ -58,6 +81,8 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         this.timeInterval.outTime = moment().format('HH:mm:ss');
         this.userSession.configIntervals.push(this.timeInterval);
         this.backLoggerService.sendConfigIntervalNow(this.userSession).subscribe(()=>{   });
+        //this.levelSubscription.unsubscribe();
+        this.configServiceSubscribe.unsubscribe();
     }
 
     ngOnInit() {
@@ -71,11 +96,13 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
     public setConfiguration(){
         this.submitted = true;
         let message;
-        this.configService.saveConfiguration(this.config, 'pt-br').subscribe(result => {
+        this.configServiceSubscribe.unsubscribe();
+        this.configService.saveConfiguration(this.config, 'pt-br', this.level).subscribe(result => {
             this.messageService.setLanguage(this.config.linguagem);
             setTimeout(()=> {
                 message = this.messageService.getTranslation('MENSAGEM_CONFIGURACOES_SALVAS');
                 this.messageService.success(message);
+                this.configService.emitGeneralConfigPayload(this.level);
             }, 200);   
         }, (error: any) => {
             message = this.messageService.getTranslation('MENSAGEM_ERRO_SALVAR_CONFIGS');

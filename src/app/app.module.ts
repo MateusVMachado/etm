@@ -6,7 +6,9 @@ import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
+import { GestureConfig } from '@angular/material';
 import { NgModule } from '@angular/core';
 
 import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
@@ -31,6 +33,10 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
 import { BackLoggerService } from './components/shared/services/backLogger.service';
 import { AppServiceBase } from './components/shared/services/app-service-base.service';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { MatSliderModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material';
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -48,6 +54,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     CoreModule.forRoot(),
     FormsModule,
     DragulaModule,
+    MatSliderModule,
+    MatSliderModule,
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,
@@ -58,6 +66,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   ],
   bootstrap: [AppComponent],
   providers: [
+    { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
     CookieService,
     StateService,
@@ -77,6 +86,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     BackLoggerService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+]
 })
 export class AppModule {
 }

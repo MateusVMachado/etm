@@ -27,6 +27,7 @@ import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession
 import { BackLoggerService } from '../shared/services/backLogger.service';
 
 import * as moment from 'moment';
+import { AudioService } from '../shared/services/audio.service';
 
 @Component({
   selector: 'app-teclado',
@@ -61,11 +62,15 @@ export class TecladoComponent implements OnInit, OnDestroy {
   public target: any;
 
   public ledOn: boolean = false;
+  public micOn: boolean = false;
 
   private userSession: UserSessionModel;
   private timeInterval: TimeIntervalUnit;
 
   public once = true;
+  public level: number;
+
+  public configurations: any;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -98,6 +103,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   this.ledOn = true;
                   clearInterval(this.timeoutId);
                   this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 500) ;
+                } else if (result === "spoked"){
+                  this.micOn = true;
+                  clearInterval(this.timeoutId);
+                  this.timeoutId =  setTimeout(this.turnMICoff.bind(this), 500) ;
                 }
               })
               
@@ -135,6 +144,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
     this.ledOn = false;
   }
 
+  private turnMICoff(){
+    this.micOn = false;
+  }
+
   ngOnDestroy(): void {
      this.keyCommandServiceSubscribe.unsubscribe();
      this.editorTecladoServiceSubscribe.unsubscribe();
@@ -169,10 +182,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.configServiceSubscribe = 
                         this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
                         .subscribe((result: ConfigModel) => {
+          this.configurations = result;
 
           this.config.lastKeyboard = result.lastKeyboard;
           this.scanTimeLines = result.openFacConfig.ScanTimeLines;
           this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
+          this.level = result.level;
 
           let found = false;
           for(let i=0; i < this.KeyboardData.length; i++){
@@ -312,9 +327,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
         }
         clearInterval(this.timerId);
         
-        
+        let user = this.authService.getLocalUser();
         let configJoystickArray = [this.tecladoService];
-        let configMicrophoneArray = [this.tecladoService];
+
+        console.log(this.level);
+        let configMicrophoneArray = [this.tecladoService, this.configService, user, this.level];
         
         OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
       
@@ -322,7 +339,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
       
         OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
         
-        this.config = new OpenFacConfig('config.file', this.openFacLayout); 
+        this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
         this.engine = new OpenFacEngine(this.config);
         this.engine.DoCallBack(this.DoCallBack.bind(this));
         if(this.once) {
