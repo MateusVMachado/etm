@@ -3,7 +3,6 @@ import { HeaderService } from './header.service';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { ProfileComponent } from '../profile/profile.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ProfileService } from '../profile/profile.service';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import {

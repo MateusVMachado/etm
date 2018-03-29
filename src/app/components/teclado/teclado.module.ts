@@ -20,6 +20,9 @@ import { FormsModule } from '@angular/forms';
     ],
     schemas: [
         CUSTOM_ELEMENTS_SCHEMA
+    ],
+    providers: [
+        TecladoService
     ]
 })
 export class TecladoModule { }

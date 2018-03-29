@@ -2,24 +2,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { LayoutEditorComponent } from './layout-editor.component';
 
-const routes: Routes = [
+export const routes: Routes = [
     {
-        path: '',  component: LayoutEditorComponent,
-        children: [{
-            path: 'layout-editor',
-            component: LayoutEditorComponent,
-        },
-        {
-            path: '',
-            redirectTo: 'layout-editor',
-            pathMatch: 'full',
-        }],
+        path: '',  component: LayoutEditorComponent
     }
 ];
-
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class LayoutEditorRoutingModule {
-}

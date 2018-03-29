@@ -9,7 +9,7 @@ import { EditorTecladoComponent } from '../editor-teclado/editor-teclado.compone
 import { GeneralConfigComponent } from '../general-config/general-config.component';
 import { LayoutEditorComponent } from '../layout-editor/layout-editor.component';
 
-const routes: Routes = [{
+export const routes: Routes = [{
   path: '',
   component: SidebarComponent,
   children: [
@@ -20,30 +20,24 @@ const routes: Routes = [{
     },
     {
       path: 'dashboard',
-      component: DashboardComponent,
+      loadChildren: 'app/components/dashboard/dashboard.module#DashboardModule'
     },
     {
       path: 'editor-teclado',
-      component: EditorTecladoComponent,
+      loadChildren: 'app/components/editor-teclado/editor-teclado.module#EditorTecladoModule'
     },
     {
       path: 'general-config',
-      component: GeneralConfigComponent,
+      loadChildren: 'app/components/general-config/general-config.module#GeneralConfigModule'
     },
     {
       path: 'layout-editor',
-      component: LayoutEditorComponent,
+      loadChildren: 'app/components/layout-editor/layout-editor.module#LayoutEditorModule'
     },
     {
       path: 'profile',
-      component: ProfileComponent,
+      loadChildren: 'app/components/profile/profile.module#ProfileModule'
     }
   ],
 }];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class SidebarRoutingModule {
-}
