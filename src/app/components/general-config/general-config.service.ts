@@ -22,7 +22,6 @@ export class GeneralConfigService extends AppServiceBase{
     public saveConfiguration(config?: any, keyboardName?:string){
         let user = this.authService.getLocalUser();
         let configOpenFAC: ConfigModel = new ConfigModel();
-        configOpenFAC.language = config.linguagem;
         configOpenFAC.openFacConfig.ActiveSensor = config.sensor;
         configOpenFAC.openFacConfig.ScanType = config.tipoVarredura;
         configOpenFAC.openFacConfig.ScanTimeLines = config.tmpVarreduraLns;
