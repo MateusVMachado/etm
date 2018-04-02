@@ -54,6 +54,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private timeoutId: any;
   private scanTimeLines: number;
   private scanTimeColumns: number;
+  private audioContext: AudioContext = new AudioContext();
 
   public menu: NbMenuItem[];
   public jsonArray = new Array();
@@ -80,6 +81,16 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService) {
+
+
+                let editor = document.createElement('script');
+                editor.setAttribute('type', 'text/javascript');
+                editor.setAttribute('src', '../../assets/ckeditor/ckeditor.js');
+                editor.setAttribute('id', 'ckeditor');
+                if(!document.getElementById('ckeditor')){
+                    document.getElementsByTagName('head').item(0).appendChild(editor);
+                }
+
 
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
@@ -203,8 +214,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
           this.configureAll();
           
 
-
-
           this.tecladoService.emitTecladoReady(true);
 
           this.editorTecladoServiceSubscribe = 
@@ -214,7 +223,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
           this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
                 this.configureSome(); 
-                this.tecladoService.emitTecladoReady(true);    
+                this.tecladoService.emitTecladoReady(true);  
           });
 
         });
@@ -327,7 +336,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         let user = this.authService.getLocalUser();
         let configJoystickArray = [this.tecladoService];
 
-        let configMicrophoneArray = [this.tecladoService, this.configService, this.level];
+        let configMicrophoneArray = [this.tecladoService, this.configService, this.level, this.audioContext];
         
         OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
       
@@ -338,11 +347,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
         this.engine = new OpenFacEngine(this.config);
         this.engine.DoCallBack(this.DoCallBack.bind(this));
-        if(this.once) {
-          this.once = false;
-        } else {
-          this.engine.Start();
-        }  
+        
+        this.engine.Start();  
 
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }

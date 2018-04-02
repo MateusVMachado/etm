@@ -79,8 +79,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
 
   logout() {
     this.sendNow().subscribe(()=>{
-      window.localStorage.removeItem('JWTtoken')
-      this.router.navigate(["./auth"]);
+      
     }); 
     window.localStorage.removeItem('JWTtoken')
     this.router.navigate(["./auth"]);
