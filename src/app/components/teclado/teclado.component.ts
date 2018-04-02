@@ -328,7 +328,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         let user = this.authService.getLocalUser();
         let configJoystickArray = [this.tecladoService];
 
-        let configMicrophoneArray = [this.tecladoService, this.configService, user, this.level];
+        let configMicrophoneArray = [this.tecladoService, this.configService, this.level];
         
         OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
       

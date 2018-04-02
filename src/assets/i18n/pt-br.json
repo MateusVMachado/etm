@@ -1,4 +1,7 @@
 {
+    "MIC_SENSIBILIDADE": "Sensibilidade",
+    "MIC_FILTRO_RUIDO": "Filtro de ruído",
+    "MIC_PALAVRA_CHAVE": "Detecção de palavra-chave (experimental)",
     "LOGIN_TITULO": "Entrar",
     "LOGIN_SUBTITULO": "Olá! Entre com seu e-mail",
     "INPUT_SENHA": "Senha",
