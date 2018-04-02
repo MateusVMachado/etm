@@ -11,8 +11,11 @@ import { TecladoService } from '../teclado/teclado.service';
 export class EditorTecladoComponent implements OnInit { 
     public tamanho: number;
     public initEditor: boolean;
-    constructor(private editorTecladoService: EditorTecladoService, private sidebarService: SideBarService, private tecladoService: TecladoService) { }
+    constructor(private editorTecladoService: EditorTecladoService, private sidebarService: SideBarService,
+                private tecladoService: TecladoService) {
 
+                }
+                
     ngOnInit() { 
         this.initEditor = false;
         if(!this.initEditor){

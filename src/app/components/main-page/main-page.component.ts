@@ -90,10 +90,7 @@ export class MainPageComponent extends AppBaseComponent implements OnDestroy {
     protected injector: Injector,
     private authService: AuthService) {
 
-      super(injector);
-
-
-
+    super(injector);
 
     this.layoutState$ = this.stateService.onLayoutState()
       .subscribe((layout: string) => this.layout = layout);
