@@ -8,8 +8,8 @@ import { NbAuthComponent,
   NbResetPasswordComponent,
 } from '@nebular/auth';
 import { AuthGuard } from './guards/auth-guard.service';
-import { NgxLoginComponent } from './components/login/login.component';
-import { NgxRegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 import { RequestPasswordComponent } from './components/request-password/request-password.component';
 import { GeneralConfigComponent } from './components/general-config/general-config.component';
 
@@ -25,27 +25,19 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: NgxLoginComponent,
+        loadChildren: 'app/components/login/login.module#LoginModule',
       },
       {
         path: 'login',
-        component: NgxLoginComponent,
+        loadChildren: 'app/components/login/login.module#LoginModule',
       },
       {
         path: 'register',
-        component: NgxRegisterComponent,
-      },
-      {
-        path: 'logout',
-        component: NbLogoutComponent,
+        loadChildren: 'app/components/register/register.module#RegisterModule'
       },
       {
         path: 'request-password',
-        component: RequestPasswordComponent,
-      },
-      {
-        path: 'reset-password',
-        component: NbResetPasswordComponent,
+        loadChildren: 'app/components/request-password/request-password.module#RequestPasswordModule'
       }
     ],
   },

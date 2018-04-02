@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 //import { ThemeModule } from '../../theme.module';
@@ -9,6 +10,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatSliderModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material';
 import { MatSlideToggleModule } from '@angular/material';
+import { routes } from "./general-config.routing";
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { MatSlideToggleModule } from '@angular/material';
     FormsModule,
     MatSliderModule,
     MatToolbarModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    FormsModule,
+    RouterModule.forChild(routes)
   ],
   declarations: [
     GeneralConfigComponent,

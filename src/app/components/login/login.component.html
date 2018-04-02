@@ -34,6 +34,13 @@
           {{ messageService.getTranslation('BTN_ENTRAR')}}
         </button>
     </form>
+    <div class="row">
+        <div class="col-md-3" style="margin: auto;">
+            <img id="pt-br" alt="Português" src="../../assets/images/br.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
+            <img id="en" alt="English" src="../../assets/images/gb.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
+            <img id="es" alt="Español" src="../../assets/images/es.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
+        </div>
+    </div>
     <div class="links" style="margin-top: 16px; text-align: center;">
         <small class="form-text">
           {{ messageService.getTranslation('LOGIN_TEXTO_CRIAR_CONTA')}} <a (click)="navigateTo('./auth/register')"><label style="cursor:pointer; color:#4799eb">{{ messageService.getTranslation('LOGIN_LINK_CRIAR_CONTA')}}</label></a>

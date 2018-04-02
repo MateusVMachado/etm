@@ -30,8 +30,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
     public config: any = {};
 
     public micOptOn: boolean;
-    public level: number = 0.30;
-
+    public level: number;
 
     private userSession: UserSessionModel;
     private timeInterval: TimeIntervalUnit;
@@ -39,6 +38,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
     private levelSubscription: Subscription;
 
     private configServiceSubscribe: Subscription;
+    private setConfigurationSubscribe: Subscription;
 
     constructor( 
         private router: Router, 
@@ -62,13 +62,6 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
             let user = this.authService.getLocalUser();
             this.userSession.user = user.email; 
 
-            //this.levelSubscription =  this.configService.subscribeToGeneralConfigPayloadSubject().subscribe((result)=>{
-            //    if(result) {
-            //        this.level = result;
-            //    }    
-            //});
-
-
             this.configServiceSubscribe = this.configService.getConfiguration(user.email).subscribe((result)=>{
                 this.level = result.level;
             })
@@ -81,8 +74,9 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         this.timeInterval.outTime = moment().format('HH:mm:ss');
         this.userSession.configIntervals.push(this.timeInterval);
         this.backLoggerService.sendConfigIntervalNow(this.userSession).subscribe(()=>{   });
-        //this.levelSubscription.unsubscribe();
-        this.configServiceSubscribe.unsubscribe();
+        
+        if(this.configServiceSubscribe) this.configServiceSubscribe.unsubscribe();
+        if(this.setConfigurationSubscribe) this.setConfigurationSubscribe.unsubscribe();
     }
 
     ngOnInit() {
@@ -97,8 +91,8 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         this.submitted = true;
         let message;
         this.configServiceSubscribe.unsubscribe();
-        this.configService.saveConfiguration(this.config, 'pt-br', this.level).subscribe(result => {
-            this.messageService.setLanguage(this.config.linguagem);
+        this.setConfigurationSubscribe = this.configService.saveConfiguration(this.config, 'pt-br', this.level).subscribe(result => {
+            
             setTimeout(()=> {
                 message = this.messageService.getTranslation('MENSAGEM_CONFIGURACOES_SALVAS');
                 this.messageService.success(message);
@@ -114,7 +108,6 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         let user: User = new User();
         user = this.authService.getLocalUser();
         this.configService.getConfiguration(user.email).subscribe((result: ConfigModel) => {
-            this.config.linguagem = result.language;
             this.config.layout = result.openFacConfig.KeyboardLayout;
             this.config.sensor = result.openFacConfig.ActiveSensor;
             this.config.tipoVarredura = result.openFacConfig.ScanType;

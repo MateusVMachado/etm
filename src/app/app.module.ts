@@ -1,8 +1,5 @@
-import { TecladoService } from './components/teclado/teclado.service';
 import { InterceptorService } from './components/shared/services/interceptor.service';
 import { HeaderService } from './components/header/header.service';
-import { ProfileService } from './components/profile/profile.service';
-import { ProfileModule } from './components/profile/profile.module';
 import { MessageService } from './components/shared/services/message.service';
 import { APP_BASE_HREF } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,15 +16,12 @@ import { ThemeModule } from './theme.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { StateService } from './data/state.service';
 import { AuthGuard } from './guards/auth-guard.service';
-import { NgxRegisterComponent } from './components/register/register.component';
 import { AuthService } from './components/shared/services/auth.services';
-import { CookieService } from 'ngx-cookie-service';
 import { CKEditorComponent } from 'ng2-ckeditor';
 import { SideBarService } from './components/sidebar/sidebar.service';
 import { FormsModule } from '@angular/forms';
 import { GeneralConfigService } from './components/general-config/general-config.service';
 import { DragulaModule, DragulaService } from  'ng2-dragula/ng2-dragula';
-import { LayoutEditorService } from './components/layout-editor/layout-editor.service';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { CaptionTextService } from './components/layout-editor/caption-text/caption-text.service';
@@ -68,7 +62,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   providers: [
     { provide: HAMMER_GESTURE_CONFIG, useClass: GestureConfig },
     { provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true },
-    CookieService,
     StateService,
     AuthService,
     AuthGuard,
@@ -78,11 +71,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     SideBarService,
     HeaderService,
     GeneralConfigService,
-    LayoutEditorService,
-    ProfileService,
-    TecladoService,
-    GeneralConfigService,
-    CaptionTextService,
     BackLoggerService,
     { provide: APP_BASE_HREF, useValue: '/' }
   ],

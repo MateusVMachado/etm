@@ -6,7 +6,6 @@ import { Component, ViewChild, OnInit, Injector, AfterViewInit } from '@angular/
 import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.services';
 import 'rxjs/add/operator/catch';
-import { CookieService } from 'ngx-cookie-service';
 import { NgForm } from '@angular/forms';
 import { LoginAuthenticateModel } from "./login-authenticate.model";
 import { UserAndGPS } from '../shared/models/userSession.model';
@@ -17,7 +16,7 @@ import { AppServiceBase } from '../shared/services/app-service-base.service';
     templateUrl: './login.component.html',
 })
 
-export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
+export class LoginComponent extends AppBaseComponent implements AfterViewInit, OnInit  {
   
   @ViewChild('form') form: NgForm;
     user: any = {
@@ -31,13 +30,21 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
 
     constructor(protected authService: AuthService,
                 protected router: Router,
-                private cookieService: CookieService,
                 protected injector: Injector,
                 private configService: GeneralConfigService
                 ) { super(injector) }
 
     public ngOnInit(){
-     
+      let idiomaCookie = window.localStorage.getItem('Language');
+      let idiomaBrowser = window.navigator.language;
+      if(idiomaCookie){
+        this.messageService.setLanguage(idiomaCookie);
+      }else if(idiomaBrowser === 'en' || idiomaBrowser === 'pt-BR' || idiomaBrowser === 'es'){
+         if(idiomaBrowser === 'pt-BR'){
+          idiomaBrowser = 'pt-br'
+        }
+        this.messageService.setLanguage(idiomaBrowser);
+      }
     }            
 
     public ngAfterViewInit(){
@@ -45,7 +52,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
       // WORKAROUND PARA RESOLVER PROBLEMA DO BOTÃO DE ENTRAR 
       // NÃO SER ATIVADO COM O AUTOFILL DO BROWSER
       this.user.password = 'inserir'; 
-    }          
+    }    
     
     public geolocationSuccess(position){
         let newUserAndGPS = new UserAndGPS();
@@ -74,7 +81,6 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
             this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
               this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
-                this.messageService.setLanguage(result.language);
                 this.router.navigate(['./pages/teclados']);
               });
             });
@@ -104,10 +110,7 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
           }
           this.authService.getUser(usuario.email).subscribe((res:User) => {
             this.authService.setUser(res, usuario.jwt);
-            this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
-              this.messageService.setLanguage(result.language);
-              this.router.navigate(['./pages/teclados']);
-            });
+            this.router.navigate(['./pages/teclados']);
           });
         }, (error) =>{
           if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
@@ -119,7 +122,6 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
     }
 
     public login(): void {
-
         if(navigator.geolocation){
           navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
           {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
@@ -130,6 +132,11 @@ export class NgxLoginComponent extends AppBaseComponent implements AfterViewInit
           
     }    
     
+
+    changeLanguage(event){
+      this.messageService.setLanguage(event.toElement.id);
+      window.localStorage.setItem('Language', event.toElement.id);
+    }
 
     navigateTo(path: string) {
       this.router.navigate([path]);

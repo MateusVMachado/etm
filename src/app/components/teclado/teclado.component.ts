@@ -82,9 +82,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService) {
 
-              //this.audioService.main();
-             
-              
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
               this.timeInterval = new TimeIntervalUnit();
@@ -158,6 +155,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.timeInterval.outTime = moment().format('HH:mm:ss');
      this.userSession.keyboardIntervals.push(this.timeInterval);
      this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(()=>{   });
+
+     this.engine.Stop();
   }
 
   ngOnInit() { }
@@ -192,7 +191,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
           let found = false;
           for(let i=0; i < this.KeyboardData.length; i++){
             if(this.KeyboardData[i].nameLayout === 'caps') continue;
-            //if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
               if(this.target === this.KeyboardData[i].nameLayout){
                   lastUsed = i;
                   this.openFacLayout = (data[lastUsed]);
@@ -314,7 +312,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   private configureSome(){
-    this.config = new OpenFacConfig('config.file', this.openFacLayout); 
+    this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
     this.engine = new OpenFacEngine(this.config);
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
@@ -330,7 +328,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
         let user = this.authService.getLocalUser();
         let configJoystickArray = [this.tecladoService];
 
-        console.log(this.level);
         let configMicrophoneArray = [this.tecladoService, this.configService, user, this.level];
         
         OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
@@ -344,9 +341,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.engine.DoCallBack(this.DoCallBack.bind(this));
         if(this.once) {
           this.once = false;
-          this.engine.Start(false);
         } else {
-          this.engine.Start(true);
+          this.engine.Start();
         }  
 
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);

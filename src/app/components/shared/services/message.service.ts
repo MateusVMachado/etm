@@ -17,7 +17,6 @@ export class MessageService {
             this.sidebarService.emitSideBarCommand('reload');
             this.headerService.emitHeaderCommand('reload');
         });
-        
     }
 
     info(message: string, title?: string): any { 

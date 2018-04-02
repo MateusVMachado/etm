@@ -20,7 +20,7 @@ import { Injector } from '@angular/core';
     templateUrl: './register.component.html',
   })
 
-export class NgxRegisterComponent extends AppBaseComponent {
+export class RegisterComponent extends AppBaseComponent {
     user: any = {};
     userInfo: any = {};
 
