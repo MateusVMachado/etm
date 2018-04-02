@@ -5,6 +5,7 @@ export class OpenFACConfig {
     public ActiveSensor: string;
     public ScanTimeLines: number;
     public ScanTimeColumns: number;
+    public level: number;
 }
 /*[DataContract]*/
 export class OpenFACLayout {

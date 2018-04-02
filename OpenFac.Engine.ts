@@ -23,6 +23,7 @@ export interface CallBackEngine {
 
 export class OpenFacEngine implements IOpenFacEngine {
 
+    private activeSensor: IOpenFacSensor;
     private currentState: EngineState;
     private currentKeyboard: OpenFacKeyboard;
     private keyboardManager: OpenFacKeyboardManager;
@@ -36,6 +37,7 @@ export class OpenFacEngine implements IOpenFacEngine {
     private priorRowNumber: number;
     private currentColumnNumber: number;
     private priorColumnNumber: number;
+    private once: boolean = true;
 
     constructor(config: IOpenFacConfig){
         this.openFacConfig = config;
@@ -179,17 +181,22 @@ export class OpenFacEngine implements IOpenFacEngine {
         return this.currentLine;
     };
 
+
+    public Stop(): void {
+        this.activeSensor.Stop();         
+    }
+
     public Start(): void {
         this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? 
                     this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
     
         this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
         
-        let s = this.sensorManager.Find(this.openFacConfig.GetActiveSensor());
-        s.DoCallBack(this, this.CallSensorAction.bind(this));
-        if (s != null)
+        this.activeSensor = this.sensorManager.Find(this.openFacConfig.GetActiveSensor());
+        this.activeSensor.DoCallBack(this, this.CallSensorAction.bind(this));
+        if (this.activeSensor != null)
         {
-            s.Start();
+                this.activeSensor.Start();
         }
     };
 }
