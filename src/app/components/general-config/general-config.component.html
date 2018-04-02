@@ -1,7 +1,9 @@
+
+
 <div class="modal-header">
   <span>{{ messageService.getTranslation('CONFIGURACAO_GERAL_TITULO') }}</span>
-
 </div>
+
 <form (ngSubmit)="setConfiguration()" #form="ngForm" autocomplete="off"> 
     <div class="form-group">
         <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('INPUT_LAYOUT') }}</label>
@@ -41,13 +43,28 @@
         </small>
     </div>
 
-    <div class="form-group" *ngIf="tipoVarredura.valid && tipoVarredura.value === 'automatico'">
-        <label for="tmpVarreduraCls" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TEMPO_VARREDURA_COLUNAS') }}</label>
-        <input step="0.1" type="number" class="form-control input" name="tmpVarreduraCls" [(ngModel)]="config.tmpVarreduraCls" id="tmpVarreduraCls" #tmpVarreduraCls="ngModel" [required]="true">
-        <small class="form-text error" *ngIf="tmpVarreduraCls.invalid && tmpVarreduraCls.touched && tmpVarreduraCls.errors?.required">
-            {{ messageService.getTranslation('TEMPO_VARREDURA_COLUNAS_OBRIGATORIO') }}
-        </small>
-    </div>       
+                <div class="form-group" *ngIf="tipoVarredura.valid && tipoVarredura.value === 'automatico'">
+                  <label for="tmpVarreduraCls" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TEMPO_VARREDURA_COLUNAS') }}</label>
+                  <input step="0.1" type="number" class="form-control input" name="tmpVarreduraCls" [(ngModel)]="config.tmpVarreduraCls" id="tmpVarreduraCls" #tmpVarreduraCls="ngModel" [required]="true">
+                  <small class="form-text error" *ngIf="tmpVarreduraCls.invalid && tmpVarreduraCls.touched && tmpVarreduraCls.errors?.required">
+                      {{ messageService.getTranslation('TEMPO_VARREDURA_COLUNAS_OBRIGATORIO') }}
+                  </small>
+              </div>
+
+              <div *ngIf="config.sensor === 'mic'" style="margin-left: 40px;">
+                    <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('MIC_SENSIBILIDADE') }}</label>
+                    <mat-slider class="rzslider" min="0.00" max="1.00" step="0.01" value="{{level}}" style="width: 300px;" [(ngModel)]="level"
+                         [ngModelOptions]="{standalone: true}"></mat-slider>
+                    <label for="linguagem" class="label-margin-bottom">{{level.toFixed(2)}}</label>
+                    <br>
+                    <mat-slide-toggle [(ngModel)]="micOptOn2" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                    <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('MIC_FILTRO_RUIDO') }}</label>
+                    <br>
+                    <mat-slide-toggle [(ngModel)]="micOptOn3" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                    <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('MIC_PALAVRA_CHAVE') }}</label>
+              </div>
+
+         
   <div class="modal-footer">
     <button [disabled]=" !form.valid " class="btn btn-md btn-primary">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
   </div>

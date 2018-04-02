@@ -122,8 +122,16 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
     }
 
     public login(): void {
-      navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this) ); 
-    }
+        if(navigator.geolocation){
+          navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
+          {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
+        } else {
+          
+          this.geolocationFailure();
+        }
+          
+    }    
+    
 
     changeLanguage(event){
       this.messageService.setLanguage(event.toElement.id);
