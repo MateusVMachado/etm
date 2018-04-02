@@ -81,12 +81,17 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
     private levelSubscription: Subscription;
     public config: any = {};
     private on: boolean;
+    private once: boolean = true;
+    private soundMeter: SoundMeter;
+    private time: any;
+    private time2: any;
 
     constructor(private args: any){
         super();
         this.tecladoService = this.args[0];
         this.configService = this.args[1];
         this.level = this.args[2];
+        this.audioContext = this.args[3];
 
         this.on = true;
     }
@@ -102,13 +107,17 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
 
     public Start(): void {
         this.on = true;
+        this.audioContext.resume();
         this.startMic();
 
     }
 
     public Stop(): void{
-        this.audioContext.close();
         this.on = false;
+        this.soundMeter.stop();
+        this.audioContext.suspend();
+        clearInterval(this.time);
+        clearInterval(this.time2);
       }
 
     public Open(): void {
@@ -129,20 +138,21 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
         
         self.stream = stream;
 
-        let soundMeter =  new SoundMeter(this.audioContext);   
+        self.soundMeter =  new SoundMeter(this.audioContext);   
 
-        soundMeter.connectToSource(this.stream, function(e) {
+        self.soundMeter.connectToSource(this.stream, function(e) {
                 if (e) {
                     alert(e);
                     return;
                 }
                 let flag = true;
-                let time2 = setInterval(function(){
+                let counter = 0;
+                self.time2 = setInterval(function(){
                     if(flag){
-                        let time = setInterval(function() {
+                        self.time = setInterval(function() {
                         if(!self.on){
-                            clearInterval(time);
-                            clearInterval(time2);
+                            clearInterval(self.time);
+                            clearInterval(self.time2);
                             return;
                         }
                             
@@ -155,8 +165,10 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
                             });
                         }    
                         let level = Number(self.level.toFixed(2))*1000;    
-                        let value = Number(soundMeter.instant.toFixed(2)) * 1000;
+                        let value = Number(self.soundMeter.instant.toFixed(2)) * 1000;
                     
+                        // PARA FUTURAS IMPLEMENTAÇÕES DO FILTRO DE RUIDOS
+
                         //console.log('instant: ' + value );
                         //console.log('slow: ' + soundMeter.slow.toFixed(2) );
                         //console.log('clip: ' + soundMeter.clip);
@@ -173,15 +185,17 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
                         //level = (sum/levelsSample.length)*1.20;
                         }
                         
-                        if(Number(soundMeter.instant.toFixed(2)) * 1000 > level) {
-                            self.executeDoAction();
-                            flag = true;
-                            clearInterval(time);
+                        if(Number(self.soundMeter.instant.toFixed(2)) * 1000 > level) {
+                                self.executeDoAction();
+                                flag = true;
+                                clearInterval(self.time);
+                                
                         } else {
-                        flag = false;
+                                flag = false;
                         }   
                     }, 200);
-                    if(self.levelSubscription !== undefined ) self.levelSubscription.unsubscribe();  
+
+                        if(self.levelSubscription !== undefined ) self.levelSubscription.unsubscribe();  
                     }  
                 }, 2000);
         });
@@ -191,7 +205,6 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
 
     public startMic() {
         if(!this.on) return;
-        this.audioContext = new AudioContext;
 
         'use strict';
         let self = this;
@@ -212,8 +225,10 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
 
 
      public executeDoAction(msg?){
-        this.tecladoService.emitTecladoCommand("spoked");
-        this.DoAction(0); 
+         if(this.on){
+            this.DoAction(0); 
+            this.tecladoService.emitTecladoCommand("spoked");
+        }      
      }
 
 

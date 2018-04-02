@@ -203,8 +203,10 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
    }
 
    public executeDoAction(msg){
-      this.tecladoService.emitTecladoCommand("pressed");
-      this.DoAction(0); 
+     if(this.on){
+        this.tecladoService.emitTecladoCommand("pressed");
+        this.DoAction(0); 
+     }   
    }
 
   public stopWorker() { 
