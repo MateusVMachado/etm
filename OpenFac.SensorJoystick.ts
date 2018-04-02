@@ -1,6 +1,5 @@
 import { IOpenFacSensor } from './OpenFac.Sensor.Interface';
 import { OpenFacSensorBase } from './OpenFac.SensorBase';
-import { TecladoService } from '../../src/app/components/teclado/teclado.service';
 
 export class Button{
 
@@ -30,7 +29,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     private controllerName: String;
     private worker: any;
     private tecladoService: any;
-  
+    private on: boolean;
     //public main_gamepad: number = 1;
     private mainGamepad: number = -1;
 
@@ -51,7 +50,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
     }
 
     public Start(): void {
-
+      this.on = true;
       this.startWorker();
       this.animateLoop();
     
@@ -64,7 +63,6 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
 
     public detectControllers(){
-      
       this.gamepads = navigator.getGamepads();
 
       let gamepadsArray = new Array<EtmGamepad>();
@@ -90,8 +88,9 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
         gamepads: gamepadsArray
       };       
 
-      this.worker.postMessage(msg); // Start the worker.
-
+      if(this.worker){
+        this.worker.postMessage(msg); 
+      }
     }
 
 
@@ -108,8 +107,9 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
 
     public animateLoop(){
-      this.cancelationToken = requestAnimationFrame(this.animateLoop.bind(this));
+      if(!this.on) return;
 
+      this.cancelationToken = requestAnimationFrame(this.animateLoop.bind(this));
       this.detectControllers();
     
     }
@@ -204,7 +204,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
 
    public executeDoAction(msg){
       this.tecladoService.emitTecladoCommand("pressed");
-      this.DoAction(0);
+      this.DoAction(0); 
    }
 
   public stopWorker() { 
@@ -216,6 +216,7 @@ export class OpenFacSensorJoystick extends OpenFacSensorBase {
   }
 
   public Stop(): void{
+    this.on = false;
     this.stopWorker();
   }
 

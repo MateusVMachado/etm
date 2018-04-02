@@ -17,7 +17,7 @@ export class OpenFacConfig implements IOpenFacConfig {
     keyboardManager: OpenFacKeyboardManager;
     actionManager: OpenFacActionManager;
 
-    constructor(configFile:string, public openFacLayout: OpenFACLayout)
+    constructor(configFile:any, public openFacLayout: OpenFACLayout)
     {
         this.keyboardManager = new OpenFacKeyboardManager();
         this.actionManager = new OpenFacActionManager();
@@ -26,13 +26,23 @@ export class OpenFacConfig implements IOpenFacConfig {
         this.LoadLayoutConfig();
     } 
 
-    private LoadConfig(FileName: string): OpenFACConfig {
+    private LoadConfig(FileName): OpenFACConfig {
         
         let config: OpenFACConfig = new OpenFACConfig();
-        config.KeyboardLayout = 'QWERT';
-        config.ScanType = "Auto";
-        config.ActiveSensor = "Joystick";
+        if(FileName.openFacConfig.ActiveSensor === 'joy'){
+            config.ActiveSensor = 'Joystick';    
+        } else {
+            config.ActiveSensor = 'Microphone';    
+        }
+        //config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout;
+        //config.KeyboardLayout = 'QWERT';
 
+        config.ScanType = 'Auto';
+        //config.ScanType = "Auto";
+        //config.ActiveSensor = "Joystick";
+        config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout;
+        //config.ActiveSensor = "Microphone";
+        //console.log(JSON.stringify(config) )
         return config;
     }
     private LoadLayout(FileName: string): OpenFACLayout {
