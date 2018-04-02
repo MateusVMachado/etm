@@ -1,4 +1,3 @@
-import { Router } from '@angular/router';
 import { AuthService } from '../shared/services/auth.services';
 import { Component, OnDestroy, HostListener, Injector } from '@angular/core';
 import {
@@ -95,8 +94,7 @@ export class MainPageComponent extends AppBaseComponent implements OnDestroy {
     protected sidebarService: NbSidebarService,
     private http: HttpClient,
     protected injector: Injector,
-    private authService: AuthService,
-    private router: Router) {
+    private authService: AuthService) {
 
     super(injector);
 
