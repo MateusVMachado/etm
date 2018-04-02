@@ -5,6 +5,7 @@ export class ConfigurationModel {
     language: string;
     openFacConfig: OpenFACConfig;
     lastKeyboard: string;
+    level: number;
     
     constructor(){
         this.openFacConfig = new OpenFACConfig();
