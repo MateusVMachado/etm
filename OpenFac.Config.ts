@@ -29,18 +29,24 @@ export class OpenFacConfig implements IOpenFacConfig {
     private LoadConfig(FileName): OpenFACConfig {
         
         let config: OpenFACConfig = new OpenFACConfig();
-        if(FileName.openFacConfig.ActiveSensor === 'joy'){
-            config.ActiveSensor = 'Joystick';    
+        if(FileName.openFacConfig){
+                if(FileName.openFacConfig.ActiveSensor === 'joy'){
+                    config.ActiveSensor = 'Joystick';    
+                } else {
+                    config.ActiveSensor = 'Microphone';    
+                }
+                config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout;      
         } else {
-            config.ActiveSensor = 'Microphone';    
-        }
+            config.ActiveSensor = 'Joystick';    
+            config.KeyboardLayout = 'QWERT';
+        }        
         //config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout;
         //config.KeyboardLayout = 'QWERT';
 
         config.ScanType = 'Auto';
         //config.ScanType = "Auto";
         //config.ActiveSensor = "Joystick";
-        config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout;
+        
         //config.ActiveSensor = "Microphone";
         //console.log(JSON.stringify(config) )
         return config;

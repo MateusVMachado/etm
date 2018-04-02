@@ -37,7 +37,6 @@ export class OpenFacEngine implements IOpenFacEngine {
     private priorRowNumber: number;
     private currentColumnNumber: number;
     private priorColumnNumber: number;
-    private once: boolean = true;
 
     constructor(config: IOpenFacConfig){
         this.openFacConfig = config;
@@ -190,13 +189,14 @@ export class OpenFacEngine implements IOpenFacEngine {
         this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? 
                     this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
     
+        
         this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
         
         this.activeSensor = this.sensorManager.Find(this.openFacConfig.GetActiveSensor());
         this.activeSensor.DoCallBack(this, this.CallSensorAction.bind(this));
         if (this.activeSensor != null)
         {
-                this.activeSensor.Start();
+                this.activeSensor.Start();           
         }
     };
 }
