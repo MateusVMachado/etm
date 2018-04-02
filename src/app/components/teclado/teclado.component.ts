@@ -27,7 +27,6 @@ import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession
 import { BackLoggerService } from '../shared/services/backLogger.service';
 
 import * as moment from 'moment';
-import { AudioService } from '../shared/services/audio.service';
 
 @Component({
   selector: 'app-teclado',
