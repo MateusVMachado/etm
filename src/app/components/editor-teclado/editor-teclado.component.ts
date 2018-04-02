@@ -12,7 +12,12 @@ export class EditorTecladoComponent implements OnInit {
     public tamanho: number;
     public initEditor: boolean;
     constructor(private editorTecladoService: EditorTecladoService, private sidebarService: SideBarService,
-                private tecladoService: TecladoService) { }
+                private tecladoService: TecladoService) {
+                    let editor = document.createElement('script');
+                    editor.setAttribute('type', 'text/javascript');
+                    editor.setAttribute('src', '../../assets/ckeditor/ckeditor.js')
+                    document.getElementsByTagName('head').item(0).appendChild(editor);
+                }
                 
     ngOnInit() { 
         this.initEditor = false;
