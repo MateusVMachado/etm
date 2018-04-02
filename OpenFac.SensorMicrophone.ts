@@ -73,17 +73,12 @@ export class SoundMeter {
 
 export class OpenFacSensorMicrophone extends OpenFacSensorBase {
  
-    private openFacLayout: OpenFACLayout;
-    private configServiceSubscribe: any;
-    private worker: any;
-    private soundMeter: SoundMeter;
     private audioContext: AudioContext;
     private stream: any;
     private tecladoService: any;
     private configService: any;
     private level: number;
     private levelSubscription: Subscription;
-    private user: any;
     public config: any = {};
     private on: boolean;
 
@@ -91,8 +86,7 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
         super();
         this.tecladoService = this.args[0];
         this.configService = this.args[1];
-        this.user = this.args[2];
-        this.level = this.args[3];
+        this.level = this.args[2];
 
         this.on = true;
     }
@@ -108,7 +102,7 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
 
     public Start(): void {
         this.on = true;
-        this.startWorker();
+        this.startMic();
 
     }
 
@@ -195,7 +189,7 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
     }
 
 
-    public startWorker() {
+    public startMic() {
         if(!this.on) return;
         this.audioContext = new AudioContext;
 
@@ -222,9 +216,6 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
         this.DoAction(0); 
      }
 
-     public stopWorker() { 
-       
-      }
 
       public static Create(documentDOM?: any): IOpenFacSensor {
         return new OpenFacSensorMicrophone(documentDOM);
