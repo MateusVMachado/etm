@@ -27,7 +27,8 @@
       "./app/styles/styles.scss"
     ],
     "scripts": [
-      "../node_modules/pace-js/pace.min.js"
+      "../node_modules/pace-js/pace.min.js",
+      "../node_modules/hammerjs/hammer.min.js"
     ],
     "environmentSource": "environments/environment.ts",
     "environments": {

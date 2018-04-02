@@ -1,4 +1,7 @@
 {
+    "MIC_SENSIBILIDADE": "Sensibilidad",
+    "MIC_FILTRO_RUIDO": "Filtro de ruido",
+    "MIC_PALAVRA_CHAVE": "Detección de palabra clave (experimental)",
     "LOGIN_TITULO": "Registrarse",
     "LOGIN_SUBTITULO": "¡Hola! Entre con su email",
     "INPUT_SENHA": "Contraseña",
@@ -52,9 +55,6 @@
     "TIPO_VARREDURA_OBRIGATORIO": "Se requiere el tipo de escaneo",
     "TEMPO_VARREDURA_LINHAS_OBRIGATORIO": "Se requiere tiempo de escaneo de línea",
     "TEMPO_VARREDURA_COLUNAS_OBRIGATORIO": "Se requiere tiempo de escaneo de columna",
-    "LINGUAGEM_ITEM_PT": "Portugués (BR)",
-    "LINGUAGEM_ITEM_EN": "Inglés",
-    "LINGUAGEM_ITEM_ES": "Español",
     "SENSOR_ITEM_MIC": "Micrófono",
     "SENSOR_ITEM_JOY": "Joystick",
     "SENSOR_ITEM_TEC": "Teclado",

@@ -1,0 +1,21 @@
+.rzslider {
+
+        transition: left linear 0.4s;
+}
+.rzslider:hover{
+    transition: none; 
+}
+
+.rzslider:noanimate{
+            transition: none; 
+    
+}   
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-thumb {
+    background-color: blue; /*replace with your color*/
+}
+
+
+::ng-deep .mat-slide-toggle.mat-checked:not(.mat-disabled) .mat-slide-toggle-bar {
+    background-color: skyblue;  /*replace with your color*/
+}

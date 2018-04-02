@@ -1,4 +1,7 @@
 {
+    "MIC_SENSIBILIDADE": "Sensibilidade",
+    "MIC_FILTRO_RUIDO": "Filtro de ruído",
+    "MIC_PALAVRA_CHAVE": "Detecção de palavra-chave (experimental)",
     "LOGIN_TITULO": "Entrar",
     "LOGIN_SUBTITULO": "Olá! Entre com seu e-mail",
     "INPUT_SENHA": "Senha",
@@ -53,9 +56,6 @@
     "TIPO_VARREDURA_OBRIGATORIO": "Tipo de varredura é obrigatório",
     "TEMPO_VARREDURA_LINHAS_OBRIGATORIO": "Tempo de varredura de linhas é obrigatório",
     "TEMPO_VARREDURA_COLUNAS_OBRIGATORIO": "Tempo de varredura de colunas é obrigatório",
-    "LINGUAGEM_ITEM_PT": "Português (BR)",
-    "LINGUAGEM_ITEM_EN": "Inglês",
-    "LINGUAGEM_ITEM_ES": "Espanhol",
     "SENSOR_ITEM_MIC": "Microfone",
     "SENSOR_ITEM_JOY": "Joystick",
     "SENSOR_ITEM_TEC": "Teclado",

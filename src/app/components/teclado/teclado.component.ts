@@ -4,6 +4,7 @@ import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.A
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
 import { OpenFacActionKeyboardWriter } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardWriter';
 import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.SensorJoystick';
+import { OpenFacSensorMicrophone } from '../../../../node_modules/openfac/OpenFac.SensorMicrophone';
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
 import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
 import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
@@ -60,9 +61,15 @@ export class TecladoComponent implements OnInit, OnDestroy {
   public target: any;
 
   public ledOn: boolean = false;
+  public micOn: boolean = false;
 
   private userSession: UserSessionModel;
   private timeInterval: TimeIntervalUnit;
+
+  public once = true;
+  public level: number;
+
+  public configurations: any;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -74,7 +81,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService) {
 
-             
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
               this.timeInterval = new TimeIntervalUnit();
@@ -93,6 +99,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   this.ledOn = true;
                   clearInterval(this.timeoutId);
                   this.timeoutId =  setTimeout(this.turnLEDoff.bind(this), 500) ;
+                } else if (result === "spoked"){
+                  this.micOn = true;
+                  clearInterval(this.timeoutId);
+                  this.timeoutId =  setTimeout(this.turnMICoff.bind(this), 500) ;
                 }
               })
               
@@ -130,6 +140,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
     this.ledOn = false;
   }
 
+  private turnMICoff(){
+    this.micOn = false;
+  }
+
   ngOnDestroy(): void {
      this.keyCommandServiceSubscribe.unsubscribe();
      this.editorTecladoServiceSubscribe.unsubscribe();
@@ -140,6 +154,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.timeInterval.outTime = moment().format('HH:mm:ss');
      this.userSession.keyboardIntervals.push(this.timeInterval);
      this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(()=>{   });
+
+     this.engine.Stop();
   }
 
   ngOnInit() { }
@@ -164,15 +180,16 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.configServiceSubscribe = 
                         this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
                         .subscribe((result: ConfigModel) => {
+          this.configurations = result;
 
           this.config.lastKeyboard = result.lastKeyboard;
           this.scanTimeLines = result.openFacConfig.ScanTimeLines;
           this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
+          this.level = result.level;
 
           let found = false;
           for(let i=0; i < this.KeyboardData.length; i++){
             if(this.KeyboardData[i].nameLayout === 'caps') continue;
-            //if(this.config.lastKeyboard === this.KeyboardData[i].nameLayout){
               if(this.target === this.KeyboardData[i].nameLayout){
                   lastUsed = i;
                   this.openFacLayout = (data[lastUsed]);
@@ -209,32 +226,20 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
       this.teclado.teclas = [];
-      this.teclado.text = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      this.teclado.text = [];
 
-      for(let i = 0 ; i < layout.Lines.length; i++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let line = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        let textL = []; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          line.push(layout.Lines[i].Buttons[j].Caption); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-          textL.push(layout.Lines[i].Buttons[j].Text); ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        this.teclado.teclas.push(line);  ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-        this.teclado.text.push(textL); ///////////////////////ADICIONADO RECENTE ////////////////////////////////////
-      } ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
-      this.teclado.type = layout.nameLayout; ////////////////////////ADICIONADO RECENTE ////////////////////////////////////
+      for(let i = 0 ; i < layout.Lines.length; i++){ 
+        let line = []; 
+        let textL = []; 
+        for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ 
+          line.push(layout.Lines[i].Buttons[j].Caption); 
+          textL.push(layout.Lines[i].Buttons[j].Text); 
+        } 
+        this.teclado.teclas.push(line);  
+        this.teclado.text.push(textL); 
+      } 
+      this.teclado.type = layout.nameLayout; 
 
-
-      /*
-      layout.Lines.forEach(element => {
-          let line = [];
-          element.Buttons.forEach(element => {
-              line.push(element.Text);
-          });
-          this.teclado.teclas.push(line);
-          
-      });
-      this.teclado.type = layout.nameLayout;
-      */
   }
 
   public capsLock() {
@@ -306,30 +311,40 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   private configureSome(){
-    this.config = new OpenFacConfig('config.file', this.openFacLayout); 
+    this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
     this.engine = new OpenFacEngine(this.config);
     this.engine.DoCallBack(this.DoCallBack.bind(this));
     this.engine.Start();
   }
 
   private configureAll(editorInstance?: any) {
-    if(editorInstance){
-      let configArray = [editorInstance, this.keyCommandService, this.zone];
-      OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
-    }
-    clearInterval(this.timerId);
-    
-    //OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone);
-    let configJoystickArray = [this.tecladoService];
-    OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+        if(editorInstance){
+          let configArray = [editorInstance, this.keyCommandService, this.zone];
+          OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
+        }
+        clearInterval(this.timerId);
+        
+        let user = this.authService.getLocalUser();
+        let configJoystickArray = [this.tecladoService];
 
-    OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
-    
-    this.config = new OpenFacConfig('config.file', this.openFacLayout); 
-    this.engine = new OpenFacEngine(this.config);
-    this.engine.DoCallBack(this.DoCallBack.bind(this));
-    this.engine.Start();
-    this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
+        let configMicrophoneArray = [this.tecladoService, this.configService, this.level];
+        
+        OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+      
+        OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone, configMicrophoneArray);
+      
+        OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
+        
+        this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
+        this.engine = new OpenFacEngine(this.config);
+        this.engine.DoCallBack(this.DoCallBack.bind(this));
+        if(this.once) {
+          this.once = false;
+        } else {
+          this.engine.Start();
+        }  
+
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }
 
   private timer1_Tick(): void {

@@ -33,12 +33,6 @@ export class MainPageComponent extends AppBaseComponent implements OnDestroy {
     });
   }
 
-  @HostListener('window:beforeunload', [ '$event' ])
-  beforeUnloadHander(event) {
-    //this.sendNow();
-  }
-
-
   subMenu: NbMenuItem[] = [
     {
       title: 'PAGE LEVEL MENU',

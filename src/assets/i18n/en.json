@@ -1,4 +1,7 @@
 {
+    "MIC_SENSIBILIDADE": "Sensitivity",
+    "MIC_FILTRO_RUIDO": "Noise Filter",
+    "MIC_PALAVRA_CHAVE": "Keyword detection (experimental)",
     "LOGIN_TITULO": "Log in",
     "LOGIN_SUBTITULO": "Hello! Sign in with your email",
     "INPUT_SENHA": "Password",
@@ -53,9 +56,6 @@
     "TIPO_VARREDURA_OBRIGATORIO": "Scan type is required",
     "TEMPO_VARREDURA_LINHAS_OBRIGATORIO": "Line scanning time is required",
     "TEMPO_VARREDURA_COLUNAS_OBRIGATORIO": "Column scan time is required",
-    "LINGUAGEM_ITEM_PT": "Portuguese (BR)",
-    "LINGUAGEM_ITEM_EN": "English",
-    "LINGUAGEM_ITEM_ES": "Spanish",
     "SENSOR_ITEM_MIC": "Microphone",
     "SENSOR_ITEM_JOY": "Joystick",
     "SENSOR_ITEM_TEC": "Keyboard",
