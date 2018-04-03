@@ -16,7 +16,11 @@ export class EditorComponent implements AfterViewInit {
 
     ngOnInit(){
         this.editorTecladoService.getHeight().subscribe((tamanho)=>{
-            this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
+
+            this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
+                this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
+              });
+            //this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
         });
     }
     

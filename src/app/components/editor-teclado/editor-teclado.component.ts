@@ -22,17 +22,19 @@ export class EditorTecladoComponent implements OnInit {
             this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
                 this.initEditor = false;
                 if(ready){
-                    console.log( $("#EditorTecladoContainer") );
-                    if($("#EditorTecladoContainer") !== undefined && $("#EditorTecladoContainer") !== null){
+                    //console.log( $("#EditorTecladoContainer") );
+                    //if($("#EditorTecladoContainer") !== undefined && $("#EditorTecladoContainer") !== null){
                             setTimeout(() => {
                                 this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                                
                                 this.editorTecladoService.setHeight(this.tamanho);
+                                
                                 this.initEditor = true
                             }, 200);
                         }        
-                    } else {
-                        console.log("NÃO EXISTE");
-                    }   
+                    //} else {
+                    //    console.log("NÃO EXISTE");
+                    //}   
             });
 
         }
