@@ -14,6 +14,7 @@ export class EditorTecladoComponent implements OnInit {
     constructor(private editorTecladoService: EditorTecladoService, private sidebarService: SideBarService,
                 private tecladoService: TecladoService) {
 
+                    console.log("MARK1");
                     let editor = document.createElement('script');
                     editor.setAttribute('type', 'text/javascript');
                     editor.setAttribute('src', '../../assets/ckeditor/ckeditor.js');
@@ -21,6 +22,7 @@ export class EditorTecladoComponent implements OnInit {
                     if(!document.getElementById('ckeditor')){
                         document.getElementsByTagName('head').item(0).appendChild(editor);
                     }
+
 
                 }
                 
