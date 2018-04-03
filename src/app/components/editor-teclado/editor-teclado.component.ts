@@ -22,14 +22,37 @@ export class EditorTecladoComponent implements OnInit {
             this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
                 this.initEditor = false;
                 if(ready){
-                            setTimeout(() => {
-                                this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                                this.editorTecladoService.setHeight(this.tamanho);
-                                this.initEditor = true
-                            }, 200);
-                        }        
+                        this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                        this.loadScript('../../assets/ckeditor/ckeditor.js', this.successCallback.bind(this));
+                }        
             });
 
         }
+    }
+
+    successCallback(){
+        this.editorTecladoService.setHeight(this.tamanho);
+        this.initEditor = true
+    }
+
+
+    loadScript(src, callback){
+                let s,
+                r,
+                t;
+            r = false;
+            s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = src;
+            s.onload = s.onreadystatechange = function() {
+                //console.log( this.readyState ); //uncomment this line to see which ready states are called.
+                if ( !r && (!this.readyState || this.readyState == 'complete') )
+                {
+                r = true;
+                callback();
+                }
+            };
+            t = document.getElementsByTagName('script')[0];
+            t.parentNode.insertBefore(s, t);
     }
 }
