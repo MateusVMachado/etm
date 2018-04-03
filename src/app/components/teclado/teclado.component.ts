@@ -213,16 +213,16 @@ export class TecladoComponent implements OnInit, OnDestroy {
                 editor2.setAttribute('id', 'ckeditor');
                 
                 document.getElementsByTagName('head').item(0).appendChild(editor2);
-
-                this.tecladoService.emitTecladoReady(true);
             }
             
-          
+          if(document.getElementById('ckeditor')){  
+              this.tecladoService.emitTecladoReady(true);
 
-          this.editorTecladoServiceSubscribe = 
-                  this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
-            this.configureAll(editor);
-          });
+              this.editorTecladoServiceSubscribe = 
+                      this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
+                this.configureAll(editor);
+              });
+          }    
 
           this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
                 this.configureSome(); 
