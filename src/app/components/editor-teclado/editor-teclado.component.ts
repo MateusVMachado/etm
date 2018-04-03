@@ -32,6 +32,17 @@ export class EditorTecladoComponent implements OnInit {
             this.tecladoService.subscribeToTecladoReady().subscribe((ready: boolean) => {
                 this.initEditor = false;
                 if(ready){
+                    if(!document.getElementById('ckeditor')){
+                        console.log("MARKFINAL");
+                        let editor = document.createElement('script');
+                        editor.setAttribute('type', 'text/javascript');
+                        editor.setAttribute('src', '../../assets/ckeditor/ckeditor.js');
+                        editor.setAttribute('id', 'ckeditor');
+                        
+                        document.getElementsByTagName('head').item(0).appendChild(editor);
+                    }
+
+
                     setTimeout(() => {
                         this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
                         this.editorTecladoService.setHeight(this.tamanho);
