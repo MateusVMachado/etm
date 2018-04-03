@@ -205,26 +205,21 @@ export class TecladoComponent implements OnInit, OnDestroy {
           
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
           this.configureAll();
-          
-  
 
-          //let editorOBJInstance = document.getElementById('ckeditor');
-          //console.log(editorOBJInstance);
-          //if(editorOBJInstance){  
               this.tecladoService.emitTecladoReady(true);
-              
+
               this.editorTecladoServiceSubscribe = 
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
-                //if(editorOBJInstance){  
+
                   this.configureAll(editor);
-                //}  
+
               });
               
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
                       this.configureSome(); 
                       this.tecladoService.emitTecladoReady(true);  
                 });
-         // }
+
         });
       }
     });
