@@ -207,7 +207,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
           this.configureAll();
           console.log("MARK8");
-
+/*
           if(!document.getElementById('ckeditor')){
             console.log("MARK9");
                 let editor2 = document.createElement('script');
@@ -217,19 +217,19 @@ export class TecladoComponent implements OnInit, OnDestroy {
                 
                 document.getElementsByTagName('head').item(0).appendChild(editor2);
             }
-            
+  */          
             console.log("MARK10");
           let editorOBJInstance = document.getElementById('ckeditor');
-          if(editorOBJInstance){  
+    //      if(editorOBJInstance){  
             console.log("MARK11");
               this.tecladoService.emitTecladoReady(true);
               console.log("MARK11-A");
               this.editorTecladoServiceSubscribe = 
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
                         console.log("MARK12");
-                if(editorOBJInstance){  
+        //        if(editorOBJInstance){  
                   this.configureAll(editor);
-                }  
+        //        }  
                 console.log("MARK12-A");
               });
               
@@ -240,7 +240,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       this.tecladoService.emitTecladoReady(true);  
                       console.log("MARK15");
                 });
-          }
+      //    }
         });
       }
     });

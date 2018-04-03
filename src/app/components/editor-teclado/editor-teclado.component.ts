@@ -25,8 +25,8 @@ export class EditorTecladoComponent implements OnInit {
                 console.log("MARK-ET-3");
                 this.initEditor = false;
                 if(ready){
-                    let editorOBJInstance = document.getElementById('ckeditor');
-                    if(editorOBJInstance){
+                    //let editorOBJInstance = document.getElementById('ckeditor');
+                    //if(editorOBJInstance){
                             console.log("MARK-ET-4");
                             setTimeout(() => {
                                 console.log("MARK-ET-5");
@@ -39,7 +39,7 @@ export class EditorTecladoComponent implements OnInit {
                             }, 200);
                         }        
                     console.log("MARK-ET-9");
-                }
+                //}
                 console.log("MARK-ET-10");
             });
             console.log("MARK-ET-11");
