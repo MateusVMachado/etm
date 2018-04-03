@@ -30,13 +30,13 @@ export class EditorTecladoComponent implements OnInit {
                             console.log("MARK-ET-4");
                             setTimeout(() => {
                                 console.log("MARK-ET-5");
-                                //this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                                this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
                                 console.log("MARK-ET-6");
                                 this.editorTecladoService.setHeight(this.tamanho);
                                 console.log("MARK-ET-7");
                                 this.initEditor = true
                                 console.log("MARK-ET-8");
-                            }, 200);
+                            }, 500);
                         }        
                     console.log("MARK-ET-9");
                 //}
