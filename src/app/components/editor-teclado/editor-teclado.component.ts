@@ -33,7 +33,7 @@ export class EditorTecladoComponent implements OnInit {
                         this.editorTecladoService.setHeight(this.tamanho);
                         console.log("MARK-ET-7");
                         this.initEditor = true
-                        console.log("MARK-ET-8");;
+                        console.log("MARK-ET-8");
                     }, 200);
                     console.log("MARK-ET-9");
                 }
