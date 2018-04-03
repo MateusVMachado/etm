@@ -82,7 +82,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService) {
 
-
+                console.log("MARK2");
                 let editor = document.createElement('script');
                 editor.setAttribute('type', 'text/javascript');
                 editor.setAttribute('src', '../../assets/ckeditor/ckeditor.js');
