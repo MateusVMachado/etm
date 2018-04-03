@@ -119,6 +119,16 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
           }
           this.authService.getUser(usuario.email).subscribe((res:User) => {
             this.authService.setUser(res, usuario.jwt);
+
+            if(!document.getElementById('ckeditor')){
+              console.log("MARK9");
+                  let editor2 = document.createElement('script');
+                  editor2.setAttribute('type', 'text/javascript');
+                  editor2.setAttribute('src', '../../assets/ckeditor/ckeditor.js');
+                  editor2.setAttribute('id', 'ckeditor');
+                  
+                  document.getElementsByTagName('head').item(0).appendChild(editor2);
+              }
             this.router.navigate(['./pages/teclados']);
           });
         }, (error) =>{
