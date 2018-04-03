@@ -32,8 +32,8 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   
   @Input() position = 'normal';
   private readonly base64Token = ';base64,';
-  private usuario: User;
-  private imgUrl;
+  public usuario: User;
+  public imgUrl;
   private headerSubscription: Subscription;
 
   userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title:  this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];

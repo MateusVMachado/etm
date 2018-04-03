@@ -11,7 +11,7 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('editor') editor: any; 
     @Input('tamanho') tamanhoDiv: number;
    
-    private editorConfig: any;
+    public editorConfig: any;
     private height: number;
 
     ngOnInit(){
