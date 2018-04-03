@@ -104,7 +104,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
 
               this.keyCommandService = new OpenFacKeyCommandService();
-   
+              console.log("MARK3");
               this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result)=>{
                 if(result === "pressed"){
                   this.ledOn = true;
@@ -115,12 +115,13 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   clearInterval(this.timeoutId);
                   this.timeoutId =  setTimeout(this.turnMICoff.bind(this), 500) ;
                 }
+                console.log("MARK4");
               })
-              
+              console.log("MARK5");
               this.routeSubscription = this.route.queryParams.subscribe(params => { // Defaults to 0 if no query param provided.
                     this.target = params['target'];
              
-
+                    console.log("MARK6");
                     let user = this.authService.getLocalUser();
                     this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
                       if(data){
@@ -140,7 +141,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         }
                       }    
                 }    
-
+                console.log("MARK7");
               });
           });      
   
@@ -172,6 +173,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
   ngOnInit() { }
 
   ngAfterViewInit(){
+
+    console.log("MARK8");
     this.teclado.teclas = [];
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
@@ -184,6 +187,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
     let user = this.authService.getLocalUser();
 
     this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
+      console.log("MARK9");
       if(data){
         this.KeyboardData = data;
 
@@ -192,7 +196,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
                         .subscribe((result: ConfigModel) => {
           this.configurations = result;
-
+          console.log("MARK10");
           this.config.lastKeyboard = result.lastKeyboard;
           this.scanTimeLines = result.openFacConfig.ScanTimeLines;
           this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
@@ -213,15 +217,17 @@ export class TecladoComponent implements OnInit, OnDestroy {
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
           this.configureAll();
           
-
+          console.log("MARK11");
           this.tecladoService.emitTecladoReady(true);
 
           this.editorTecladoServiceSubscribe = 
                   this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
+                    console.log("MARK12");
             this.configureAll(editor);
           });
 
           this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+            console.log("MARK13");
                 this.configureSome(); 
                 this.tecladoService.emitTecladoReady(true);  
           });
