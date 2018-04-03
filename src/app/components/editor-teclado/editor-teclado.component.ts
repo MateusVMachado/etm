@@ -30,7 +30,9 @@ export class EditorTecladoComponent implements OnInit {
                                 this.initEditor = true
                             }, 200);
                         }        
-                    }    
+                    } else {
+                        console.log("NÃO EXISTE");
+                    }   
             });
 
         }
