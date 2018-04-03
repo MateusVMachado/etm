@@ -83,7 +83,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private backLoggerService: BackLoggerService) {
 
 
-                console.log("MARK1");
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
               this.timeInterval = new TimeIntervalUnit();
@@ -107,7 +106,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   clearInterval(this.timeoutId);
                   this.timeoutId =  setTimeout(this.turnMICoff.bind(this), 500) ;
                 }
-                console.log("MARK2");
+
               })
 
               this.routeSubscription = this.route.queryParams.subscribe(params => { // Defaults to 0 if no query param provided.
@@ -120,7 +119,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
                         let lastUsed: number = 0;
                       } 
-                      console.log("MARK3");
+
                     if(this.target && this.KeyboardData){
                       for (let j = 0; j < this.KeyboardData.length; j++) {
                         if (this.KeyboardData[j].nameLayout === 'caps') continue;
@@ -132,7 +131,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         }
                       }    
                 }    
-                console.log("MARK4");
+
               });
           });      
   
@@ -166,7 +165,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   ngAfterViewInit(){
 
     this.teclado.teclas = [];
-    console.log("MARK5");
+
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
     this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
         if(result === 'caps'){
@@ -191,7 +190,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
           this.scanTimeLines = result.openFacConfig.ScanTimeLines;
           this.scanTimeColumns = result.openFacConfig.ScanTimeColumns;
           this.level = result.level;
-          console.log("MARK6");
+
           let found = false;
           for(let i=0; i < this.KeyboardData.length; i++){
             if(this.KeyboardData[i].nameLayout === 'caps') continue;
@@ -203,47 +202,29 @@ export class TecladoComponent implements OnInit, OnDestroy {
               }
           }                                    
           if(!found) this.openFacLayout = (data[0]);  
-          console.log("MARK7");
+          
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
           this.configureAll();
-          console.log("MARK8");
+          
+  
 
-          /*
-          if(!document.getElementById('ckeditor')){
-            console.log("MARK9");
-                let editor2 = document.createElement('script');
-                editor2.setAttribute('type', 'text/javascript');
-                editor2.setAttribute('src', '../../assets/ckeditor/ckeditor.js');
-                editor2.setAttribute('id', 'ckeditor');
-                
-                document.getElementsByTagName('head').item(0).appendChild(editor2);
-            }
-            */
-            
-            console.log("MARK10");
-          let editorOBJInstance = document.getElementById('ckeditor');
-          console.log(editorOBJInstance);
-          if(editorOBJInstance){  
-            console.log("MARK11");
+          //let editorOBJInstance = document.getElementById('ckeditor');
+          //console.log(editorOBJInstance);
+          //if(editorOBJInstance){  
               this.tecladoService.emitTecladoReady(true);
-              console.log("MARK11-A");
+              
               this.editorTecladoServiceSubscribe = 
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
-                        console.log("MARK12");
-                if(editorOBJInstance){  
+                //if(editorOBJInstance){  
                   this.configureAll(editor);
-                }  
-                console.log("MARK12-A");
+                //}  
               });
               
-                console.log("MARK1 3");
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
                       this.configureSome(); 
-                      console.log("MARK14"); 
                       this.tecladoService.emitTecladoReady(true);  
-                      console.log("MARK15");
                 });
-          }
+         // }
         });
       }
     });
