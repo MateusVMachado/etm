@@ -26,7 +26,7 @@ export class EditorTecladoComponent implements OnInit {
                                 this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
                                 this.editorTecladoService.setHeight(this.tamanho);
                                 this.initEditor = true
-                            }, 500);
+                            }, 1000);
                         }        
             });
 
