@@ -25,16 +25,19 @@ export class EditorTecladoComponent implements OnInit {
                 console.log("MARK-ET-3");
                 this.initEditor = false;
                 if(ready){
-                    console.log("MARK-ET-4");
-                    setTimeout(() => {
-                        console.log("MARK-ET-5");
-                        this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
-                        console.log("MARK-ET-6");
-                        this.editorTecladoService.setHeight(this.tamanho);
-                        console.log("MARK-ET-7");
-                        this.initEditor = true
-                        console.log("MARK-ET-8");
-                    }, 200);
+                    let editorOBJInstance = document.getElementById('ckeditor');
+                    if(editorOBJInstance){
+                            console.log("MARK-ET-4");
+                            setTimeout(() => {
+                                console.log("MARK-ET-5");
+                                this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+                                console.log("MARK-ET-6");
+                                this.editorTecladoService.setHeight(this.tamanho);
+                                console.log("MARK-ET-7");
+                                this.initEditor = true
+                                console.log("MARK-ET-8");
+                            }, 200);
+                        }        
                     console.log("MARK-ET-9");
                 }
                 console.log("MARK-ET-10");
