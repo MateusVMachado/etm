@@ -46,7 +46,7 @@
                 {{ messageService.getTranslation('TERMO_DE_USO_TEXTO') }} <a href="#" target="_blank"><strong>{{ messageService.getTranslation('TERMO_DE_USO_LINK') }}</strong></a>
             </nb-checkbox>
         </div>
-        <button [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
+        <button class="btn btn-block btn-hero-success">
           {{ messageService.getTranslation('BTN_REGISTRAR') }}
         </button>
     </form>

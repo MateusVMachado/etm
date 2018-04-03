@@ -869,7 +869,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    }
 
 
-   public saveKeyboardLayout(saveAs: boolean){
+   public saveKeyboardLayout(saveAs?: boolean){
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
               let message = this.messageService.getTranslation('MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA');
@@ -1064,7 +1064,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }
 
-    private addLine(){
+    public addLine(){
         let line = new Array();
         let lineReplicant = new Array();
         line = [];
@@ -1080,7 +1080,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
     }  
     
-    private removeLine(){
+    public removeLine(){
       if(this.teclado.teclas.length > 5){
           this.teclado.teclas.pop();
           this.teclado.text.pop();  
