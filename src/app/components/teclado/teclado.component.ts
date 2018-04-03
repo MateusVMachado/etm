@@ -223,21 +223,22 @@ export class TecladoComponent implements OnInit, OnDestroy {
           if(editorOBJInstance){  
             console.log("MARK11");
               this.tecladoService.emitTecladoReady(true);
-
+              console.log("MARK11-A");
               this.editorTecladoServiceSubscribe = 
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
                         console.log("MARK12");
                 this.configureAll(editor);
+                console.log("MARK12-A");
               });
-          }    
-          console.log("MARK13");
-          this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                this.configureSome(); 
-                console.log("MARK14"); 
-                this.tecladoService.emitTecladoReady(true);  
-                console.log("MARK15");
-          });
-
+              
+                console.log("MARK13");
+                this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+                      this.configureSome(); 
+                      console.log("MARK14"); 
+                      this.tecladoService.emitTecladoReady(true);  
+                      console.log("MARK15");
+                });
+          }
         });
       }
     });
