@@ -20,10 +20,9 @@ export class Login extends BaseRoute{
     }
 
     public authenticateUser(req: Request, res: Response, next: NextFunction){
-        
-    
-        let email = req.query.email;
-        let password = req.query.password;
+        let email = req.body['email'];
+        let password = req.body['password'];
+
 
         res.locals.mongoAccess.coll[0].find({"email": email}).toArray(function(err, user_list) {         
                 if(user_list.length !== 0){

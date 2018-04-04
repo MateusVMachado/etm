@@ -26,9 +26,9 @@ export class Logger extends BaseRoute{
     public logSessionStart(req: Request, res: Response, next: NextFunction, options?: string){
         let userSession = new UserSessionModel();
         
-        let email = req.query.email;
-        let latitude = req.query.latitude;
-        let longitude = req.query.longitude;
+        let email = req.body['email'];
+        let latitude = req.body['latitude'];
+        let longitude = req.body['longitude'];
 
         userSession.ip = req.ip;    
         userSession.user = email;
@@ -67,7 +67,7 @@ export class Logger extends BaseRoute{
         let userSession = new UserSessionModel();
         
         userSession.sessDate = moment().format('L');
-        userSession.user = req.query.user;
+        userSession.user = req.body['user'];
         
 
         res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
