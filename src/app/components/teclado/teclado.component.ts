@@ -126,8 +126,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
                           this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
 
-                          //console.log(JSON.stringify(this.teclado));
-
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
                           break;
                         }
