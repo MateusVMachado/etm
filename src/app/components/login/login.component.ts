@@ -111,7 +111,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
           }
           this.authService.getUser(usuario.email).subscribe((res:User) => {
             this.authService.setUser(res, usuario.jwt);
- 
+   
             this.router.navigate(['./pages/teclados']);
           });
         }, (error) =>{
