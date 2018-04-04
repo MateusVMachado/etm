@@ -1,146 +1,127 @@
-
-<div id="mainPage" >
-
-
-        <div class="box-teclado-menu" style="height: 20%;">
-                <div class="teclado-container-menu">
-                    <div class="row" style="padding-left:15px">
-                        <div class="col-md-1">
-                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_NOVO') }}" style="word-break: normal" id="newKeyboard"/>
-                        </div> 
-                        <div class="col-md-1">
-                            <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_ADD_LINHA') }}" style="word-break: normal" (click)="addLine()"/>
-                        </div>    
-                        <div class="col-md-1">
-                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_DEL_LINHA') }}" (click)="removeLine()"/>
-                        </div>    
-                        <div class="col-md-1">
-                                    <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_ADD_IMG') }}" />
-                        </div>
-
-                                
-                        <div class="col-md-1">
-                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_DEL_TEC') }}" (click)="deleteKeyboardLayout()"/>
-                        </div>
-                        <div class="col-md-1">
-                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_SALVAR') }}" (click)="saveKeyboardLayout()" />
-                        </div>
-                        <div class="col-md-1">
-                                <input type="button" class="btn button-keyboard-menu" value="{{ messageService.getTranslation('BTN_SALVAR_COMO') }}" (click)="saveKeyboardLayout(true)" />
-                        </div>
-
-                        <div class="col-md-1">   
-                            <select id="loadKeyboard" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()" (click)="reloadList()">
-                                <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
-                                <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard">
-                                        {{keyboard}}
-                                </option>
-                            </select>
-                        </div> 
-                    </div>
+<div id="mainPage" style="overflow-x: hidden; overflow-y: hidden;">
+    <div class="col-md-12 teclado-container-menu">
+        <div class="row">
+            <div>
+                <button class="button-keyboard-menu" id="newKeyboard"><i class="fas fa-file" style="font-size: 15px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_NOVO') }}</button>
+            </div> 
+            <div>
+                <button class="button-keyboard-menu" (click)="saveKeyboardLayout()"><i class="fas fa-save" style="font-size: 14px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_SALVAR') }}</button>
             </div>
+            <div>
+                <button class="button-keyboard-menu" (click)="saveKeyboardLayout(true)"><i class="fas fa-archive" style="font-size: 14px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_SALVAR_COMO') }}</button>
+            </div>
+            <div>
+                <button class="button-keyboard-menu" (click)="deleteKeyboardLayout()"><i class="ion-trash-a" style="font-size: 16px; font-weight: 600; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_DEL_TEC') }}</button>
+            </div>
+            <div>
+                <button class="button-keyboard-menu" (click)="addLine()"><i class="ion-plus-round" style="font-size: 16px; font-weight: 600; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_ADD_LINHA') }}</button>
+            </div>    
+            <div>
+                <button class="button-keyboard-menu" (click)="removeLine()"><i class="ion-close-round" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_DEL_LINHA')}}</button>
+            </div>    
+            <!--<div>
+                <button class="button-keyboard-menu"><i class="far fa-image" style="font-size: 16px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_ADD_IMG') }}</button>
+            </div>-->
+            <div>   
+                <select id="loadKeyboard" style="width: 200px; height: 30px; margin: 5px 10px" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()" (click)="reloadList()">
+                    <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
+                    <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard">
+                            {{keyboard}}
+                    </option>
+                </select>
+            </div> 
         </div>
-
-
-        <div class="box-teclado" style="height: 30%;">
-            <div class="teclado-container-editor">
+    </div>
+    <div class="box-teclado" style="height: 30%;">
+        <div class="teclado-container-editor">
             <div style="z-index: 0" >
                 <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px;">
-        
-                <div class="col-md-12 line">
-                    <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
-                    <div *ngIf="i <= 14" [dragula]='"master-bag"' (drag)="setCopyMode()" id="copy" 
-                            tooltip="Arraste a tecla para adicionar." 
-                            class="{{'@' + 'copyArea' + '$' + i.toString() + '#' + iR.toString()}}"
-                            >
-        
-                        <button *ngIf="key == '*tab'"
-                        class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon  class="mat-icon material-icons"
-                            role="img" aria-hidden="true">keyboard_tab</mat-icon>
-                        </button>
-        
-        
-                        <button 
-                        *ngIf="key == '*cpslck'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
-                        </button>
-                        <input  style="text-align: center;"
-                        *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
-                                                && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-                                                && key != '*arrowdown' && key != '*arrowright'" 
-                        type="button" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard-down" value="{{ key }}" />
-                        <button 
-                        *ngIf="key == '*bckspc'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
-                        </button>
-        
-        
-                        <button 
-                        *ngIf="key == '*arrowup'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
-                        </button>                 
-        
-                        <button 
-                        *ngIf="key == '*arrowdown'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
-                        </button>              
-        
-                        
-                        <button 
-                        *ngIf="key == '*arrowleft'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
-                        </button>   
-        
-        
-                        <button 
-                        *ngIf="key == '*arrowright'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
-                        </button>                 
-        
-        
-                        <button 
-                        *ngIf="key == '*kbdrtrn'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
-                        <mat-icon 
-                            class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
-                        </button>
-                        <button 
-                            *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard tamanho-button3" 
-                                    value="{{key}}" >SPACE
-                         
-                        </button>
-                    </div>
+                    <div class="col-md-12 line">
+                        <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
+                            <div *ngIf="i <= 14" [dragula]='"master-bag"' (drag)="setCopyMode()" id="copy" 
+                                    tooltip="Arraste a tecla para adicionar." 
+                                    class="{{'@' + 'copyArea' + '$' + i.toString() + '#' + iR.toString()}}"
+                                    >
+
+                                <button *ngIf="key == '*tab'"
+                                class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon  class="mat-icon material-icons"
+                                    role="img" aria-hidden="true">keyboard_tab</mat-icon>
+                                </button>
+
+                                <button 
+                                *ngIf="key == '*cpslck'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
+                                </button>
+
+                                <input
+                                *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                                        && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                                                        && key != '*arrowdown' && key != '*arrowright'" 
+                                type="button" class="{{i.toString() + '#' + iR.toString()}} button-keyboard-down" value="{{ key }}" />
+                               
+                                <button 
+                                *ngIf="key == '*bckspc'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                    <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                                </button>
+
+                                <button 
+                                *ngIf="key == '*arrowup'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
+                                </button>                 
+
+                                <button 
+                                *ngIf="key == '*arrowdown'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
+                                </button>              
+
+                                <button 
+                                *ngIf="key == '*arrowleft'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
+                                </button>   
+
+                                <button 
+                                *ngIf="key == '*arrowright'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
+                                </button>                 
+
+                                <button 
+                                *ngIf="key == '*kbdrtrn'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
+                                </button>
+                                <button 
+                                    *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} button-keyboard icon-keyboard tamanho-button3" 
+                                            value="{{key}}" >SPACE
+                                    
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
-            </div>
             </div>
         </div>
+    </div>
 
-   
-                <div class="box-teclado-bottom" style="height: 30%;">
-                        <div class="teclado-container ">
-                        
-                                <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
-                                        <div class="col-md-12 line" >
-                                                
-                                                <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
-                                                    *ngFor="let key of row; index as i" 
-                                                    [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)">
-                                                    <div class="none"></div>
-                                                </div>    
-
-                                        </div>
-                                </div>
-                            
+    <div class="box-teclado-bottom" style="height: 30%;">
+            <div class="teclado-container ">
+                    <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
+                        <div class="col-md-12 line" >
+                            <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
+                                *ngFor="let key of row; index as i" 
+                                [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)">
+                                <div class="none"></div>
+                            </div>
                         </div>
-                </div>
+                    </div>
+                
+            </div>
+    </div>
 
     
 </div>        
