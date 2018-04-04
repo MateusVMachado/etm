@@ -30,7 +30,7 @@
             <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">{{ messageService.getTranslation('REMEMBER_ME')}}</nb-checkbox>
             <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">{{ messageService.getTranslation('FORGOT_PASSWORD')}}</a>
         </div>
-        <button style="cursor:pointer;" [disabled]="submitted || !form.valid" class="btn btn-block btn-hero-success" [class.btn-pulse]="submitted">
+        <button style="cursor:pointer;" class="btn btn-block btn-hero-success">
           {{ messageService.getTranslation('BTN_ENTRAR')}}
         </button>
     </form>

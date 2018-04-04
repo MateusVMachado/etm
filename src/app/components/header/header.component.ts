@@ -32,8 +32,8 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   
   @Input() position = 'normal';
   private readonly base64Token = ';base64,';
-  private usuario: User;
-  private imgUrl;
+  public usuario: User;
+  public imgUrl;
   private headerSubscription: Subscription;
 
   userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title:  this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
@@ -79,8 +79,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
 
   logout() {
     this.sendNow().subscribe(()=>{
-      window.localStorage.removeItem('JWTtoken')
-      this.router.navigate(["./auth"]);
+      
     }); 
     window.localStorage.removeItem('JWTtoken')
     this.router.navigate(["./auth"]);
@@ -89,7 +88,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   public sendNow(){
     let user = this.authService.getLocalUser();
     let payload = { "user" : user.email };
-    return this.http.get(this.appServiceBase.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
+    return this.http.post(this.appServiceBase.backendAddress + '/logout' , payload, {responseType: 'text'});
   }
    ngOnDestroy(): void {
     this.headerSubscription.unsubscribe();

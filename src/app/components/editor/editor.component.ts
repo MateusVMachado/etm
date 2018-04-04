@@ -11,12 +11,12 @@ export class EditorComponent implements AfterViewInit {
     @ViewChild('editor') editor: any; 
     @Input('tamanho') tamanhoDiv: number;
    
-    private editorConfig: any;
+    public editorConfig: any;
     private height: number;
 
     ngOnInit(){
         this.editorTecladoService.getHeight().subscribe((tamanho)=>{
-            this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
+                this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
         });
     }
     

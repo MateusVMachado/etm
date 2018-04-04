@@ -54,6 +54,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private timeoutId: any;
   private scanTimeLines: number;
   private scanTimeColumns: number;
+  private audioContext: AudioContext = new AudioContext();
 
   public menu: NbMenuItem[];
   public jsonArray = new Array();
@@ -93,7 +94,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
 
               this.keyCommandService = new OpenFacKeyCommandService();
-   
+
               this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result)=>{
                 if(result === "pressed"){
                   this.ledOn = true;
@@ -104,12 +105,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   clearInterval(this.timeoutId);
                   this.timeoutId =  setTimeout(this.turnMICoff.bind(this), 500) ;
                 }
+
               })
-              
+
               this.routeSubscription = this.route.queryParams.subscribe(params => { // Defaults to 0 if no query param provided.
                     this.target = params['target'];
              
-
                     let user = this.authService.getLocalUser();
                     this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
                       if(data){
@@ -124,6 +125,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         if (this.target === this.KeyboardData[j].nameLayout) {
 
                           this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
+
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
                           break;
                         }
@@ -161,6 +163,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   ngOnInit() { }
 
   ngAfterViewInit(){
+
     this.teclado.teclas = [];
 
     // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
@@ -173,6 +176,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
     let user = this.authService.getLocalUser();
 
     this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
+
       if(data){
         this.KeyboardData = data;
 
@@ -199,23 +203,45 @@ export class TecladoComponent implements OnInit, OnDestroy {
           }                                    
           if(!found) this.openFacLayout = (data[0]);  
 
+
+
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
+
+
           this.configureAll();
-          
+
+              this.tecladoService.emitTecladoReady(true);
+
+              this.editorTecladoServiceSubscribe = 
+                      this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
+
+                  this.configureAll(editor);
+
+              });
+              
+                this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
+                  console.log("TARGET: " + JSON.stringify(result) );
+                      this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
+                          this.KeyboardData = data;
+
+                          let found = false;
+                          for(let i=0; i < this.KeyboardData.length; i++){
+                            if(this.KeyboardData[i].nameLayout === 'caps') continue;
+                              if(this.target === this.KeyboardData[i].nameLayout){
+                                  lastUsed = i;
+                                  this.openFacLayout = (data[lastUsed]);
+                                  found = true;
+                                  break;
+                              }
+                          }                                    
+                          if(!found) this.openFacLayout = (data[0]); 
+                          this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
 
 
-
-          this.tecladoService.emitTecladoReady(true);
-
-          this.editorTecladoServiceSubscribe = 
-                  this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
-            this.configureAll(editor);
-          });
-
-          this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                this.configureSome(); 
-                this.tecladoService.emitTecladoReady(true);    
-          });
+                          this.configureSome(); 
+                          this.tecladoService.emitTecladoReady(true);  
+                      });    
+                });
 
         });
       }
@@ -327,7 +353,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         let user = this.authService.getLocalUser();
         let configJoystickArray = [this.tecladoService];
 
-        let configMicrophoneArray = [this.tecladoService, this.configService, this.level];
+        let configMicrophoneArray = [this.tecladoService, this.configService, this.level, this.audioContext];
         
         OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
       
@@ -338,11 +364,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
         this.engine = new OpenFacEngine(this.config);
         this.engine.DoCallBack(this.DoCallBack.bind(this));
-        if(this.once) {
-          this.once = false;
-        } else {
-          this.engine.Start();
-        }  
+        
+        this.engine.Start();  
 
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
   }

@@ -56,7 +56,7 @@ IF /I "%argType%" EQU "front" (
         echo Building application in production mode...
         timeout 2 >NUL
         echo.
-        ng build --env=prod 
+        ng build --env=prod --aot 
         cd "%frontPath%"
         @echo on >NUL
         @echo off >NUL

@@ -8,6 +8,7 @@ import { Observable } from "rxjs/Observable";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import * as jwt from 'jsonwebtoken';
 import { UserAndGPS } from '../models/userSession.model';
+import { ResponseType } from '@angular/http';
 
 @Injectable()
 export class AuthService extends AppServiceBase {
@@ -21,7 +22,7 @@ export class AuthService extends AppServiceBase {
     }
     
     authenticate(user: UserAndGPS) {
-        return this.http.get(this.backendAddress + `/login?email=${user.email}&password=${user.password}&latitude=${user.latitude}&longitude=${user.longitude}`);
+        return this.http.post(this.backendAddress + '/login', user, { responseType: 'text'});
     }
 
     isAuthenticated() {

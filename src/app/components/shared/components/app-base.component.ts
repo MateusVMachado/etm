@@ -4,7 +4,7 @@ import { AppServiceBase } from '../services/app-service-base.service';
 
 
 export abstract class AppBaseComponent {
-    protected messageService: MessageService
+    public messageService: MessageService
     protected appServiceBase: AppServiceBase;
     constructor(injector: Injector) {
         this.messageService = injector.get(MessageService);
