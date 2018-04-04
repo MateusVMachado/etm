@@ -70,13 +70,14 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
         newUserAndGPS.password = this.user.password;
 
         usuario = this.user;
-        //this.authService.authenticate(usuario).subscribe(
         this.authService.authenticate(newUserAndGPS).subscribe(
           (res: any) => {
-            usuario.jwt = res.accessToken;
+            let resObj = JSON.parse(res);
+            usuario.jwt = resObj.accessToken;
+
             this.authService.setJWT(usuario.jwt);
             if(this.user.rememberMe){
-              window.localStorage.setItem('JWTtoken', res.accessToken);
+              window.localStorage.setItem('JWTtoken', resObj.accessToken);
             }
             this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
@@ -104,14 +105,15 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
       usuario = this.user;
       this.authService.authenticate(newUserAndGPS).subscribe(
         (res: any) => {
-          usuario.jwt = res.accessToken;
+          let resObj = JSON.parse(res);
+          usuario.jwt = resObj.accessToken;
           this.authService.setJWT(usuario.jwt);
           if(this.user.rememberMe){
-            window.localStorage.setItem('JWTtoken', res.accessToken);
+            window.localStorage.setItem('JWTtoken', resObj.accessToken);
           }
           this.authService.getUser(usuario.email).subscribe((res:User) => {
             this.authService.setUser(res, usuario.jwt);
- 
+   
             this.router.navigate(['./pages/teclados']);
           });
         }, (error) =>{
