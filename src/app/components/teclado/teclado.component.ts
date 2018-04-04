@@ -82,7 +82,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService) {
 
-
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
               this.timeInterval = new TimeIntervalUnit();
@@ -126,6 +125,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         if (this.target === this.KeyboardData[j].nameLayout) {
 
                           this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
+
+                          //console.log(JSON.stringify(this.teclado));
+
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
                           break;
                         }
@@ -202,8 +204,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
               }
           }                                    
           if(!found) this.openFacLayout = (data[0]);  
-          
+
+
+
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
+
+
           this.configureAll();
 
               this.tecladoService.emitTecladoReady(true);
@@ -216,8 +222,27 @@ export class TecladoComponent implements OnInit, OnDestroy {
               });
               
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                      this.configureSome(); 
-                      this.tecladoService.emitTecladoReady(true);  
+                  console.log("TARGET: " + JSON.stringify(result) );
+                      this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
+                          this.KeyboardData = data;
+
+                          let found = false;
+                          for(let i=0; i < this.KeyboardData.length; i++){
+                            if(this.KeyboardData[i].nameLayout === 'caps') continue;
+                              if(this.target === this.KeyboardData[i].nameLayout){
+                                  lastUsed = i;
+                                  this.openFacLayout = (data[lastUsed]);
+                                  found = true;
+                                  break;
+                              }
+                          }                                    
+                          if(!found) this.openFacLayout = (data[0]); 
+                          this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
+
+
+                          this.configureSome(); 
+                          this.tecladoService.emitTecladoReady(true);  
+                      });    
                 });
 
         });

@@ -58,6 +58,7 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
                       } else {
                         // PARTE DO TECLADO
                         editor.focus();
+                
                         this.sideBarService.emitSideBarCommand(result.item.target);
                         this.editorTecladoServiceSubscribe.unsubscribe();
                         this.router.navigate(['/pages/editor-teclado'], { queryParams: { target: result.item.target } });
