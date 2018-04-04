@@ -23,7 +23,7 @@
 
 .box-teclado-bottom{
     height: 100%;
-    padding-top: 20px;
+    padding-top: 12px;
     margin: auto;
     max-height: 40%;
     background-color: #eeeeee;
@@ -40,7 +40,7 @@
     height: 320px;
     overflow-y:scroll;
     overflow-x: hidden;
-    padding: 15px 24px;
+    padding: 4px 17px 4px 8px;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
     0 2px 2px 0 rgba(0,0,0,.14),
@@ -50,13 +50,14 @@
 
 .teclado-container-editor{
     height: 30%;
-    padding: 15px 24px;
+    padding: 4px 14px 4px 8px;
     border-radius: 2px;
     box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
     0 2px 2px 0 rgba(0,0,0,.14), 
     0 1px 5px 0 rgba(0,0,0,.12);
     background-color:  #eeeeee;
 }
+
 .tamanho-button-especial{
     background-color: white; 
     color:black;
@@ -100,7 +101,7 @@ div[tooltip]:hover:before {
 
 
 .tamanho-button-especial-full{
-    background-color: rgb(94, 175, 221);
+    background-color: whitesmoke;
     color:black;
     height:48px;
 
@@ -115,7 +116,7 @@ div[tooltip]:hover:before {
     white-space: nowrap;
     vertical-align: middle;
     user-select: none;
-    border: 1 solid transparent;
+    border: transparent;
     font-family: Exo;
 }
 
@@ -133,8 +134,16 @@ div[tooltip]:hover:before {
 }
 
 .tamanho-button3{
-    width: 101%;
     position: relative;
+    height: 48px;
+    width: 100%;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border: transparent;
+    font-family: Exo;
+    font-weight: 500;
 }
 
 .button-keyboard-menu{
@@ -158,10 +167,6 @@ div[tooltip]:hover:before {
     width: 100%;
 }
 
-.div-buttom{
-
-}
-
 .button-keyboard{
     white-space: normal;
     background-color: whitesmoke;
@@ -175,7 +180,16 @@ div[tooltip]:hover:before {
     background-color: whitesmoke;
     color: black;
     max-height: 100%;
+    height: 48px;
     width: 100%;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border: transparent;
+    font-family: Exo;
+    font-weight: 500;
+    text-transform: uppercase;
 }
 
 .button-keyboard-down:hover{
