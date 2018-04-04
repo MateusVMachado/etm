@@ -42,7 +42,6 @@ export class IndexRoute extends BaseRoute {
     //add home page route
     router.get("/", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       newIndexRoute.index(req, res, next);
     });
     
@@ -50,70 +49,59 @@ export class IndexRoute extends BaseRoute {
     // Rota para API de teclados  
     router.get("/keyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //console.log("LOGGER NO GET");
-      //logger.logRequests(req);
       keyboard.keyboard_api(req,res,next);  
     });
 
     router.get("/keyboardByUser", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.getKeyboardByUser(req,res,next);  
     });
 
     router.get("/getSingleKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //console.log("LOGGER NO GET");
-      //logger.logRequests(req);
       keyboard.getSingleKeyboardByName(req,res,next);  
     });
 
     router.get("/keyboard/getKeyboardNames", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //console.log("getKeyboardNames");
-      //logger.logRequests(req);
       keyboard.getKeyboardNames(req,res,next);  
     });
 
     router.post("/keyboard/insertNewKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.insertNewKeyboard(req,res,next);  
     });
 
     router.post("/keyboard/insertUpdateKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.insertUpdateKeyboard(req,res,next);  
     });
 
     router.post("/keyboard/insertUpdateOnlyKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.insertUpdateOnlyKeyboard(req,res,next);  
     });
 
     router.post("/keyboard/insertBasicAtRegister", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.insertBasicAtRegister(req,res,next);  
     });
 
     router.post("/keyboard/insertBasicIntoDatabase", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.insertBasicIntoDatabase(req,res,next);  
     });
 
     router.post("/keyboard/deleteKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       keyboard.deleteKeyboard(req,res,next);  
     });
 
+
+    
     // LOGIN
     // Rota para handler do login
-    router.all("/login", (req: Request, res: Response, next: NextFunction) => {
+    router.post("/login", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       console.clear();
       logger.logSessionStart(req,res,next);   
@@ -121,10 +109,8 @@ export class IndexRoute extends BaseRoute {
     });
 
 
-    router.all("/logout", (req: Request, res: Response, next: NextFunction) => {
+    router.post("/logout", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      console.log("received in /logout");
-      
       logger.logSessionEnd(req,res,next);
       
     });
@@ -153,51 +139,36 @@ export class IndexRoute extends BaseRoute {
     // Rota para handler do registro
     router.post("/register", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //console.log("LOGGER NO POST");
-      //logger.logRequests(req);
       register.registerUser(req, res, next);
-    });
-
-    // Rota para alguma área que precisa de privilégios
-    router.all("/secret", (req: Request, res: Response, next: NextFunction) => {
-      res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
-      //auth.authorizeUser(req, res, next);
-      mongoC.configureDatabase(req, res, next);
     });
 
     // Rota para salvar configurações
     router.post("/configuration", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       configuration.userConfigure(req, res, next);
     });
 
     // Rota para buscar configurações
     router.get("/configuration", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       configuration.getUserConfigure(req, res, next);
     });
 
     // Rota para atualizar informações do usuário
     router.post("/updateUser", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       user.updateUser(req, res, next);
     });
 
     // Rota para buscar foto de perfil do usuário
     router.get("/getUserProfilePicture", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       profilePic.getUserProfilePicture(req, res, next);
     });
 
     // Rota para buscar informações do usuário
     router.get("/user", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      //logger.logRequests(req);
       user.getUser(req, res, next);
     });
   }
