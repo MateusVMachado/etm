@@ -88,7 +88,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   public sendNow(){
     let user = this.authService.getLocalUser();
     let payload = { "user" : user.email };
-    return this.http.get(this.appServiceBase.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
+    return this.http.post(this.appServiceBase.backendAddress + '/logout' , payload, {responseType: 'text'});
   }
    ngOnDestroy(): void {
     this.headerSubscription.unsubscribe();

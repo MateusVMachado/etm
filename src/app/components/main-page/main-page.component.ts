@@ -26,8 +26,16 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 })
 export class MainPageComponent extends AppBaseComponent implements OnDestroy {
 
+  //CLOSING TAB AND BROWSER EVENTS
   @HostListener('window:unload', [ '$event' ])
   unloadHandler(event) {
+    this.sendNow().subscribe(()=>{
+
+    });
+  }
+
+  @HostListener('window:beforeunload', [ '$event' ])
+  beforeUnloadHandler(event) {
     this.sendNow().subscribe(()=>{
 
     });
@@ -122,7 +130,7 @@ export class MainPageComponent extends AppBaseComponent implements OnDestroy {
   public sendNow(){
     let user = this.authService.getLocalUser();
     let payload = { "user" : user.email };
-    return this.http.get(this.appServiceBase.backendAddress + `/logout?user=${user.email}`, { responseType: 'text' });
+    return this.http.post(this.appServiceBase.backendAddress + '/logout' , payload, {responseType: 'text'});
   }
 
 

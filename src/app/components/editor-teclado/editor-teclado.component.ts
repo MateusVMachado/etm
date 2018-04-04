@@ -25,7 +25,9 @@ export class EditorTecladoComponent implements OnInit {
                         this.tamanho = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
                         if(! document.getElementById('ckeditor') ){
                             this.loadScript('../../assets/ckeditor/ckeditor.js', this.successCallback.bind(this));
-                        }    
+                        } else {
+                            this.successCallback();
+                        }   
                 }        
             });
 
