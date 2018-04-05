@@ -63,6 +63,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
             this.userSession.user = user.email; 
 
             this.configServiceSubscribe = this.configService.getConfiguration(user.email).subscribe((result)=>{
+                
                 this.level = 1-result.level;
             })
 
