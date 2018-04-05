@@ -78,6 +78,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
             this.authService.setJWT(usuario.jwt);
             if(this.user.rememberMe){
               window.localStorage.setItem('JWTtoken', resObj.accessToken);
+              window.localStorage.setItem('User', usuario.email);
             }
             this.authService.getUser(usuario.email).subscribe((res:User) => {
               this.authService.setUser(res, usuario.jwt);
@@ -110,8 +111,10 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
           this.authService.setJWT(usuario.jwt);
           if(this.user.rememberMe){
             window.localStorage.setItem('JWTtoken', resObj.accessToken);
+            window.localStorage.setItem('User', usuario.email);
           }
           this.authService.getUser(usuario.email).subscribe((res:User) => {
+
             this.authService.setUser(res, usuario.jwt);
    
             this.router.navigate(['./pages/teclados']);

@@ -71,6 +71,10 @@ export class AuthService extends AppServiceBase {
         return this.user;
     }
 
+    public getUserCookie(){
+        
+    }
+
     public getUser(email:string) {
         return this.http.get(this.backendAddress + `/user?email=${email}`);
     }

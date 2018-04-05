@@ -112,6 +112,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
                     this.target = params['target'];
              
                     let user = this.authService.getLocalUser();
+                    if(!user){
+                      user.email = window.localStorage.getItem('User');
+                    }
+
                     this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
                       if(data){
                         this.KeyboardData = data;
@@ -174,6 +178,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
     });
 
     let user = this.authService.getLocalUser();
+    if(!user){
+      user.email = window.localStorage.getItem('User');
+    }
 
     this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
 
@@ -220,7 +227,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
               });
               
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                 
+                  
+                  if(!user){
+                    user.email = window.localStorage.getItem('User');
+                  }
+
                       this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
                           this.KeyboardData = data;
 
