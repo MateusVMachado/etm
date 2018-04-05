@@ -39,16 +39,14 @@ export class Login extends BaseRoute{
                 
                             } else {
                                 console.log("NÃO AUTENTICADO");
-                                res.send('MENSAGEM_DADOS_INVALIDOS');
-                                //res.status(403).json({ message: 'Dados inválidos.' });
+                                res.status(403).json({ message: 'Dados inválidos.' });
                             }
 
                             console.log(user_list[0]['email']);
                             
                         } else {
                             console.log("USER NOT FOUND!");
-                            res.send('MENSAGEM_DADOS_INVALIDOS');
-                            //res.status(400).json({message: 'Dados inválidos!'});
+                            res.status(400).json({message: 'Dados inválidos!'});
                         } 
                 });     
             }        
