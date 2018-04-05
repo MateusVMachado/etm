@@ -111,7 +111,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
       usuario = this.user;
       this.authService.authenticate(newUserAndGPS).subscribe(
         (res: any) => {
-          console.log(JSON.stringify(res));
+          console.log("RES: " + JSON.stringify(res));
           let resObj = JSON.parse(res);
           usuario.jwt = resObj.accessToken;
           this.authService.setJWT(usuario.jwt);
@@ -126,7 +126,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
             this.router.navigate(['./pages/teclados']);
           });
         }, (error) =>{
-          console.log(JSON.stringify(error));
+          console.log("ERROR: " + JSON.stringify(error));
           if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
             let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
             this.messageService.error(message, 'Oops..');
