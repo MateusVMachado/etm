@@ -23,7 +23,6 @@ export class Login extends BaseRoute{
         let email = req.body['email'];
         let password = req.body['password'];
 
-        if(res.locals.mongoAccess.coll[0]){
             res.locals.mongoAccess.coll[0].find({"email": email}).toArray(function(err, user_list) {         
                     if(user_list.length !== 0){
                         if (email === user_list[0]['email'] && 
@@ -48,7 +47,6 @@ export class Login extends BaseRoute{
                         console.log("USER NOT FOUND!");
                         res.status(400).json({message: 'Dados inválidos!'});
                     } 
-            });
-        }       
+            });     
     }
 }        
