@@ -51,6 +51,9 @@ export class Keyboard extends BaseRoute {
     public getKeyboardNamesInDatabase(teclado: KeyboardModel, req: Request, res: Response){    
         let instance = this;
         let keyboardNames = new KeyboardNamesList();
+
+        console.log(req.query.email);
+
         res.locals.mongoAccess.coll[1].find({ $or: [{"email": req.query.email}, {"email": "system"}] }).toArray(function(err, keyboard_list) {
             if(keyboard_list.length !== 0){
                 for(let i = 0; i < keyboard_list.length; i++){
@@ -63,6 +66,9 @@ export class Keyboard extends BaseRoute {
 
     public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
         let instance = this;
+
+        console.log(req.query.email);
+
         if(req.query.email){
             res.locals.mongoAccess.coll[1].find( { $or: [{ "email": req.query.email }, { "email": "system" }]}).toArray(function(err, keyboard_list) {
                 if(keyboard_list.length !== 0){
@@ -76,6 +82,9 @@ export class Keyboard extends BaseRoute {
 
     public deleteKeyboard(req: Request, res: Response, next: NextFunction){
         if(req.query.email){
+
+            console.log(req.query.email);
+
             res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
                 if(keyboard_list){
                     res.locals.mongoAccess.coll[1].remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
@@ -91,6 +100,7 @@ export class Keyboard extends BaseRoute {
 
     public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
+
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             if(keyboard_list.length >= 7){
                 res.send('maxNumber');
