@@ -57,15 +57,16 @@ export class Keyboard extends BaseRoute {
         let keyboardNames = new KeyboardNamesList();
 
         console.log(req.query.email);
-
-        res.locals.mongoAccess.coll[1].find({ $or: [{"email": req.query.email}, {"email": "system"}] }).toArray(function(err, keyboard_list) {
-            if(keyboard_list.length !== 0){
-                for(let i = 0; i < keyboard_list.length; i++){
-                    keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
-                }
-                res.send(keyboardNames);
-            }     
-        })
+        if(res.locals.mongoAccess.coll[1]){
+            res.locals.mongoAccess.coll[1].find({ $or: [{"email": req.query.email}, {"email": "system"}] }).toArray(function(err, keyboard_list) {
+                if(keyboard_list.length !== 0){
+                    for(let i = 0; i < keyboard_list.length; i++){
+                        keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
+                    }
+                    res.send(keyboardNames);
+                }     
+            })
+        }    
     }
 
     public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
@@ -74,11 +75,13 @@ export class Keyboard extends BaseRoute {
         console.log(req.query.email);
 
         if(req.query.email){
-            res.locals.mongoAccess.coll[1].find( { $or: [{ "email": req.query.email }, { "email": "system" }]}).toArray(function(err, keyboard_list) {
-                if(keyboard_list.length !== 0){
-                    res.send(keyboard_list);
-                }  
-            })
+            if(res.locals.mongoAccess.coll[1]){
+                res.locals.mongoAccess.coll[1].find( { $or: [{ "email": req.query.email }, { "email": "system" }]}).toArray(function(err, keyboard_list) {
+                    if(keyboard_list.length !== 0){
+                        res.send(keyboard_list);
+                    }  
+                })
+            }    
         }    
     }
 
@@ -89,16 +92,17 @@ export class Keyboard extends BaseRoute {
         if(req.query.email){
 
             
-
-            res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
-                if(keyboard_list){
-                    res.locals.mongoAccess.coll[1].remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
-                    res.send('removed');
-                } else {
-                    res.send('notFound');   
-                }
-                
-            });         
+            if(res.locals.mongoAccess.coll[1]){
+                res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
+                    if(keyboard_list){
+                        res.locals.mongoAccess.coll[1].remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
+                        res.send('removed');
+                    } else {
+                        res.send('notFound');   
+                    }
+                    
+                });         
+            }    
         }
     }     
     
