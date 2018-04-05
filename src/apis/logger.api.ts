@@ -57,6 +57,7 @@ export class Logger extends BaseRoute{
                         })
                    
                } else {
+                    res.send();
                     return;
                 }         
             });        
