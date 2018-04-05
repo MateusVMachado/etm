@@ -6,18 +6,7 @@ import * as mongoose from 'mongoose'
 export class User extends BaseRoute{
 
     public getUser(req: Request, res: Response, next: NextFunction){
-        if(res === undefined){
-            console.log("RES UNDEFINED");
-        } else if(res.locals === undefined){
-            console.log("LOCALS UNDEFINED");
-        }else if(res.locals.mongoAccess === undefined){
-            console.log("MONGOACCESS UNDEFINED");
-        } else if(res.locals.mongoAccess.coll[0] === undefined){
-            console.log("COLLECTION UNDEFINED");
-        }
-        
-        console.log(req.query.email);
-        
+
         res.locals.mongoAccess.coll[0].find({"email": req.query.email}).toArray(function(err, user_list) {
             if(user_list){
                 let user: UserModel = new UserModel();
