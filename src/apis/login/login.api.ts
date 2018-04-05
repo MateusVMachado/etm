@@ -37,6 +37,7 @@ export class Login extends BaseRoute{
                         response.name = user_list[0]['fullName'];
                         response.email = user_list[0]['email'];
                         response.accessToken = token;
+                        console.log(response);
                         res.json(response);
         
                     } else {
