@@ -28,6 +28,7 @@ export class AuthService extends AppServiceBase {
     isAuthenticated() {
         let token = window.localStorage.getItem('JWTtoken');
         let user = this.getLocalUser();
+        if(user.jwt === undefined) user.jwt = window.localStorage.getItem('JWTtoken');
         if(token || user.jwt){
             if(token){
                 let tokenDecode = jwt.decode(token);
@@ -84,7 +85,7 @@ export class AuthService extends AppServiceBase {
     }
 
     public getJWT(){
-        return this.user.jwt;
+            return this.user.jwt;   
     }
 
     public setJWT(jwt){
