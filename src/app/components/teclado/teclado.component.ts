@@ -220,7 +220,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
               });
               
                 this.sideBarServiceSubscribe = this.sideBarService.subscribeTosideBarSubject().subscribe((result) =>{
-                  console.log("TARGET: " + JSON.stringify(result) );
+                 
                       this.tecladoService.loadDataFromUser(user.email).subscribe((data)=>{
                           this.KeyboardData = data;
 
