@@ -2,13 +2,13 @@
     <div class="col-md-12 teclado-container-menu">
         <div class="row">
             <div>
-                <button class="button-keyboard-menu" id="newKeyboard"><i class="fas fa-file" style="font-size: 15px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_NOVO') }}</button>
+                <button class="button-keyboard-menu" id="newKeyboard"><i class="ion-document-text" style="font-size: 17px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_NOVO') }}</button>
             </div> 
             <div>
-                <button class="button-keyboard-menu" (click)="saveKeyboardLayout()"><i class="fas fa-save" style="font-size: 14px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_SALVAR') }}</button>
+                <button class="button-keyboard-menu" (click)="saveKeyboardLayout()"><img src="../../assets/images/save.png" style="width: 16px; height:16px; margin-right:3px;"/>{{ messageService.getTranslation('BTN_SALVAR') }}</button>
             </div>
             <div>
-                <button class="button-keyboard-menu" (click)="saveKeyboardLayout(true)"><i class="fas fa-archive" style="font-size: 14px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_SALVAR_COMO') }}</button>
+                <button class="button-keyboard-menu" (click)="saveKeyboardLayout(true)"><img src="../../assets/images/folder.png" style="width: 16px; height:16px; margin-right:6px;"/>{{ messageService.getTranslation('BTN_SALVAR_COMO') }}</button>
             </div>
             <div>
                 <button class="button-keyboard-menu" (click)="deleteKeyboardLayout()"><i class="ion-trash-a" style="font-size: 16px; font-weight: 600; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_DEL_TEC') }}</button>
