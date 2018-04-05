@@ -14,6 +14,8 @@ export class Keyboard extends BaseRoute {
 
     public getSingleKeyboardByName(req: Request, res: Response, next: NextFunction){
         let instance = this;
+        console.log(req.query.email);
+
         if(req.query.nameLayout === "pt-br"){
             res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": "system"} ] } ).toArray(function(err, keyboard) {
                 res.send(keyboard);
@@ -39,6 +41,8 @@ export class Keyboard extends BaseRoute {
 
     public getInDatabase(teclado: KeyboardModel, res: Response){    
             let instance = this;
+
+            
             res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {
                 if(keyboard_list.length !== 0){
                     res.send(keyboard_list);
@@ -81,9 +85,10 @@ export class Keyboard extends BaseRoute {
 
 
     public deleteKeyboard(req: Request, res: Response, next: NextFunction){
+        console.log(req.query.email);
         if(req.query.email){
 
-            console.log(req.query.email);
+            
 
             res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
                 if(keyboard_list){
@@ -100,6 +105,8 @@ export class Keyboard extends BaseRoute {
 
     public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
+
+        console.log(req.query.email);
 
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             if(keyboard_list.length >= 7){
@@ -124,6 +131,8 @@ export class Keyboard extends BaseRoute {
 
     public insertUpdateKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
+        console.log(req.query.email);
+
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             if(keyboard_list.length >= 8){
                 res.send('maxNumber');
@@ -140,6 +149,8 @@ export class Keyboard extends BaseRoute {
 
     public insertUpdateOnlyKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
+        console.log(req.query.email);
+
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
                         res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
                             console.log("Keyboard atualizado");
