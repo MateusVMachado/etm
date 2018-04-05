@@ -15,8 +15,8 @@ export class AppServiceBase {
       
 
         if(environment.production){
-            this.backendAddress = 'https://etm-api.korp.com.br/';
-            this.frontendAddress = 'https://etm.korp.com.br/';
+            this.backendAddress = 'https://etm-api.korp.com.br';
+            this.frontendAddress = 'https://etm.korp.com.br';
         } else {
             this.backendAddress = 'http://localhost:8080';
             this.frontendAddress = 'http://localhost:4200/';
