@@ -23,6 +23,16 @@ export class Login extends BaseRoute{
         let email = req.body['email'];
         let password = req.body['password'];
 
+        if(res === undefined){
+            console.log("RES UNDEFINED");
+        } else if(res.locals === undefined){
+            console.log("LOCALS UNDEFINED");
+        }else if(res.locals.mongoAccess === undefined){
+            console.log("MONGOACCESS UNDEFINED");
+        } else if(res.locals.mongoAccess.coll[0] === undefined){
+            console.log("COLLECTION UNDEFINED");
+        }
+
         //if(res.locals.mongoAccess.coll[0]){
             res.locals.mongoAccess.coll[0].find({"email": email}).toArray(function(err, user_list) {         
                     if(user_list.length !== 0){
