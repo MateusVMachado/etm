@@ -104,7 +104,7 @@ export class IndexRoute extends BaseRoute {
     router.post("/login", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       console.clear();
-      logger.logSessionStart(req,res,next);   
+      //logger.logSessionStart(req,res,next);   
       login.authenticateUser(req, res, next);
     });
 
