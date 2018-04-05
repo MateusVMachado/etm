@@ -33,6 +33,7 @@ export class Login extends BaseRoute{
             console.log("COLLECTION UNDEFINED");
         }
 
+        console.log(req.body['email']);
         //if(res.locals.mongoAccess.coll[0]){
             res.locals.mongoAccess.coll[0].find({"email": email}).toArray(function(err, user_list) {         
                     if(user_list.length !== 0){

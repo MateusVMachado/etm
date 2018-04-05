@@ -15,7 +15,9 @@ export class User extends BaseRoute{
         } else if(res.locals.mongoAccess.coll[0] === undefined){
             console.log("COLLECTION UNDEFINED");
         }
-
+        
+        console.log(req.query.email);
+        
         res.locals.mongoAccess.coll[0].find({"email": req.query.email}).toArray(function(err, user_list) {
             if(user_list){
                 let user: UserModel = new UserModel();
