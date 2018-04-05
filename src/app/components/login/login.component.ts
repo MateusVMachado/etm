@@ -91,6 +91,9 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
             if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
               let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
               this.messageService.error(message, 'Oops..');
+            } else {
+              let message = 'o.O';
+              this.messageService.error(message, 'Oops..');
             }
           }
        );
@@ -122,6 +125,9 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
         }, (error) =>{
           if(error.error.message === "MENSAGEM_DADOS_INVALIDOS"){
             let message = this.messageService.getTranslation('MENSAGEM_DADOS_INVALIDOS');
+            this.messageService.error(message, 'Oops..');
+          } else {
+            let message = 'o.O';
             this.messageService.error(message, 'Oops..');
           }
         }
