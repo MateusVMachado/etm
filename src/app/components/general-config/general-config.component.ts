@@ -63,7 +63,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
             this.userSession.user = user.email; 
 
             this.configServiceSubscribe = this.configService.getConfiguration(user.email).subscribe((result)=>{
-                this.level = result.level;
+                this.level = 1-result.level;
             })
 
         }
@@ -91,7 +91,7 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
         this.submitted = true;
         let message;
         this.configServiceSubscribe.unsubscribe();
-        this.setConfigurationSubscribe = this.configService.saveConfiguration(this.config, 'pt-br', this.level).subscribe(result => {
+        this.setConfigurationSubscribe = this.configService.saveConfiguration(this.config, 'pt-br', 1-this.level).subscribe(result => {
             
             setTimeout(()=> {
                 message = this.messageService.getTranslation('MENSAGEM_CONFIGURACOES_SALVAS');
