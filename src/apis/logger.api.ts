@@ -49,17 +49,18 @@ export class Logger extends BaseRoute{
         userSession.latitude = latitude;
         userSession.longitude = longitude;
     
-        
-        res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
-               if(userSessionList.length ===0){
-                        res.locals.mongoAccess.coll[3].insert(userSession, (err, result) => {
-                            res.send();
-                        })
-                   
-               } else {
-                    return;
-                }         
-            });        
+        if(res.locals.mongoAccess.coll[3] !== undefined){
+                res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
+                    if(userSessionList.length ===0){
+                                res.locals.mongoAccess.coll[3].insert(userSession, (err, result) => {
+                                    res.send();
+                                })
+                        
+                    } else {
+                            return;
+                        }         
+                    });
+        }                    
  
     }
 
@@ -69,53 +70,54 @@ export class Logger extends BaseRoute{
         userSession.sessDate = moment().format('L');
         userSession.user = req.body['user'];
         
+        if(res.locals.mongoAccess.coll[3] !== undefined){
+            res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
 
-        res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
+                if(userSessionList.length !== 0){
 
-            if(userSessionList.length !== 0){
+                    userSession.logout = moment().format('HH:mm:ss');
+                            
+                    let logout = moment().format('HH:mm:ss').split(' ')[0];
+                    let logoutParts = logout.split(':');
+                    let end = moment([logoutParts[0],logoutParts[1],logoutParts[2]], "HH:mm:ss")
 
-                userSession.logout = moment().format('HH:mm:ss');
-                          
-                let logout = moment().format('HH:mm:ss').split(' ')[0];
-                let logoutParts = logout.split(':');
-                let end = moment([logoutParts[0],logoutParts[1],logoutParts[2]], "HH:mm:ss")
+                    let access = userSessionList[0].access.split(' ')[0];
+                    let accessParts = access.split(':');
+                    let start = moment([accessParts[0],accessParts[1],accessParts[2]], "HH:mm:ss")
 
-                let access = userSessionList[0].access.split(' ')[0];
-                let accessParts = access.split(':');
-                let start = moment([accessParts[0],accessParts[1],accessParts[2]], "HH:mm:ss")
+                    
+                    let hDiffStr, mDiffStr, sDiffStr;
+                    let hDiff = Math.abs(start.diff(end, 'hours') );
+                    let mDiff = Math.abs(start.diff(end, 'minutes') );
+                    let sDiff = Math.abs(start.diff(end, 'seconds') );
 
+                    hDiffStr = hDiff.toString();
+                    mDiffStr = (mDiff-(hDiff*60)).toString();
+                    sDiffStr = (sDiff - (hDiff*60*60) - ((mDiff-(hDiff*60))*60)).toString();
                 
-                let hDiffStr, mDiffStr, sDiffStr;
-                let hDiff = Math.abs(start.diff(end, 'hours') );
-                let mDiff = Math.abs(start.diff(end, 'minutes') );
-                let sDiff = Math.abs(start.diff(end, 'seconds') );
+                    if(Number(hDiffStr) < 10){
+                        hDiffStr = '0' + hDiffStr;
+                    }
+                    if(Number(mDiffStr) < 10){
+                        mDiffStr = '0' + mDiffStr;
+                    }
+                    if(Number(sDiffStr) < 10){
+                        sDiffStr = '0' + sDiffStr;
+                    }
+                    let sessDuration = hDiffStr + ':' + mDiffStr + ':' + sDiffStr;
+                    userSession.sessDuration = sessDuration;
+                    
+                    res.locals.mongoAccess.coll[3].update({ $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}]}, 
+                                {  $set: {"logout" : userSession.logout, "sessDuration" : userSession.sessDuration} }, (err, result) => {
+                                    res.send();
+                    })
 
-                hDiffStr = hDiff.toString();
-                mDiffStr = (mDiff-(hDiff*60)).toString();
-                sDiffStr = (sDiff - (hDiff*60*60) - ((mDiff-(hDiff*60))*60)).toString();
-            
-                if(Number(hDiffStr) < 10){
-                    hDiffStr = '0' + hDiffStr;
+                    return;
+                } else {
+                    console.log("THERE IS NO UNCLOSED ENTRY");
                 }
-                if(Number(mDiffStr) < 10){
-                    mDiffStr = '0' + mDiffStr;
-                }
-                if(Number(sDiffStr) < 10){
-                    sDiffStr = '0' + sDiffStr;
-                }
-                let sessDuration = hDiffStr + ':' + mDiffStr + ':' + sDiffStr;
-                userSession.sessDuration = sessDuration;
-                
-                res.locals.mongoAccess.coll[3].update({ $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}]}, 
-                             {  $set: {"logout" : userSession.logout, "sessDuration" : userSession.sessDuration} }, (err, result) => {
-                                res.send();
-                })
-
-                return;
-            } else {
-                console.log("THERE IS NO UNCLOSED ENTRY");
-            }
-        })    
+            })
+        }        
     }  
 
 
@@ -151,38 +153,42 @@ export class Logger extends BaseRoute{
         let userSession = new UserSessionModel();
         userSession = req.body;
 
-        res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
-            logger.sumTimeIntervals(userSessionList, userSession, 'layoutEditorIntervals', 'layoutEditorUsage');
-            res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
-                             {  $push: {"layoutEditorIntervals" : userSession.layoutEditorIntervals} }, (err, result) => {
-                            if(result) {   
-                                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
-                                {  $set: {"layoutEditorUsage" : userSession.layoutEditorUsage } }, (err, result) => {
-                                        if(result) {   res.send();   }
-                                }); 
-                            }
-            });    
-                   
-        });         
+        if(res.locals.mongoAccess.coll[3] !== undefined){
+            res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
+                logger.sumTimeIntervals(userSessionList, userSession, 'layoutEditorIntervals', 'layoutEditorUsage');
+                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                                {  $push: {"layoutEditorIntervals" : userSession.layoutEditorIntervals} }, (err, result) => {
+                                if(result) {   
+                                    res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                                    {  $set: {"layoutEditorUsage" : userSession.layoutEditorUsage } }, (err, result) => {
+                                            if(result) {   res.send();   }
+                                    }); 
+                                }
+                });    
+                    
+            });
+        }             
     }
 
     public logKeyboardIntervals(req: Request, res: Response, next: NextFunction, options?: string){
         let logger = new Logger();
         let userSession = new UserSessionModel();
         userSession = req.body;
-        res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
-            logger.sumTimeIntervals(userSessionList, userSession, 'keyboardIntervals', 'keyboardUsage');
-            res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
-                             {  $push: {"keyboardIntervals" : userSession.keyboardIntervals} }, (err, result) => {
-                            if(result) {   
-                                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
-                                {  $set: {"keyboardUsage" : userSession.keyboardUsage } }, (err, result) => {
-                                        if(result) {   res.send();   }
-                                }); 
-                            }
-            });    
-                   
-        });         
+        if(res.locals.mongoAccess.coll[3] !== undefined){
+            res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
+                logger.sumTimeIntervals(userSessionList, userSession, 'keyboardIntervals', 'keyboardUsage');
+                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                                {  $push: {"keyboardIntervals" : userSession.keyboardIntervals} }, (err, result) => {
+                                if(result) {   
+                                    res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                                    {  $set: {"keyboardUsage" : userSession.keyboardUsage } }, (err, result) => {
+                                            if(result) {   res.send();   }
+                                    }); 
+                                }
+                });    
+                    
+            });
+        }             
     }
 
     public logConfigIntervals(req: Request, res: Response, next: NextFunction, options?: string){
@@ -190,19 +196,21 @@ export class Logger extends BaseRoute{
         let userSession = new UserSessionModel();
         userSession = req.body;
 
-        res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
-            logger.sumTimeIntervals(userSessionList, userSession, 'configIntervals', 'configUsage');
-            res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
-                             {  $push: {"configIntervals" : userSession.configIntervals} }, (err, result) => {
-                            if(result) {   
-                                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
-                                {  $set: {"configUsage" : userSession.configUsage } }, (err, result) => {
-                                        if(result) {   res.send();   }
-                                }); 
-                            }
-            });    
-                   
-        });         
+        if(res.locals.mongoAccess.coll[3] !== undefined){
+            res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
+                logger.sumTimeIntervals(userSessionList, userSession, 'configIntervals', 'configUsage');
+                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                                {  $push: {"configIntervals" : userSession.configIntervals} }, (err, result) => {
+                                if(result) {   
+                                    res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                                    {  $set: {"configUsage" : userSession.configUsage } }, (err, result) => {
+                                            if(result) {   res.send();   }
+                                    }); 
+                                }
+                });    
+                    
+            });         
+        }    
     }
 
 
