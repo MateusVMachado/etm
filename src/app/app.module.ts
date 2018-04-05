@@ -30,6 +30,7 @@ import { AppServiceBase } from './components/shared/services/app-service-base.se
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatSliderModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material';
+import { GeneralConfigModule } from './components/general-config/general-config.module';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -50,6 +51,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     DragulaModule,
     MatSliderModule,
     MatSliderModule,
+    GeneralConfigModule,
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,
