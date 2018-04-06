@@ -86,5 +86,8 @@
     "MENSAGEM_ERRO_BUSCAR_CONFIGS": "There was a problem fetching your settings",
     "MENSAGEM_EMAIL_JA_CADASTRADO": "This email has already been registered!",
     "MENSAGEM_CADASTRO_CONCLUIDO": "User registered successfully!",
-    "MENSAGEM_DADOS_INVALIDOS": "Invalid email or password"
+    "MENSAGEM_DADOS_INVALIDOS": "Invalid email or password",
+    "OP_BOTAO_ESCREVER": "Write",
+    "OP_BOTAO_FALAR": "Speak",
+    "OP_BOTAO_IMAGEM": "Imagen"
 }

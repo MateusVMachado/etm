@@ -85,5 +85,8 @@
     "MENSAGEM_ERRO_BUSCAR_CONFIGS": "Se ha producido un problema al buscar su configuración",
     "MENSAGEM_EMAIL_JA_CADASTRADO": "¡Ese correo electrónico ya ha sido registrado!",
     "MENSAGEM_CADASTRO_CONCLUIDO": "¡El usuario registrado con éxito!",
-    "MENSAGEM_DADOS_INVALIDOS": "Correo electrónico o contraseña no válida"
+    "MENSAGEM_DADOS_INVALIDOS": "Correo electrónico o contraseña no válida",
+    "OP_BOTAO_ESCREVER": "Escribir",
+    "OP_BOTAO_FALAR": "Hablar",
+    "OP_BOTAO_IMAGEM": "Imagen"
 }
