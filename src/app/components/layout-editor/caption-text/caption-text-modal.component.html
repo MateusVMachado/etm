@@ -5,7 +5,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <form #form="ngForm" autocomplete="off">
+    <form autocomplete="off">
         <div class="modal-body">
 
             <div class="from-group line">
@@ -61,9 +61,10 @@
                 </div>
             </div>
 
-            <div class="modal-footer">
-                <button (ngSubmit)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Salvar</button>
-            </div>
+
         </div>
     </form>
+    <div class="modal-footer">
+        <button (click)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="false">Salvar</button>
+    </div>
 </div>

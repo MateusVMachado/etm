@@ -20,6 +20,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
     public buttonText: string;
     public buttonCaption: string;
+    public buttonAction: string;
     private captionSubscribe: Subscription;
 
     constructor(private activeModal: NgbActiveModal,
@@ -32,6 +33,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         
                         this.buttonCaption = result[0].target.value;
                         this.buttonText = result[1];
+                        this.buttonAction = result[2];
                     })
 
                  }
@@ -52,9 +54,11 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         let payload = new Array();    
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
+        payload.push(this.buttonAction);
 
         
-        this.layoutEditorService.emitLayoutEditorPayload(payload);        
+        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+        
         if(stat){
             return;
         } else {
