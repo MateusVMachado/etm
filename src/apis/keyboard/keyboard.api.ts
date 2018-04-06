@@ -187,7 +187,7 @@ export class Keyboard extends BaseRoute {
             openFacLayout.Lines[i].Buttons = new Array<LayoutButton>();
             for( let j = 0 ; j < teclado.teclas[i].length; j++){
                     openFacLayout.Lines[i].Buttons.push(new LayoutButton());
-                    openFacLayout.Lines[i].Buttons[j].Action = 'Keyboard';
+                    openFacLayout.Lines[i].Buttons[j].Action = teclado.action[i][j];        
                     openFacLayout.Lines[i].Buttons[j].Caption = teclado.teclas[i][j];        
                     openFacLayout.Lines[i].Buttons[j].Text = teclado.text[i][j];        
             }
