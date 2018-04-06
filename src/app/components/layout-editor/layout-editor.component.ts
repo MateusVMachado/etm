@@ -1009,6 +1009,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   let user = this.authService.getLocalUser();
                   finalKeyboard.type = this.keyboardName;
                   let layout = this.populateLayout(finalKeyboard, user.email);
+                  console.log(JSON.stringify(finalKeyboard));
+                  console.log('\n')
+                  console.log(JSON.stringify(layout));
                   
                   this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
                     let message;
@@ -1065,6 +1068,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             let user = this.authService.getLocalUser();
             finalKeyboard.type = this.keyboardToEdit;
             let layout = this.populateLayout(finalKeyboard, user.email);
+            console.log(JSON.stringify(finalKeyboard));
+            console.log('\n')
+            console.log(JSON.stringify(layout));
             
             this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
               let message;

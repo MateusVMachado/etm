@@ -34,6 +34,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         this.buttonCaption = result[0].target.value;
                         this.buttonText = result[1];
                         this.buttonAction = result[2];
+
                     })
 
                  }
@@ -54,6 +55,11 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         let payload = new Array();    
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
+
+        if(this.falar && !this.escrever) this.buttonAction = 'TTS'; // falar activated
+        if(!this.falar && this.escrever) this.buttonAction = 'Keyboard'; // escrever activated
+        //if(this.falar && this.escrever) this.buttonAction = 'KeyboardAndTTS'; // both
+        if(!this.falar && !this.escrever) this.buttonAction = 'Keyboard'; // None activated
         payload.push(this.buttonAction);
 
         

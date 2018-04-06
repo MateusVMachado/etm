@@ -3,6 +3,7 @@ import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.S
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
 import { OpenFacActionKeyboardWriter } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardWriter';
+import { OpenFacActionTTS } from '../../../../node_modules/openfac/OpenFac.ActionTTS';
 import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.SensorJoystick';
 import { OpenFacSensorMicrophone } from '../../../../node_modules/openfac/OpenFac.SensorMicrophone';
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
@@ -125,6 +126,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         if (this.KeyboardData[j].nameLayout === 'caps') continue;
                         if (this.target === this.KeyboardData[j].nameLayout) {
 
+                          console.log(JSON.stringify(this.KeyboardData[j]));
+
                           this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
 
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
@@ -207,7 +210,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
 
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-
+          console.log(JSON.stringify(this.openFacLayout));
+          console.log(JSON.stringify(this.teclado));
 
           this.configureAll();
 
@@ -237,7 +241,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                           }                                    
                           if(!found) this.openFacLayout = (data[0]); 
                           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-
+                          console.log(JSON.stringify(this.teclado));
 
                           this.configureSome(); 
                           this.tecladoService.emitTecladoReady(true);  
@@ -254,16 +258,20 @@ export class TecladoComponent implements OnInit, OnDestroy {
       this.openFacLayout = layout;
       this.teclado.teclas = [];
       this.teclado.text = [];
+      this.teclado.action = []; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
       for(let i = 0 ; i < layout.Lines.length; i++){ 
         let line = []; 
         let textL = []; 
+        let actionL = [];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ 
           line.push(layout.Lines[i].Buttons[j].Caption); 
           textL.push(layout.Lines[i].Buttons[j].Text); 
+          actionL.push(layout.Lines[i].Buttons[j].Action);  ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
         } 
         this.teclado.teclas.push(line);  
         this.teclado.text.push(textL); 
+        this.teclado.action.push(actionL); ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
       } 
       this.teclado.type = layout.nameLayout; 
 
@@ -347,6 +355,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private configureAll(editorInstance?: any) {
         if(editorInstance){
           let configArray = [editorInstance, this.keyCommandService, this.zone];
+          OpenFacActionFactory.Register('TTS', OpenFacActionTTS, configArray);
           OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
         }
         clearInterval(this.timerId);
