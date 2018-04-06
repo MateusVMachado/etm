@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { AppBaseComponent } from '../../shared/components/app-base.component';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutEditorService } from '../layout-editor.service';
 import { CaptionTextService } from './caption-text.service';
@@ -9,10 +10,13 @@ import { Subscription } from 'rxjs';
     templateUrl: './caption-text-modal.component.html',
     styleUrls: ['./caption-text-modal.component.css']
 })
-export class CaptionTextModalComponent implements OnInit, OnDestroy {
+export class CaptionTextModalComponent extends AppBaseComponent implements OnInit, OnDestroy {
     public isKeyboardName: boolean = true;
-    
+    public falar: boolean;
+    public escrever: boolean;
+    public imagem: boolean;
     public keyboardName: string;
+    public imgPadrao: string;
 
     public buttonText: string;
     public buttonCaption: string;
@@ -20,8 +24,9 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
 
     constructor(private activeModal: NgbActiveModal,
                 private layoutEditorService: LayoutEditorService,
-                private captionTextService: CaptionTextService) {
-                    
+                private captionTextService: CaptionTextService,
+                private injector: Injector) {
+                    super(injector)
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                         
@@ -32,7 +37,8 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
                  }
 
     ngOnInit() { 
-
+        this.escrever = true;
+        this.imgPadrao = '1';
     }
 
     ngOnDestroy() {
@@ -65,6 +71,26 @@ export class CaptionTextModalComponent implements OnInit, OnDestroy {
     public closeModal(stat?) {
         this.saveButtonConfiguration(true)
         this.activeModal.close();
+    }
+
+    slideImage(direction: string){
+        let image: number;
+        if(direction === 'up'){
+            if(this.imgPadrao === '1'){
+                image = 14;
+            }else{
+                image = Number(this.imgPadrao) - 1;
+            }
+            this.imgPadrao = String(image);
+        }else if(direction === 'down'){
+            if(this.imgPadrao === '14'){
+                image = 1;
+            }else{
+                image = Number(this.imgPadrao) + 1;
+            }
+            this.imgPadrao = String(image);
+        }
+        
     }
     
 }

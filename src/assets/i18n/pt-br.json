@@ -86,5 +86,8 @@
     "MENSAGEM_ERRO_BUSCAR_CONFIGS": "Ocorreu um problema ao buscar suas configurações",
     "MENSAGEM_EMAIL_JA_CADASTRADO": "Esse email já foi cadastrado!",
     "MENSAGEM_CADASTRO_CONCLUIDO": "Usuário cadastrado com sucesso!",
-    "MENSAGEM_DADOS_INVALIDOS": "Email ou senha inválidos"
+    "MENSAGEM_DADOS_INVALIDOS": "Email ou senha inválidos",
+    "OP_BOTAO_ESCREVER": "Escrever",
+    "OP_BOTAO_FALAR": "Falar",
+    "OP_BOTAO_IMAGEM": "Imagem"
 }

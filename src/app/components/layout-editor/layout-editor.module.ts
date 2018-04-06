@@ -11,12 +11,14 @@ import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.
 import { SaveModalComponent } from './save-layout/save-modal.component';
 import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
 import { routes } from "./layout-editor.routing";
+import { MatSlideToggleModule } from "@angular/material";
 
 @NgModule({
   imports: [
     ThemeModule,
     DragulaModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    MatSlideToggleModule
   ],
   declarations: [
     LayoutEditorComponent,
