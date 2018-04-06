@@ -306,192 +306,218 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 el1 = sEl[0].cloneNode(true);
               }
               
-
-              if(index && index !== -1){
-                  let valor = valuesArray[index];
-              
-                  
-                  for(let cm = 0; cm < coordinatesMap.length; cm++ ){
-                    if(coordinatesMap[cm][0].toString().toLowerCase() === valor.toString().toLowerCase()){
-                      ok = true;
-                      let x = coordinatesMap[cm][1];
-                      let y = coordinatesMap[cm][2];
-                      this.tecladoReplicant.teclas[x][y] = valor;
-                      this.tecladoReplicant.text[x][y] = valor; 
-                      
-                      
-
-                      let el = sEl[i].cloneNode(true);
-        
-                      if(!$(el).find('input')[0]){
-        
-                        $($(el).find('button')[0]).attr('value', valor);
-                        //$(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
-
-                        
-                        
-                      }  else {
-                        
-                        $($(el).find('input')[0]).attr('value', valor);
-                        //$(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                        $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
-                     
-
-                      }
-            
-                        $(el).removeAttr('tooltip');
-                    
-
-                     let formula = (this.globColumnQnty*x)+(y);
-                      $("[id=content]")[formula].appendChild(el);
-
-                      continue;
-                    } 
-                    
-
-                    if(!ok){
-
-                      let found = false;
-                      for(let k = 0; k < coordinatesMap.length; k++){
-                        let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
-    
-                       
-                        
-                        for(let i = 0; i < notFoundArray.length; i++ ){
-
-  
-                          if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
-                              found = true;  
-                              break;
-                    }
-                  }                  
-
-                       
-                        if(!found && index2 === -1 ){ 
-                          let map = new Array();
-
-                          map.push(coordinatesMap[k][0]);
-                          map.push(k);
-  
-                          notFoundArray.push(map);
-              }    
-                      }
-
-                    }
-
-                 
-
-                  }
-
-              }    
-            } else {
-              let index = $.inArray(($( $(sEl[i]).find('input')[0] ).clone()).val().toString().toLowerCase(), valuesArrayLower);
-
-              if(index && index !== -1){
-                  let valor = valuesArray[index];
-     
-
-                  let ok = false;
-
-                  for(let cm = 0; cm < coordinatesMap.length; cm++ ){
-                    if(coordinatesMap[cm][0].toString().toLowerCase() === valor.toString().toLowerCase()){
-                      ok = true;
-                      let x = coordinatesMap[cm][1];
-                      let y = coordinatesMap[cm][2];
-                      this.tecladoReplicant.teclas[x][y] = valor;
-                      this.tecladoReplicant.text[x][y] = valor; 
-
-                      
-
-                      let el1 = sEl[i].cloneNode(true);
         
                       if(!$(el1).find('input')[0]){
         
-                        $($(el1).find('button')[0]).attr('value', valor);
-                        
+                        $($(el1).find('button')[0]).attr('value', replicantFromDatabase.teclas[x][y]);
+                        //$(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+
                         
                         
                       }  else {
                         
-                        $($(el1).find('input')[0]).attr('value', valor);
-                        
+                        $($(el1).find('input')[0]).attr('value', replicantFromDatabase.teclas[x][y]);
+                        //$(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                         $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
-                        
+                     
 
                       }
             
-                      $(el1).removeAttr('tooltip');
-
-                      let formula = (this.globColumnQnty*x)+(y);
-                       $("[id=content]")[formula].appendChild(el1);
-                     
-                       continue;
-
-                    } 
+                        $(el1).removeAttr('tooltip');
                     
-                    if(!ok){
 
-                      let found = false;
-                      for(let k = 0; k < coordinatesMap.length; k++){
-                        let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
+                     let formula = (this.globColumnQnty*x)+(y);
+                      $("[id=content]")[formula].appendChild(el1);
+
+                      continue;
+                    } 
+
+      //         if(index && index !== -1){
+      //             let valor = valuesArray[index];
+              
+                  
+      //             for(let cm = 0; cm < coordinatesMap.length; cm++ ){
+      //               if(coordinatesMap[cm][0].toString().toLowerCase() === valor.toString().toLowerCase()){
+      //                 ok = true;
+      //                 let x = coordinatesMap[cm][1];
+      //                 let y = coordinatesMap[cm][2];
+      //                 this.tecladoReplicant.teclas[x][y] = valor;
+      //                 this.tecladoReplicant.text[x][y] = valor; 
+                      
+                      
+
+      //                 let el = sEl[i].cloneNode(true);
+        
+      //                 if(!$(el).find('input')[0]){
+        
+      //                   $($(el).find('button')[0]).attr('value', valor);
+      //                   //$(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+      //                   $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+
+                        
+                        
+      //                 }  else {
+                        
+      //                   $($(el).find('input')[0]).attr('value', valor);
+      //                   //$(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
+      //                   $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+                     
+
+      //                 }
+            
+      //                   $(el).removeAttr('tooltip');
+                    
+
+      //                let formula = (this.globColumnQnty*x)+(y);
+      //                 $("[id=content]")[formula].appendChild(el);
+
+      //                 continue;
+      //               } 
+                    
+
+      //               if(!ok){
+
+      //                 let found = false;
+      //                 for(let k = 0; k < coordinatesMap.length; k++){
+      //                   let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
+    
+                       
+                        
+      //                   for(let i = 0; i < notFoundArray.length; i++ ){
+
+  
+      //                     if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
+      //                         found = true;  
+      //                         break;
+      //                      }
+      //             }                  
+
+                       
+      //                   if(!found && index2 === -1 ){ 
+      //                     let map = new Array();
+
+      //                     map.push(coordinatesMap[k][0]);
+      //                     map.push(k);
+  
+      //                     notFoundArray.push(map);
+      //         }    
+      //                 }
+
+      //               }
+
+                 
+
+      //             }
+
+      //         }    
+      //       } else {
+      //         let index = $.inArray(($( $(sEl[i]).find('input')[0] ).clone()).val().toString().toLowerCase(), valuesArrayLower);
+
+      //         if(index && index !== -1){
+      //             let valor = valuesArray[index];
+     
+
+      //             let ok = false;
+
+      //             for(let cm = 0; cm < coordinatesMap.length; cm++ ){
+      //               if(coordinatesMap[cm][0].toString().toLowerCase() === valor.toString().toLowerCase()){
+      //                 ok = true;
+      //                 let x = coordinatesMap[cm][1];
+      //                 let y = coordinatesMap[cm][2];
+      //                 this.tecladoReplicant.teclas[x][y] = valor;
+      //                 this.tecladoReplicant.text[x][y] = valor; 
+
+                      
+
+      //                 let el1 = sEl[i].cloneNode(true);
+        
+      //                 if(!$(el1).find('input')[0]){
+        
+      //                   $($(el1).find('button')[0]).attr('value', valor);
+                        
+      //                   $(el1).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+                        
+                        
+      //                 }  else {
+                        
+      //                   $($(el1).find('input')[0]).attr('value', valor);
+                        
+      //                   $(el1).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+                        
+
+      //                 }
+            
+      //                 $(el1).removeAttr('tooltip');
+
+      //                 let formula = (this.globColumnQnty*x)+(y);
+      //                  $("[id=content]")[formula].appendChild(el1);
+                     
+      //                  continue;
+
+      //               } 
+                    
+      //               if(!ok){
+
+      //                 let found = false;
+      //                 for(let k = 0; k < coordinatesMap.length; k++){
+      //                   let index2 = $.inArray(coordinatesMap[k][0].toString().toLowerCase(), sElArray); 
    
                        
                         
-                        for(let i = 0; i < notFoundArray.length; i++ ){
+      //                   for(let i = 0; i < notFoundArray.length; i++ ){
 
   
-                          if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
-                              found = true;  
-                              break;
-                    }
-                        }     
+      //                     if(coordinatesMap[k][0].toString().toLowerCase() === notFoundArray[i][0].toString().toLowerCase()){
+      //                         found = true;  
+      //                         break;
+      //               }
+      //                   }     
 
                        
-                        if(!found && index2 === -1 ){ 
-                          let map = new Array();
+      //                   if(!found && index2 === -1 ){ 
+      //                     let map = new Array();
 
-                          map.push(coordinatesMap[k][0]);
-                          map.push(k);
+      //                     map.push(coordinatesMap[k][0]);
+      //                     map.push(k);
   
-                          notFoundArray.push(map);
-                  }                    
-                      }
+      //                     notFoundArray.push(map);
+      //             }                    
+      //                 }
 
-                    }
-
-
-
-              }    
-            } 
-            } 
+      //               }
 
 
 
-       }
+      //         }    
+      //       } 
+      //       } 
+
+
+
+      //  }
 
        
-       if(notFoundArray.length > 0 ){
-         for(let i = 0; i< notFoundArray.length; i++){
-            let el3 = sEl[0].cloneNode(true);
-            let x = coordinatesMap[notFoundArray[i][1]][1];
-            let y = coordinatesMap[notFoundArray[i][1]][2];
+      //  if(notFoundArray.length > 0 ){
+      //    for(let i = 0; i< notFoundArray.length; i++){
+      //       let el3 = sEl[0].cloneNode(true);
+      //       let x = coordinatesMap[notFoundArray[i][1]][1];
+      //       let y = coordinatesMap[notFoundArray[i][1]][2];
             
          
             
-            if(!$(el3).find('input')[0]){
-              $(el3).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
-              $($(el3).find('button')[0]).attr('value', coordinatesMap[notFoundArray[i][1]][0] );
-            }  else {
-              $(el3).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
-              $($(el3).find('input')[0]).attr('value', coordinatesMap[notFoundArray[i][1]][0] );
-            }
-            $(el3).removeAttr('tooltip');
-            let formula = (this.globColumnQnty*x)+(y);
-             $("[id=content]")[formula].appendChild(el3);
-         }
-       }
+      //       if(!$(el3).find('input')[0]){
+      //         $(el3).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+      //         $($(el3).find('button')[0]).attr('value', coordinatesMap[notFoundArray[i][1]][0] );
+      //       }  else {
+      //         $(el3).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + y + '#' + x + '';
+      //         $($(el3).find('input')[0]).attr('value', coordinatesMap[notFoundArray[i][1]][0] );
+      //       }
+      //       $(el3).removeAttr('tooltip');
+      //       let formula = (this.globColumnQnty*x)+(y);
+      //        $("[id=content]")[formula].appendChild(el3);
+      //    }
+      //  }
 
       console.log("AFTER 1");
       console.log(JSON.stringify(this.tecladoReplicant));
