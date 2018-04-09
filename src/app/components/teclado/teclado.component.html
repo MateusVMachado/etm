@@ -27,7 +27,7 @@
 
             <input [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                                     (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-              *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+              *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
                                       && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
                                       && key != '*arrowdown' && key != '*arrowright'" 
               type="button" class="btn button-keyboard" value="{{ key }}" />
@@ -84,6 +84,15 @@
                                                             (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                 class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
             </button>
+
+            <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+            (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+            *ngIf="key == '*mic'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
+                              (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+            class="mat-icon material-icons" role="img" aria-hidden="true">volume_up</mat-icon>
+            </button>
+
               <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                   (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
                   *ngIf="key == '*space'" class="btn button-keyboard icon-keyboard tamanho-button3" 

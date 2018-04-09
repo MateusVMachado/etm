@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutEditorService } from '../layout-editor.service';
 import { CaptionTextService } from './caption-text.service';
 import { Subscription } from 'rxjs';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-caption-text-modal',
@@ -18,8 +19,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public keyboardName: string;
     public imgPadrao: string;
 
-    public buttonText: string;
-    public buttonCaption: string;
+    public buttonText: string = "";
+    public buttonCaption: string = "";
+    public buttonAction: string = "";
     private captionSubscribe: Subscription;
 
     constructor(private activeModal: NgbActiveModal,
@@ -30,14 +32,37 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                         
-                        this.buttonCaption = result[0].target.value;
-                        this.buttonText = result[1];
+                        if(result[1].substring(0,1) === '*'){
+                            this.buttonCaption = "";
+                            this.buttonText = "";
+                            this.buttonAction = result[2]; 
+                        } else {
+                            this.buttonCaption = result[0].target.value;
+                            this.buttonText = result[1];
+                            this.buttonAction = result[2];
+                        }
+             
+                        
+
+                        if(this.buttonAction === "Keyboard"){
+                            this.escrever = true;
+                            this.falar = false;
+                        } else if( this.buttonAction === "TTS"){
+                            this.escrever = false;
+                            this.falar = true;
+                        } else if( this.buttonAction === "KeyboardAndTTS"){
+                            this.escrever = true;
+                            this.falar = true;
+                        } else {
+                            this.escrever = true;
+                        }
+
                     })
 
                  }
 
+
     ngOnInit() { 
-        this.escrever = true;
         this.imgPadrao = '1';
     }
 
@@ -48,13 +73,30 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         this.captionSubscribe.unsubscribe();
     }
 
+    public onChangeToggle(event){
+        if(event['source'].id === 'escrever' && event['source'].checked === false && !this.falar){
+            event['source'].checked = true;
+            this.escrever = true;     
+        }
+        if(!this.falar && !this.escrever){
+            this.escrever = true;
+        }
+    }
+
     public saveButtonConfiguration(stat?){
         let payload = new Array();    
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
 
+        if(this.falar && !this.escrever) this.buttonAction = 'TTS'; // falar activated
+        if(!this.falar && this.escrever) this.buttonAction = 'Keyboard'; // escrever activated
+        if(this.falar && this.escrever) this.buttonAction = 'KeyboardAndTTS'; // both
+        if(!this.falar && !this.escrever) this.buttonAction = 'Keyboard'; // None activated
+        payload.push(this.buttonAction);
+
         
-        this.layoutEditorService.emitLayoutEditorPayload(payload);        
+        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+        
         if(stat){
             return;
         } else {

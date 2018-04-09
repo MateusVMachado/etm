@@ -56,7 +56,7 @@
                                 </button>
 
                                 <input
-                                *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' 
+                                *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
                                                         && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
                                                         && key != '*arrowdown' && key != '*arrowright'" 
                                 type="button" class="{{i.toString() + '#' + iR.toString()}} button-keyboard-down" value="{{ key }}" />
@@ -95,6 +95,16 @@
                                 <mat-icon 
                                     class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
                                 </button>
+
+                                
+                                <button 
+                                *ngIf="key == '*mic'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                    class="mat-icon material-icons" role="img" aria-hidden="true">volume_up</mat-icon>
+                                </button>
+                            
+
+
                                 <button 
                                     *ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} button-keyboard icon-keyboard tamanho-button3" 
                                             value="{{key}}" >SPACE

@@ -5,7 +5,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <form #form="ngForm" autocomplete="off">
+    <form autocomplete="off">
         <div class="modal-body">
 
             <div class="from-group line">
@@ -22,11 +22,11 @@
 
             </div>
             <div class="from-group">
-                <mat-slide-toggle id="escrever" color="primary" [(ngModel)]="escrever" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                <mat-slide-toggle id="escrever" color="primary" [(ngModel)]="escrever" [ngModelOptions]="{standalone: true}" (change)="onChangeToggle($event)"></mat-slide-toggle>
                 <label for="escrever" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_ESCREVER') }}</label>
             </div>
             <div class="from-group">
-                <mat-slide-toggle id="falar" color="primary" [(ngModel)]="falar" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                <mat-slide-toggle id="falar" color="primary" [(ngModel)]="falar" [ngModelOptions]="{standalone: true}" (change)="onChangeToggle($event)"></mat-slide-toggle>
                 <label for="falar" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_FALAR') }}</label>
             </div>
             <div class="from-group line">
@@ -61,9 +61,10 @@
                 </div>
             </div>
 
-            <div class="modal-footer">
-                <button (ngSubmit)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">Salvar</button>
-            </div>
+
         </div>
     </form>
+    <div class="modal-footer">
+        <button (click)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="false">Salvar</button>
+    </div>
 </div>
