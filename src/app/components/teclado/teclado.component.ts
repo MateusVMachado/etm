@@ -126,8 +126,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         if (this.KeyboardData[j].nameLayout === 'caps') continue;
                         if (this.target === this.KeyboardData[j].nameLayout) {
 
-                          console.log(JSON.stringify(this.KeyboardData[j]));
-
                           this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
 
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
@@ -210,8 +208,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
 
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-          console.log(JSON.stringify(this.openFacLayout));
-          console.log(JSON.stringify(this.teclado));
 
           this.configureAll();
 
@@ -241,7 +237,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
                           }                                    
                           if(!found) this.openFacLayout = (data[0]); 
                           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-                          console.log(JSON.stringify(this.teclado));
 
                           this.configureSome(); 
                           this.tecladoService.emitTecladoReady(true);  
@@ -346,10 +341,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   private configureSome(){
-    this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
-    this.engine = new OpenFacEngine(this.config);
-    this.engine.DoCallBack(this.DoCallBack.bind(this));
-    this.engine.Start();
+  
+        this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
+        this.engine = new OpenFacEngine(this.config);
+        this.engine.DoCallBack(this.DoCallBack.bind(this));
+        this.engine.Start();
+    
   }
 
   private configureAll(editorInstance?: any) {
@@ -358,26 +355,30 @@ export class TecladoComponent implements OnInit, OnDestroy {
           OpenFacActionFactory.Register('TTS', OpenFacActionTTS, configArray);
           OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
         }
-        clearInterval(this.timerId);
-        
-        let user = this.authService.getLocalUser();
-        let configJoystickArray = [this.tecladoService];
 
-        let configMicrophoneArray = [this.tecladoService, this.configService, this.level, this.audioContext];
-        
-        OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
-      
-        OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone, configMicrophoneArray);
-      
-        OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
-        
-        this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
-        this.engine = new OpenFacEngine(this.config);
-        this.engine.DoCallBack(this.DoCallBack.bind(this));
-        
-        this.engine.Start();  
+        if(OpenFacActionFactory.dicTypes.size >= 2){
+            clearInterval(this.timerId);
+            
+            let user = this.authService.getLocalUser();
+            let configJoystickArray = [this.tecladoService];
 
-        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
+            let configMicrophoneArray = [this.tecladoService, this.configService, this.level, this.audioContext];
+            
+            OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+          
+            OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone, configMicrophoneArray);
+          
+            OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
+            
+
+            this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
+            this.engine = new OpenFacEngine(this.config);
+            this.engine.DoCallBack(this.DoCallBack.bind(this));
+            
+            this.engine.Start();  
+
+            this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
+        }           
   }
 
   private timer1_Tick(): void {

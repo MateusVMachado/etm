@@ -4,6 +4,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LayoutEditorService } from '../layout-editor.service';
 import { CaptionTextService } from './caption-text.service';
 import { Subscription } from 'rxjs';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-caption-text-modal',
@@ -35,12 +36,20 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         this.buttonText = result[1];
                         this.buttonAction = result[2];
 
+                        if(this.buttonAction === "Keyboard"){
+                            this.escrever = true;
+                            this.falar = false;
+                        } else if( this.buttonAction === "TTS"){
+                            this.escrever = false;
+                            this.falar = true;
+                        }
+
                     })
 
                  }
 
+
     ngOnInit() { 
-        this.escrever = true;
         this.imgPadrao = '1';
     }
 
@@ -49,6 +58,16 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         //Add 'implements OnDestroy' to the class.
         this.saveButtonConfiguration(true);
         this.captionSubscribe.unsubscribe();
+    }
+
+    public onChangeToggle(event){
+        if(event['source'].id === 'escrever' && event['source'].checked === false && !this.falar){
+            event['source'].checked = true;
+            this.escrever = true;     
+        }
+        if(!this.falar && !this.escrever){
+            this.escrever = true;
+        }
     }
 
     public saveButtonConfiguration(stat?){
