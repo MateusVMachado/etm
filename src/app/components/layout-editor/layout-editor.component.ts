@@ -1151,9 +1151,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
       var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
-      var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', ''];
+      var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', '*arrowdown'];
       var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup', ''];
-      var zRow: string[] = ['*arrowdown', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
+      var zRow: string[] = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
 
        this.masterKeys.teclas.push(row);
        this.masterKeys.teclas.push(pRow);
@@ -1295,17 +1295,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               } else {
                 //console.clear();
 
-
                 let x = parts[1].split('#')[0];
                 let y = parts[1].split('#')[1];
-
-
     
                 let tecla = $($(event.target)[0]).val().toString();
    
                 if(tecla === '*bckspc' || tecla === '*tab' || tecla === '*kbdrtrn' || tecla === 'PULA'
                     || tecla === '*arrowleft' || tecla === '*arrowright' || tecla === '*arrowup'
-                    || tecla === '*arrowdown' || tecla === '*space' || tecla === "" ) {
+                    || tecla === '*arrowdown' || tecla === '*space' || tecla === "" || tecla === '*mic' ) {
 
                   this.messageService.error("Não é possível alterar teclas especiais.");
                   this.payloadSubscription.unsubscribe();

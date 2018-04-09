@@ -19,9 +19,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public keyboardName: string;
     public imgPadrao: string;
 
-    public buttonText: string;
-    public buttonCaption: string;
-    public buttonAction: string;
+    public buttonText: string = "";
+    public buttonCaption: string = "";
+    public buttonAction: string = "";
     private captionSubscribe: Subscription;
 
     constructor(private activeModal: NgbActiveModal,
@@ -32,9 +32,17 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                         
-                        this.buttonCaption = result[0].target.value;
-                        this.buttonText = result[1];
-                        this.buttonAction = result[2];
+                        if(result[1].substring(0,1) === '*'){
+                            this.buttonCaption = "";
+                            this.buttonText = "";
+                            this.buttonAction = result[2]; 
+                        } else {
+                            this.buttonCaption = result[0].target.value;
+                            this.buttonText = result[1];
+                            this.buttonAction = result[2];
+                        }
+             
+                        
 
                         if(this.buttonAction === "Keyboard"){
                             this.escrever = true;
@@ -42,6 +50,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         } else if( this.buttonAction === "TTS"){
                             this.escrever = false;
                             this.falar = true;
+                        } else {
+                            this.escrever = true;
                         }
 
                     })

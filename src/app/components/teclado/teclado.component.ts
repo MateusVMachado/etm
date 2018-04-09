@@ -215,7 +215,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
               this.editorTecladoServiceSubscribe = 
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
-
+                        
                   this.configureAll(editor);
 
               });
@@ -356,7 +356,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
           OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
         }
 
-        if(OpenFacActionFactory.dicTypes.size >= 2){
+        //if(OpenFacActionFactory.dicTypes.size >= 2){
             clearInterval(this.timerId);
             
             let user = this.authService.getLocalUser();
@@ -378,7 +378,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
             this.engine.Start();  
 
             this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
-        }           
+        //}           
   }
 
   private timer1_Tick(): void {
