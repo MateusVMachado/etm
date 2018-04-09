@@ -155,7 +155,8 @@ export class Keyboard extends BaseRoute {
 
     public insertBasicIntoDatabase(req: Request,  res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
-            console.log("Keyboard inserido")
+            console.log("Keyboard inserido");
+            
         })
         //res.locals.mongoAccess.coll[1].insert(this.populateLayout('caps'), (err, result) => {
         //    console.log("Keyboard inserido")
@@ -176,7 +177,6 @@ export class Keyboard extends BaseRoute {
         } else {
             openFacLayout.email = 'system'; 
         }
-        
 
         let teclado = this.loadKeyboard(type);
         let qntyLines = teclado.teclas.length;
@@ -204,9 +204,19 @@ export class Keyboard extends BaseRoute {
         
         var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
         var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
-        var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA'];
+        var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', '*arrowdown'];
         var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup'];
-        var zRow: string[] = ['*arrowdown', '*space'];
+        var zRow: string[] = ['*mic', '*space'];
+
+        var rowKey: string[] = ['Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 
+                'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard'];
+        var pRowKey: string[] = ['Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard',
+                 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard'];
+        var sRowKey: string[] = ['Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 
+                 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard'];
+        var tRowKey: string[] = ['Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 
+                'Keyboard', 'Keyboard', 'Keyboard'];
+        var zRowKey: string[] = ['TTS', 'Keyboard'];
     
         var crow: string[] = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '*bckspc'];
         var cpRow: string[] = ['*tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'];
@@ -239,6 +249,14 @@ export class Keyboard extends BaseRoute {
             teclado.text.push(sRow);
             teclado.text.push(tRow);
             teclado.text.push(zRow);
+
+            
+            teclado.action.push(rowKey);
+            teclado.action.push(pRowKey);
+            teclado.action.push(sRowKey);
+            teclado.action.push(tRowKey);
+            teclado.action.push(zRowKey);
+
             teclado.type = 'pt-br';
         } else if ( type === 'caps') {
             teclado.teclas.push(crow);
