@@ -11,7 +11,8 @@ export class OpenFacActionFactory {
     
     public static Create(actionName: string): IOpenFacAction {
         //primeiro faz o get no dic 
-        let result = this.dicTypes.get(actionName)
+        let result = this.dicTypes.get(actionName);
+    
         if( result ){
            return new result.type(result.args);
         } else {
@@ -25,7 +26,8 @@ export class OpenFacActionFactory {
                                                     args?: any) {                                              
         let helper = new OpenFacRegisterHelper();
         helper.type = type;
-        helper.args = args;                                                        
+        helper.args = args;           
+        
         OpenFacActionFactory.dicTypes.set(actionName, helper);
     }
 

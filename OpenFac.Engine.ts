@@ -44,6 +44,7 @@ export class OpenFacEngine implements IOpenFacEngine {
         this.currentRowNumber = this.priorRowNumber = 0;
         this.currentColumnNumber = this.priorColumnNumber = -1;
         this.keyboardManager = this.openFacConfig.GetKeyboardManager();
+
     }
 
 
@@ -188,7 +189,6 @@ export class OpenFacEngine implements IOpenFacEngine {
     public Start(): void {
         this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? 
                     this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
-    
         
         this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
         

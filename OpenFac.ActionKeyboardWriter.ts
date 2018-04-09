@@ -5,13 +5,16 @@ import { OpenFacKeyCommandService } from './OpenFac.KeyCommand.service';
 import { KeyboardWriterService } from './OpenFAc.KeyboardWriterService';
 
 export class OpenFacActionKeyboardWriter implements IOpenFacAction {    
-    public cursorPosition: number = 0;
+    //public cursorPosition: number = 0;
+    public cursorPosition: number;
+    public maxLength: number;
+
     public selection: any;
     public range: any;
     public editor: any;
     public keyCommandService: any;
     public zone: any;
-    private maxLength: number = 1;
+    //private maxLength: number = 1;
     private keyboardWriterService: KeyboardWriterService = new KeyboardWriterService();
 
     private tabs: Map<number, boolean> = new Map<number, boolean>()
@@ -20,6 +23,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         this.editor = this.args[0];
         this.keyCommandService = this.args[1];
         this.zone = this.args[2];
+        this.cursorPosition = this.args[3];
+        this.maxLength = this.args[4];
 
         this.selection = this.editor.getSelection();
         if(this.selection){
@@ -40,6 +45,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.maxLength += 1;
                 this.doGetCaretPosition();
                 break;
+                
             case '*bckspc':
                 this.editor.focus();
                 if ( this.tabs.get(this.cursorPosition) ){
@@ -51,7 +57,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                     }
                 } else {
                     this.backspaceKey();
-                    this.maxLength -= 1;
+                    //this.maxLength -= 1;
                     this.doGetCaretPosition();
                 }
                 break;
@@ -116,13 +122,13 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.focus();
                 this.editor.insertHtml('&nbsp;');      
                 this.maxLength += 1;
-                this.doGetCaretPosition();
+                this.doGetCaretPosition(false,' ');
                 break;
             case 'SPACE':
                 this.editor.focus();
                 this.editor.insertHtml('&nbsp;');      
                 this.maxLength += 1;
-                this.doGetCaretPosition();
+                this.doGetCaretPosition(false,' ');
                 break;                     
             case 'PULA':
                 this.editor.focus();
@@ -134,6 +140,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.focus();
                 this.editor.insertText(bt.Text);
                 this.maxLength += 1;
+                //this.maxLength += bt.Text.length;
+                //this.doGetCaretPosition(false, bt.Text);
                 this.doGetCaretPosition();
                 break;
         }
@@ -168,13 +176,22 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         }
     }
 
-    public doGetCaretPosition(toReturn?:boolean) {
+    public doGetCaretPosition(toReturn?:boolean, bt?:string) {
         this.editor.focus();
         let selection = this.editor.getSelection();
         if(selection !== null) { 
             let range = selection.getRanges()[0];
-            this.cursorPosition = range.startOffset + 1;
+            //this.cursorPosition = range.startOffset + 1;
+            if(bt){
+                //this.cursorPosition = range.startOffset + bt.length;
+                this.cursorPosition += bt.length;
+            } else {
+                this.cursorPosition += 1;
+                //this.cursorPosition = range.startOffset + 1;
+            }
+            
         }    
+
         if(toReturn) return this.cursorPosition;
     }
 
