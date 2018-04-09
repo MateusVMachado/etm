@@ -4,6 +4,7 @@ import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.A
 import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
 import { OpenFacActionKeyboardWriter } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardWriter';
 import { OpenFacActionTTS } from '../../../../node_modules/openfac/OpenFac.ActionTTS';
+import { OpenFacActionKeyboardAndTTS } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardAndTTS';
 import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.SensorJoystick';
 import { OpenFacSensorMicrophone } from '../../../../node_modules/openfac/OpenFac.SensorMicrophone';
 import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
@@ -72,6 +73,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
   public level: number;
 
   public configurations: any;
+
+
+  public cursorPosition: number = 0;
+  private maxLength: number = 0;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -352,8 +357,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private configureAll(editorInstance?: any) {
         if(editorInstance){
           let configArray = [editorInstance, this.keyCommandService, this.zone];
+          let configArrayWriters = [editorInstance, this.keyCommandService, this.zone, this.cursorPosition, this.maxLength];
           OpenFacActionFactory.Register('TTS', OpenFacActionTTS, configArray);
-          OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArray);
+          OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArrayWriters);
+          OpenFacActionFactory.Register('KeyboardAndTTS', OpenFacActionKeyboardAndTTS, configArrayWriters);
         }
 
         //if(OpenFacActionFactory.dicTypes.size >= 2){

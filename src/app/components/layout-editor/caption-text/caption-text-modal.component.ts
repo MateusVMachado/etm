@@ -50,6 +50,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         } else if( this.buttonAction === "TTS"){
                             this.escrever = false;
                             this.falar = true;
+                        } else if( this.buttonAction === "KeyboardAndTTS"){
+                            this.escrever = true;
+                            this.falar = true;
                         } else {
                             this.escrever = true;
                         }
@@ -87,7 +90,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
         if(this.falar && !this.escrever) this.buttonAction = 'TTS'; // falar activated
         if(!this.falar && this.escrever) this.buttonAction = 'Keyboard'; // escrever activated
-        //if(this.falar && this.escrever) this.buttonAction = 'KeyboardAndTTS'; // both
+        if(this.falar && this.escrever) this.buttonAction = 'KeyboardAndTTS'; // both
         if(!this.falar && !this.escrever) this.buttonAction = 'Keyboard'; // None activated
         payload.push(this.buttonAction);
 
