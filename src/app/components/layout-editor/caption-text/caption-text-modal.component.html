@@ -29,10 +29,13 @@
                 <mat-slide-toggle id="falar" color="primary" [(ngModel)]="falar" [ngModelOptions]="{standalone: true}" (change)="onChangeToggle($event)"></mat-slide-toggle>
                 <label for="falar" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_FALAR') }}</label>
             </div>
+
+            <!--AINDA NÃO ESTA PRONTO
             <div class="from-group line">
                 <mat-slide-toggle id="imagem" color="primary" [(ngModel)]="imagem" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
                 <label for="imagem" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_IMAGEM') }}</label>
             </div>
+
             <div *ngIf="imagem" class="line">
                 <div class="row line">
                     <div class="col-md-5">
@@ -60,7 +63,7 @@
                     <input class="form-control" type="file" id="input-image"/>
                 </div>
             </div>
-
+        -->
 
         </div>
     </form>
