@@ -35,7 +35,7 @@ export class OpenFacConfig implements IOpenFacConfig {
                 } else {
                     config.ActiveSensor = 'Microphone';    
                 }
-                config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout;      
+                config.KeyboardLayout = FileName.openFacConfig.KeyboardLayout; 
         } else {
             config.ActiveSensor = 'Joystick';    
             config.KeyboardLayout = 'QWERT';
@@ -53,6 +53,7 @@ export class OpenFacConfig implements IOpenFacConfig {
     }
     private LoadLayout(FileName: string): OpenFACLayout {
         let layout = this.openFacLayout;
+        //console.log(JSON.stringify(layout));
         layout.Engine = "QWERT";
 
         return layout;
@@ -116,8 +117,11 @@ export class OpenFacConfig implements IOpenFacConfig {
                 let button: OpenFacKeyboardButton = line.Buttons.Add();
                 button.Caption = bt.Caption;
                 button.Text = bt.Text;
+                
                 let action: IOpenFacAction = this.actionManager.Find(bt.Action);
-                button.Action = action;
+                button.Action = action;        
+
+ 
             }
         }
     }
