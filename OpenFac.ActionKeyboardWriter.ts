@@ -1,7 +1,6 @@
 import { IOpenFacAction } from './OpenFac.Action.Interface';
-import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { OpenFacEngine } from './OpenFac.Engine';
-import { OpenFacKeyCommandService } from './OpenFac.KeyCommand.service';
+import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { KeyboardWriterService } from './OpenFAc.KeyboardWriterService';
 
 export class OpenFacActionKeyboardWriter implements IOpenFacAction {    

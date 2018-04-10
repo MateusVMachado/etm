@@ -1,7 +1,6 @@
 import { IOpenFacAction } from './OpenFac.Action.Interface';
-import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { OpenFacEngine } from './OpenFac.Engine';
-import { KeyboardWriterService } from 'openfac/OpenFAc.KeyboardWriterService';
+import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 
 export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
     private editor: any;
@@ -22,11 +21,6 @@ export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
     }
 
 
-    public Dispose(): void {
-
-    }
-
-
 
     public Execute(Engine: IOpenFacEngine): void {
 
@@ -35,7 +29,16 @@ export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
         let bt = eg.GetCurrentButton();
 
         let str = bt.Text;
-        this.speak(str, this.callback.bind(this));
+
+        
+        if(bt.Text === '*mic'){
+            this.speak(this.selectAll(), this.callback.bind(this));
+        } else {
+            let str = bt.Text;
+            this.speak(str, this.callback.bind(this));
+        }
+
+        //this.speak(str, this.callback.bind(this));
     
         this.editor.focus();
         this.editor.insertText(bt.Text);
@@ -48,6 +51,12 @@ export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
         // .then(() => this.speak("pt", "BR", [ /male/i ], "Olá, mundo."))
         // .then(() => this.speak("pt", "BR", null, "Olá, mundo."))
         // .then(() => this.speak("pt", "BR", [ /\Wmale/i ], "Olá, mundo."));
+    }
+
+    public selectAll(){
+        let data = this.editor.getData();
+        data = data.replace(/(<([^>]+)>)/ig,"");
+        return data;
     }
 
     public doGetCaretPosition(toReturn?:boolean, bt?:string) {
@@ -115,6 +124,12 @@ export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
             this.Dispose();
         }
     }
+
+    
+    public Dispose(): void {
+
+    }
+
 
 
 }
