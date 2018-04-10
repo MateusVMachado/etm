@@ -5,6 +5,7 @@ import { LayoutEditorService } from '../layout-editor.service';
 import { CaptionTextService } from './caption-text.service';
 import { Subscription } from 'rxjs';
 import * as $ from 'jquery';
+import { Picture } from '../../shared/models/picture';
 
 @Component({
     selector: 'app-caption-text-modal',
@@ -23,6 +24,14 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public buttonCaption: string = "";
     public buttonAction: string = "";
     private captionSubscribe: Subscription;
+
+    private readonly base64Token = ';base64,';
+    public bigImage: boolean;
+    public imageFile: Picture;
+    public fileLoaded: Boolean = false;
+    public saved: boolean;
+
+    public imgUrl: string;
 
     constructor(private activeModal: NgbActiveModal,
                 private layoutEditorService: LayoutEditorService,
@@ -63,6 +72,10 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
 
     ngOnInit() { 
+        this.imageFile = new Picture();
+        this.saved = false;
+        this.bigImage = false;
+
         this.imgPadrao = '1';
     }
 
@@ -133,6 +146,30 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             this.imgPadrao = String(image);
         }
         
+    }
+
+
+    public onAddPicture(fileInput: any){
+        if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 1000000) {
+            this.bigImage = false;
+            var reader = new FileReader();
+            reader.onload = () => {                
+                this.imageFile.content = reader.result.substring((reader.result.indexOf(this.base64Token) + this.base64Token.length));
+                this.imageFile.name = fileInput.target.files[0].name;
+                this.fileLoaded = true;
+                //this.imgUrl = 'data:image/png;base64,'+ this.imageFile.content;
+                this.imgUrl = this.imageFile.content;
+            };
+            reader.readAsDataURL(fileInput.target.files[0]);          
+        } else {
+            this.bigImage = true;
+        }
+    }
+
+    public closePicture(){
+        this.imageFile = new Picture();
+        this.imgUrl = null;
+        $('#input-image').val('');
     }
     
 }
