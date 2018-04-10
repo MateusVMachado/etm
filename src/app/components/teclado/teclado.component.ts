@@ -1,34 +1,32 @@
-import { Component, EventEmitter, NgZone, OnDestroy, OnInit, Output } from '@angular/core';
-import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NbMenuItem } from '@nebular/theme';
+import * as moment from 'moment';
+import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
+import { Subscription } from 'rxjs';
+
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
-import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
+import { OpenFacActionKeyboardAndTTS } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardAndTTS';
 import { OpenFacActionKeyboardWriter } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardWriter';
 import { OpenFacActionTTS } from '../../../../node_modules/openfac/OpenFac.ActionTTS';
-import { OpenFacActionKeyboardAndTTS } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardAndTTS';
+import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
+import { EngineState, OpenFacEngine } from '../../../../node_modules/openfac/OpenFac.Engine';
+import { OpenFacKeyboardFactory } from '../../../../node_modules/openfac/OpenFac.KeyboardFactory';
+import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
+import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
+import { OpenFacSensorFactory } from '../../../../node_modules/openfac/OpenFac.SensorFactory';
 import { OpenFacSensorJoystick } from '../../../../node_modules/openfac/OpenFac.SensorJoystick';
 import { OpenFacSensorMicrophone } from '../../../../node_modules/openfac/OpenFac.SensorMicrophone';
-import { OpenFacKeyboardQWERT } from '../../../../node_modules/openfac/OpenFac.KeyboardQWERT';
-import { OpenFacConfig } from '../../../../node_modules/openfac/OpenFac.Config';
-import { OpenFacEngine, EngineState } from '../../../../node_modules/openfac/OpenFac.Engine';
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { ConfigModel } from '../general-config/config.model';
+import { GeneralConfigService } from '../general-config/general-config.service';
+import { TimeIntervalUnit, UserSessionModel } from '../shared/models/userSession.model';
+import { AuthService } from '../shared/services/auth.services';
+import { BackLoggerService } from '../shared/services/backLogger.service';
+import { SideBarService } from '../sidebar/sidebar.service';
+import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
-import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
-import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
-import { OpenFacKeyCommandService } from '../../../../node_modules/openfac/OpenFac.KeyCommand.service';
-import { SideBarService } from '../sidebar/sidebar.service';
-import { GeneralConfigService } from '../general-config/general-config.service';
-import { ConfigModel } from '../general-config/config.model';
-import { ActiveLineCol } from './activeLine.model';
-import { Subscription } from 'rxjs';
-import { AuthService } from '../shared/services/auth.services';
-
-import * as $ from 'jquery';
-import { NbMenuItem } from '@nebular/theme';
-import { Router, ActivatedRoute } from '@angular/router';
-import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession.model';
-import { BackLoggerService } from '../shared/services/backLogger.service';
-
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-teclado',
