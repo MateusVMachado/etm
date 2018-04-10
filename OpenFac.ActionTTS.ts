@@ -16,15 +16,30 @@ export class OpenFacActionTTS implements IOpenFacAction {
         this.zone = this.args[2];
 
     }
+    
 
+    public Execute(Engine: IOpenFacEngine): void {
+        
+        let eg = <OpenFacEngine>Engine;
+        let bt = eg.GetCurrentButton();
 
-    public OpenFacActionTTS(){
+        if(bt.Text === '*mic'){
+            this.speak(this.selectAll(), this.callback.bind(this));
+        } else {
+            let str = bt.Text;
+            this.speak(str, this.callback.bind(this));
+        }
+        
 
+        // this.speak("pt", null, [ /Google português do Brasil/, /Samantha/, /Fiona/, /Victoria/, /male/i ], "Olá, mundo.")
+        // .then(() => this.speak("pt", null, [ /\Wmale/i ], "Olá, mundo."))
+        // .then(() => this.speak("pt", "BR", [ /male/i ], "Olá, mundo."))
+        // .then(() => this.speak("pt", "BR", null, "Olá, mundo."))
+        // .then(() => this.speak("pt", "BR", [ /\Wmale/i ], "Olá, mundo."));
     }
-    public Dispose(): void {
 
-    }
 
+    
     private speak(text, callback) {
         let u = new SpeechSynthesisUtterance();
         
@@ -64,33 +79,6 @@ export class OpenFacActionTTS implements IOpenFacAction {
       //DO SOMETHING
     }
 
-    
-
-    public Execute(Engine: IOpenFacEngine): void {
-        
-        let eg = <OpenFacEngine>Engine;
-        let bt = eg.GetCurrentButton();
-
-        if(bt.Text === '*mic'){
-            this.speak(this.selectAll(), this.callback.bind(this));
-        } else {
-            let str = bt.Text;
-            this.speak(str, this.callback.bind(this));
-        }
-        
-
-        // this.speak("pt", null, [ /Google português do Brasil/, /Samantha/, /Fiona/, /Victoria/, /male/i ], "Olá, mundo.")
-        // .then(() => this.speak("pt", null, [ /\Wmale/i ], "Olá, mundo."))
-        // .then(() => this.speak("pt", "BR", [ /male/i ], "Olá, mundo."))
-        // .then(() => this.speak("pt", "BR", null, "Olá, mundo."))
-        // .then(() => this.speak("pt", "BR", [ /\Wmale/i ], "Olá, mundo."));
-    }
-
-    public Free(): void {
-        if (this) {
-            this.Dispose();
-        }
-    }
 
     public selectAll(){
         let data = this.editor.getData();
@@ -98,8 +86,21 @@ export class OpenFacActionTTS implements IOpenFacAction {
         return data;
     }
 
-    //public static Create(): IOpenFacAction {
-    //    return new OpenFacActionTTS();
-   // }
+
+
+    public Free(): void {
+        if (this) {
+            this.Dispose();
+        }
+    }
+
+    
+    public OpenFacActionTTS(){
+
+    }
+    public Dispose(): void {
+
+    }
+
 
 }
