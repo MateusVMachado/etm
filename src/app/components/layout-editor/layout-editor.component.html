@@ -121,13 +121,26 @@
     <div class="box-teclado-bottom" style="height: 30%;">
             <div class="teclado-container ">
                     <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
-                        <div class="col-md-12 line" >
+
+                        <div class="col-md-12 line">
                             <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
                                 *ngFor="let key of row; index as i" 
-                                [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)">
-                                <div class="none"></div>
+                                [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)" >
+                                <div id="none" class="none" ></div>
                             </div>
                         </div>
+                        
+                        <!--
+                        <div class="col-md-12 line" *ngIf="(imgLinesArray.includes(iR.toString() ) || setButton) && iR < 4" >
+                                <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
+                                    *ngFor="let key of row; index as i" style="background-color: green"
+                                    [dragula]='"master-bag"' id="content2"  (dblclick)="editCaptionNText($event)" >
+                                    <div class="none"></div>
+                                </div>
+                            </div>
+                        -->
+                          
+
                     </div>
                 
             </div>

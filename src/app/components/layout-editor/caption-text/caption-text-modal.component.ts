@@ -23,6 +23,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public buttonText: string = "";
     public buttonCaption: string = "";
     public buttonAction: string = "";
+    public buttonImage: string = "";
+
     private captionSubscribe: Subscription;
 
     private readonly base64Token = ';base64,';
@@ -32,6 +34,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public saved: boolean;
 
     public imgUrl: string;
+    public height: number;
+    public width: number;
 
     constructor(private activeModal: NgbActiveModal,
                 private layoutEditorService: LayoutEditorService,
@@ -98,16 +102,25 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
     public saveButtonConfiguration(stat?){
         let payload = new Array();    
+        
+        if(this.buttonImage)this.buttonCaption = "*img";
+
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
-
+        
+    
         if(this.falar && !this.escrever) this.buttonAction = 'TTS'; // falar activated
         if(!this.falar && this.escrever) this.buttonAction = 'Keyboard'; // escrever activated
         if(this.falar && this.escrever) this.buttonAction = 'KeyboardAndTTS'; // both
         if(!this.falar && !this.escrever) this.buttonAction = 'Keyboard'; // None activated
         payload.push(this.buttonAction);
 
+        payload.push(this.buttonImage);
+        payload.push(this.imgUrl);
         
+        payload.push(this.height);
+        payload.push(this.width);
+
         this.layoutEditorService.emitLayoutEditorPayload(payload);  
         
         if(stat){
@@ -153,12 +166,17 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 1000000) {
             this.bigImage = false;
             var reader = new FileReader();
-            reader.onload = () => {                
+            reader.onload = () => {    
+                var img = new Image();
+                img.src = reader.result;            
                 this.imageFile.content = reader.result.substring((reader.result.indexOf(this.base64Token) + this.base64Token.length));
+                this.height = img.height;
+                this.width = img.width;
                 this.imageFile.name = fileInput.target.files[0].name;
                 this.fileLoaded = true;
                 //this.imgUrl = 'data:image/png;base64,'+ this.imageFile.content;
                 this.imgUrl = this.imageFile.content;
+                this.buttonImage = 'data:image/png;base64,'+ this.imageFile.content;
             };
             reader.readAsDataURL(fileInput.target.files[0]);          
         } else {

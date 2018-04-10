@@ -42,6 +42,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public spillMode: boolean = false;
     public timerId: any;
 
+
     public aux: string;
     private email: string;
 
@@ -68,6 +69,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private userSession: UserSessionModel;
     private timeInterval: TimeIntervalUnit;
 
+    public lines: number;
+    public imgLinesArray = new Array();
+    public x: number;
+    public y: number;
+    public exist: boolean = false;
+    public tam:string  = "150px";
+    public setButton: boolean = false;
+
+    public minimo:number = 5;
+    public dummyArray = ['', '', '', '', ''];
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -82,6 +94,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private backLoggerService: BackLoggerService) {
       super(injector);       
                   
+
 
       this.userSession = new UserSessionModel();
       this.userSession.layoutEditorIntervals = new Array();
@@ -155,6 +168,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                self.tecladoReplicant.teclas[i][j] = "";
                self.tecladoReplicant.text[i][j] = "";
                self.tecladoReplicant.action[i][j] = "";  
+               self.tecladoReplicant.image[i][j] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
             }
         }
 
@@ -178,6 +192,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             this.tecladoReplicant.teclas[i][j] = "";
             this.tecladoReplicant.text[i][j] = ""; 
             this.tecladoReplicant.action[i][j] = "";  
+            this.tecladoReplicant.image[i][j] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
           }
       }
 
@@ -222,6 +237,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.tecladoReplicant.teclas[i][j] = "";
           this.tecladoReplicant.text[i][j] = "";
           this.tecladoReplicant.action[i][j] = "";  
+          this.tecladoReplicant.image[i][j] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         }
       }
 
@@ -230,6 +246,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.tecladoReplicant.teclas[i][j] = replicantFromDatabase.teclas[i][j];
           this.tecladoReplicant.text[i][j] = replicantFromDatabase.text[i][j];
           this.tecladoReplicant.action[i][j] = replicantFromDatabase.action[i][j]; 
+          this.tecladoReplicant.image[i][j] = replicantFromDatabase.image[i][j];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         }
       }
 
@@ -289,6 +306,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               this.tecladoReplicant.teclas[x][y] = replicantFromDatabase.teclas[x][y];
               this.tecladoReplicant.text[x][y] = replicantFromDatabase.text[x][y];
               this.tecladoReplicant.action[x][y] = replicantFromDatabase.action[x][y]; 
+              this.tecladoReplicant.image[x][y] = replicantFromDatabase.image[x][y];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
               
               if(this.tecladoReplicant.teclas[x][y].substring(0,1) === '*' ){
                 for(let j=0; j < specialKeys.length; j++){
@@ -341,19 +359,23 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       keyboard.teclas = [];
       keyboard.text = [];
       keyboard.action = [];  
+      keyboard.image = [];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
       for(let i = 0; i < layout.Lines.length; i++){ 
         let line = []; 
         let textL = [];
         let actionL = [];
+        let imageL = [];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         for(let j = 0; j < layout.Lines[i].Buttons.length; j++){ 
           line.push(layout.Lines[i].Buttons[j].Caption); 
           textL.push(layout.Lines[i].Buttons[j].Text); 
           actionL.push(layout.Lines[i].Buttons[j].Action); 
+          imageL.push(layout.Lines[i].Buttons[j].Image);  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         } 
         keyboard.teclas.push(line); 
         keyboard.text.push(textL); 
         keyboard.action.push(actionL); 
+        keyboard.image.push(imageL);  ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
       } 
 
       keyboard.type = layout.nameLayout
@@ -373,6 +395,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.tecladoReplicant.teclas[y][x] = "";
       this.tecladoReplicant.text[y][x] = "";
       this.tecladoReplicant.action[y][x] = "";  
+      this.tecladoReplicant.image[y][x] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
     }
 
@@ -392,6 +415,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
       this.tecladoReplicant.text[sourceY][sourceX] = "";
       this.tecladoReplicant.action[sourceY][sourceX] = "";  
+      this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
       
     }  
 
@@ -446,6 +470,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                             this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                             this.tecladoReplicant.action[sourceY][sourceX] = "";  
+                            this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } else {
                             trueValue = $($(value[1])[0]).val() ;
                  
@@ -460,13 +485,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.text[sourceY][sourceX] = ""; 
 
                                   this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX]; 
-                                  this.tecladoReplicant.action[sourceY][sourceX] = "";  
-                              } else if (isContent && isCopy){
+                                  this.tecladoReplicant.action[sourceY][sourceX] = "";
+                                  
+                                  this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                  this.tecladoReplicant.image[sourceY][sourceX] = "";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              
+                                } else if (isContent && isCopy){
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
 
                                   this.tecladoReplicant.text[drainY][drainX] = trueValue; 
 
-                                  this.tecladoReplicant.action[drainY][drainX] = trueValue; 
+                                  this.tecladoReplicant.action[drainY][drainX] = trueValue;
+                                  
+                                  this.tecladoReplicant.image[drainY][drainX] = "";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                   
                               }
                             } else {
@@ -478,6 +509,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 
                                 
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";  
+
+                                this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
+
                                 if(trueValue === "*mic"){
                                   this.tecladoReplicant.action[drainY][drainX] = 'TTS';  
                                 } else {
@@ -498,7 +533,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             trueValue = $($(value[1])[0]).val() ;
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                             this.tecladoReplicant.text[sourceY][sourceX] = ""; 
-                            this.tecladoReplicant.action[sourceY][sourceX] = "";  
+                            this.tecladoReplicant.action[sourceY][sourceX] = "";
+                            
+                            this.tecladoReplicant.image[sourceY][sourceX] = ""; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } else {
        
 
@@ -521,7 +558,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                     this.tecladoReplicant.text[sourceY][sourceX] = ""; 
 
                                     this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX]; 
-                                    this.tecladoReplicant.action[sourceY][sourceX] = "";  
+                                    this.tecladoReplicant.action[sourceY][sourceX] = "";
+                                    
+                                    
+                                    this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                    this.tecladoReplicant.image[sourceY][sourceX] = ""; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
+
                                 } else if (isContent && isCopy){
             
              
@@ -537,6 +580,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                       this.tecladoReplicant.action[drainY][drainX] = 'Keyboard';  
 
                                     }
+
+                                    this.tecladoReplicant.image[drainY][drainX] = "";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
                                 }
                               } else {
 
@@ -547,6 +593,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.text[drainY][drainX] = trueValue; 
 
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";  
+
+                                  this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                  
                                   if(trueValue === "*mic"){
                                     this.tecladoReplicant.action[drainY][drainX] = 'TTS';  
@@ -590,6 +638,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                         this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                         this.tecladoReplicant.action[sourceY][sourceX] = "";  
+
+                        this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                     } else {
   
 
@@ -629,6 +679,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     } 
 
 
+                    if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                        this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                        this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                    } else {   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                        this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                    } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
 
                     } 
                     
@@ -648,7 +705,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                       this.tecladoReplicant.text[sourceY][sourceX] = ""; 
-                      this.tecladoReplicant.action[sourceY][sourceX] = "";  
+                      this.tecladoReplicant.action[sourceY][sourceX] = "";
+                      
+                      this.tecladoReplicant.image[sourceY][sourceX] = ""; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                     } else {
 
                       trueValue = $( $(value[1]).children()[0] ).val();
@@ -693,6 +752,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           }
 
 
+                          
+                          if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                          } else {   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                          } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
 
 
 
@@ -710,6 +777,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";   
+
+                                this.tecladoReplicant.image[sourceY][sourceX] = "";    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } else {
                               
 
@@ -754,7 +823,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
+                            
 
+                            if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                          } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                          }   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
 
                             }    
@@ -768,12 +844,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                               this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               this.tecladoReplicant.action[sourceY][sourceX] = "";  
+
+                              this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } else {
                               
 
 
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
-                      this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
+                              this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
@@ -810,6 +888,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
+                            
+                            if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                          } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                          } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
 
          
                             } 
@@ -827,6 +914,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                   this.tecladoReplicant.text[sourceY][sourceX] = "";
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";  
+
+                                  this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               } else {
 
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -864,7 +953,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                    
                                   }    
                               }
+                              
 
+                              if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                this.tecladoReplicant.image[sourceY][sourceX] = "";       ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
 
                               }    
@@ -876,7 +972,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                   this.tecladoReplicant.text[sourceY][sourceX] = ""; 
-                                  this.tecladoReplicant.action[sourceY][sourceX] = "";  
+                                  this.tecladoReplicant.action[sourceY][sourceX] = "";
+                                  this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               } else {
              
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -911,6 +1008,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                    
                                   }    
                               }  
+
+
+
+                              if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                            } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
+
+
+
 
 
 
@@ -955,6 +1065,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   openFacLayout.Lines[i].Buttons[j].Action = teclado.action[i][j];
                   openFacLayout.Lines[i].Buttons[j].Caption = teclado.teclas[i][j]; 
                   openFacLayout.Lines[i].Buttons[j].Text = teclado.text[i][j]; 
+                  openFacLayout.Lines[i].Buttons[j].Image = teclado.image[i][j];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
           }
       } 
 
@@ -983,7 +1094,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let finalKeyboard = new TecladoModel;
       finalKeyboard.teclas = [];
       finalKeyboard.text = [];
-      finalKeyboard.action = [];  
+      finalKeyboard.action = [];
+      finalKeyboard.image = [];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
 
       for(let i = 0; i< this.tecladoReplicant.teclas.length; i++){ 
@@ -991,14 +1103,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         let teclasLine = new Array(); 
         let textLine = new Array(); 
         let actionLine = new Array();  
+        let imageLine = new Array();   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         teclasLine = []; 
         textLine = []; 
         actionLine = [];  
+        imageLine = [];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         for(let j=0; j < this.tecladoReplicant.teclas[i].length; j++){ 
            if(this.tecladoReplicant.teclas[i][j] !== "" && this.tecladoReplicant.teclas[i][j] !== " "){ 
              teclasLine.push(this.tecladoReplicant.teclas[i][j]); 
              textLine.push(this.tecladoReplicant.text[i][j]); 
              actionLine.push(this.tecladoReplicant.action[i][j]);  
+             imageLine.push(this.tecladoReplicant.image[i][j]);   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
              tam += 1; 
             }  
 
@@ -1008,6 +1123,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           finalKeyboard.teclas.push(teclasLine);  
           finalKeyboard.text.push(textLine);
           finalKeyboard.action.push(actionLine); 
+          finalKeyboard.image.push(imageLine);  ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
             totalLines += 1;
         }    
 
@@ -1130,38 +1246,50 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       for (let i = 0; i < 5; i++) {
         this.teclado.teclas[i] = [[]];
         this.teclado.text[i] = [[]]; 
-        this.teclado.action[i] = [[]];  
+        this.teclado.action[i] = [[]];
+        this.teclado.image[i] = [[]];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         this.tecladoReplicant.teclas[i] = [[]];
         this.tecladoReplicant.text[i] = [[]];
         this.tecladoReplicant.action[i] = [[]];  
+        this.tecladoReplicant.image[i] = [[]];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
          let line = new Array();
          let textL = new Array(); 
          let actionL = new Array();  
+         let imageL = new Array();   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
          let lineReplicant = new Array();
          let textReplicant = new Array(); 
          let actionReplicant = new Array(); 
+         let imageReplicant = new Array();  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
          line = [];
          textL = []; 
          actionL = [];  
+         imageL = [];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
          lineReplicant = [];
          textReplicant = [];
          actionReplicant = [];   
+         imageReplicant = [];    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
           for (let j = 0; j < 14; j++) {
               line[j] = "";
               textL[j] = "";  
               actionL[j] = "";   
+              imageL[j] = "";    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
               lineReplicant[j] = "";
               textReplicant[j] = ""; 
               actionReplicant[j] = "";  
+              imageReplicant[j] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
           }
 
           this.teclado.teclas[i] = line;
           this.teclado.text[i] = textL; 
           this.teclado.action[i] = actionL; 
+          this.teclado.image[i] = imageL;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
           this.tecladoReplicant.teclas[i] = lineReplicant;  
           this.tecladoReplicant.text[i] = textReplicant;  
           this.tecladoReplicant.action[i] = actionReplicant;  
+          this.tecladoReplicant.image[i] = imageReplicant;   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
+          this.lines = this.teclado.teclas.length;
       }  
       
 
@@ -1191,11 +1319,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         }
         this.teclado.teclas.push(line);  
         this.teclado.text.push(line); 
-        this.teclado.action.push(line);  
+        this.teclado.action.push(line);
+        this.teclado.image.push(line);   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         this.tecladoReplicant.teclas[this.tecladoReplicant.teclas.length] = lineReplicant;
         this.tecladoReplicant.text[this.tecladoReplicant.text.length] = lineReplicant; 
         this.tecladoReplicant.action[this.tecladoReplicant.action.length] = lineReplicant;  
+        this.tecladoReplicant.image[this.tecladoReplicant.image.length] = lineReplicant;   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         
+        this.lines = this.teclado.teclas.length;
     }  
     
     public removeLine(){
@@ -1203,9 +1334,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.teclado.teclas.pop();
           this.teclado.text.pop();
           this.teclado.action.pop();   
-      this.tecladoReplicant.teclas.pop();
+          this.teclado.image.pop();   
+          this.tecladoReplicant.teclas.pop();
           this.tecladoReplicant.text.pop(); 
           this.tecladoReplicant.action.pop();  
+          this.tecladoReplicant.image.pop();  
+          
+          this.lines = this.teclado.teclas.length;
       } else {
         this.messageService.error("O mínimo de linhas no modo edição é 5.");
     }  
@@ -1218,34 +1353,50 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
         this.showModal(CaptionTextModalComponent);
         
-      
+        console.log(JSON.stringify(this.imgLinesArray));
         let parts = event.target.className.split(' ');
 
         let text;
         let action;
+        let image; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
         if(parts[0].indexOf('#') !== -1){
           let x = <number>parts[0].split('#')[0];
           let y = <number>parts[0].split('#')[1];
 
+          this.x = x;
+          this.y = y;
+          
           text = this.tecladoReplicant.text[y][x];
           action = this.tecladoReplicant.action[y][x];
+          image = this.tecladoReplicant.image[y][x]; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
     
         } else {
           let x = <number>parts[1].split('#')[0];
           let y = <number>parts[1].split('#')[1];
 
+          
+          this.x = x;
+          this.y = y;
+          
           text = this.tecladoReplicant.text[y][x];
           action = this.tecladoReplicant.action[y][x];
+          image = this.tecladoReplicant.image[y][x]; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
     
         }
 
+        
+
         let payload = new Array();
+
         payload.push(event);
         payload.push(text);
         payload.push(action);
+        payload.push(image); ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
 
         this.captionTextService.emitCaptionText(payload);
+        
+        
 
         this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
 
@@ -1258,11 +1409,30 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let buttonAction = "";
               buttonAction = result[2];
 
+              let buttonImage = "";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+              buttonImage = result[3];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
+              let imgUrl = result[4];
+              let height = result[5];
+              let width = result[6];
+
+              if(height > width) {
+                height = 150;
+                width = 150 - (width/150);
+              }  else {
+                width = 150;
+                height = 150 - (height/150);
+              }
+  
+              console.log(result[5] + ' ' + result[6]);
+              
+
               if(buttonText === undefined) buttonText = " ";
               if(buttonCaption === undefined) buttonCaption = " ";
               if(buttonAction === undefined || buttonAction === "") buttonAction = "Keyboard";
-
+              if(buttonImage === undefined) buttonImage = " ";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
           
+
               
               let parts = event.target.className.split(' ');
  
@@ -1278,6 +1448,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 let formula = this.globColumnQnty*Number(y)+Number(x);
      
                 let sEl = $("[id=copy]").clone();
+                
 
  
                 let el = sEl[<number>formula].cloneNode(true);
@@ -1286,28 +1457,123 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 if($(el).find('input')[0]){
        
                   $(el).find('input')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
-                  $($(el).find('input')[0]).attr('value', buttonCaption);
+
+                  if(buttonCaption !== "*img") {
+                      $($(el).find('input')[0]).attr('value', buttonCaption);
+                  } else {
+                    $($(el).find('input')[0]).attr('value', '');
+                  }    
+                  //console.log(imgUrl);
+                  //$($(el).find('input')[0]).attr('background-image', imgUrl);
+                  
+                  //$($(el).find('input')[0]).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
+                  //$($(el).find('input')[0]).css("background-size", "100% 100%");
+                  
+                  //$($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
+                  
+                  if(imgUrl){
+                      this.imgLinesArray.push(this.y);
+                      console.log(JSON.stringify(this.imgLinesArray));
+                      $($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
+                      $($(el)).css("background-size", "100% 100%");
+                      $($(el)).css("height", height);
+                      $($(el)).css("width", width);
+                      $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
+                      $($(el).find('input')[0]).attr('display', 'none');
+                } 
+
+
                 } else if($(el).find('button')[0]){
  
                   $(el).find('button')[0].className = 'tamanho-button-especial-full' + ' ' + x + '#' + y + '';
                   
                   if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();
-                  $($(el).find('button')[0]).text(buttonCaption);
-                  $($(el).find('button')[0]).attr('value', buttonCaption);
                   
+                  $($(el).find('button')[0]).text(buttonCaption);
+                  if(buttonCaption !== "*img") {
+                      $($(el).find('button')[0]).attr('value', buttonCaption);
+                  } else {
+                    $($(el).find('button')[0]).attr('value', '');
+                  }        
+                  //$($(el).find('button')[0]).attr('background-image', imgUrl);
+                  //$($(el).find('button')[0]).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
+                  //$($(el).find('button')[0]).css("background-size", "100% 100%");
+                  //$($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
+                  if(imgUrl){
+                    this.imgLinesArray.push(this.y);
+                    console.log(JSON.stringify(this.imgLinesArray));
+
+                    $($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
+                    $($(el)).css("background-size", "100% 100%");
+                    $($(el)).css("height", height);
+                    $($(el)).css("width", width);
+                    $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
+                    $($(el).find('button')[0]).attr('display', 'none');
+                  } 
+
                 }
                 
 
                 this.tecladoReplicant.action[y][x] = buttonAction;
                 this.tecladoReplicant.teclas[y][x] = buttonCaption;
                 this.tecladoReplicant.text[y][x] = buttonText;
+                this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
+                //console.log(JSON.stringify(this.tecladoReplicant));
                 $(el).removeAttr('tooltip');
                 
-               
+                
                 $("[id=content]")[formula].appendChild(el);
+                
+                if(imgUrl){
+                      let sElContent = $("[id=content]");
+                      //let sElCopy = $("[id=copy]");
+                      let formula = this.globColumnQnty*Number(y)+Number(x);
+
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      
+                      
+                      // this.tecladoReplicant.teclas[0].pop();
+                      // this.tecladoReplicant.teclas[0].pop();
+                      // this.tecladoReplicant.teclas[0].pop();
+                      // this.tecladoReplicant.teclas[0].pop();
+                      // this.tecladoReplicant.teclas[0].pop();
+                      // this.tecladoReplicant.teclas[0].pop();
+
+                      for(let line = 0; line < this.imgLinesArray.length; line++){
+                         for(let col = 0; col < this.globColumnQnty; col++){
+
+                          
+                          let string = '.'+col+'#'+line+' tamanho-button-especial';
+                          let formula = this.globColumnQnty*Number(line)+Number(col);
+                          //console.log(JSON.stringify(sElContent));
+                          console.log(formula);
+
+                          $($(sElContent)[formula]).css("height", height);
+                          $($(sElContent)[formula]).css("width", width);
+                          $($(sElContent)[formula]).css("background-color", 'red');
+                          
+                          //$($($(sElCopy)[formula]).find('input')[0]).css("height", height);
+                          //$($($(sElCopy)[formula]).find('input')[0]).css("width", width);
+                          //$($($(sElCopy)[formula]).find('input')[0]).css("background-color", 'red');
+                          
+                          for(let z=1; z < this.lines ; z++){
+                            formula = this.globColumnQnty*Number(line+z)+Number(col);
+                            $($(sElContent)[formula]).css("margin-top", height-10);
+                          }
+                          
+                         } 
+                      }
+
+                }
 
 
+              
               } else {
                 //console.clear();
 
@@ -1331,15 +1597,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 this.tecladoReplicant.teclas[y][x] = buttonCaption;
                 this.tecladoReplicant.text[y][x] = buttonText;
                 this.tecladoReplicant.action[y][x] = buttonAction;
+                this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
-
+                console.log(JSON.stringify(this.tecladoReplicant));
  
               }
 
               this.payloadSubscription.unsubscribe();
         })
+        
+
+      }
 
 
+      public checkExistence(iR: number){
+        this.exist = this.imgLinesArray.includes(iR.toString());
+        console.log(this.exist);
       }
       
 }
