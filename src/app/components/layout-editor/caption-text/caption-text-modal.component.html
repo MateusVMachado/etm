@@ -36,13 +36,24 @@
             </div>
 
             <div *ngIf="imagem" class="line">
-                <div class="row line">
+                <div  class="row line">
                     <div class="col-md-5">
                         <div class="row">
                             <div class="col-md-6" style="padding-right: 0">
-                                <img class="image-button" src="../../../assets/images/{{imgPadrao}}.png"/>
+                                <img *ngIf="!imgUrl" class="image-button" src="../../../assets/images/{{imgPadrao}}.png"/>
+                                
+
+                                <img *ngIf="imgUrl"  class="image-button" src='data:image/png;base64,{{imgUrl}}'/>
+
                             </div>
-                            <div class="col-md-1 slide-bar">
+                            
+                            <div *ngIf="imgUrl" class="col-md-1">
+                                <button *ngIf="imgUrl"  class="close" aria-label="Close" (click)="closePicture()" >
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>    
+
+                            <div *ngIf="!imgUrl" class="col-md-1 slide-bar">
                                 <div class="row button-top">
                                     <div class="col-md-12" style="padding:0">
                                         <button class="button-slide-bar" (click)="slideImage('up');"><i class="nb-arrow-dropup"></i></button>
@@ -54,12 +65,16 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="input-image">Imagem personalizada</label>
-                    <input class="form-control" type="file" accept=".jpg, .png, .jpeg" id="input-image"/>
+                    <input class="form-control" type="file" accept=".jpg, .png, .jpeg" id="input-image" (change)="onAddPicture($event)"/>
+                    <small class="form-text error" *ngIf="bigImage">
+                        {{ messageService.getTranslation('IMAGEM_TAMANHO_ULTRAPASSADO') }}
+                    </small>
                 </div>
             </div>
       
