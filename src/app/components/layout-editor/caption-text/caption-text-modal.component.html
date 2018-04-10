@@ -30,7 +30,6 @@
                 <label for="falar" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_FALAR') }}</label>
             </div>
 
-            <!--AINDA NÃO ESTA PRONTO
             <div class="from-group line">
                 <mat-slide-toggle id="imagem" color="primary" [(ngModel)]="imagem" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
                 <label for="imagem" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_IMAGEM') }}</label>
@@ -60,10 +59,10 @@
                 </div>
                 <div class="form-group">
                     <label for="input-image">Imagem personalizada</label>
-                    <input class="form-control" type="file" id="input-image"/>
+                    <input class="form-control" type="file" accept=".jpg, .png, .jpeg" id="input-image"/>
                 </div>
             </div>
-        -->
+      
 
         </div>
     </form>

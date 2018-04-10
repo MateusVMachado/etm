@@ -1,15 +1,15 @@
+import 'rxjs/add/operator/catch';
+
+import { AfterViewInit, Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { ConfigModel } from '../general-config/config.model';
-import { User } from '../shared/models/user';
 import { GeneralConfigService } from '../general-config/general-config.service';
 import { AppBaseComponent } from '../shared/components/app-base.component';
-import { Component, ViewChild, OnInit, Injector, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../shared/services/auth.services';
-import 'rxjs/add/operator/catch';
-import { NgForm } from '@angular/forms';
-import { LoginAuthenticateModel } from "./login-authenticate.model";
+import { User } from '../shared/models/user';
 import { UserAndGPS } from '../shared/models/userSession.model';
-import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AuthService } from '../shared/services/auth.services';
 
 @Component({
     selector: 'nb-login',
