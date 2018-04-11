@@ -71,6 +71,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     public lines: number;
     public imgLinesArray = new Array();
+    public imgChangedSizeArray = new Array();
+
     public x: number;
     public y: number;
     public exist: boolean = false;
@@ -79,6 +81,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     public minimo:number = 5;
     public dummyArray = ['', '', '', '', ''];
+
+    public count: number = 0;
 
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
@@ -401,7 +405,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private onRemove(value){
-        let drainX, drainY, drainParts, sourceX, sourceY, sourceParts;
+
+        console.log("MARK1");
+        let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, index, found;
         if(value[3].id === 'copy'){  
           sourceParts = value[3].className.split('$')[1].split('#');
           sourceX = sourceParts[0];
@@ -412,22 +418,80 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           sourceY = sourceParts[1];
       }   
 
+
+      let isImage = false;
+      if(this.tecladoReplicant.teclas[sourceY][sourceX] === '*img'){
+        isImage = true;
+      }
+
+      console.log("MARK2");
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
       this.tecladoReplicant.text[sourceY][sourceX] = "";
       this.tecladoReplicant.action[sourceY][sourceX] = "";  
       this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+
       
+      if(isImage){
+        console.log("MARK3");        
+              found = false;
+              this.count = 0;
+              for(let u=0; u< this.tecladoReplicant.image[sourceY].length; u++){
+                if(this.tecladoReplicant.image[sourceY][u] !== ""){
+                  found = true;
+                  this.count +=1;
+                  console.log("MARK4");
+                  //if(!this.imgLinesArray.includes(sourceY.toString())){
+                  //  this.imgLinesArray.push(sourceY);
+                 // }
+                }
+              }
+              console.log(found);
+              console.log(this.count);
+              
+              if(!found || this.count >= 1){
+                console.log("MARK5");
+                if(this.imgLinesArray.includes(sourceY.toString())){
+                  console.log('SOURCE: ' + sourceY);
+                  index = this.imgLinesArray.indexOf[sourceY];
+                  for(let i = 0; i < this.imgLinesArray.length; i++){
+                    if(this.imgLinesArray[i] === sourceY){
+                      console.log("MARK6");
+                      index = i;
+                    }
+                  }
+
+                  console.log('INDEX: ' + index);
+                  this.imgLinesArray.splice(index, 1);
+                }
+              }
+              
+              console.log("MARK7");
+              found = false;
+              // for(let y=0; y < this.tecladoReplicant.image.length; y++){
+              //   for(let x=0;  x < this.tecladoReplicant.image[y].length; x++){
+              //       if(this.tecladoReplicant.image[y][x] !== ""){
+              //         if(!this.imgLinesArray.includes(y.toString())){
+              //            this.imgLinesArray.push(y);
+              //         }
+              //       }
+              //   }
+              // }
+      }        
+
+      console.log(JSON.stringify(this.imgLinesArray));
+      //console.log(JSON.stringify(this.tecladoReplicant.image));
+
     }  
 
 
 
     private onDrop(value) {
-
+      
       if (value[2] == null) {//dragged outside any of the bags
           return;
       }    
           let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, isContent = false, isCopy = false;
-
+          let index, found;
 
           if(value[3].id === 'copy'){  
               isCopy = true;
@@ -452,7 +516,30 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               drainY = drainParts[1];
           }    
 
+          console.log('SOURCE ON DROP: ' + sourceY);
+          console.log('DRAIN ON DROP: ' + drainY);
 
+
+          if(this.imgLinesArray.includes(sourceY.toString())){
+            //index = this.imgLinesArray.indexOf[sourceY];
+            for(let i = 0; i < this.imgLinesArray.length; i++){
+              if(this.imgLinesArray[i] === sourceY){
+                console.log("MARK-DROP-8");
+                index = i;
+              }
+            }
+          }
+
+            this.imgLinesArray.splice(index, 1);
+
+            this.imgLinesArray.push(drainY);
+
+            
+
+          console.log(JSON.stringify(this.imgLinesArray));
+          console.log("TESTE");
+
+          
    
                 let trueValue, copyObj, objClass, trueObj, toSource;
 
@@ -464,6 +551,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   if(!this.editMode){
                           if($(value[2]).children().length > 2 ) {   
               
+                            console.log("MARK-DROP-9");
+
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
                             
@@ -474,10 +563,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           } else {
                             trueValue = $($(value[1])[0]).val() ;
                  
-                            
+                                          
+                            console.log("MARK-DROP-10");
+
+
 
                             if(this.tecladoReplicant.text[sourceY][sourceX]!== "" && this.tecladoReplicant.teclas[sourceY][sourceX]!== ""){ 
                               if(isContent && !isCopy){
+
+                                                                          
+                            console.log("MARK-DROP-11");
+
+
                                   this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
@@ -491,6 +588,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.image[sourceY][sourceX] = "";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               
                                 } else if (isContent && isCopy){
+
+                                                                            
+                            console.log("MARK-DROP-12");
+
+
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
 
                                   this.tecladoReplicant.text[drainY][drainX] = trueValue; 
@@ -1033,12 +1135,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 }    
                
-               
+                console.log(JSON.stringify(this.imgLinesArray));
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
    
              
     }    
 
+    
     public showModal(component){
         const activeModal = this.modalService.open(component, {size: 'lg', container: 'nb-layout'});
         this.modal = activeModal;
@@ -1501,6 +1604,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   //$($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
                   if(imgUrl){
                     this.imgLinesArray.push(this.y);
+                    
                     console.log(JSON.stringify(this.imgLinesArray));
 
                     $($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
@@ -1525,55 +1629,91 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 
                 $("[id=content]")[formula].appendChild(el);
                 
-                if(imgUrl){
-                      let sElContent = $("[id=content]");
-                      //let sElCopy = $("[id=copy]");
-                      let formula = this.globColumnQnty*Number(y)+Number(x);
+                //REDIMENSIONAMENTO DAS TECLAS
 
-                      // this.teclado.teclas[0].pop();
-                      // this.teclado.teclas[0].pop();
-                      // this.teclado.teclas[0].pop();
-                      // this.teclado.teclas[0].pop();
-                      // this.teclado.teclas[0].pop();
-                      // this.teclado.teclas[0].pop();
-                      
-                      
-                      // this.tecladoReplicant.teclas[0].pop();
-                      // this.tecladoReplicant.teclas[0].pop();
-                      // this.tecladoReplicant.teclas[0].pop();
-                      // this.tecladoReplicant.teclas[0].pop();
-                      // this.tecladoReplicant.teclas[0].pop();
-                      // this.tecladoReplicant.teclas[0].pop();
+                // if(imgUrl){
+                //       let sElContent = $("[id=content]");
+                //       let sElLines = $("[id=blankLines]");
+                //       let sElRows = $("[id=blankRows]");
+      
 
-                      for(let line = 0; line < this.imgLinesArray.length; line++){
-                         for(let col = 0; col < this.globColumnQnty; col++){
+                //       for(let line = 0; line < this.imgLinesArray.length; line++){
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          
+
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                //       }  
+
+                //       for(let j = 0; j< Math.floor(sElContent.length/this.globColumnQnty) ; j++){
+                //         for(let col = 0; col < this.globColumnQnty; col++){
+             
+                //             let found = false;
+                //             for(let z = 0 ; z < this.imgLinesArray.length ; z++){
+                //                if(j < this.imgLinesArray[z]) found = true;
+                //             }
+
+                //             if(found) continue;
+
+                //             if(this.imgLinesArray.includes(j.toString())) {
+                //               continue;
+                //             } else {
+                //               formula = this.globColumnQnty*Number(j)+Number(col);
+                            
+                //               if(j !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+(20 + 7) );
+                //               $($(sElContent)[formula]).css("background-color", 'blue');
+                //               $($(sElContent)[formula]).attr("tooltip", 'Duplo clique para editar.');
+                //             } 
+                //         }
+                //       }   
+
+
+                //         for(let j = 0; j< sElRows.length ; j++){
+                //           if(this.imgLinesArray.includes(j.toString())) {
+                //             continue;
+                //           } else {
+                //             if(j!==0){
+                //                 $($(sElRows)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
+                //                 $($(sElLines)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
+                //             }    
+                //           }
+                //         }   
+
+                //       for(let line = 0; line < this.imgLinesArray.length; line++){
+                //          for(let col = 0; col < this.globColumnQnty; col++){
 
                           
-                          let string = '.'+col+'#'+line+' tamanho-button-especial';
-                          let formula = this.globColumnQnty*Number(line)+Number(col);
-                          //console.log(JSON.stringify(sElContent));
-                          console.log(formula);
-
-                          $($(sElContent)[formula]).css("height", height);
-                          $($(sElContent)[formula]).css("width", width);
-                          $($(sElContent)[formula]).css("background-color", 'red');
-                          
-                          //$($($(sElCopy)[formula]).find('input')[0]).css("height", height);
-                          //$($($(sElCopy)[formula]).find('input')[0]).css("width", width);
-                          //$($($(sElCopy)[formula]).find('input')[0]).css("background-color", 'red');
-                          
-                          for(let z=1; z < this.lines ; z++){
-                            formula = this.globColumnQnty*Number(line+z)+Number(col);
-                            $($(sElContent)[formula]).css("margin-top", height-10);
-                          }
-                          
-                         } 
-                      }
-
-                }
-
-
+                //           let string = '.'+col+'#'+line+' tamanho-button-especial';
+                //           let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
               
+                //           console.log(formula);
+
+                //           $($(sElContent)[formula]).css("height", height);
+                //           $($(sElContent)[formula]).css("width", width);
+                //           if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 25 + 7))) ;
+                //           $($(sElContent)[formula]).css("background-color", '#62FA02');
+  
+                //           }
+                          
+                //          } 
+                //       }
+
+                //       this.imgLinesArray = new Array();
+
+
+
               } else {
                 //console.clear();
 
