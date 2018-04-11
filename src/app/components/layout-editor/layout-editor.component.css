@@ -256,3 +256,9 @@ div[tooltip]:hover:before {
     padding: 0; 
     height: 45px;
 }
+
+.row {
+
+    position: relative;
+
+}

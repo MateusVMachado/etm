@@ -405,8 +405,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private onRemove(value){
+      let DEBUG = false;
 
-        console.log("MARK1");
+      if(DEBUG) console.log("MARK1");
         let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, index, found;
         if(value[3].id === 'copy'){  
           sourceParts = value[3].className.split('$')[1].split('#');
@@ -424,7 +425,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         isImage = true;
       }
 
-      console.log("MARK2");
+      if(DEBUG) console.log("MARK2");
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
       this.tecladoReplicant.text[sourceY][sourceX] = "";
       this.tecladoReplicant.action[sourceY][sourceX] = "";  
@@ -432,40 +433,40 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       
       if(isImage){
-        console.log("MARK3");        
+        if(DEBUG) console.log("MARK3");        
               found = false;
               this.count = 0;
               for(let u=0; u< this.tecladoReplicant.image[sourceY].length; u++){
                 if(this.tecladoReplicant.image[sourceY][u] !== ""){
                   found = true;
                   this.count +=1;
-                  console.log("MARK4");
+                  if(DEBUG) console.log("MARK4");
                   //if(!this.imgLinesArray.includes(sourceY.toString())){
                   //  this.imgLinesArray.push(sourceY);
                  // }
                 }
               }
-              console.log(found);
-              console.log(this.count);
+              if(DEBUG) console.log(found);
+              if(DEBUG) console.log(this.count);
               
               if(!found || this.count >= 1){
-                console.log("MARK5");
+                if(DEBUG) console.log("MARK5");
                 if(this.imgLinesArray.includes(sourceY.toString())){
-                  console.log('SOURCE: ' + sourceY);
+                  if(DEBUG) console.log('SOURCE: ' + sourceY);
                   index = this.imgLinesArray.indexOf[sourceY];
                   for(let i = 0; i < this.imgLinesArray.length; i++){
                     if(this.imgLinesArray[i] === sourceY){
-                      console.log("MARK6");
+                      if(DEBUG) console.log("MARK6");
                       index = i;
                     }
                   }
 
-                  console.log('INDEX: ' + index);
+                  if(DEBUG)  console.log('INDEX: ' + index);
                   this.imgLinesArray.splice(index, 1);
                 }
               }
               
-              console.log("MARK7");
+              if(DEBUG) console.log("MARK7");
               found = false;
               // for(let y=0; y < this.tecladoReplicant.image.length; y++){
               //   for(let x=0;  x < this.tecladoReplicant.image[y].length; x++){
@@ -486,7 +487,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private onDrop(value) {
-      
+      let DEBUG = false;
       if (value[2] == null) {//dragged outside any of the bags
           return;
       }    
@@ -524,7 +525,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             //index = this.imgLinesArray.indexOf[sourceY];
             for(let i = 0; i < this.imgLinesArray.length; i++){
               if(this.imgLinesArray[i] === sourceY){
-                console.log("MARK-DROP-8");
+                if(DEBUG) console.log("MARK-DROP-8");
                 index = i;
               }
             }
@@ -551,7 +552,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   if(!this.editMode){
                           if($(value[2]).children().length > 2 ) {   
               
-                            console.log("MARK-DROP-9");
+                            if(DEBUG) console.log("MARK-DROP-9");
 
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
@@ -564,7 +565,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             trueValue = $($(value[1])[0]).val() ;
                  
                                           
-                            console.log("MARK-DROP-10");
+                            if(DEBUG) console.log("MARK-DROP-10");
 
 
 
@@ -572,7 +573,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               if(isContent && !isCopy){
 
                                                                           
-                            console.log("MARK-DROP-11");
+                                if(DEBUG) console.log("MARK-DROP-11");
 
 
                                   this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
@@ -590,7 +591,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 } else if (isContent && isCopy){
 
                                                                             
-                            console.log("MARK-DROP-12");
+                                  if(DEBUG) console.log("MARK-DROP-12");
 
 
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
@@ -603,8 +604,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   
                               }
                             } else {
+
+                                                                            
+                              if(DEBUG) console.log("MARK-DROP-13");
+
+                              if(trueValue){
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
+                              
+                              } else {
+                                this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                              }
+                              
+                                //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                //this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
+                                //this.tecladoReplicant.teclas[sourceY][sourceX] = "";
 
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 this.tecladoReplicant.text[drainY][drainX] = trueValue;
@@ -630,7 +645,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   } else {
                           if($(value[2]).children().length > 1 ) {   
 
-                            
+                                                                                                        
+                            if(DEBUG) console.log("MARK-DROP-14");
+
+
                             value[1].remove();  
                             trueValue = $($(value[1])[0]).val() ;
                             this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -640,6 +658,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             this.tecladoReplicant.image[sourceY][sourceX] = ""; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } else {
        
+                                                                            
+                            if(DEBUG) console.log("MARK-DROP-14");
+
 
                             if($(value[1]).find('input')[0]){
                               trueValue = $($(value[1]).find('input')[0]).val();
@@ -651,8 +672,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                  
                             if(this.tecladoReplicant.text[sourceY][sourceX]!== ""  && this.tecladoReplicant.teclas[sourceY][sourceX]!== ""){
   
+                      
                                   if(isContent && !isCopy){
       
+                                                                                                                
+                                    if(DEBUG) console.log("MARK-DROP-15");
+
+
                                     this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; 
                                     this.tecladoReplicant.teclas[sourceY][sourceX] = ""; 
                                   
@@ -669,7 +695,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                                 } else if (isContent && isCopy){
             
-             
+                                                                                         
+                                  if(DEBUG)  console.log("MARK-DROP-15");
+
+
                                     this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
                                     
@@ -687,6 +716,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                                 }
                               } else {
+
+                                                                            
+                                if(DEBUG)  console.log("MARK-DROP-16");
+
+
 
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                   this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
@@ -716,13 +750,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                   }   
    
-
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas) );
                   return;
                 }
 
                 if(value[3].id === "copy"){
                   
                   this.lastKind = value[3].id ; 
+
+                                                                            
+                  if(DEBUG) console.log("MARK-DROP-17");
 
 
       
@@ -736,6 +773,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         value[1].remove();  
                         trueValue = $($(value[1])[0]).val();
 
+                                                                            
+                        if(DEBUG) console.log("MARK-DROP-18");
+
 
                         this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                         this.tecladoReplicant.text[sourceY][sourceX] = ""; 
@@ -744,6 +784,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                     } else {
   
+                                                                                                  
+                      if(DEBUG) console.log("MARK-DROP-19");
+
+
 
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                         this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
@@ -752,8 +796,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
                           this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                           this.tecladoReplicant.text[sourceY][sourceX] = ""; 
- 
+                                                                             
+                          if(DEBUG) console.log("MARK-DROP-20");
+
+
                     } else {
+
+                                                                                                   
+                      if(DEBUG) console.log("MARK-DROP-21");
+
 
                           this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                           this.tecladoReplicant.text[drainY][drainX] = trueValue; 
@@ -763,10 +814,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     
                     if(this.tecladoReplicant.action[sourceY][sourceX]!== ""){ 
+                                                                             
+                      if(DEBUG) console.log("MARK-DROP-22");
+
+
 
                           this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX];  
                           this.tecladoReplicant.action[sourceY][sourceX] = "";  
                     } else {  
+                                                                             
+                      if(DEBUG) console.log("MARK-DROP-23");
 
 
                           this.tecladoReplicant.action[sourceY][sourceX] = "";  
@@ -782,9 +839,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                     if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                                                             
+                      if(DEBUG) console.log("MARK-DROP-24");
+
+
+
                         this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                         this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                     } else {   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                                                                                   
+                      if(DEBUG)  console.log("MARK-DROP-25");
+
+
                         this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                     } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
@@ -792,6 +858,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     } 
                     
                 } else if ( value[3].id === "content"){
+                                                                             
+                  if(DEBUG) console.log("MARK-DROP-26");
+
 
                   this.lastKind = value[3].id ; 
                   
@@ -801,7 +870,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     objClass = $(value[1])[0].className;
 
                     if($(value[2]).children().length > 2) { 
-      
+                                                                                   
+                      if(DEBUG) console.log("MARK-DROP-27");
+
+
                       value[1].remove();  
                       trueValue = $($(value[1])[0]).val();
     
@@ -811,6 +883,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       
                       this.tecladoReplicant.image[sourceY][sourceX] = ""; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                     } else {
+                                                                             
+                      if(DEBUG) console.log("MARK-DROP-28");
 
                       trueValue = $( $(value[1]).children()[0] ).val();
                       if($(value[2]).children().length > 2  ) { 
@@ -824,11 +898,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           
                           if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
                             
+                                                                             
+                            if(DEBUG) console.log("MARK-DROP-29");
+
 
                             
                             this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                               this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                     } else {
+                                                                             
+                      if(DEBUG)  console.log("MARK-DROP-30");
+
 
   
                               this.tecladoReplicant.text[sourceY][sourceX] = ""; 
@@ -838,12 +918,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                           if(this.tecladoReplicant.action[sourceY][sourceX]!== ""){ 
 
- 
+                            if(DEBUG) console.log("MARK-DROP-31");
 
                             this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX];  
                             this.tecladoReplicant.action[sourceY][sourceX] = "";  
                           } else {  
   
+                            if(DEBUG)  console.log("MARK-DROP-32");
+
+
                             this.tecladoReplicant.action[sourceY][sourceX] = "";  
                             
                             if(trueValue === "*mic"){
@@ -856,9 +939,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                           
                           if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              
+                            if(DEBUG) console.log("MARK-DROP-33");
+
+
                             this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } else {   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                              
+                            if(DEBUG) console.log("MARK-DROP-34");
+
+
                             this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
@@ -867,6 +958,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                       } else {
         
+                          
+                        if(DEBUG) console.log("MARK-DROP-35");
+
+
                         if( $(value[1]).find('input')[0]) {
      
                           trueValue = $($($(value[1])[0]).find('input')[0]).val();
@@ -874,7 +969,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             if($(value[2]).children().length > 1) {
                               
 
-                              
+                                
+                              if(DEBUG) console.log("MARK-DROP-36");
+
+
                               value[1].remove();
                       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
@@ -883,6 +981,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 this.tecladoReplicant.image[sourceY][sourceX] = "";    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } else {
                               
+  
+                              if(DEBUG)  console.log("MARK-DROP-37");
+
 
                               
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -891,12 +992,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
 
+  
+                                if(DEBUG)  console.log("MARK-DROP-38");
+
 
 
                                   this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                                   this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
                                 
+  
+                                if(DEBUG) console.log("MARK-DROP-39");
+
 
                                 
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
@@ -906,6 +1013,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                               if(this.tecladoReplicant.action[sourceY][sourceX]!== ""){ 
+  
+                                if(DEBUG)  console.log("MARK-DROP-40");
+
 
   
 
@@ -913,6 +1023,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";  
                             } else { 
  
+ 
+                              if(DEBUG)  console.log("MARK-DROP-41");
+
 
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";  
                                
@@ -928,9 +1041,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             
 
                             if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                               
+                              if(DEBUG) console.log("MARK-DROP-42");
+
+
                               this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                             
+                            if(DEBUG) console.log("MARK-DROP-43");
+
+
                               this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           }   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
@@ -941,6 +1062,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
            
                               value[1].remove();
                               
+ 
+                              if(DEBUG)  console.log("MARK-DROP-44");
+
 
                               
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -950,6 +1074,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } else {
                               
+ 
+                              if(DEBUG)  console.log("MARK-DROP-45");
+
 
 
                               this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -958,11 +1085,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                               if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
 
+ 
+                                if(DEBUG)  console.log("MARK-DROP-46");
+
 
 
                                   this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                                   this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                               } else {
+ 
+                                if(DEBUG) console.log("MARK-DROP-47");
+
 
                                   this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                   this.tecladoReplicant.text[drainY][drainX] = trueValue; 
@@ -972,12 +1105,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                               if(this.tecladoReplicant.action[sourceY][sourceX]!== ""){ 
 
+ 
+                                if(DEBUG) console.log("MARK-DROP-48");
+
 
                                 this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX];  
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";  
                             } else { 
 
-    
+     
+                              if(DEBUG) console.log("MARK-DROP-49");
+
+
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";  
                                 
                                 if(trueValue === "*mic"){
@@ -992,9 +1131,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                             
                             if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                               
+                              if(DEBUG)  console.log("MARK-DROP-50");
+
+
                               this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                             
+                            if(DEBUG) console.log("MARK-DROP-51");
+
+
                               this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                           } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
@@ -1012,6 +1159,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
                                   value[1].remove();
 
+                               
+                                  if(DEBUG)   console.log("MARK-DROP-52");
+
                                   
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                   this.tecladoReplicant.text[sourceY][sourceX] = "";
@@ -1019,16 +1169,25 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                                   this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               } else {
+                             
+                                if(DEBUG)  console.log("MARK-DROP-53");
+
 
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                                 
 
                                 if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                             
+                                  if(DEBUG)  console.log("MARK-DROP-54");
+
 
                                     this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                                     this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else {
+                             
+                                  if(DEBUG)  console.log("MARK-DROP-55");
+
 
                                     this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                     this.tecladoReplicant.text[drainY][drainX] = trueValue; 
@@ -1038,10 +1197,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                                 if(this.tecladoReplicant.action[sourceY][sourceX]!== ""){ 
+                             
+                                  if(DEBUG)   console.log("MARK-DROP-56");
+
 
                                   this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX];  
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";  
                               } else { 
+
+                             
+                                if(DEBUG)  console.log("MARK-DROP-57");
 
 
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";  
@@ -1058,9 +1223,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               
 
                               if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                                             
+                                if(DEBUG) console.log("MARK-DROP-58");
+
+
                                 this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                 this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                                           
+                              if(DEBUG) console.log("MARK-DROP-59");
+
+
                                 this.tecladoReplicant.image[sourceY][sourceX] = "";       ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
@@ -1070,6 +1243,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               if($(value[2]).children().length > 2) {
        
                                   value[1].remove();
+                             
+                                  if(DEBUG) console.log("MARK-DROP-60");
+
 
 
                                   this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -1077,16 +1253,25 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";
                                   this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                               } else {
+                             
+                                if(DEBUG)   console.log("MARK-DROP-61");
+
              
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
 
                                 if(this.tecladoReplicant.text[sourceY][sourceX]!== ""){
+                             
+                                  if(DEBUG)    console.log("MARK-DROP-62");
+
 
                                     this.tecladoReplicant.text[drainY][drainX] = this.tecladoReplicant.text[sourceY][sourceX]; 
                                     this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 } else {
+                             
+                                  if(DEBUG)  console.log("MARK-DROP-63");
+
 
                                     this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                     this.tecladoReplicant.text[drainY][drainX] = trueValue; 
@@ -1095,10 +1280,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                                 if(this.tecladoReplicant.action[sourceY][sourceX]!== ""){ 
-        
+                                     
+                                  if(DEBUG)  console.log("MARK-DROP-64");
+
+
                                   this.tecladoReplicant.action[drainY][drainX] = this.tecladoReplicant.action[sourceY][sourceX];  
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";  
                               } else { 
+                             
+                                if(DEBUG) console.log("MARK-DROP-65");
+
 
                                   this.tecladoReplicant.action[sourceY][sourceX] = "";  
                                   
@@ -1114,9 +1305,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                               if(this.tecladoReplicant.image[sourceY][sourceX]!== ""){   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                                             
+                                if(DEBUG)  console.log("MARK-DROP-66");
+
+
                                 this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                 this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } else {  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                                           
+                              if(DEBUG) console.log("MARK-DROP-67");
+
+
                                 this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                             } ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
@@ -1135,6 +1334,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 }    
                
+                console.log(JSON.stringify(this.tecladoReplicant.teclas) );
                 console.log(JSON.stringify(this.imgLinesArray));
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
    
@@ -1527,7 +1727,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 height = 150 - (height/150);
               }
   
-              console.log(result[5] + ' ' + result[6]);
+              //console.log(result[5] + ' ' + result[6]);
               
 
               if(buttonText === undefined) buttonText = " ";
@@ -1631,86 +1831,120 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 
                 //REDIMENSIONAMENTO DAS TECLAS
 
-                // if(imgUrl){
-                //       let sElContent = $("[id=content]");
-                //       let sElLines = $("[id=blankLines]");
-                //       let sElRows = $("[id=blankRows]");
+                if(imgUrl){
+                      let sElContent = $("[id=content]");
+                      let sElLines = $("[id=blankLines]");
+                      let sElRows = $("[id=blankRows]");
       
 
-                //       for(let line = 0; line < this.imgLinesArray.length; line++){
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
+                      for(let line = 0; line < this.imgLinesArray.length; line++){
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
+                          this.teclado.teclas[this.imgLinesArray[line]].pop();
                           
 
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //       }  
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                          this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
+                      }  
 
-                //       for(let j = 0; j< Math.floor(sElContent.length/this.globColumnQnty) ; j++){
-                //         for(let col = 0; col < this.globColumnQnty; col++){
-             
-                //             let found = false;
-                //             for(let z = 0 ; z < this.imgLinesArray.length ; z++){
-                //                if(j < this.imgLinesArray[z]) found = true;
-                //             }
 
-                //             if(found) continue;
+                      for(let j = 0; j<= sElRows.length ; j++){
+                        if(this.imgLinesArray.includes(j.toString())) {
+                          continue;
+                        } else {
+                          if(j!==0){
+                            //$($(sElRows)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
+                            //$($(sElLines)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
 
-                //             if(this.imgLinesArray.includes(j.toString())) {
-                //               continue;
-                //             } else {
-                //               formula = this.globColumnQnty*Number(j)+Number(col);
+                            // $($(sElRows)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
+                            // $($(sElLines)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
+
+                            $($(sElRows)[j]).css("margin-top", -Math.floor(height/2)+(45 +20 + 7) )
+                            $($(sElLines)[j]).css("margin-top", -Math.floor(height/2)+(45 +20 + 7) )
+
                             
-                //               if(j !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+(20 + 7) );
-                //               $($(sElContent)[formula]).css("background-color", 'blue');
-                //               $($(sElContent)[formula]).attr("tooltip", 'Duplo clique para editar.');
-                //             } 
-                //         }
-                //       }   
+                            //$($(sElRows)[j]).css("top", '-50px' );
+                            //$($(sElRows)[j]).css("height", '90px' );
+                         
+
+                            //$($(sElLines)[j]).css("top", '-50px' );
+                            //$($(sElLines)[j]).css("height", '90px' );
+                         
+                              //$($(sElRows)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
+                              //$($(sElLines)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
+               
+                          }    
+                        }
+                      }   
+
+                      for(let j = 0; j< Math.floor(sElContent.length/this.globColumnQnty) ; j++){
+                        for(let col = 0; col < this.globColumnQnty; col++){
+             
+                            let found = false;
+                            for(let z = 0 ; z < this.imgLinesArray.length ; z++){
+                               if(j < this.imgLinesArray[z]) found = true;
+                            }
+
+                            if(found) continue;
+
+                            if(this.imgLinesArray.includes(j.toString())) {
+                              continue;
+                            } else {
+                              formula = this.globColumnQnty*Number(j)+Number(col);
+                            
+                              //if(j !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+(22+ 7) );
+                              
+                              
+                              //$($(sElRows)[j]).css("bottom", -Math.floor(height/2)+(45 + 20 + 7));
+                              //$($(sElLines)[j]).css("bottom", -Math.floor(height/2)+(45 + 20 + 7));
+
+                        
+                              $($(sElContent)[formula]).css("background-color", 'blue');
+                              $($(sElContent)[formula]).attr("tooltip", 'Duplo clique para editar.');
+                            } 
+                        }
+                      }   
 
 
-                //         for(let j = 0; j< sElRows.length ; j++){
-                //           if(this.imgLinesArray.includes(j.toString())) {
-                //             continue;
-                //           } else {
-                //             if(j!==0){
-                //                 $($(sElRows)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
-                //                 $($(sElLines)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
-                //             }    
-                //           }
-                //         }   
 
-                //       for(let line = 0; line < this.imgLinesArray.length; line++){
-                //          for(let col = 0; col < this.globColumnQnty; col++){
+                      for(let line = 0; line < this.imgLinesArray.length; line++){
+                         for(let col = 0; col < this.globColumnQnty; col++){
 
                           
-                //           let string = '.'+col+'#'+line+' tamanho-button-especial';
-                //           let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
-              
-                //           console.log(formula);
+                          let string = '.'+col+'#'+line+' tamanho-button-especial';
+                          console.log("ARRAY: " + this.imgLinesArray);
+                          console.log("VALUE: "+ this.imgLinesArray[line]);
+                          let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
+                          console.log("FORMULA: " + formula);
+                         // console.log(formula);
 
-                //           $($(sElContent)[formula]).css("height", height);
-                //           $($(sElContent)[formula]).css("width", width);
-                //           if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 25 + 7))) ;
-                //           $($(sElContent)[formula]).css("background-color", '#62FA02');
+                          $($(sElContent)[formula]).css("height", height);
+                          $($(sElContent)[formula]).css("width", width);
+                          
+
+                          
+                          //$($(sElLines)[this.imgLinesArray[line]]).css("height", height);
+                          //$($(sElRows)[this.imgLinesArray[line]]).css("height", height);
+
+                          if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 23 + 7))) ;
+                          $($(sElContent)[formula]).css("background-color", '#62FA02');
   
-                //           }
+                          }
                           
-                //          } 
-                //       }
+                         } 
+                      }
 
-                //       this.imgLinesArray = new Array();
+                      this.imgLinesArray = new Array();
 
 
 
