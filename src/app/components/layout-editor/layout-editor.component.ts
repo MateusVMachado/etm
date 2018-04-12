@@ -71,7 +71,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     public lines: number;
     public imgLinesArray = new Array();
-    public imgChangedSizeArray = new Array();
+    public imgIsModified = new Array();
 
     public x: number;
     public y: number;
@@ -83,6 +83,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public dummyArray = ['', '', '', '', ''];
 
     public count: number = 0;
+
+    private imgMaxHeightSize = 0;
+    private imgMaxWidthSize = 0;
+
 
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
@@ -485,6 +489,62 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
 
 
+    public checkLineHasImage(drainY: number) {
+      for(let x = 0; x < this.tecladoReplicant.teclas[drainY].length; x++){
+        if(this.tecladoReplicant.teclas[drainY][x] === '*img') return true;
+      }
+      return false;
+    }
+
+    public changeLineSize(drainY: number, config: string){
+         if(config === 'default'){
+
+         } else if (config === 'imgSize'){
+
+          let sElContent = $("[id=content]");
+          let sElLines = $("[id=blankLines]");
+          let sElRows = $("[id=blankRows]");
+          let sElNone = $("[id=blankNone]");
+          let height = this.imgMaxHeightSize;
+          let width = this.imgMaxWidthSize;
+
+
+          if(height > width) {
+            height = 150;
+            width = 150 - (width/150);
+          }  else {
+            width = 150;
+            height = 150 - (height/150);
+          }
+
+          console.log("ESTAMOS EM " + drainY);
+
+          //for(let step = 0; step < sElLines.length; step++){
+            for(let col = 0; col < this.globColumnQnty; col++){
+             
+              let formula = this.globColumnQnty*Number(drainY)+Number(col);
+              // $($(sElLines)[formula]).css("height", '150px');
+              // $($(sElRows)[formula]).css("height", '150px');
+              this.changeDragulaElSize( $($(sElContent)[formula]), height, width);
+              $($(sElContent)[formula]).css("background-color", '#62FA02');
+            }
+            this.changeDragulaElSize( $($(sElLines)[drainY]), height, -1);
+              this.changeDragulaElSize( $($(sElRows)[drainY]), height, -1);
+          //}
+          //$($(sElRows)[0]).css("top", "1px");
+          $($(sElRows)[drainY]).css("margin-bottom", "17px");
+
+          //$($(sElLines)[0]).css("top", "1px");
+          $($(sElLines)[drainY]).css("margin-bottom", "17px");
+
+          this.imgIsModified.push(this.imgLinesArray[drainY]);
+
+         //if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 23 + 7))) ;
+         
+          
+
+        }       
+    }    
 
     private onDrop(value) {
       let DEBUG = false;
@@ -530,6 +590,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               }
             }
           }
+
+            
+            if(this.tecladoReplicant.teclas[sourceY][sourceX] === '*img'){
+              if( !this.checkLineHasImage(drainY) ){
+                console.log("IMAGE1");
+                console.log(drainY);
+                  this.changeLineSize(drainY, 'imgSize');
+              }
+              if(!this.checkLineHasImage(sourceY)){
+                console.log("IMAGE2");
+                this.changeLineSize(sourceY, 'default');
+              }
+            }
+            
 
             this.imgLinesArray.splice(index, 1);
 
@@ -1718,7 +1792,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let imgUrl = result[4];
               let height = result[5];
               let width = result[6];
+              
 
+              if(height > this.imgMaxHeightSize && this.imgMaxHeightSize < 150) this.imgMaxHeightSize = height;
+              if(width > this.imgMaxWidthSize && this.imgMaxWidthSize < 150) this.imgMaxWidthSize = width;
+
+
+              console.log("TAM MAX  h: "+this.imgMaxHeightSize +' w: ' +this.imgMaxWidthSize);
+              // if(height > width && height > 150) {
+              //   height = 150;
+              //   width = 150 - (width/150);
+              // }  else if (width > height && width > 150){
+              //   width = 150;
+              //   height = 150 - (height/150);
+              // }
+
+              
               if(height > width) {
                 height = 150;
                 width = 150 - (width/150);
@@ -1727,6 +1816,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 height = 150 - (height/150);
               }
   
+
               //console.log(result[5] + ' ' + result[6]);
               
 
@@ -1777,10 +1867,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   if(imgUrl){
                       this.imgLinesArray.push(this.y);
                       console.log(JSON.stringify(this.imgLinesArray));
-                      $($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
-                      $($(el)).css("background-size", "100% 100%");
-                      $($(el)).css("height", height);
-                      $($(el)).css("width", width);
+                      //$($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
+                      //$($(el)).css("background-size", "100% 100%");
+                      //$($(el)).css("height", height);
+                      //$($(el)).css("width", width);
+                      this.changeDragulaBackground( $($(el)), imgUrl, height, width, 100, 100);
                       $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
                       $($(el).find('input')[0]).attr('display', 'none');
                 } 
@@ -1807,10 +1898,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     
                     console.log(JSON.stringify(this.imgLinesArray));
 
-                    $($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
-                    $($(el)).css("background-size", "100% 100%");
-                    $($(el)).css("height", height);
-                    $($(el)).css("width", width);
+                    //$($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
+                    //$($(el)).css("background-size", "100% 100%");
+                    //$($(el)).css("height", height);
+                    //$($(el)).css("width", width);
+                    this.changeDragulaBackground( $($(el)), imgUrl, height, width, 100, 100);
                     $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
                     $($(el).find('button')[0]).attr('display', 'none');
                   } 
@@ -1835,6 +1927,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let sElContent = $("[id=content]");
                       let sElLines = $("[id=blankLines]");
                       let sElRows = $("[id=blankRows]");
+                      let sElNone = $("[id=blankNone]");
       
 
                       for(let line = 0; line < this.imgLinesArray.length; line++){
@@ -1869,9 +1962,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             // $($(sElRows)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
                             // $($(sElLines)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
 
-                            $($(sElRows)[j]).css("margin-top", -Math.floor(height/2)+(45 +20 + 7) )
-                            $($(sElLines)[j]).css("margin-top", -Math.floor(height/2)+(45 +20 + 7) )
-
+                            $($(sElRows)[j]).css("margin-top", -Math.floor(height/2)+(45 +22 + 7) );
+                            $($(sElLines)[j]).css("margin-top", -Math.floor(height/2)+(45 +22 + 7) );
                             
                             //$($(sElRows)[j]).css("top", '-50px' );
                             //$($(sElRows)[j]).css("height", '90px' );
@@ -1928,13 +2020,30 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           console.log("FORMULA: " + formula);
                          // console.log(formula);
 
-                          $($(sElContent)[formula]).css("height", height);
-                          $($(sElContent)[formula]).css("width", width);
+                         
+                         this.changeDragulaElSize( $($(sElContent)[formula]), height, width);
+
+                         
+                          //$($(sElContent)[formula]).css("height", height);
+                          //$($(sElContent)[formula]).css("width", width);
                           
 
-                          
+                          this.changeDragulaElSize( $($(sElLines)[this.imgLinesArray[line]]), height, -1);
+                          this.changeDragulaElSize( $($(sElRows)[this.imgLinesArray[line]]), height, -1);
+
                           //$($(sElLines)[this.imgLinesArray[line]]).css("height", height);
                           //$($(sElRows)[this.imgLinesArray[line]]).css("height", height);
+                         
+                         
+                          //$($(sElRows)[this.imgLinesArray[line]]).css("bottom", "8px");
+                          
+                           $($(sElRows)[this.imgLinesArray[line]]).css("top", "1px");
+                           $($(sElRows)[this.imgLinesArray[line]]).css("margin-bottom", "7px");
+
+                           $($(sElLines)[this.imgLinesArray[line]]).css("top", "1px");
+                           $($(sElLines)[this.imgLinesArray[line]]).css("margin-bottom", "7px");
+
+                           this.imgIsModified.push(this.imgLinesArray[line]);
 
                           if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 23 + 7))) ;
                           $($(sElContent)[formula]).css("background-color", '#62FA02');
@@ -1983,6 +2092,25 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       }
 
+
+      public changeDragulaElSize(el: any, height:number, width:number){
+          if(width === -1){
+            el.css("height", height);
+          } else if(height === -1){
+            el.css("width", width);
+          } else {
+            el.css("height", height);
+            el.css("width", width);
+          }
+      }
+
+      public changeDragulaBackground(el: any, url:string, height: number, width: number, percentX:number, percentY:number){
+        el.css("background", "url(data:image/png;base64,"+ url +") no-repeat");
+        let params = <string>(percentX + '% ' + percentY + '%');
+        el.css("background-size", params);
+        el.css("height", height);
+        el.css("width", width);
+      }
 
       public checkExistence(iR: number){
         this.exist = this.imgLinesArray.includes(iR.toString());
