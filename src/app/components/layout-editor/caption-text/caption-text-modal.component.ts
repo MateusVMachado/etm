@@ -55,8 +55,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.buttonAction = result[2];
                         }
              
-                        
-
                         if(this.buttonAction === "Keyboard"){
                             this.escrever = true;
                             this.falar = false;
@@ -150,6 +148,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                 image = Number(this.imgPadrao) - 1;
             }
             this.imgPadrao = String(image);
+            let url = 'assets/images/' + this.imgPadrao + '.png'
+            console.log(url);
+            
         }else if(direction === 'down'){
             if(this.imgPadrao === '14'){
                 image = 1;
@@ -157,6 +158,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                 image = Number(this.imgPadrao) + 1;
             }
             this.imgPadrao = String(image);
+            let url = 'assets/images/' + this.imgPadrao + '.png'
+            console.log(url);
+            
         }
         
     }
