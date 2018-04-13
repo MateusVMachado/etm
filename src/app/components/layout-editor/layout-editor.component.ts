@@ -90,7 +90,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private markedTarget: number = 0;
 
     private TAMANHO_DE_TESTE: number = 80;
-    private keysSize: number;
+    private keysHeightSize: number = 48;
+    private keysWidthSize: number;
+    
 
     private keyboardContainerSize: number;
 
@@ -108,8 +110,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private backLoggerService: BackLoggerService) {
       super(injector);       
                   
-    
+     
       this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container')).width();
+      this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
      
       
       //this.keysSize = container.width;
@@ -492,7 +495,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               //   }
               // }
       }        
-
+      console.log(this.checkLineHasImage(sourceY, sourceX, 'drain'));
       if(!this.checkLineHasImage(sourceY, sourceX, 'drain')){
         this.changeLineSize2(sourceY, 'default');
       }
@@ -506,7 +509,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private onDrop(value) {
-      console.clear();
+      //console.clear();
       let DEBUG = false;
       if (value[2] == null) {//dragged outside any of the bags
           return;
@@ -537,8 +540,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               drainY = drainParts[1];
           }    
 
-          console.log('SOURCE ON DROP: ' + sourceY);
-          console.log('DRAIN ON DROP: ' + drainY);
+          //console.log('SOURCE ON DROP: ' + sourceY);
+          //console.log('DRAIN ON DROP: ' + drainY);
 
 
           if(this.imgLinesArray.includes(sourceY.toString())){
@@ -551,12 +554,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
           }
 
-            
-            if(this.tecladoReplicant.teclas[sourceY][sourceX] === '*img' && drainY !== sourceY){
 
+
+            
+          if(this.tecladoReplicant.teclas[sourceY][sourceX] === '*img' && drainY !== sourceY){
+
+            this.imgLinesArray.push(drainY);
               console.log(JSON.stringify(this.imgIsModified));
               let choice = false;
-              console.log("DRAIN");
+              //console.log("DRAIN");
 
               if( !this.checkLineHasImage(drainY, drainX, 'drain') ) {//&& !this.imgIsModified.includes(drainY.toString())){
                 //console.log("NÃO TEM IMAGEM NO DRAIN");
@@ -564,7 +570,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   this.changeLineSize2(drainY, 'imgSize');
               } 
 
-              console.log("SOURCE");
+              //console.log("SOURCE");
               if(!this.checkLineHasImage(sourceY, sourceX, 'source') ){
                 //console.log("NÃO TEM IMAGEM NO SOURCE");
                 
@@ -576,7 +582,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
              this.imgLinesArray.splice(index, 1);
 
-             this.imgLinesArray.push(drainY);
+             //this.imgLinesArray.push(drainY);
 
             
 
@@ -792,7 +798,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
                   }   
    
-                  console.log(JSON.stringify(this.tecladoReplicant.teclas) );
+                  //console.log(JSON.stringify(this.tecladoReplicant.teclas) );
                   return;
                 }
 
@@ -1376,7 +1382,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 }    
                
-                console.log(JSON.stringify(this.tecladoReplicant.teclas) );
+                //console.log(JSON.stringify(this.tecladoReplicant.teclas) );
                 console.log(JSON.stringify(this.imgLinesArray));
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
    
@@ -1777,11 +1783,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
               
               if(height > width) {
-                height = 150;
-                width = 150 - (width/150);
+                //height = 150;
+                height = this.keysHeightSize;
+                //width = 150 - (width/150);
+                width = this.keysHeightSize - (this.keysWidthSize/this.keysHeightSize);
               }  else {
-                width = 150;
-                height = 150 - (height/150);
+                //width = 150;
+                width = this.keysWidthSize;
+                //height = 150 - (height/150);
+                height = this.keysWidthSize - (this.keysHeightSize/this.keysWidthSize);
               }
   
 
@@ -1834,7 +1844,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   //$($(el).find('input')[0]).css("background-size", "100% 100%");
                   
                   //$($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
-                  
+                  console.log("WIDTH: " + width);
                   if(imgUrl){
                       this.imgLinesArray.push(this.y);
                       console.log(JSON.stringify(this.imgLinesArray));
@@ -1844,7 +1854,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       //$($(el)).css("width", width);
                      
                       //this.changeDragulaBackground( $($(el)), imgUrl, height, width, 100, 100);
-                      this.changeDragulaBackground( $($(el)), imgUrl, this.TAMANHO_DE_TESTE, this.TAMANHO_DE_TESTE, 100, 100);
+                      this.changeDragulaBackground( $($(el)), imgUrl, this.TAMANHO_DE_TESTE, width*0.9, 100, 100);
                       $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
                       $($(el).find('input')[0]).attr('display', 'none');
                 } 
@@ -1878,7 +1888,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                     //this.changeDragulaBackground( $($(el)), imgUrl, height, width, 100, 100);
-                    this.changeDragulaBackground( $($(el)), imgUrl, this.TAMANHO_DE_TESTE, this.TAMANHO_DE_TESTE, 100, 100);
+                    this.changeDragulaBackground( $($(el)), imgUrl, this.TAMANHO_DE_TESTE, width*0.8, 100, 100);
                     $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
                     $($(el).find('button')[0]).attr('display', 'none');
                   } 
@@ -1905,17 +1915,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let sElLines = $("[id=blankLines]");
                       let sElRows = $("[id=blankRows]");
                       let sElNone = $("[id=blankNone]");
-                  
+                      console.log("TAMANHO: " + this.TAMANHO_DE_TESTE);
                   for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
                     for(let col=0; col < this.globColumnQnty ; col++){
-                      console.log(this.imgLinesArray[imgLine]);
+                      //console.log(this.imgLinesArray[imgLine]);
                         let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
                         $($(sElContent)[formula]).css('height', this.TAMANHO_DE_TESTE);
-                        $($(sElContent)[formula]).css('width', this.TAMANHO_DE_TESTE);
+                        $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                        $($(sElContent)[formula]).css('text-align', 'center');
                         $($(sElContent)[formula]).css("background-color", '#62FA02');
                         $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.TAMANHO_DE_TESTE);
                         $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.TAMANHO_DE_TESTE);
 
+                        console.log('ARRAY INSERT: ' + this.imgLinesArray[imgLine]);
                         $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
                         $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
                     }    
@@ -2107,34 +2119,52 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         let sElRows = $("[id=blankRows]");
         let sElNone = $("[id=blankNone]");
 
+        //console.log("KEY SIZE: " + this.keysSize);
         if(config === 'default'){
               //for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
                 for(let col=0; col < this.globColumnQnty ; col++){
                   
                     let formula = this.globColumnQnty*Number(targetY)+Number(col);
-                    $($(sElContent)[formula]).css('height', this.TAMANHO_DE_TESTE);
-                    $($(sElContent)[formula]).css('width', this.TAMANHO_DE_TESTE);
+                    $($(sElContent)[formula]).css('height', this.keysHeightSize);
+                    $($(sElContent)[formula]).css('width', this.keysWidthSize);
                     $($(sElContent)[formula]).css("background-color", 'orange');
-                    $($(sElLines)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
-                    $($(sElRows)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
+                    //$($(sElLines)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
+                    //$($(sElRows)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
 
-                    $($(sElLines)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
-                    $($(sElRows)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+                    $($(sElLines)[targetY]).css('height', this.keysHeightSize);
+                    $($(sElRows)[targetY]).css('height', this.keysHeightSize);
+                    //$($(sElLines)[targetY]).css('width', '100%');
+                    //$($(sElRows)[targetY]).css('width', '100%');
+
+                    // $($(sElLines)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+                    // $($(sElRows)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+                    console.log("TARGET: " + targetY);
+                    $($(sElLines)[targetY]).css('margin-bottom', 4 );
+                    $($(sElRows)[targetY]).css('margin-bottom', 4 );
                 }    
               //}
         } else if( config === 'imgSize'){
+                  console.log("TAMANHO: " + this.TAMANHO_DE_TESTE);
               //for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
                   for(let col=0; col < this.globColumnQnty ; col++){
                     
                   let formula = this.globColumnQnty*Number(targetY)+Number(col);
                   $($(sElContent)[formula]).css('height', this.TAMANHO_DE_TESTE);
-                  $($(sElContent)[formula]).css('width', this.TAMANHO_DE_TESTE);
+                  $($(sElContent)[formula]).css('width', this.keysWidthSize);
                   $($(sElContent)[formula]).css("background-color", '#62FA02');
-                  $($(sElLines)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
-                  $($(sElRows)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
+                  //$($(sElLines)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
+                  //$($(sElRows)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
 
-                  $($(sElLines)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
-                  $($(sElRows)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+                  $($(sElLines)[targetY]).css('height', this.TAMANHO_DE_TESTE);
+                  $($(sElRows)[targetY]).css('height', this.TAMANHO_DE_TESTE);
+
+                  // $($(sElLines)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+                  // $($(sElRows)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+                 
+                  
+                  $($(sElLines)[targetY]).css('margin-bottom', 4 );
+                  $($(sElRows)[targetY]).css('margin-bottom', 4 );
+
               }    
             //}
         }      
@@ -2154,8 +2184,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       public changeDragulaBackground(el: any, url:string, height: number, width: number, percentX:number, percentY:number){
         el.css("background", "url(data:image/png;base64,"+ url +") no-repeat");
+        //el.css("background-position",'10px center')
         let params = <string>(percentX + '% ' + percentY + '%');
         el.css("background-size", params);
+        let percent = (((this.keysWidthSize-width)/2)/this.keysWidthSize)*100;
+
+        el.css("transform", 'translateX('+ percent +'%)');
         el.css("height", height);
         el.css("width", width);
       }
