@@ -111,9 +111,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       super(injector);       
                   
      
-      this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container')).width();
-      this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
+
+      
+      
      
+                  
+      console.log("TAM INIT: " + this.keysWidthSize);
       
       //this.keysSize = container.width;
 
@@ -173,6 +176,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     ngOnInit() {
 
+      this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container-editor')).width();
+      
+      //this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
+      this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*5.5) )/this.globColumnQnty;
+
       let self = this;
 
       
@@ -231,6 +239,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }
 
+
+
+
+
+
+     //////////////////////////////////////
+    // LOAD DO TECLADO VIA COPY DRAGULA //
+   ////////////////////////////////////// 
+
+
     public updateReplicant(){
       this.newKeyboard = false;
       this.editMode = true;
@@ -239,18 +257,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let user = this.authService.getLocalUser();
       this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email, user.jwt).subscribe(async (data)=>{
         
-        this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
+      this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
 
 
-        
-      
       var counter = 0;
 
       var drake = dragula({});
 
-
       let totalLength = 0;
-
 
       this.masterKeys.teclas.forEach(element => {
         element.forEach(element => {
@@ -263,9 +277,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       elem2 = $("[id=copy]")[1].cloneNode(true);
       
 
+      console.log("ANTES DE LIMPAR:");
+      console.log(JSON.stringify(this.teclado.teclas) );
       for(let line = 0; line < this.teclado.teclas.length; line++){
         for(let col = 0; col < this.teclado.teclas[line].length; col ++){
           if(this.tecladoReplicant.teclas[line][col].split('$')[0] === '*img'){
+            console.log("*img ENCONTRADO; LINHA: " + line);
               this.changeLineSize2(line, 'default');  
           }
         }
@@ -375,26 +392,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         
                         if(replicantFromDatabase.teclas[x][y].split('$')[0] === '*img'){
 
+                          let height = replicantFromDatabase.teclas[x][y].split("$")[1].split('#')[0];
+                          let width = replicantFromDatabase.teclas[x][y].split("$")[1].split('#')[1];
+                          this.imgMaxHeightSize = height;
+                          this.imgMaxWidthSize = width;
 
-               
-                          //let content = replicantFromDatabase.image[x][y];
-                          //let ret = content.replace('data:image/png;base64,','');
-
-                          // let imgData = ret;    
-                          // let img = new Image();       
-                          // img.onload = function(){
-                          //   alert(img.width +' '+ img.height );
-                          //   console.log(img.width);
-                          // };
-                          // img.src = imgData;
-
-                          this.changeDragulaBackground( $($(el1)), replicantFromDatabase.image[x][y], this.TAMANHO_DE_TESTE, 82.61285714285715*0.9, 100, 100);
+                          this.changeDragulaBackground( $($(el1)), replicantFromDatabase.image[x][y], height, width, 100, 100);
                           $($(el1).find('button')[0]).attr('class', 'tamanho-button-especial-big');
                           $($(el1).find('button')[0]).attr('display', 'none');
-                            if(!this.checkLineHasImage(x, y, 'drain')){
+                            if(this.checkLineHasImage(x)){
                               this.changeLineSize2(x, 'imgSize');
                             }
-                        
+                            //this.changeLineSize2(x, 'imgSize');  
+
                         }
                         
                         
@@ -409,25 +419,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 
                         if(replicantFromDatabase.teclas[x][y].split('$')[0] === '*img'){
 
+                          let height = replicantFromDatabase.teclas[x][y].split("$")[1].split('#')[0];
+                          let width = replicantFromDatabase.teclas[x][y].split("$")[1].split('#')[1];
+                          this.imgMaxHeightSize = height;
+                          this.imgMaxWidthSize = width;
 
-                          // let content = replicantFromDatabase.image[x][y];
-                          // let ret = content.replace('data:image/png;base64,','');
-
-                          // let imgData = ret;
-                          // let img = new Image();       
-                          // img.onload = function(){
-                          //   alert(img.width +' '+ img.height );
-                          //   console.log(img.width);
-                          // };
-                          // img.src = imgData;
-
-                          this.changeDragulaBackground( $(el1), replicantFromDatabase.image[x][y], this.TAMANHO_DE_TESTE, 82.61285714285715*0.9, 100, 100);
+                          this.changeDragulaBackground( $(el1), replicantFromDatabase.image[x][y], height, width, 100, 100);
                           $($(el1).find('input')[0]).attr('class', 'tamanho-button-especial-big');
                           $($(el1).find('input')[0]).attr('display', 'none');
 
-                          if(!this.checkLineHasImage(x, y, 'drain')){
+                          if(this.checkLineHasImage(x)){
                             this.changeLineSize2(x, 'imgSize');
                           }
+                          
+                          //this.changeLineSize2(x, 'imgSize');
 
                         }
 
@@ -570,9 +575,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               //   }
               // }
       }        
-      console.log(this.checkLineHasImage(sourceY, sourceX, 'drain'));
+      console.log(this.checkLineHasImage(sourceY));
       if(isImage){
-          if(!this.checkLineHasImage(sourceY, sourceX, 'drain')){
+          if(!this.checkLineHasImage(sourceY)){
             this.changeLineSize2(sourceY, 'default');
           }
       }
@@ -633,32 +638,35 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           }
 
 
+          if(sourceY !== drainY) this.imgLinesArray.splice(index, 1);
 
-            
+          console.log(JSON.stringify(this.imgLinesArray));  
+
           if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && drainY !== sourceY){
 
             this.imgLinesArray.push(drainY);
               console.log(JSON.stringify(this.imgIsModified));
+              
               let choice = false;
               //console.log("DRAIN");
 
-              if( !this.checkLineHasImage(drainY, drainX, 'drain') ) {//&& !this.imgIsModified.includes(drainY.toString())){
+              if( !this.checkLineHasImage(drainY) ) {//&& !this.imgIsModified.includes(drainY.toString())){
                 //console.log("NÃO TEM IMAGEM NO DRAIN");
                 
                   this.changeLineSize2(drainY, 'imgSize');
               } 
 
               //console.log("SOURCE");
-              if(!this.checkLineHasImage(sourceY, sourceX, 'source') ){
+              if(this.checkLineHasImage(sourceY) ){
                 //console.log("NÃO TEM IMAGEM NO SOURCE");
                 
                 this.changeLineSize2(sourceY, 'default');
-              }
+              } 
 
             }
             
 
-             this.imgLinesArray.splice(index, 1);
+            
 
              //this.imgLinesArray.push(drainY);
 
@@ -905,8 +913,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           }          
         
                   }   
+
+
+                  if(!this.checkLineHasImage(sourceY)){
+                    this.changeLineSize2(sourceY, 'default');
+                  } else {
+                    this.changeLineSize2(sourceY, 'imgSize');
+                  }
+
                   console.log(JSON.stringify(this.imgLinesArray));
-                  console.log(JSON.stringify(this.tecladoReplicant) );
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas) );
                   return;
                 }
 
@@ -1488,9 +1504,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       } 
                     } 
 
+                    
                 }    
-               
-                console.log(JSON.stringify(this.tecladoReplicant) );
+                
+                
+                  if(!this.checkLineHasImage(sourceY)){
+                    this.changeLineSize2(sourceY, 'default');
+                  } else {
+                    this.changeLineSize2(sourceY, 'imgSize');
+                  }
+              
+
+                console.log(JSON.stringify(this.tecladoReplicant.teclas) );
                 console.log(JSON.stringify(this.imgLinesArray));
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
    
@@ -1875,37 +1900,40 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let height = result[5];
               let width = result[6];
               
-              
 
-              if(height > this.imgMaxHeightSize && this.imgMaxHeightSize < 150) this.imgMaxHeightSize = height;
-              if(width > this.imgMaxWidthSize && this.imgMaxWidthSize < 150) this.imgMaxWidthSize = width;
+              console.log("ALTURA: " + height + " LARGURA: " + width);
 
-
-              //console.log("TAM MAX  h: "+this.imgMaxHeightSize +' w: ' +this.imgMaxWidthSize);
-              // if(height > width && height > 150) {
-              //   height = 150;
-              //   width = 150 - (width/150);
-              // }  else if (width > height && width > 150){
-              //   width = 150;
-              //   height = 150 - (height/150);
-              // }
-
-              
-              if(height > width) {
-                //height = 150;
-                height = this.keysHeightSize;
-                //width = 150 - (width/150);
-                width = this.keysHeightSize - (this.keysWidthSize/this.keysHeightSize);
-              }  else {
-                //width = 150;
-                width = this.keysWidthSize;
-                //height = 150 - (height/150);
-                height = this.keysWidthSize - (this.keysHeightSize/this.keysWidthSize);
+              console.log("KEY SIZE: " + this.keysWidthSize);
+              let maxAdmissibleSize = this.keysWidthSize;
+              let greaterDimension, smallerDimension;
+              if(height > width){
+                greaterDimension = height;
+                smallerDimension = width;
+              } else {
+                greaterDimension = width;
+                smallerDimension = height;
               }
-  
-
-              //console.log(result[5] + ' ' + result[6]);
               
+              let conversionFactor = smallerDimension / greaterDimension;
+
+              if(height > maxAdmissibleSize) { 
+                height = maxAdmissibleSize;
+                width = maxAdmissibleSize * conversionFactor;
+
+              } else if(width > maxAdmissibleSize){
+                width = maxAdmissibleSize;
+                height = maxAdmissibleSize * conversionFactor;
+              }
+
+              if(height > this.imgMaxHeightSize){
+                this.imgMaxHeightSize = height;
+              }
+
+              if(width > this.imgMaxWidthSize){
+                this.imgMaxWidthSize = width;
+              }
+
+              console.log("NOVAS DIMNESÕES: " + height + 'x' + width); 
 
               if(buttonText === undefined) buttonText = " ";
               if(buttonCaption === undefined) buttonCaption = " ";
@@ -1934,8 +1962,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 let el = sEl[<number>formula].cloneNode(true);
 
 
-                
-
   
                 if($(el).find('input')[0]){
        
@@ -1946,25 +1972,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   } else {
                     $($(el).find('input')[0]).attr('value', '');
                   }    
-                  //console.log(imgUrl);
-                  //$($(el).find('input')[0]).attr('background-image', imgUrl);
                   
-                  //$($(el).find('input')[0]).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
-                  //$($(el).find('input')[0]).css("background-size", "100% 100%");
-                  
-                  //$($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
-                  //console.log("WIDTH: " + width);
                   if(imgUrl){
                       this.imgLinesArray.push(this.y);
                       console.log(JSON.stringify(this.imgLinesArray));
-                      //$($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
-                      //$($(el)).css("background-size", "100% 100%");
-                      //$($(el)).css("height", height);
-                      //$($(el)).css("width", width);
-                     
-                      //this.changeDragulaBackground( $($(el)), imgUrl, height, width, 100, 100);
                       
-                      this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.TAMANHO_DE_TESTE, width*0.9, 100, 100);
+                      this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
                       $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
                       $($(el).find('input')[0]).attr('display', 'none');
                 } 
@@ -1982,23 +1995,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   } else {
                     $($(el).find('button')[0]).attr('value', '');
                   }        
-                  //$($(el).find('button')[0]).attr('background-image', imgUrl);
-                  //$($(el).find('button')[0]).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
-                  //$($(el).find('button')[0]).css("background-size", "100% 100%");
-                  //$($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
+                  
                   if(imgUrl){
                     this.imgLinesArray.push(this.y);
                     
                     console.log(JSON.stringify(this.imgLinesArray));
-
-                    //$($(el)).css("background", "url(data:image/png;base64,"+ imgUrl +") no-repeat");
-                    //$($(el)).css("background-size", "100% 100%");
-                    //$($(el)).css("height", height);
-                    //$($(el)).css("width", width);
-
-
-                    //this.changeDragulaBackground( $($(el)), imgUrl, height, width, 100, 100);
-                    this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.TAMANHO_DE_TESTE, width*0.8, 100, 100);
+                    this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
                     $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
                     $($(el).find('button')[0]).attr('display', 'none');
                   } 
@@ -2007,14 +2009,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 console.log("Dimensões recebidas: " + height + 'x' + width);
 
                 this.tecladoReplicant.action[y][x] = buttonAction;
-                if(imgUrl){
-                  this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+height+'#'+width ;
-                } else {
-                  this.tecladoReplicant.teclas[y][x] = buttonCaption;
-                }  
+                this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+height+'#'+width ;
                 this.tecladoReplicant.text[y][x] = buttonText;
                 this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
-                //console.log(buttonImage);
 
                 
                 console.log(JSON.stringify(this.tecladoReplicant.teclas));
@@ -2034,155 +2031,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       console.log("TAMANHO: " + this.TAMANHO_DE_TESTE);
                   for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
                     for(let col=0; col < this.globColumnQnty ; col++){
-                      //console.log(this.imgLinesArray[imgLine]);
+                      
                         let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
-                        $($(sElContent)[formula]).css('height', this.TAMANHO_DE_TESTE);
+                        $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
                         $($(sElContent)[formula]).css('width', this.keysWidthSize);
                         $($(sElContent)[formula]).css('text-align', 'center');
                         $($(sElContent)[formula]).css("background-color", '#62FA02');
-                        $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.TAMANHO_DE_TESTE);
-                        $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.TAMANHO_DE_TESTE);
+                        $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+                        $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
 
                         console.log('ARRAY INSERT: ' + this.imgLinesArray[imgLine]);
                         $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
                         $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
                     }    
                   }
+                  
                 }
-
-
-                // if(imgUrl){
-                //       let sElContent = $("[id=content]");
-                //       let sElLines = $("[id=blankLines]");
-                //       let sElRows = $("[id=blankRows]");
-                //       let sElNone = $("[id=blankNone]");
-      
-
-                //       for(let line = 0; line < this.imgLinesArray.length; line++){
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                //           this.teclado.teclas[this.imgLinesArray[line]].pop();
-                          
-
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //           this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-                //       }  
-
-
-                //       for(let j = 0; j<= sElRows.length ; j++){
-                //         if(this.imgLinesArray.includes(j.toString())) {
-                //           continue;
-                //         } else {
-                //           if(j!==0){
-                //             //$($(sElRows)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
-                //             //$($(sElLines)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
-
-                //             // $($(sElRows)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
-                //             // $($(sElLines)[j]).css("top", -Math.floor(height/2)+(45 +20 + 7) )
-
-                //             $($(sElRows)[j]).css("margin-top", -Math.floor(height/2)+(45 +22 + 7) );
-                //             $($(sElLines)[j]).css("margin-top", -Math.floor(height/2)+(45 +22 + 7) );
-                            
-                //             //$($(sElRows)[j]).css("top", '-50px' );
-                //             //$($(sElRows)[j]).css("height", '90px' );
-                         
-
-                //             //$($(sElLines)[j]).css("top", '-50px' );
-                //             //$($(sElLines)[j]).css("height", '90px' );
-                         
-                //               //$($(sElRows)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
-                //               //$($(sElLines)[j]).css("bottom", -Math.floor(height/2)+(45 + 23 + 7));
-               
-                //           }    
-                //         }
-                //       }   
-
-                //       for(let j = 0; j< Math.floor(sElContent.length/this.globColumnQnty) ; j++){
-                //         for(let col = 0; col < this.globColumnQnty; col++){
-             
-                //             let found = false;
-                //             for(let z = 0 ; z < this.imgLinesArray.length ; z++){
-                //                if(j < this.imgLinesArray[z]) found = true;
-                //             }
-
-                //             if(found) continue;
-
-                //             if(this.imgLinesArray.includes(j.toString())) {
-                //               continue;
-                //             } else {
-                //               formula = this.globColumnQnty*Number(j)+Number(col);
-                            
-                //               //if(j !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+(22+ 7) );
-                              
-                              
-                //               //$($(sElRows)[j]).css("bottom", -Math.floor(height/2)+(45 + 20 + 7));
-                //               //$($(sElLines)[j]).css("bottom", -Math.floor(height/2)+(45 + 20 + 7));
-
-                        
-                //               $($(sElContent)[formula]).css("background-color", 'blue');
-                //               $($(sElContent)[formula]).attr("tooltip", 'Duplo clique para editar.');
-                //             } 
-                //         }
-                //       }   
-
-
-
-                //       for(let line = 0; line < this.imgLinesArray.length; line++){
-                //          for(let col = 0; col < this.globColumnQnty; col++){
-
-                          
-                //           let string = '.'+col+'#'+line+' tamanho-button-especial';
-                //           let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
-         
-                //          // console.log(formula);
-
-                         
-                //          this.changeDragulaElSize( $($(sElContent)[formula]), height, width);
-
-                         
-                //           //$($(sElContent)[formula]).css("height", height);
-                //           //$($(sElContent)[formula]).css("width", width);
-                          
-
-                //           this.changeDragulaElSize( $($(sElLines)[this.imgLinesArray[line]]), height, -1);
-                //           this.changeDragulaElSize( $($(sElRows)[this.imgLinesArray[line]]), height, -1);
-
-                //           //$($(sElLines)[this.imgLinesArray[line]]).css("height", height);
-                //           //$($(sElRows)[this.imgLinesArray[line]]).css("height", height);
-                         
-                         
-                //           //$($(sElRows)[this.imgLinesArray[line]]).css("bottom", "8px");
-                          
-                //            $($(sElRows)[this.imgLinesArray[line]]).css("top", "1px");
-                //            $($(sElRows)[this.imgLinesArray[line]]).css("margin-bottom", "7px");
-
-                //            $($(sElLines)[this.imgLinesArray[line]]).css("top", "1px");
-                //            $($(sElLines)[this.imgLinesArray[line]]).css("margin-bottom", "7px");
-
-                //            if(!this.imgIsModified.includes(this.imgLinesArray[line].toString()) && this.imgLinesArray[line] !== null ){
-                //               this.imgIsModified.push(this.imgLinesArray[line]);
-                //            }
-
-                //           if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 23 + 7))) ;
-                //           $($(sElContent)[formula]).css("background-color", '#62FA02');
-  
-                //           }
-                          
-                //          } 
-                //       }
-
-                //       this.imgLinesArray = new Array();
-
 
 
               } else {
@@ -2210,7 +2074,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 this.tecladoReplicant.action[y][x] = buttonAction;
                 this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
-                console.log(JSON.stringify(this.tecladoReplicant));
+                //console.log(JSON.stringify(this.tecladoReplicant));
  
               }
 
@@ -2221,39 +2085,24 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
-
-
-
-
-
-
-
-
       public changeLineSize2(targetY: number, config: string){
         let sElContent = $("[id=content]");
         let sElLines = $("[id=blankLines]");
         let sElRows = $("[id=blankRows]");
         let sElNone = $("[id=blankNone]");
 
-        //console.log("KEY SIZE: " + this.keysSize);
         if(config === 'default'){
-              //for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
+
                 for(let col=0; col < this.globColumnQnty ; col++){
                   
                     let formula = this.globColumnQnty*Number(targetY)+Number(col);
                     $($(sElContent)[formula]).css('height', this.keysHeightSize);
                     $($(sElContent)[formula]).css('width', this.keysWidthSize);
                     $($(sElContent)[formula]).css("background-color", 'orange');
-                    //$($(sElLines)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
-                    //$($(sElRows)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
 
                     $($(sElLines)[targetY]).css('height', this.keysHeightSize);
                     $($(sElRows)[targetY]).css('height', this.keysHeightSize);
-                    //$($(sElLines)[targetY]).css('width', '100%');
-                    //$($(sElRows)[targetY]).css('width', '100%');
-
-                    // $($(sElLines)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
-                    // $($(sElRows)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
+   
                     console.log("TARGET: " + targetY);
                     $($(sElLines)[targetY]).css('margin-bottom', 4 );
                     $($(sElRows)[targetY]).css('margin-bottom', 4 );
@@ -2261,22 +2110,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               //}
         } else if( config === 'imgSize'){
                   console.log("TAMANHO: " + this.TAMANHO_DE_TESTE);
-              //for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
+              
                   for(let col=0; col < this.globColumnQnty ; col++){
                     
                   let formula = this.globColumnQnty*Number(targetY)+Number(col);
-                  $($(sElContent)[formula]).css('height', this.TAMANHO_DE_TESTE);
+                  $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
                   $($(sElContent)[formula]).css('width', this.keysWidthSize);
                   $($(sElContent)[formula]).css("background-color", '#62FA02');
-                  //$($(sElLines)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
-                  //$($(sElRows)[this.imgLinesArray[targetY]]).css('height', this.TAMANHO_DE_TESTE);
 
-                  $($(sElLines)[targetY]).css('height', this.TAMANHO_DE_TESTE);
-                  $($(sElRows)[targetY]).css('height', this.TAMANHO_DE_TESTE);
-
-                  // $($(sElLines)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
-                  // $($(sElRows)[this.imgLinesArray[targetY]]).css('margin-bottom', 4);
-                 
+                  $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize);
+                  $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize); 
                   
                   $($(sElLines)[targetY]).css('margin-bottom', 4 );
                   $($(sElRows)[targetY]).css('margin-bottom', 4 );
@@ -2317,197 +2160,23 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         //console.log(this.exist);
       }
 
-      public checkLineHasImage(Y: number, X: number, location: string) {
-          for(let z = 0; z < this.tecladoReplicant.teclas[Y].length; z++){
-           // if(location === 'drain') console.log("VALOR NOS DRAINS: [" + this.tecladoReplicant.teclas[Y][z] +'] ' );
-            //if(location === 'source') console.log("VALOR NOS SOURCES: [" + this.tecladoReplicant.teclas[Y][z]+'] ' + ' ' + Y + '  ' + z);
-            //console.log("X: " + X + ' z: ' + z);
-            if(z.toString() === X.toString()) {
-              //console.log('ignora');
-              //continue;
-            } else if(this.tecladoReplicant.teclas[Y][z].split('$')[0] === '*img'){//} && z!== X) {
-              //console.log("-------------------------------");
-              // if(location ==='drain'){
-              //   console.log("TEM IMAGEM EM ALGUM LUGAR DO DRAIN");
-              // } else if ( location === 'source'){
-              //   console.log("TEM IMAGEM EM ALGUM LUGAR DO SOURCE");
-              // }
-              //if(location !== 'drain') console.log("VALOR DO SOURCE: [" + this.tecladoReplicant.teclas[Y][X]+'] '  + ' ' + Y + '  ' + X );
-              console.log("LINHA TEM IMAGEM!");
+      public checkLineHasImage(Y: number) {
+        //console.log(JSON.stringify(this.tecladoReplicant.teclas) );
+          
+        for(let z = 0; z < this.tecladoReplicant.teclas[Y].length; z++){
+
+             if(this.tecladoReplicant.teclas[Y][z].split('$')[0] === '*img'){//} && z!== X) {
+
+              console.log("LINHA " + Y + " TEM IMAGEM!");
               return true;
             } 
+          
           }
-          // console.log("-------------------------------");
-          // if(location ==='drain'){
-          //   console.log("NãO TEM IMAGEM EM NENHUM LUGAR DO DRAIN");
-          // } else if ( location === 'source'){
-          //   console.log("NÃO TEM IMAGEM EM NENHUM LUGAR DO SOURCE");
-          // }
 
-          //let index = this.imgLinesArray.indexOf(Y);
-          //this.imgLinesArray.splice(index, 1);
-          console.log("LINHA NÃO TEM IMAGEM!");
+
+          console.log("LINHA " + Y +  " NÃO TEM IMAGEM!");
           return false;
     }
 
-    // public changeLineSize(targetY: number, config: string){
-    //      if(config === 'default'){
-           
-    //     //   console.log("DIMINUINDO LINHA");
-    
-    //     //   let sElContent = $("[id=content]");
-    //     //   let sElLines = $("[id=blankLines]");
-    //     //   let sElRows = $("[id=blankRows]");
-    //     //   let sElNone = $("[id=blankNone]");
-    //     //   let height = 45  + 3;
-    //     //   let width = 50;
-
-          
-    //     //   for(let line = 0; line < this.imgLinesArray.length; line++){
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-    //     //     this.teclado.teclas[this.imgIsModified[line]].push('');
-            
-
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     //     this.tecladoReplicant.teclas[this.imgIsModified[line]].push('');
-    //     // }  
-
-    //     // console.log("MODIFICADO:");
-    //     // console.log(JSON.stringify(this.imgIsModified));
-
-    //     //     for(let col = 0; col < this.globColumnQnty; col++){
-             
-    //     //       let formula = this.globColumnQnty*Number(targetY)+Number(col);
-
-    //     //       this.changeDragulaElSize( $($(sElContent)[formula]), height, width);
-    //     //       $($(sElContent)[formula]).css("background-color", 'orange');
-    //     //     }
-    //     //       this.changeDragulaElSize( $($(sElLines)[targetY]), height, -1);
-    //     //       this.changeDragulaElSize( $($(sElRows)[targetY]), height, -1);
-    
-         
-    //     //   $($(sElRows)[targetY]).css("margin-top", '4px');
-
-          
-
-    //     //   $($(sElLines)[targetY]).css("margin-top", '4px');
-
-         
-        
-    //     //  console.log("--------------DEPOIS----------");
-    //     //  console.log(JSON.stringify(this.tecladoReplicant.teclas));
- 
-    //     //    console.log("ESTAMOS EM " + targetY);  
-
-
-
-    //      } else if (config === 'imgSize'){
-
-    //       console.log("AUMENTANDO LINHA");
-    //       let sElContent = $("[id=content]");
-    //       let sElLines = $("[id=blankLines]");
-    //       let sElRows = $("[id=blankRows]");
-    //       let sElNone = $("[id=blankNone]");
-    //       let height = this.imgMaxHeightSize;
-    //       let width = this.imgMaxWidthSize;
-
-
-    //       if(height > width) {
-    //         height = 150;
-    //         width = 150 - (width/150);
-    //       }  else {
-    //         width = 150;
-    //         height = 150 - (height/150);
-    //       }
-
-    //       console.log("--------------ANTES----------");
-    //       console.log(JSON.stringify(this.tecladoReplicant.teclas));
-
-    //       this.imgLinesArray.push(targetY);
-    //       for(let line = 0; line < this.imgLinesArray.length; line++){
-
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-    //         this.teclado.teclas[this.imgLinesArray[line]].pop();
-            
-
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //         this.tecladoReplicant.teclas[this.imgLinesArray[line]].pop();
-    //     }  
-
-    //       console.log("ESTAMOS EM " + targetY);
-
-          
-    //       //for(let col = 0; col < this.globColumnQnty; col++){
-          
-    //       for(let col = 0; col < this.globColumnQnty; col++){////////////////////////////////////////Não Esquecer de alterar
-             
-    //           let formula = this.globColumnQnty*Number(targetY)+Number(col);
-    //           // $($(sElLines)[formula]).css("height", '150px');
-    //           // $($(sElRows)[formula]).css("height", '150px');
-    //           this.changeDragulaElSize( $($(sElContent)[formula]), height, width);
-    //           $($(sElContent)[formula]).css("background-color", '#62FA02');
-    //         }
-
-    //         for(let m = 0; m < this.imgIsModified.length ; m++){
-    //           if(this.markedTarget < this.imgIsModified[m]){
-    //             this.markedTarget = this.imgIsModified[m];
-    //           }
-    //         }
-    //         if(targetY > this.markedTarget){
-
-    //         }
-
-    //           this.changeDragulaElSize( $($(sElLines)[targetY]), height, -1);
-    //           this.changeDragulaElSize( $($(sElRows)[targetY]), height, -1);
-          
-    //       //$($(sElRows)[0]).css("top", "1px");
-    //       $($(sElRows)[targetY]).css("margin-bottom", '4px');
-
-    //       //$($(sElLines)[0]).css("top", "1px");
-    //       $($(sElLines)[targetY]).css("margin-bottom", '4px');
-
-
-
-
-
-
-
-
-    //       if( this.imgLinesArray[targetY] !== null)  this.imgIsModified.push(targetY);
-
-    //       console.log("MODIFICADO:");
-    //       console.log(JSON.stringify(this.imgIsModified));
-    //       console.log(JSON.stringify(this.tecladoReplicant.teclas));
-
-    //       console.log("LINES ARRAY: ");
-    //       console.log(JSON.stringify(this.imgLinesArray));
-    //      //if(line !== 0) $($(sElContent)[formula]).css("top", Math.floor(height/2)+((line+1)*(45+ 23 + 7))) ;
-         
-          
-
-    //     }       
-    // }    
       
 }

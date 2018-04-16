@@ -84,7 +84,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     ngOnDestroy() {
         //Called once, before the instance is destroyed.
         //Add 'implements OnDestroy' to the class.
-        this.saveButtonConfiguration(true);
+        //this.saveButtonConfiguration(true);
         this.captionSubscribe.unsubscribe();
     }
 
@@ -170,19 +170,37 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 1000000) {
             this.bigImage = false;
             var reader = new FileReader();
+            let self = this;
+            //var img = new Image();
             reader.onload = () => {    
                 var img = new Image();
-                img.src = reader.result;            
+                img.src = reader.result;           
+                //console.log("ALTURA: " + img.height + "LARGURA: " + img.width);
                 this.imageFile.content = reader.result.substring((reader.result.indexOf(this.base64Token) + this.base64Token.length));
-                this.height = img.height;
-                this.width = img.width;
+                
+                //let self = this;
+                
+
+                self.height = img.height;
+                self.width = img.width;
+                
                 this.imageFile.name = fileInput.target.files[0].name;
                 this.fileLoaded = true;
                 //this.imgUrl = 'data:image/png;base64,'+ this.imageFile.content;
                 this.imgUrl = this.imageFile.content;
                 this.buttonImage = 'data:image/png;base64,'+ this.imageFile.content;
+
+                img.onload = function() {
+                    self.height = img.height;
+                    self.width = img.width;
+                    console.log(img.height + 'x' + img.width);
+                    self.saveButtonConfiguration(true);
+                 };
+                 img.src = reader.result;
             };
-            reader.readAsDataURL(fileInput.target.files[0]);          
+
+            reader.readAsDataURL(fileInput.target.files[0]);  
+            
         } else {
             this.bigImage = true;
         }
