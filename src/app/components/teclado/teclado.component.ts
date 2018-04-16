@@ -367,7 +367,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.engine = new OpenFacEngine(this.config);
         this.engine.DoCallBack(this.DoCallBack.bind(this));
         this.engine.Start();
-        this.adjustKeys();
+        //this.adjustKeys();
         // this.configureImages();
   }
 
@@ -402,7 +402,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.engine.Start();  
 
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
-        this.adjustKeys();
+        //this.adjustKeys();
 
         // //CONFIGURA ASPECTO DAS IMAGENS
         // this.configureImages();
@@ -416,6 +416,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.engine.CalculateNextLine();
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
 
+        this.adjustKeys();
         // console.log("--------------LINHA-----------------");
         // console.log(JSON.stringify(this.teclado.teclas) );
         // console.log(JSON.stringify(this.teclado.text) );
@@ -468,7 +469,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.engine.CalculateNextButton();
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeColumns*1000);
 
-
+        this.adjustKeys();
         // console.log("---------------COLUNA----------------");
         // console.log(JSON.stringify(this.teclado.teclas) );
         // console.log(JSON.stringify(this.teclado.text) );
