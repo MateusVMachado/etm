@@ -2,11 +2,11 @@
 <div class="container-fluid teclado-container" id="teclado-container" onload="getGPS()">
   <div style="z-index: 0">
     
-    <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px">
+    <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px" id="sElRows">
 
-      <div class="col-md-12 line">
+      <div class="col-md-12 line" id="sElLines">
           <div class="tamanho-button" *ngFor="let key of row; index as i">
-          <div *ngIf="i <= 14" >
+          <div *ngIf="i <= 14">
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 
                                   (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'" *ngIf="key == '*tab'"
@@ -29,10 +29,8 @@
                                                     (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
               *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
                                       && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-                                      && key != '*arrowdown' && key != '*arrowright' && key === '*img'" 
-              type="button" class="btn button-keyboard" value="{{ key }}" style="background: url(assets/images/gamepad.png) no-repeat scroll;  
-                                                                                    text-align:center; margin-left: auto; margin-right: auto;
-                                                                                    width: 50%;" /> 
+                                      && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] === '*img'" 
+              type="button" class="btn button-keyboard "  id="images{{iR}}x{{i}}"  /> 
                                                                                     
 
 
@@ -40,9 +38,10 @@
                                                     (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
               *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
               && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-              && key != '*arrowdown' && key != '*arrowright' && key !== '*img'" 
-              type="button" class="btn button-keyboard" value="{{ key }}"/> 
+              && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] !== '*img'" 
+              type="button" class="btn button-keyboard" value="{{ key }}" id="notImage"/> 
                                             
+          
 
 
             <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? 'white': 

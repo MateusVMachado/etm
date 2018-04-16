@@ -1613,6 +1613,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       }
 
+      console.log("TECLADO FINAL:")
+      console.log(JSON.stringify(finalKeyboard) )
 
       if(totalLines === 0) {
         let message = this.messageService.getTranslation('MENSAGEM_SALVAR_TECLADO_VAZIO')
@@ -1887,6 +1889,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
               let buttonText = "";
               buttonText = result[0];
+
+              console.log("TEXTO: " + buttonText);
               let buttonCaption = "";
               buttonCaption = result[1];
 
