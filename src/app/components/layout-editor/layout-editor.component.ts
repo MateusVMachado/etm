@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as $ from 'jquery';
@@ -22,7 +22,7 @@ import { LayoutEditorService } from './layout-editor.service';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { LayoutButton, LayoutLine, OpenFACLayout } from './layout.model';
 import { SaveModalComponent } from './save-layout/save-modal.component';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-layout-editor',
@@ -107,9 +107,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private modalService: NgbModal,
                 private sideBarService: SideBarService,
                 private captionTextService: CaptionTextService,
-                private backLoggerService: BackLoggerService) {
+                private backLoggerService: BackLoggerService,
+                private cdr: ChangeDetectorRef) {
       super(injector);       
                   
+      
      
 
       
@@ -282,7 +284,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       for(let line = 0; line < this.teclado.teclas.length; line++){
         for(let col = 0; col < this.teclado.teclas[line].length; col ++){
           if(this.tecladoReplicant.teclas[line][col].split('$')[0] === '*img'){
-            console.log("*img ENCONTRADO; LINHA: " + line);
               this.changeLineSize2(line, 'default');  
           }
         }
@@ -377,7 +378,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
                 
               } else {
-                el1 = sEl[0].cloneNode(true);
+                let formula = this.globColumnQnty*Number(x)+Number(y);
+                el1 = sEl[formula].cloneNode(true);
               }
               
         
@@ -398,7 +400,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           this.imgMaxWidthSize = width;
 
                           this.changeDragulaBackground( $($(el1)), replicantFromDatabase.image[x][y], height, width, 100, 100);
-                          $($(el1).find('button')[0]).attr('class', 'tamanho-button-especial-big');
+                          //$($(el1).find('button')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
+                          $($(el1).find('button')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
+                          //$(el1).find('button')[0].className = 'tamanho-button-especial-big' + ' ' + y + '#' + x + '';
                           $($(el1).find('button')[0]).attr('display', 'none');
                             if(this.checkLineHasImage(x)){
                               this.changeLineSize2(x, 'imgSize');
@@ -425,7 +429,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           this.imgMaxWidthSize = width;
 
                           this.changeDragulaBackground( $(el1), replicantFromDatabase.image[x][y], height, width, 100, 100);
-                          $($(el1).find('input')[0]).attr('class', 'tamanho-button-especial-big');
+                          //$($(el1).find('input')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
+                          $($(el1).find('input')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
+                          //$(el1).find('input')[0].className = 'tamanho-button-especial-big' + ' ' + y + '#' + x + '';
                           $($(el1).find('input')[0]).attr('display', 'none');
 
                           if(this.checkLineHasImage(x)){
@@ -447,7 +453,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       continue;
                     } 
 
-
+                    
        })
        
 
@@ -816,7 +822,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   if(isContent && !isCopy){
       
                                                                                                                 
-                                    if(DEBUG) console.log("MARK-DROP-15");
+                                    if(DEBUG) console.log("MARK-DROP-15A");
 
 
                                     this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX]; 
@@ -836,9 +842,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 } else if (isContent && isCopy){
             
                                                                                          
-                                  if(DEBUG)  console.log("MARK-DROP-15");
+                                  if(DEBUG)  console.log("MARK-DROP-15B");
 
-
+                                  
                                     this.tecladoReplicant.teclas[drainY][drainX] = trueValue;  
 
                                     
@@ -906,9 +912,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           $(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
                           //$($(value[1])[0]).css('display', 'none');
                           if($($(value[1])[0]).find('input')[0]){ 
-                                  $($(value[1])[0]).find('input')[0].className = 'tamanho-button-especial-big' + ' ' + drainX + '#' + drainY + '';
-                                  $($(value[1])[0]).find('input')[0].setAttribute('display', 'none');
-                                  $($($(value[1])[0]).find('input')[0]).attr('display', 'none');
+                                  $($($(value[1])[0]).find('input')[0]).css('class', 'tamanho-button-especial-big' + ' ' + drainX + '#' + drainY + '');
+                                 // $($(value[1])[0]).find('input')[0].setAttribute('display', 'none');
+                                 // $($($(value[1])[0]).find('input')[0]).attr('display', 'none');
                                   //$($($(value[1])[0]).find('input')[0]).css('display', 'none');
                           }          
         
@@ -922,7 +928,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
 
                   console.log(JSON.stringify(this.imgLinesArray));
-                  console.log(JSON.stringify(this.tecladoReplicant.teclas) );
+
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas));
+                  console.log(JSON.stringify(this.tecladoReplicant.text));
+                  console.log(JSON.stringify(this.tecladoReplicant.action));
+                  
                   return;
                 }
 
@@ -1515,7 +1525,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
               
 
-                console.log(JSON.stringify(this.tecladoReplicant.teclas) );
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas));
+                  console.log(JSON.stringify(this.tecladoReplicant.text));
+                  console.log(JSON.stringify(this.tecladoReplicant.action));
                 console.log(JSON.stringify(this.imgLinesArray));
                 objClass = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
    
@@ -1722,6 +1734,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let user = this.authService.getLocalUser();
       this.keyboardNamesSubscribe = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
             this.keyboardItems = result;
+            
       });
 
    }
@@ -1836,27 +1849,49 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     public editCaptionNText(event){
         
-        
+      
         this.showModal(CaptionTextModalComponent);
         
-        console.log(JSON.stringify(this.imgLinesArray));
+       // console.log(JSON.stringify(this.imgLinesArray));
+
+      //  console.log("CLASS NAME: " +event.target.className);
         let parts = event.target.className.split(' ');
 
         let text;
         let action;
         let image; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+        let teclas;
         if(parts[0].indexOf('#') !== -1){
+          if(parts[0].substring(0,1) === "@") parts[0] = parts[0].split('$')[1];
+
+       //   console.log("MARK1");
           let x = <number>parts[0].split('#')[0];
           let y = <number>parts[0].split('#')[1];
 
           this.x = x;
           this.y = y;
-          
+
+          teclas = this.tecladoReplicant.teclas[y][x];
           text = this.tecladoReplicant.text[y][x];
           action = this.tecladoReplicant.action[y][x];
           image = this.tecladoReplicant.image[y][x]; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
-    
+
+          //console.log(teclas + ', ' + text + ', ' + action + ', ' + image)
+          //if(text === '' && action === '' && image === '' && teclas === '') return;
+
+      //    console.log('-----SECTOR 1-------');
+          //console.log(JSON.stringify(this.tecladoReplicant.teclas));
+          //console.log(JSON.stringify(this.tecladoReplicant.text));
+          //console.log(JSON.stringify(this.tecladoReplicant.action));
+          
+          //console.log(text);
+          //console.log(action);
+          //console.log('[' + x + ',' + y + ']');
+          //console.log('-----END SECTOR 1-------');
         } else {
+          console.log("MARK2");
+          //if(parts[1].substring(0,1) === "@") parts[1] = parts[1].split('$')[1];
+
           let x = <number>parts[1].split('#')[0];
           let y = <number>parts[1].split('#')[1];
 
@@ -1864,10 +1899,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.x = x;
           this.y = y;
           
+          teclas = this.tecladoReplicant.teclas[y][x];
           text = this.tecladoReplicant.text[y][x];
           action = this.tecladoReplicant.action[y][x];
           image = this.tecladoReplicant.image[y][x]; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
-    
+          
+          //console.log(teclas + ', ' + text + ', ' + action + ', ' + image)
+          
+          
         }
 
         
@@ -1878,36 +1917,52 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         payload.push(text);
         payload.push(action);
         payload.push(image); ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+        payload.push(teclas); ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
-
-        this.captionTextService.emitCaptionText(payload);
+        //console.log("ANTES DE ENVIAR PAYLOAD");
+        //console.log("EVENT:");
+        //console.log(event);
+        //console.log("TEXT: " + text);
+        //console.log("ACTION: " + action);
+        //console.log("TECLAS: " + teclas);
         
+        //this.cdr.detectChanges();
+        this.captionTextService.emitCaptionText(payload);
+        //this.cdr.detectChanges();
         
 
         this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
+
+         // console.log("TEESSSSTTEEEEEE");
 
 
               let buttonText = "";
               buttonText = result[0];
 
-              console.log("TEXTO: " + buttonText);
+              //console.log("TEXTO: " + buttonText);
               let buttonCaption = "";
               buttonCaption = result[1];
 
+              //console.log("CAPTION: " + buttonCaption);
               let buttonAction = "";
               buttonAction = result[2];
 
               let buttonImage = "";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
               buttonImage = result[3];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
+
               let imgUrl = result[4];
               let height = result[5];
               let width = result[6];
               
+              let sysImg = result[7];
 
-              console.log("ALTURA: " + height + " LARGURA: " + width);
+              //console.log("RECEBIIDOSSSS");
+              //console.log("text: " + buttonText + ' caption: ' + buttonCaption + ' Action: ' + buttonAction);
 
-              console.log("KEY SIZE: " + this.keysWidthSize);
+              //console.log("ALTURA: " + height + " LARGURA: " + width);
+
+             // console.log("KEY SIZE: " + this.keysWidthSize);
               let maxAdmissibleSize = this.keysWidthSize;
               let greaterDimension, smallerDimension;
               if(height > width){
@@ -1937,35 +1992,46 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 this.imgMaxWidthSize = width;
               }
 
-              console.log("NOVAS DIMNESÕES: " + height + 'x' + width); 
+              //console.log("NOVAS DIMNESÕES: " + height + 'x' + width); 
 
               if(buttonText === undefined) buttonText = " ";
               if(buttonCaption === undefined) buttonCaption = " ";
               if(buttonAction === undefined || buttonAction === "") buttonAction = "Keyboard";
               if(buttonImage === undefined) buttonImage = " ";  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
-          
+              //console.log("TEXTO_1: " + buttonText);
 
               
               let parts = event.target.className.split(' ');
  
             
-      
+              console.log('PARTS: ' + parts[0]);
               if(parts[0].indexOf('#') !== -1){
-     
+                if(parts[0].substring(0,1) === "@") parts[0] = parts[0].split('$')[1];
+
                 let x = <number>parts[0].split('#')[0];
                 let y = <number>parts[0].split('#')[1];
                 
 
                 
                 let formula = this.globColumnQnty*Number(y)+Number(x);
-     
-                let sEl = $("[id=copy]").clone();
                 
 
+                let sEl = $("[id=copy]").clone();
+                
+                let el1 = document.getElementsByClassName('@copyArea$'+ x +'#'+ y +'')//.item(1).remove();
+
+                // for(let unit=0; unit < el1.length; unit++){
+                //   console.log(el1.item(unit));
+                // }
+               // console.log("DOCUMENT: " + el1.length );
+                if(el1.length > 1) el1.item(1).remove();
+                //console.log(el1.item(1));
  
                 let el = sEl[<number>formula].cloneNode(true);
-
-
+                //let string = '.@copyArea$'+ x +'#' + y;
+                //$(string).children().remove();
+                
+          
   
                 if($(el).find('input')[0]){
        
@@ -1977,12 +2043,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     $($(el).find('input')[0]).attr('value', '');
                   }    
                   
-                  if(imgUrl){
+                  if(imgUrl || sysImg){
                       this.imgLinesArray.push(this.y);
                       console.log(JSON.stringify(this.imgLinesArray));
                       
-                      this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
-                      $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big');
+                      if(sysImg){
+                        console.log(buttonImage);
+                        this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
+                      } else {
+                        this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
+                      }
+                      
+                      //this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
+                      //$($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big'  + ' ' + x + '#' + y + '');
+                      $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
                       $($(el).find('input')[0]).attr('display', 'none');
                 } 
 
@@ -2000,25 +2074,44 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     $($(el).find('button')[0]).attr('value', '');
                   }        
                   
-                  if(imgUrl){
+                  if(imgUrl || sysImg){
                     this.imgLinesArray.push(this.y);
                     
                     console.log(JSON.stringify(this.imgLinesArray));
-                    this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
-                    $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big');
+                    if(sysImg){
+                      console.log(buttonImage);
+                      this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
+                    } else {
+                      this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
+                    }
+                    
+                    //this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
+                    //$($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + x + '#' + y + '');
+                    $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
                     $($(el).find('button')[0]).attr('display', 'none');
                   } 
 
                 }
-                console.log("Dimensões recebidas: " + height + 'x' + width);
+              //  console.log("Dimensões recebidas: " + height + 'x' + width);
+
 
                 this.tecladoReplicant.action[y][x] = buttonAction;
-                this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+height+'#'+width ;
+                if(buttonCaption === '*img') {
+                  //this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+height+'#'+width ;
+                  this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+this.imgMaxHeightSize+'#'+this.imgMaxWidthSize ;
+                } else {
+                  this.tecladoReplicant.teclas[y][x] = buttonCaption;
+                }  
                 this.tecladoReplicant.text[y][x] = buttonText;
+                //console.log("TEXTO2: " + buttonText);
                 this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
                 
                 console.log(JSON.stringify(this.tecladoReplicant.teclas));
+                console.log(JSON.stringify(this.tecladoReplicant.text));
+                console.log(JSON.stringify(this.tecladoReplicant.action));
+                //console.log(JSON.stringify(this.tecladoReplicant.image));
+                
                 $(el).removeAttr('tooltip');
                 
                 
@@ -2027,19 +2120,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 
                 // //REDIMENSIONAMENTO DAS TECLAS
 
-                if(imgUrl){
+                if(imgUrl || sysImg){
                       let sElContent = $("[id=content]");
                       let sElLines = $("[id=blankLines]");
                       let sElRows = $("[id=blankRows]");
                       let sElNone = $("[id=blankNone]");
-                      console.log("TAMANHO: " + this.TAMANHO_DE_TESTE);
+                      //console.log("TAMANHO: " + this.TAMANHO_DE_TESTE);
                   for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
                     for(let col=0; col < this.globColumnQnty ; col++){
                       
                         let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
                         $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
                         $($(sElContent)[formula]).css('width', this.keysWidthSize);
-                        $($(sElContent)[formula]).css('text-align', 'center');
+                        //$($(sElContent)[formula]).css('text-align', 'center');
                         $($(sElContent)[formula]).css("background-color", '#62FA02');
                         $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
                         $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
@@ -2052,6 +2145,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   
                 }
 
+            
 
               } else {
                 //console.clear();
@@ -2075,6 +2169,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 this.tecladoReplicant.teclas[y][x] = buttonCaption;
                 this.tecladoReplicant.text[y][x] = buttonText;
+                //console.log("TEXTO3: " + buttonText);
                 this.tecladoReplicant.action[y][x] = buttonAction;
                 this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
