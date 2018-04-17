@@ -270,7 +270,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         $('#input-image').val('');
     }
 
-    public readLocalImg(){
+    public readLocalImg()  {
             this.imageFile = new Picture();
             let xhr = new XMLHttpRequest();       
             xhr.open("GET", this.sysImgPath, true); 
@@ -278,7 +278,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             let self = this;
             xhr.onload = function (e) {
                     let img = new Image();
-                    //console.log(this.response);
+                    console.log(xhr.response);
+                    
                     let reader = new FileReader();
                     reader.onload = function(event) {
                         let res = reader.result;
@@ -297,8 +298,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         //console.log(self.buttonImage);
                         //console.log(self.buttonImage);
                         //console.log("RESULT: " + res)
+                        
                     }
-                    let file = this.response;
+                    let file = xhr.response;
                     
                     reader.readAsDataURL(file)
             };
