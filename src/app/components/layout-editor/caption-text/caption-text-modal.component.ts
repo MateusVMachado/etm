@@ -42,7 +42,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public fileLoaded: Boolean = false;
     public saved: boolean = false;
 
-    public imgUrl: string = "";
+    public imgUrl: string;
     public height: number = 0;
     public width: number = 0;
 
@@ -61,7 +61,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                     
                         
-                        //console.log("RESULT 1: " + result[1]);
                         if(result[1].substring(0,1) === '*' && result[1] !== '*img'){
                             this.buttonCaption = "";
                             this.buttonText = "";
@@ -71,15 +70,20 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.buttonText = result[1];
                             this.buttonAction = result[2];
                             this.buttonImage = result[3];
+                            //if(this.buttonCaption.split('$')[0] === '*img')
                             if(this.buttonImage) {
                                 this.imagem = true;
                                 //console.log('\n'+this.buttonImage+'\n');
                                 this.imgUrl = this.buttonImage;
-                                
                             }    
+                            if(result[4].split('$')[0] === '*img'){
+                                this.imagem = true;
+                            } else {
+                                this.imagem = false;
+                            }
+
                         }
              
-    //                    console.log("TEXTO DO BOTÃO: " + this.buttonText);
 
                         if(this.buttonAction === "Keyboard"){
                             this.escrever = true;
@@ -94,8 +98,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.escrever = true;
                         }
 
-                        
-                        //this.imgPadrao = '1';
                     
                     })
 
@@ -104,12 +106,11 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     ngAfterContentInit() {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
         //Add 'implements AfterViewInit' to the class.
-        //this.imgPadrao = 1;   
-        //this.bsImg = 1;
     }
 
     ngOnInit() { 
-        if(this.sysImg) this.readLocalImg();
+        if(this.sysImg && !this.imgUrl) this.readLocalImg();
+        
         // this.imageFile = new Picture();
         // this.saved = false;
         // this.bigImage = false;
@@ -122,6 +123,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         //Add 'implements OnDestroy' to the class.
         //this.saveButtonConfiguration(true);
         this.captionSubscribe.unsubscribe();
+        console.log("DESTROYED");
         this.bsImg = 1;
     }
 
@@ -140,7 +142,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         
         let payload = new Array();    
         
-        if(this.buttonImage)this.buttonCaption = "*img";
+        if(this.buttonImage && this.imagem)this.buttonCaption = "*img";
 
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
@@ -163,6 +165,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         payload.push(this.width);
     
         payload.push(this.sysImg);
+        payload.push(this.imagem);
 
         this.layoutEditorService.emitLayoutEditorPayload(payload);  
         
@@ -226,32 +229,26 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             this.bigImage = false;
             var reader = new FileReader();
             let self = this;
-            //var img = new Image();
+            
             reader.onload = () => {    
                 var img = new Image();
                 img.src = reader.result;           
-                //console.log("ALTURA: " + img.height + "LARGURA: " + img.width);
+                
                 this.imageFile.content = reader.result.substring((reader.result.indexOf(this.base64Token) + this.base64Token.length));
-                
-                //let self = this;
-                
-
+            
                 self.height = img.height;
                 self.width = img.width;
                 
                 this.imageFile.name = fileInput.target.files[0].name;
                 this.fileLoaded = true;
-                //this.imgUrl = 'data:image/png;base64,'+ this.imageFile.content;
+            
                 this.imgUrl = this.imageFile.content;
                 this.buttonImage = 'data:image/png;base64,'+ this.imageFile.content;
-
-                //console.log(this.buttonImage);
 
                 img.onload = function() {
                     self.height = img.height;
                     self.width = img.width;
                     console.log(img.height + 'x' + img.width);
-                    //self.saveButtonConfiguration(true);
                  };
                  img.src = reader.result;
             };
@@ -264,13 +261,16 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public closePicture(){
-        this.sysImg = false;
+        this.sysImg = true;
         this.imageFile = new Picture();
         this.imgUrl = null;
         $('#input-image').val('');
+
+        if(this.sysImg) this.readLocalImg();
     }
 
     public readLocalImg()  {
+            //console.log("LOADING LOCAL IMAGE");
             this.imageFile = new Picture();
             let xhr = new XMLHttpRequest();       
             xhr.open("GET", this.sysImgPath, true); 
@@ -278,26 +278,22 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             let self = this;
             xhr.onload = function (e) {
                     let img = new Image();
-                    console.log(xhr.response);
+                    //console.log(xhr.response);
                     
                     let reader = new FileReader();
                     reader.onload = function(event) {
                         let res = reader.result;
                         self.imageFile.content =  reader.result.substring((reader.result.indexOf(self.base64Token) + self.base64Token.length));
-                        
-                        //self.imgUrl =  self.imageFile.content;
+
                         self.buttonImage = 'data:image/png;base64,' + self.imageFile.content;
 
                         img.onload = function() {
                             self.height = img.height;
                             self.width = img.width;
-                            console.log(img.height + 'x' + img.width);
-                            //self.saveButtonConfiguration(true);
+                            //console.log(img.height + 'x' + img.width);
+
                          };
                          img.src = reader.result;
-                        //console.log(self.buttonImage);
-                        //console.log(self.buttonImage);
-                        //console.log("RESULT: " + res)
                         
                     }
                     let file = xhr.response;
