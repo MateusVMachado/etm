@@ -673,6 +673,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               //console.log("SOURCE");
               if(this.checkLineHasImage(sourceY) ){
                 console.log("ATIVOU DEFAULT NO DROP")
+                console.log('sourceY: ' + sourceY);
+                console.log(JSON.stringify(this.imgLinesArray) );
                 //console.log("NÃO TEM IMAGEM NO SOURCE");
                 
                 this.changeLineSize2(sourceY, 'default');
@@ -801,6 +803,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           console.log($(value[1])[0].className);
                           let coord = $(value[1])[0].className.split(' ');
                           $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+
+                          $($(value[1])[0]).css('height', this.imgMaxHeightSize);
                           
                  
                   } else {
@@ -924,6 +928,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
        
                           } 
                           console.log("CLASS CHANGER");
+                          let coord = $(value[1])[0].className.split(' ');
+                          $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+                          $($(value[1])[0]).css('height', this.imgMaxHeightSize);
                           //$(value[1])[0].className = 'tamanho-button-especial-full' + ' ' + drainX + '#' + drainY + '';
                           //$($(value[1])[0]).css('display', 'none');
                           if($($(value[1])[0]).find('input')[0]){ 
@@ -937,12 +944,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                   console.log("CLASSE DO COPIADO: " + value[3].className);
 
-                  // if(!this.checkLineHasImage(sourceY)){
-                  //   console.log("ATIVOU DEFAULT 1")
-                  //   this.changeLineSize2(sourceY, 'default');
-                  // } else {
-                  //   this.changeLineSize2(sourceY, 'imgSize');
-                  // }
+                  if(!this.checkLineHasImage(sourceY)){
+                    console.log("ATIVOU DEFAULT 1")
+                    this.changeLineSize2(sourceY, 'default');
+                  } else {
+                    this.changeLineSize2(sourceY, 'imgSize');
+                  }
 
                   if(!this.checkLineHasImage(drainY)){
                       console.log("ATIVOU DEFAULT 1")
@@ -2195,7 +2202,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 //console.log(JSON.stringify(this.tecladoReplicant.image));
 
                 if(!normal){
-
+                  console.log("NORMAL");
                   if($(el).find('mat-icon')[0]) $(el).find('mat-icon')[0].remove();
                   
                   $(el).text(buttonCaption);
@@ -2207,11 +2214,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     $(el).attr('value', '');
                   }        
                   
-                  if( (imgUrl || sysImg ) & imagem){
+                  console.log("NORMAl -> imgUrl: " + imgUrl + ' sysImg: ' + sysImg + ' imagem: '+ imagem);
+                  if( (imgUrl !== "" || sysImg ) & imagem){
                     console.log("MARK-el-12");
                     this.imgLinesArray.push(this.y);
                     
                     console.log(JSON.stringify(this.imgLinesArray));
+                    console.log('sysImg: ' + sysImg);
                     if(sysImg){
                       console.log(buttonImage);
                       console.log("MARK-el-13");
@@ -2246,8 +2255,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 
                 // //REDIMENSIONAMENTO DAS TECLAS
-                console.log("redimensionamentos")
-                console.log('imgUlr: ' + imgUrl + ' sysImg: '+ sysImg + ' imagem: ' + imagem );
+                //console.log("redimensionamentos")
+                //console.log('imgUlr: ' + imgUrl + ' sysImg: '+ sysImg + ' imagem: ' + imagem );
 
                 if( ( imgUrl || sysImg ) && imagem ){
                       let sElContent = $("[id=content]");
@@ -2392,7 +2401,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
           }
 
-
+    
           console.log("LINHA " + Y +  " NÃO TEM IMAGEM!");
           return false;
     }

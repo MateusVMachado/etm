@@ -163,7 +163,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         
         payload.push(this.height);
         payload.push(this.width);
-    
+
+        if(!this.imagem) this.sysImg = false;
         payload.push(this.sysImg);
         payload.push(this.imagem);
 
