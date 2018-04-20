@@ -445,27 +445,29 @@ export class TecladoComponent implements OnInit, OnDestroy {
                     let sElLines = $('[id=sElLines]');
                     let sElRows = $('[id=sElRows]');
 
+                    console.log(this.teclado.teclas[line][col]);
+                    if(this.teclado.teclas[line][col].split('$')[0] === '*img'){
+                          let height =  this.teclado.teclas[line][col].split('$')[1].split('#')[0];
+                          let width = this.teclado.teclas[line][col].split('$')[1].split('#')[1];
+                          $(el).css("height", height);
+                          $(el).css("width", width);
 
-                    let height =  this.teclado.teclas[line][col].split('$')[1].split('#')[0];
-                    let width = this.teclado.teclas[line][col].split('$')[1].split('#')[1];
-                    $(el).css("height", height);
-                    $(el).css("width", width);
 
+                          $($(sElLines)[line]).css('height', height);
+                          $($(sElRows)[line]).css('height', height); 
 
-                    $($(sElLines)[line]).css('height', height);
-                    $($(sElRows)[line]).css('height', height); 
+                          
+                          $(el).css("background", "url("+ this.teclado.image[line][col] +") no-repeat");
+                          
+                          let params = <string>(100 + '% ' + 100 + '%');
+                          $(el).css("background-size", params);
+                          
 
-                    
-                    $(el).css("background", "url("+ this.teclado.image[line][col] +") no-repeat");
-                    
-                    let params = <string>(100 + '% ' + 100 + '%');
-                    $(el).css("background-size", params);
-                    
+                          $(el).css("transform", 'translateX('+ 20 +'%)');
 
-                    $(el).css("transform", 'translateX('+ 20 +'%)');
-
-                    $($(sElLines)[line]).css('margin-bottom', 4 );
-                    $($(sElRows)[line]).css('margin-bottom', 4 );
+                          $($(sElLines)[line]).css('margin-bottom', 4 );
+                          $($(sElRows)[line]).css('margin-bottom', 4 );
+                    }       
    
                   }
                 }
