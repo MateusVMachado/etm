@@ -16,14 +16,14 @@ import { DomSanitizer,  SafeHtml,  SafeUrl, SafeStyle } from '@angular/platform-
     styleUrls: ['./caption-text-modal.component.css']
 })
 export class CaptionTextModalComponent extends AppBaseComponent implements OnInit, OnDestroy, AfterContentInit {
+
     
-    //public isKeyboardName: boolean = true;
     public falar: boolean = false;
     public escrever: boolean = true;
     public imagem: boolean = false;
     public keyboardName: string = "";
 
-    //public imgPadrao: number = 1;
+    
     public bsImg: number;
     public sysImg: boolean = true;
     public sysImgPath: string;
@@ -46,6 +46,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public height: number = 0;
     public width: number = 0;
 
+    private timer: any; 
+    private counter: number;
+
     constructor(private activeModal: NgbActiveModal,
                 private layoutEditorService: LayoutEditorService,
                 private captionTextService: CaptionTextService,
@@ -53,10 +56,10 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                 private cdr: ChangeDetectorRef,
                 private sanitizer: DomSanitizer) {
                     super(injector)
-
+                    
                     this.bsImg = 1;
                     this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';    
-
+                    this.timer = setInterval(this.newCheckRound.bind(this), 100);
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                     
@@ -70,10 +73,10 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.buttonText = result[1];
                             this.buttonAction = result[2];
                             this.buttonImage = result[3];
-                            //if(this.buttonCaption.split('$')[0] === '*img')
+                            
                             if(this.buttonImage) {
                                 this.imagem = true;
-                                //console.log('\n'+this.buttonImage+'\n');
+                            
                                 this.imgUrl = this.buttonImage;
                             }    
                             if(result[4].split('$')[0] === '*img'){
@@ -104,27 +107,26 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                  }
 
     ngAfterContentInit() {
-        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-        //Add 'implements AfterViewInit' to the class.
+
     }
 
     ngOnInit() { 
+        
+
         if(this.sysImg && !this.imgUrl) this.readLocalImg();
         
-        // this.imageFile = new Picture();
-        // this.saved = false;
-        // this.bigImage = false;
-        
-        // this.imgPadrao = '1';
+
     }
 
     ngOnDestroy() {
-        //Called once, before the instance is destroyed.
-        //Add 'implements OnDestroy' to the class.
-        //this.saveButtonConfiguration(true);
+
         this.captionSubscribe.unsubscribe();
-        console.log("DESTROYED");
         this.bsImg = 1;
+        clearInterval(this.timer);
+    }
+
+    private newCheckRound(){
+        this.cdr.detectChanges();
     }
 
     public onChangeToggle(event){
@@ -156,8 +158,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
         payload.push(this.buttonImage);
 
-        //console.log("IMAGEM FINAL: ");
-        //console.log(this.buttonImage);
+
         
         payload.push(this.imgUrl);
         
@@ -190,19 +191,15 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
     public slideImage(direction: string){
         let image: number;
-        //this.bsImg = Math.floor((Math.random() * 14) + 1);
-        //this.bsImg = 1;
+
         if(direction === 'up'){
             if(this.bsImg === 1){
                 this.bsImg = 14;
             }else{
                 this.bsImg = this.bsImg - 1;
             }
-            //let url = 'assets/images/' + this.bsImg.toString() + '.png'
-            //this.imgUrl = '../../../assets/images/' + this.bsImg.toString() + '.png';
-            //this.buttonImage = '../../../assets/images/' + this.bsImg.toString() + '.png';
+
             this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';
-            //console.log(url);
             if(this.sysImg) this.readLocalImg();
             
         }else if(direction === 'down'){
@@ -211,11 +208,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             }else{
                 this.bsImg = this.bsImg + 1;
             }
-            //let url = 'assets/images/' + this.bsImg.toString() + '.png'
-            //this.imgUrl = '../../../assets/images/' + this.bsImg.toString() + '.png';
-            //this.buttonImage = '../../../assets/images/' + this.bsImg.toString() + '.png';
+
             this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';
-            //console.log(url);
+
             if(this.sysImg) this.readLocalImg();
             
         }
@@ -271,7 +266,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public readLocalImg()  {
-            //console.log("LOADING LOCAL IMAGE");
             this.imageFile = new Picture();
             let xhr = new XMLHttpRequest();       
             xhr.open("GET", this.sysImgPath, true); 
@@ -279,7 +273,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             let self = this;
             xhr.onload = function (e) {
                     let img = new Image();
-                    //console.log(xhr.response);
+   
                     
                     let reader = new FileReader();
                     reader.onload = function(event) {
@@ -291,7 +285,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                         img.onload = function() {
                             self.height = img.height;
                             self.width = img.width;
-                            //console.log(img.height + 'x' + img.width);
 
                          };
                          img.src = reader.result;
