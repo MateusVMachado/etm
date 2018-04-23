@@ -2,6 +2,7 @@ import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbMenuItem } from '@nebular/theme';
 import * as moment from 'moment';
+import * as $ from 'jquery';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { Subscription } from 'rxjs';
 
@@ -67,7 +68,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private userSession: UserSessionModel;
   private timeInterval: TimeIntervalUnit;
 
-  public once = true;
+  public once: number  = 0;
   public level: number;
 
   public configurations: any;
@@ -75,6 +76,19 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   public cursorPosition: number = 0;
   private maxLength: number = 0;
+
+  public image: boolean = false;
+
+  public imagesLinesArray = new Array();
+  public imagesColsArray = new Array();
+
+  private imgMaxHeightSize: number = 0;
+  private imgMaxWidthtSize: number = 0;
+
+  private globColumnQnty: number = 14;
+  private keyboardContainerSize: number;
+  private keysWidthSize: number;
+  private keysHeightSize: number = 48;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -92,6 +106,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
               this.timeInterval.inTime = moment().format("HH:mm:ss");
 
+              this.teclado.teclas = [];
+              this.teclado.text = [];
+              this.teclado.action = [];
+              this.teclado.image = [];
 
               let user = this.authService.getLocalUser();
               this.userSession.user = user.email; 
@@ -129,8 +147,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
                         if (this.KeyboardData[j].nameLayout === 'caps') continue;
                         if (this.target === this.KeyboardData[j].nameLayout) {
 
-                          this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]);
-
+                          this.convertLayoutToKeyboard(this.teclado, this.KeyboardData[j]); //// ALTERADO RECENTEMENTE
+                          
                           this.configService.saveOnlyLastKeyboard(this.teclado.type).subscribe();  
                           break;
                         }
@@ -163,11 +181,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(()=>{   });
 
      this.engine.Stop();
+     clearInterval(this.timerId);  
   }
 
-  ngOnInit() { }
-
-  ngAfterViewInit(){
+  ngOnInit() { ///////////////////////////////////// ALTERADO RECENTEMENTE DE ngAfterViewInit PARA ngOnInit ///////////////////////////////////
 
     this.teclado.teclas = [];
 
@@ -220,6 +237,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
                         
                   this.configureAll(editor);
+                  
 
               });
               
@@ -243,35 +261,57 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
                           this.configureSome(); 
                           this.tecladoService.emitTecladoReady(true);  
+
+                          
                       });    
                 });
 
         });
       }
     });
+
+
+    
+    this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container-editor')).width();
+      
+    //this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
+    this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*5.5) )/this.globColumnQnty;
+
   }
 
+  ngAfterViewInit(){
+    
+  }
 
   private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       this.openFacLayout = layout;
       this.teclado.teclas = [];
       this.teclado.text = [];
-      this.teclado.action = []; ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+      this.teclado.action = []; 
+      this.teclado.image = []; 
 
       for(let i = 0 ; i < layout.Lines.length; i++){ 
         let line = []; 
         let textL = []; 
-        let actionL = [];  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+        let actionL = [];  
+        let imageL = [];  
         for( let j = 0 ; j < layout.Lines[i].Buttons.length; j++){ 
           line.push(layout.Lines[i].Buttons[j].Caption); 
           textL.push(layout.Lines[i].Buttons[j].Text); 
-          actionL.push(layout.Lines[i].Buttons[j].Action);  ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
+          actionL.push(layout.Lines[i].Buttons[j].Action);  
+          if(layout.Lines[i].Buttons[j].Image !== undefined){
+            imageL.push(layout.Lines[i].Buttons[j].Image);  
+          }
+          
         } 
         this.teclado.teclas.push(line);  
         this.teclado.text.push(textL); 
-        this.teclado.action.push(actionL); ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
+        this.teclado.action.push(actionL); 
+        if(imageL.length > 0) this.teclado.image.push(imageL); 
       } 
       this.teclado.type = layout.nameLayout; 
+
+      
 
   }
 
@@ -349,7 +389,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
         this.engine = new OpenFacEngine(this.config);
         this.engine.DoCallBack(this.DoCallBack.bind(this));
         this.engine.Start();
-    
+        setTimeout(this.adjustKeys.bind(this), 1000); //Need to be executed after html elements rendering
+
   }
 
   private configureAll(editorInstance?: any) {
@@ -361,44 +402,263 @@ export class TecladoComponent implements OnInit, OnDestroy {
           OpenFacActionFactory.Register('KeyboardAndTTS', OpenFacActionKeyboardAndTTS, configArrayWriters);
         }
 
-        //if(OpenFacActionFactory.dicTypes.size >= 2){
-            clearInterval(this.timerId);
-            
-            let user = this.authService.getLocalUser();
-            let configJoystickArray = [this.tecladoService];
+     
+        clearInterval(this.timerId);
+        
+        let user = this.authService.getLocalUser();
+        let configJoystickArray = [this.tecladoService];
 
-            let configMicrophoneArray = [this.tecladoService, this.configService, this.level, this.audioContext];
-            
-            OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
-          
-            OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone, configMicrophoneArray);
-          
-            OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
-            
+        let configMicrophoneArray = [this.tecladoService, this.configService, this.level, this.audioContext];
+        
+        OpenFacSensorFactory.Register('Joystick', OpenFacSensorJoystick, configJoystickArray);
+      
+        OpenFacSensorFactory.Register('Microphone', OpenFacSensorMicrophone, configMicrophoneArray);
+      
+        OpenFacKeyboardFactory.Register('QWERT', OpenFacKeyboardQWERT);
+        
 
-            this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
-            this.engine = new OpenFacEngine(this.config);
-            this.engine.DoCallBack(this.DoCallBack.bind(this));
-            
-            this.engine.Start();  
+        this.config = new OpenFacConfig(this.configurations, this.openFacLayout); 
+        this.engine = new OpenFacEngine(this.config);
+        this.engine.DoCallBack(this.DoCallBack.bind(this));
+        
+        this.engine.Start();  
 
-            this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
-        //}           
+        this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
+
+
+        setTimeout(this.adjustKeys.bind(this), 1000); //Need to be executed after html elements rendering
+        
+
+      
   }
 
   private timer1_Tick(): void {
     if (this.engine !== null) {
       if (this.engine.CurrentState() == EngineState.LineDown) {
         clearInterval(this.timerId);  
+        
         this.engine.CalculateNextLine();
+        //if(this.teclado.teclas) this.applyLineColorFilter(this.activeLine.line+1, this.activeLine.col, 255, 255, 0, 0.3);
+        if(this.teclado.teclas) this.applyLineColorFilter(this.activeLine.line, this.activeLine.col, 255, 255, 0, 0.3);
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeLines*1000);
+
       }
       else if (this.engine.CurrentState() == EngineState.ColumnRight) {
         clearInterval(this.timerId);
+        
         this.engine.CalculateNextButton();
+        //if(this.teclado.teclas) this.applyImageColorFilter(this.activeLine.line, this.activeLine.col+1, 255, 0, 150, 0.3);
+        if(this.teclado.teclas) this.applyImageColorFilter(this.activeLine.line, this.activeLine.col, 255, 0, 150, 0.3);
         this.timerId = setInterval(this.timer1_Tick.bind(this), this.scanTimeColumns*1000);
+
       }
     }
   }
+
+  public adjustKeys(){
+        console.log("--------------ADJUST KEYS-----------------");
+        console.log(JSON.stringify(this.teclado.teclas) );
+        console.log(JSON.stringify(this.teclado.text) );
+        console.log(JSON.stringify(this.teclado.action) );
+
+        console.log('\nTAMANHO: ' + this.teclado.image.length + '\n')
+    
+        let values = []
+        for(let x = 0; x < this.teclado.teclas.length; x++){
+          values.push(this.teclado.teclas[x].length);
+          for(let y = 0 ; y < this.teclado.teclas[x].length; y++ ){
+            if(this.teclado.teclas[x][y].split('$')[0] === '*img' ){
+              if(!this.imagesLinesArray.includes(x)) this.imagesLinesArray.push(x);
+              if(this.imgMaxHeightSize < this.teclado.teclas[x][y].split('$')[1].split('#')[0]){
+                this.imgMaxHeightSize = this.teclado.teclas[x][y].split('$')[1].split('#')[0];
+              }
+              if(this.imgMaxWidthtSize < this.teclado.teclas[x][y].split('$')[1].split('#')[1]){
+                this.imgMaxWidthtSize = this.teclado.teclas[x][y].split('$')[1].split('#')[1];
+              }
+            }
+          }
+        }
+
+        console.log(values);
+        let sum = values.reduce(function(a, b) { return a + b; });
+        let avg = sum / values.length;
+        this.globColumnQnty = Math.floor(avg)
+        console.log('MAX_H: ' + this.imgMaxHeightSize + ' ' + 'MAX_W: ' + this.imgMaxWidthtSize)
+
+        if(this.teclado.image.length !== 0){
+
+                let sElLines = $('[id=sElLines]');
+                let sElRows = $('[id=sElRows]');
+                let sElouterBox = $('[id=outerBox]');
+                let sElNotImage = $('[id=notImage]');
+                for(let line = 0; line < this.teclado.teclas.length; line ++ ){
+                  for(let col = 0 ; col < this.teclado.teclas[line].length; col ++){
+                    let el = $('#images'+line+'x'+col)[0];
+
+                    console.log("LINE NO LOOP: " + line);
+
+                    if(this.teclado.teclas[line][col].split('$')[0] === '*img'){
+                          if(!this.imagesLinesArray.includes(line)) this.imagesLinesArray.push(line);
+                          if(!this.imagesColsArray.includes(col)) this.imagesColsArray.push(col);
+
+                          let height =  this.teclado.teclas[line][col].split('$')[1].split('#')[0];
+                          let width = this.teclado.teclas[line][col].split('$')[1].split('#')[1];
+                          $(el).css("height", height);
+                          $(el).css("width", width);
+                          
+                          if(height > this.imgMaxHeightSize){
+                            this.imgMaxHeightSize = height;
+                          }
+
+                          if(width > this.imgMaxWidthtSize){
+                            this.imgMaxWidthtSize = width;
+                          }
+                          
+
+
+                          $($(sElLines)[line]).css('height', height);
+                          $($(sElRows)[line]).css('height', height); 
+
+                          
+                          $(el).css("background", "url("+ this.teclado.image[line][col] +") no-repeat");
+                          //$(el).css("box-shadow", "inset 0 0 0 2000px rgba(255,0,150,0.3)");
+
+                          let params = <string>(100 + '% ' + 100 + '%');
+                          $(el).css("background-size", params);
+                          
+
+                          //$(el).css("transform", 'translateX('+ 20 +'%)');
+
+                          $($(sElLines)[line]).css('margin-bottom', 4 );
+                          $($(sElRows)[line]).css('margin-bottom', 4 );
+
+                    } else if(this.teclado.teclas[line][col].split('$')[0] !== '*img'){
+
+                        let formula = this.globColumnQnty*Number(line)+Number(col);
+                     
+                        console.log("ARRAY:")
+                        console.log(JSON.stringify(this.imagesLinesArray))
+                        console.log(line)
+                        console.log(this.imagesLinesArray.includes(line))
+
+                        if(this.imagesLinesArray.includes(line)){
+                          let el1 = $('#notImage'+line+'x'+col)[0];
+                          //let el1 = $(sElNotImage)[formula];
+                          //console.log("formula: " + formula)
+                          //console.log($(sElNotImage[formula]))
+                          //console.log("tam do array: " + sElNotImage.length);
+                          console.log(el1);
+
+                          // $(el).css("height", this.imgMaxHeightSize);
+                          // $(el).css("width", this.imgMaxWidthtSize); 
+                          $(el1).css('height', this.imgMaxHeightSize);
+                          $($(sElLines)[line]).css('height', this.imgMaxHeightSize);
+                          $($(sElRows)[line]).css('height', this.imgMaxHeightSize); 
+                        }
+                        //console.log(JSON.stringify(this.imagesLinesArray));
+                      //console.log("line: " + line);
+                      //console.log(this.imagesLinesArray.includes(line));
+                    }
+   
+
+
+
+                  }
+                }
+                // let ImagesArray = new Array();
+                // for(let line = 0; line < this.teclado.teclas.length; line++){
+                //   for(let col = 0; col < this.teclado.teclas[line].length; col++){
+                //     if(this.teclado.teclas[line][col].split("$")[0] === "*img"){
+                //       if(!ImagesArray.includes(line)) ImagesArray.push(line);
+
+                //     }
+                //   }
+                // }
+
+                // for(let lines = 0; lines < ImagesArray.length; lines++){
+                //   for(let col = 0 ; col < this.teclado.teclas[ImagesArray[lines]].length; col++ ){
+                //     if(this.teclado.teclas[ImagesArray[lines]][col].split("$")[0]  !== "*img"){
+
+                //     }
+                //   } 
+                // }
+
+        }   
+  }
+
+
+  private applyLineColorFilter(line: number, col: number, R: number, G: number, B: number, A: Number){
+      if(line - 1 < 0) {
+        line = this.teclado.teclas.length-1;
+      } else {
+        line = line - 1;
+      }  
+      for(let oneCol = 0; oneCol < 14; oneCol++){
+        let el1 = $('#images'+line+'x'+oneCol)[0];
+        $(el1).css("box-shadow", "inset 0 0 0 2000px rgba(" + 255 + ","+ 255 + "," + 255 + "," + 0.0 +")");
+      }
+    
+      console.log(JSON.stringify(this.imagesLinesArray) )
+
+      if(line + 1 === this.teclado.teclas.length) {
+        line = 0;
+      } else {
+        line = line + 1;
+      }        
+
+    //if(!this.imagesLinesArray.includes(line) ) return;;
+
+    for(let colIterate = 0; colIterate < 14; colIterate++){
+        let el = $('#images'+line+'x'+colIterate)[0];
+        //$(elAnterior).css("box-shadow", "inset 0 0 0 2000px rgba(" + R + ","+ G + "," + B + "," + A +")");
+        $(el).css("box-shadow", "inset 0 0 0 2000px rgba(" + R + ","+ G + "," + B + "," + A +")");
+    }    
+  }
+
+  private applyImageColorFilter(line: number, col: number, R: number, G: number, B: number, A: Number){
+
+    if(col - 1 < 0) {
+      col = this.teclado.teclas[line].length-1;  
+    } else {
+      col = col - 1;
+    }  
+    //for(let oneCol = 0; oneCol < 14; oneCol++){
+      console.log('COLUNA: ' + col);
+
+      
+          let el1 = $('#images'+line+'x'+col)[0];
+          $(el1).css("box-shadow", "inset 0 0 0 2000px rgba(" + 255 + ","+ 255 + "," + 0 + "," + 0.3 +")");
+   
+    //}
+
+    // if(col - 1 < 0) {
+    //   //line = 13;
+    // } else {
+    //   col = col + 1;
+    // }  
+
+    if(col + 1 === this.teclado.teclas[line].length ) {
+      col = 0;
+    } else {
+      col = col + 1;
+    }  
+    console.log('COLUNA: ' + col);
+
+    let el = $('#images'+line+'x'+col)[0];
+    //$(elAnterior).css("box-shadow", "inset 0 0 0 2000px rgba(" + R + ","+ G + "," + B + "," + A +")");
+    $(el).css("box-shadow", "inset 0 0 0 2000px rgba(" + R + ","+ G + "," + B + "," + A +")");
+    
+
+
+
+
+    // let el = $('#images'+line+'x'+col)[0];
+    // //$(elAnterior).css("box-shadow", "inset 0 0 0 2000px rgba(" + R + ","+ G + "," + B + "," + A +")");
+    // $(el).css("box-shadow", "inset 0 0 0 2000px rgba(" + R + ","+ G + "," + B + "," + A +")");
+
+
+
+
+}
 
 }

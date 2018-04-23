@@ -18,17 +18,20 @@
             </div>    
             <div>
                 <button class="button-keyboard-menu" (click)="removeLine()"><i class="ion-close-round" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_DEL_LINHA')}}</button>
-            </div>    
-            <!--<div>
-                <button class="button-keyboard-menu"><i class="far fa-image" style="font-size: 16px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_ADD_IMG') }}</button>
-            </div>-->
-            <div>   
-                <select id="loadKeyboard" style="width: 200px; height: 30px; margin: 5px 10px" [(ngModel)]="keyboardToEdit" [ngModelOptions]="{standalone: true}" (change)="updateReplicant()" (click)="reloadList()">
-                    <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
-                    <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard">
-                            {{keyboard}}
-                    </option>
-                </select>
+            </div>
+            <div>
+                    <button class="button-keyboard-menu" (click)="updateReplicant(keyboardToEdit)"><i class="icon ion-load-b" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_LOAD')}}</button>
+            </div>        
+            
+            <div>                   
+              
+                    <select id="loadKeyboard" style="width: 200px; height: 30px; margin: 5px 10px" [(ngModel)]="keyboardToEdit"  (click)="reloadList()">
+                        <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
+                        <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" value={{keyboard}}>
+                                {{keyboard}}
+                        </option>
+                    </select>
+                
             </div> 
         </div>
     </div>
@@ -118,16 +121,20 @@
         </div>
     </div>
 
-    <div class="box-teclado-bottom" style="height: 30%;">
+    <div id="outerBox" class="box-teclado-bottom" style="height: 30%;">
             <div class="teclado-container ">
-                    <div class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
-                        <div class="col-md-12 line" >
+                    <div id="blankRows" class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
+
+                        <div id="blankLines" class="col-md-12 lineBlanks">
                             <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
                                 *ngFor="let key of row; index as i" 
-                                [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)">
-                                <div class="none"></div>
+                                [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)" >
+                                <div id="none" class="none" ></div>
                             </div>
                         </div>
+                        
+                          
+
                     </div>
                 
             </div>

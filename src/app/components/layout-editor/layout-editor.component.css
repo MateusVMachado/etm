@@ -75,6 +75,26 @@
     border: 1 solid transparent;
 }
 
+
+.tamanho-button-especial-big{
+    display: none;
+    visibility: hidden;
+    background-color: white; 
+    color:black;
+    height:150px;
+    width: 150px;
+    position: relative;
+    top: 0;
+    margin-right: 6px; 
+    border-radius:  8px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1 solid transparent;
+}
+
 div[tooltip]:not([tooltip-persistent]):before {
     pointer-events: none;
     opacity: 0;
@@ -228,4 +248,17 @@ div[tooltip]:hover:before {
     margin-bottom: 7px;
     padding: 0; 
     height: 45px;
+}
+
+.lineBlanks{
+    position: relative;
+    margin-bottom: 7px;
+    padding: 0; 
+    height: 45px;
+}
+
+.row {
+
+    position: relative;
+
 }
