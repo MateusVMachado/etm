@@ -23,4 +23,5 @@ export class LayoutButton {
     public Caption: string;
     public Text: string;
     public Action: string;
+    public Image: string;
 }
