@@ -83,7 +83,8 @@ export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
         let u = new SpeechSynthesisUtterance();
         
         let voices = speechSynthesis.getVoices();
- 
+        
+
         let derangedVoice = voices.filter(function (voice) {
             return voice.name == 'Google português do Brasil';
         })[0];
