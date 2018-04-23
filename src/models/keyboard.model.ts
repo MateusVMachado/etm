@@ -8,6 +8,7 @@ export class KeyboardModel {
     teclas: string[][];
     text: string[][];
     action: string[][];
+    image: string[][];
     type: string;
 
     constructor() {
@@ -15,6 +16,7 @@ export class KeyboardModel {
         this.teclas = [];
         this.text = [];
         this.action = [];
+        this.image = [];
         this.type = 'none';
     }
 }

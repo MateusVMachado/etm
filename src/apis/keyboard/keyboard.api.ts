@@ -189,7 +189,8 @@ export class Keyboard extends BaseRoute {
                     openFacLayout.Lines[i].Buttons.push(new LayoutButton());
                     openFacLayout.Lines[i].Buttons[j].Action = teclado.action[i][j];        
                     openFacLayout.Lines[i].Buttons[j].Caption = teclado.teclas[i][j];        
-                    openFacLayout.Lines[i].Buttons[j].Text = teclado.text[i][j];        
+                    openFacLayout.Lines[i].Buttons[j].Text = teclado.text[i][j];
+                    openFacLayout.Lines[i].Buttons[j].Image = teclado.image[i][j];        
             }
         } 
 
@@ -217,6 +218,13 @@ export class Keyboard extends BaseRoute {
         var tRowKey: string[] = ['Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 'Keyboard', 
                 'Keyboard', 'Keyboard', 'Keyboard'];
         var zRowKey: string[] = ['TTS', 'Keyboard'];
+
+
+        var rowImg: string[] = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+        var pRowImg: string[] = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+        var sRowImg: string[] = ['', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+        var tRowImg: string[] = ['', '', '', '', '', '', '', '', '', '', '', '', ''];
+        var zRowImg: string[] = ['', ''];
     
         var crow: string[] = ['~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '*bckspc'];
         var cpRow: string[] = ['*tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', '|'];
@@ -256,6 +264,12 @@ export class Keyboard extends BaseRoute {
             teclado.action.push(sRowKey);
             teclado.action.push(tRowKey);
             teclado.action.push(zRowKey);
+
+            teclado.image.push(rowImg);
+            teclado.image.push(pRowImg);
+            teclado.image.push(sRowImg);
+            teclado.image.push(tRowImg);
+            teclado.image.push(zRowImg);
 
             teclado.type = 'pt-br';
         } else if ( type === 'caps') {
