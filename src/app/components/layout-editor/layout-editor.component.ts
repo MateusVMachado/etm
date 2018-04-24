@@ -303,7 +303,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
 
 
-
+      //reset
       for(let line = 0; line < this.teclado.teclas.length; line++){
         for(let col = 0; col < this.teclado.teclas[line].length; col ++){
           if(this.tecladoReplicant.teclas[line][col].split('$')[0] === '*img'){
@@ -406,7 +406,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 
               } else {
                 let formula = this.globColumnQnty*Number(x)+Number(y);
-                el1 = sEl[formula].cloneNode(true);
+                //el1 = sEl[formula].cloneNode(true);
+                el1 = sEl[0].cloneNode(true);
                 
               }
               
