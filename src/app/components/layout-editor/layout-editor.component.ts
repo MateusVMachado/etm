@@ -730,12 +730,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               if( $($(value[1])[0]).find('input')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
                 
    
-        
-                if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                  
- 
-                  this.imgLinesArray.splice(this.cutIndex, 1);
-                } 
+                  if($($(value[1])[0].attributes)[4]){  
+                    if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
+                      
+    
+                      this.imgLinesArray.splice(this.cutIndex, 1);
+                    }
+                  }   
               }
           } else if(! $($(value[1])[0]).find('input')[0] && isContent && $($(value[1])[0]).find('button')[0] !== undefined) {
 
