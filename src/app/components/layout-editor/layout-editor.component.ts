@@ -2514,8 +2514,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
 
               let sElContentTmp = $("[id=content]");
-              let sElLinesTmp = $("[id=blankLines]");
-              let sElRowsTmp = $("[id=blankRows]");
               for(let line = 0; line < this.imgLinesArray.length; line++){
                 for(let col = 0; col < this.globColumnQnty; col++){
                   let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
@@ -2523,16 +2521,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                     if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                     $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
-                    
-                    $($($($(sElLinesTmp)[this.imgLinesArray[line]]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
-                    $($($($(sElRowsTmp)[this.imgLinesArray[line]]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
                   }
                   
 
                 }
               }    
 
-       
 
               this.payloadSubscription.unsubscribe();
 
