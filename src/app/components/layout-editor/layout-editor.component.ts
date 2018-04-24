@@ -2290,11 +2290,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 let el, copied, copyToTarget = false;
                 if(event.target.value){
-                  console.log('MARK-TARGET-1')
+                  
                   el = $(event.target);
                   copyToTarget = true;
                 } else {
-                  console.log('MARK-TARGET-2')
+                  
                     let sEl = $("[id=copy]").clone();
                     
                     let el1 = document.getElementsByClassName('@copyArea$'+ x +'#'+ y +'');
@@ -2304,11 +2304,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     
                     if(sEl[<number>formula] === undefined) {
-                      console.log('MARK-TARGET-3')
+                  
                       el = $(event.target);
                       copyToTarget = true;
                     } else {
-                      console.log('MARK-TARGET-4')
+                  
                       //el = sEl[<number>formula].cloneNode(true);
                       el = sEl[0].cloneNode(true);
                     }
@@ -2435,7 +2435,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
 
-                console.log(JSON.stringify(this.tecladoReplicant))
+               
 
                 if(!normal){
   
