@@ -2219,6 +2219,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let imagem = result[8];
 
 
+
               let maxAdmissibleSize = this.keysWidthSize;
               let greaterDimension, smallerDimension;
               if(height > width){
@@ -2428,7 +2429,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 this.tecladoReplicant.image[y][x] = buttonImage;  ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
 
-
+                console.log(JSON.stringify(this.tecladoReplicant))
 
                 if(!normal){
   
