@@ -2527,6 +2527,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
               }    
 
+              if(copyToTarget) this.changeLineSize(y, 'imgSize');
 
               this.payloadSubscription.unsubscribe();
 
