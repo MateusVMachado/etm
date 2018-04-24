@@ -2309,7 +2309,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       copyToTarget = true;
                     } else {
                       console.log('MARK-TARGET-4')
-                      el = sEl[<number>formula].cloneNode(true);
+                      //el = sEl[<number>formula].cloneNode(true);
+                      el = sEl[0].cloneNode(true);
                     }
 
                 }
