@@ -121,16 +121,25 @@
         </div>
     </div>
 
-    <div id="outerBox" class="box-teclado-bottom" style="height: 30%;">
-            <div class="teclado-container ">
-                    <div id="blankRows" class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px"> 
+    <div id="outerBox" class="box-teclado-bottom" style="height: 30%; ">
+            <div class="teclado-container " >
+                    <div id="blankRows" class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px;"> 
 
-                        <div id="blankLines" class="col-md-12 lineBlanks">
-                            <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
-                                *ngFor="let key of row; index as i" 
-                                [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)" >
-                                <div id="none" class="none" ></div>
-                            </div>
+                        <div id="blankLines" class="col-md-12 lineBlanks" >
+                                <!--*ngIf="choppedLines.includes(iR.toString()) ? (i < choppedNumber) : true"-->
+                                <!--*ngIf="(i < choppedNumber)"-->
+                                <ng-container *ngFor="let key of row; index as i">
+                                        
+                                    <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
+                                       
+                                        [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)" >
+                                        <ng-container *ngIf="ENABLE_TEXT_MODE && key.split('$')[0] === '*img'" >
+                                            <p style=" margin-top: 20px">{{iR}}:{{i}} </p>
+                                        </ng-container>
+                                        <div id="none" class="none" ></div>
+                                    
+                                    </div>
+                                </ng-container>     
                         </div>
                         
                           

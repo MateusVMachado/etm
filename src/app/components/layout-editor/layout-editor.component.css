@@ -65,7 +65,7 @@
     width: calc((100% / 14) - 6px);
     position: relative;
     top: 0;
-    margin-right: 6px; 
+    margin-right: 2px; 
     border-radius:  8px;
     display: inline-block;
     text-align: center;

@@ -55,11 +55,13 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   ngOnInit() {
     this.authService.getObservableUser().subscribe(result =>{
       this.usuario = result;
-      if(result.picture.content){
-        this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
-      }else{
-        this.imgUrl = '../../../assets/images/avatarUser.png'
-      }
+      if(result.picture !== undefined){
+          if(result.picture.content){
+            this.imgUrl = 'data:image/png;base64,'+ result.picture.content;
+          }else{
+            this.imgUrl = '../../../assets/images/avatarUser.png'
+          }
+      }    
     });
   }
 

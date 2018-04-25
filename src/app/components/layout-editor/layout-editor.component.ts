@@ -25,6 +25,7 @@ import { SaveModalComponent } from './save-layout/save-modal.component';
 import { ChangeDetectorRef } from '@angular/core';
 
 
+
 @Component({
   selector: 'app-layout-editor',
   templateUrl: './layout-editor.component.html',
@@ -104,6 +105,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public keyboardToEdit: string = 'pt-br';
 
     private timer: any;
+    private markOfRemove: boolean = false;
+
+
+    public IMAGE_TESTE = true;
+    public choppedLines = new Array();
+    public choppedNumber: number = 14;
+    public choppedMap = new Map<number,number>();
+    
+    private growthFactor = 1;
+    private ENABLE_TEXT_MODE: boolean = false;
+    private textModeFactor: number = 23;
+    private textModeMarginFactor: number = 3;
+    public randomTextShouldBeArray: string = 'Random text'
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -119,7 +134,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private cdr: ChangeDetectorRef) {
       super(injector);       
       this.timer = setInterval(this.newCheckRound.bind(this), 100);            
-      
+      this.choppedNumber = this.globColumnQnty;
      
 
 
@@ -191,6 +206,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       //this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
       this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*5.5) )/this.globColumnQnty;
+      
+      //PARA IMAGENS MAIORES
+      if(this.IMAGE_TESTE) {
+        this.growthFactor = 1.5;
+        this.keysWidthSize = this.keysWidthSize * this.growthFactor;
+      }  
 
       let self = this;
 
@@ -231,7 +252,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }
 
-
+  public getRandomColor() {
+      let letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+  }
 
 
     private newCheckRound(){
@@ -263,9 +291,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
-     //////////////////////////////////////
-    // LOAD DO TECLADO VIA COPY DRAGULA //
-   ////////////////////////////////////// 
+
+        /////////////////////////////
+     ///////////////////////////////////////////////////////
+    // LOAD DO TECLADO VIA COPY DOS ELEMENTOS DO DRAGULA //
+   ///////////////////////////////////////////////////////
+    ////////////////////////////
 
 
     public updateReplicant(nameString: string){
@@ -526,6 +557,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
   
 
+    
+        /////////////////////////////
+     ////////////////////////
+    // FUNÇÃO AUXILIAR    //
+   ////////////////////////
+    ////////////////////////////
+
 
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       if(!layout) return;
@@ -571,6 +609,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.tecladoReplicant.image[y][x] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
 
     }
+
+
+    
+        /////////////////////////////
+     //////////////////////////////
+    // EVENTO REMOVE DO DRAGULA //
+   //////////////////////////////
+    ////////////////////////////
 
 
     private onRemove(value){
@@ -665,6 +711,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           } else {
             $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
           }
+          if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+            $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.keysHeightSize);
+          } else {
+            $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.keysHeightSize);
+          }
   
         }
       }
@@ -674,10 +725,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
 
 
+
+    
+        /////////////////////////////
+     ////////////////////////////
+    // EVENTO DROP DO DRAGULA //
+   ////////////////////////////
+    ////////////////////////////
+
     private onDrop(value) {
 
-
+      console.clear();
       let DEBUG = false;
+
+
       if (value[2] == null) {//dragged outside any of the bags
           return;
       }    
@@ -773,13 +834,27 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       for(let step = 0 ; step < 14; step++){
                         
                         let formula = this.globColumnQnty*Number(drainY)+Number(step);
+                        
+                        // if(this.markOfRemove){
+                        //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                        // }
               
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                         if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                          if(this.ENABLE_TEXT_MODE){
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                          } else {
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                          }
+                          
                         } else {
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                          if(this.ENABLE_TEXT_MODE){
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                          } else {
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                          }
+                          
                         }
                 
                       }
@@ -795,7 +870,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 for(let step = 0 ; step < 14; step++){
 
                   let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-         
+
+                  // if(this.markOfRemove){
+                  //   if(sourceY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                  // }
+
+
                   if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
                     $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
                   } else {
@@ -814,7 +894,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 for(let step = 0 ; step < 14; step++){
 
                   let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-            
+                  
+                  // if(this.markOfRemove){
+                  //   if(sourceY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                  // }
+
+
                   if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
                     $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
                   } else {
@@ -838,18 +923,39 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
               if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
               if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-              if(isContent) $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
+              if(isContent){
+                if(this.ENABLE_TEXT_MODE){
+                  $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize + this.textModeFactor);
+                } else {
+                  $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
+                }
+                
+              } 
               let sElContentTmp = $('[id=content]');
               
               for(let line = 0 ; line < this.imgLinesArray.length; line++){
                   for(let step = 0 ; step < 14; step++){
                     
                     let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(step);
-  
+                    
+                    // if(this.markOfRemove){
+                    //   if(this.imgLinesArray[line] > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                    // }
+
                     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);    
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      }
+                      
                     } else {
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      }
+                      
                     }
                   }
               }    
@@ -868,10 +974,24 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     
                     let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(step);
    
+                                      
+                  // if(this.markOfRemove){
+                  //   if(this.imgLinesArray[line] > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                  // }
+
                     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      }
+                      
                     } else {
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      }
                     }
                   }
               }    
@@ -993,7 +1113,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                           if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                           if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-                          $($(value[1])[0]).css('height', this.imgMaxHeightSize);
+                          if(this.checkLineHasImage(drainY)){
+                            $($(value[1])[0]).css('height', this.imgMaxHeightSize);
+                          } else {
+                            $($(value[1])[0]).css('height', this.keysHeightSize);
+                          }
+                          
                           
                  
                   } else {
@@ -1121,7 +1246,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
                           if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                           if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-                          $($(value[1])[0]).css('height', this.imgMaxHeightSize);
+                          if(this.checkLineHasImage(drainY)){
+                            $($(value[1])[0]).css('height', this.imgMaxHeightSize);  
+                          } else {
+                            $($(value[1])[0]).css('height', this.keysHeightSize);
+                          }
+                          
 
                           if($($(value[1])[0]).find('input')[0]){ 
                                   $($($(value[1])[0]).find('input')[0]).css('class', 'tamanho-button-especial-big' + ' ' + drainX + '#' + drainY + '');
@@ -1147,42 +1277,43 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }
 
  
+                    this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
                   
-                  if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
+                  // if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
   
                       
-                          let sElContentTmp = $('[id=content]');
-                          for(let step = 0 ; step < 14; step++){
+                  //         let sElContentTmp = $('[id=content]');
+                  //         for(let step = 0 ; step < 14; step++){
                             
-                            let formula = this.globColumnQnty*Number(drainY)+Number(step);
+                  //           let formula = this.globColumnQnty*Number(drainY)+Number(step);
   
-                            if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                            } else {
-                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                            }
+                  //           if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                  //             $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                  //           } else {
+                  //             $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                  //           }
 
-                          }
-                    }
+                  //         }
+                  //   }
 
 
-                    if(!this.checkLineHasImage(sourceY) ){
+                  //   if(!this.checkLineHasImage(sourceY) ){
  
                       
-                      this.changeLineSize(sourceY, 'default');
-                      let sElContentTmp = $('[id=content]');
-                      for(let step = 0 ; step < 14; step++){
+                  //     this.changeLineSize(sourceY, 'default');
+                  //     let sElContentTmp = $('[id=content]');
+                  //     for(let step = 0 ; step < 14; step++){
       
-                        let formula = this.globColumnQnty*Number(sourceY)+Number(step);
+                  //       let formula = this.globColumnQnty*Number(sourceY)+Number(step);
       
-                        if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                        } else {
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                        }
+                  //       if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                  //         $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                  //       } else {
+                  //         $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                  //       }
            
-                      }
-                    } 
+                  //     }
+                  //   } 
                   
 
 
@@ -1780,26 +1911,122 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
               
 
-
+                  this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
                 
-                  if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
+                  // if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
 
+                  //       let sElContentTmp = $('[id=content]');
+                  //       for(let step = 0 ; step < 14; step++){
+                          
+                  //         let formula = this.globColumnQnty*Number(drainY)+Number(step);
+      
+                  //         if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                  //           $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                  //         } else {
+                  //           $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                  //         }
+      
+                  //       }
+                  // }
+
+                  // if(!this.checkLineHasImage(sourceY) ){
+
+                    
+                  //   this.changeLineSize(sourceY, 'default');
+                  //   let sElContentTmp = $('[id=content]');
+                  //   for(let step = 0 ; step < 14; step++){
+    
+                  //     let formula = this.globColumnQnty*Number(sourceY)+Number(step);
+            
+                  //     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                  //       $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                  //     } else {
+                  //       $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                  //     }
+     
+                  //   }
+                  // } 
+                
+      
+   
+             
+    }    
+
+    
+        /////////////////////////////
+     //////////////////////////////////////
+    // FAZ AJUSTE DO TAMANHO DAS LINHAS //
+   //////////////////////////////////////
+    ////////////////////////////
+
+
+    private adjustLinesSizes(drainY: number, drainX: number, sourceY: number, sourceX: number){
+                console.log(JSON.stringify(this.imgLinesArray));
+                console.log(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0]);
+                //if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
+                  if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
+                      console.log("CHANGER-1")
                         let sElContentTmp = $('[id=content]');
                         for(let step = 0 ; step < 14; step++){
                           
                           let formula = this.globColumnQnty*Number(drainY)+Number(step);
       
+                          // if(this.markOfRemove){
+                          //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                          // }
+
                           if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                            if(this.ENABLE_TEXT_MODE){
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize + this.textModeFactor);  
+                            } else {
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                            }
+                            
                           } else {
-                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                            if(this.ENABLE_TEXT_MODE){
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize + this.textModeFactor);  
+                            } else {
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                            }
+                            
                           }
       
                         }
                   }
 
-                  if(!this.checkLineHasImage(sourceY) ){
+                  if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img'){
+                    console.log("CHANGER-2")
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < 14; step++){
+                      
+                      let formula = this.globColumnQnty*Number(drainY)+Number(step);
 
+                      // if(this.markOfRemove){
+                      //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                      // }
+
+                      console.log($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]);
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+  
+                    }
+              }
+
+                  if(!this.checkLineHasImage(sourceY) ){
+                    console.log("CHANGER-3")
                     
                     this.changeLineSize(sourceY, 'default');
                     let sElContentTmp = $('[id=content]');
@@ -1807,20 +2034,107 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     
                       let formula = this.globColumnQnty*Number(sourceY)+Number(step);
             
-                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                      // if(this.markOfRemove){
+                      //   if(sourceY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                      // }
+
+                      if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+                        $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.keysHeightSize);
                       } else {
-                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                        $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.keysHeightSize);
                       }
      
                     }
-                  } 
-                
-      
-   
-             
-    }    
+                  }
 
+                  if(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' ){
+                    console.log("CHANGER-4");
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < 14; step++){
+    
+                      let formula = this.globColumnQnty*Number(drainY)+Number(step);
+                      
+                      // if(this.markOfRemove){
+                      //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                      // }
+                      
+                      //console.log( $(sElContentTmp)[formula]);
+  
+                      
+
+                      //console.log('altura: ' + this.imgMaxHeightSize);
+
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        console.log("CHANGER-4-A1");
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        console.log("CHANGER-4-B1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+
+                      
+                      if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+                        console.log("CHANGER-4-A1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        console.log("CHANGER-4-B1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.imgMaxHeightSize);  
+                        }
+                        
+                      }
+
+                      if( $($(sElContentTmp)[formula]).find('input')[0] ){
+                        console.log("CHANGER-4-A1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($(sElContentTmp)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+                        } else {
+                          $($($(sElContentTmp)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        console.log("CHANGER-4-B1")
+                        if(this.ENABLE_TEXT_MODE) {
+                          $($($(sElContentTmp)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($(sElContentTmp)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+
+
+
+     
+                    }
+                  }
+                  
+                  
+    }
+
+
+    
+        /////////////////////////////
+     ////////////////////////
+    // FUNÇÕES AUXILIARES //
+   ////////////////////////
+    ////////////////////////////
     
     public showModal(component){
         const activeModal = this.modalService.open(component, {size: 'lg', container: 'nb-layout'});
@@ -1863,6 +2177,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     this.keyboardItems.KeyboardsNames.push(this.keyboardName);
     this.keyboardToEdit = this.keyboardName;
    }
+
+
+
+   
+        /////////////////////////////
+     ////////////////////
+    // SALVAR TECLADO //
+   ////////////////////
+    ////////////////////////////
 
 
    public saveKeyboardLayout(saveAs?: boolean){
@@ -2015,6 +2338,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
    }
 
+
+   
+        /////////////////////////////
+     /////////////////////////////////////////////
+    // RECARREGA LISTA DE TECLADOS PARA EDITAR //
+   /////////////////////////////////////////////
+    ////////////////////////////
+
   public reloadList(){
       
       this.keyboardNamesSubscribe.unsubscribe();
@@ -2026,6 +2357,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
    }
 
+
+   
+        /////////////////////////////
+     //////////////////////////////////
+    // CRIAÇÂO DE TECLADO EM BRANCO //
+   //////////////////////////////////
+    ////////////////////////////
 
     private createEmptyKeyboard(){
      
@@ -2134,11 +2472,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
+
+        /////////////////////////////
+     ////////////////////////
+    // INSERT DAS IMAGENS //
+   ////////////////////////
+    ////////////////////////////
+
     public editCaptionNText(event){
       
    
-        
-      
          this.showModal(CaptionTextModalComponent);
         
         let parts = event.target.className.split(' ');
@@ -2267,7 +2610,87 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let x = parts[0].split('#')[0];
               let y = parts[0].split('#')[1];
             
-         
+
+
+              let formula = this.globColumnQnty*Number(y)+Number(x);
+
+
+              console.log('x: ' + x);
+              console.log('y: ' + y);
+
+              this.markOfRemove = false;
+
+              
+
+              // this.teclado.teclas[y].splice(-1,1)
+              // this.tecladoReplicant.teclas[y].splice(-1,1)
+              // this.teclado.teclas[y].splice(-1,1)
+              // this.tecladoReplicant.teclas[y].splice(-1,1)
+              // this.teclado.teclas[y].splice(-1,1)
+              // this.tecladoReplicant.teclas[y].splice(-1,1)
+              // this.teclado.teclas[y].splice(-1,1)
+              // this.tecladoReplicant.teclas[y].splice(-1,1)
+
+               
+
+               if(imagem && this.IMAGE_TESTE){
+                    this.markOfRemove = true;
+                    //if(y > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )//this.teclado.teclas[y-1].length)                                
+                        let quantity = Math.floor(this.keyboardContainerSize / this.keysWidthSize)
+                          this.choppedNumber = quantity;
+                          this.choppedLines.push(y);
+
+                          
+
+
+
+                        console.log(JSON.stringify(this.choppedLines))
+                        console.log('choppNumber: ' + quantity)                      
+
+                        console.log("LINHA: " + y)
+
+                        console.log('Qntd na linha atual: ' + this.teclado.teclas[y].length )
+
+                        //if(quantity !== this.teclado.teclas[y].length){
+                                // let elements = quantity - this.teclado.teclas[y].length
+                                // if(elements < 0){
+                                //   this.choppedLines.push(y);
+                                //   console.log('Elementos a mais: ' +  Math.abs(elements) )
+                                //   for( ;elements !== 0 ;){
+                                //     // this.teclado.teclas[y].splice(-1,1);
+                                //     // this.teclado.action[y].splice(-1,1);
+                                //     // this.teclado.text[y].splice(-1,1);
+                                //     // this.teclado.image[y].splice(-1,1);
+
+                                //     // this.tecladoReplicant.teclas[y].splice(-1,1);
+                                //     // this.tecladoReplicant.action[y].splice(-1,1);
+                                //     // this.tecladoReplicant.text[y].splice(-1,1);
+                                //     // this.tecladoReplicant.image[y].splice(-1,1);
+                                //     // elements = Math.abs(elements) - 1;
+                                //     console.log('Elementos a mais: ' +  Math.abs(elements) )
+                                //   }
+                                // } else {
+                                //   //for( ;elements !== 0 ;){
+                                //     //this.teclado.teclas[y].push('')
+                                //     //elements = Math.abs(elements) + 1;
+                                //     console.log('Elementos a menos: ' +  Math.abs(elements) )
+                                //   //}
+                                  
+                                // }
+                      //} else {
+                      //  console.log("DIFERENTES")
+                      //}        
+               } 
+
+
+
+               console.log(JSON.stringify(this.teclado.teclas))
+
+               
+
+
+
+
               $(event.target).attr('value', buttonCaption);
 
 
@@ -2285,7 +2708,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    
 
                 
-                let formula = this.globColumnQnty*Number(y)+Number(x);
+                //let formula = this.globColumnQnty*Number(y)+Number(x);
                 
 
                 let el, copied, copyToTarget = false;
@@ -2420,6 +2843,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 if(x.split("$")[0] === '@copyArea') x = x.split('$')[1];
              
 
+                if(this.choppedNumber !== 14){
+                  let returnable = new Array();
+                  this.mapToNewFormula(x,y, this.choppedNumber, returnable)
+                  //let returnable = new Array();
+                  //returnable = mapToNewRecursive(x,y, this.choppedNumber, returnable)
+                  //formula = returnable[0];
+                  //x = returnable[1];
+
+
+                  //formula = mapToNewFormula(x, y, this.choppedNumber)[0]
+                  //x = mapToNewFormula(x,y,this.choppedNumber)[1]
+                  x = 0;
+                }
+
                 this.tecladoReplicant.action[y][x] = buttonAction;
 
                 if(buttonCaption === '*img') {
@@ -2456,7 +2893,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     this.imgLinesArray.push(Number(y) );
                     
-     
+
+
+
 
                     if(sysImg){
 
@@ -2482,10 +2921,25 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 $(el).removeAttr('tooltip');
                 
+
                 
-                if(!copyToTarget) $("[id=content]")[formula].appendChild(el);
+                if(this.markOfRemove && y!== 0) {
+                  
+                  console.log("FORMULA: " + formula)
+                }  
 
+                if(this.choppedNumber !== 14){
+                  
+                  formula = this.globColumnQnty*Number(y)+Number(0);
 
+                  if(!copyToTarget) $("[id=content]")[formula].appendChild(el);  
+                } else {
+                  if(!copyToTarget) $("[id=content]")[formula].appendChild(el);  
+                }
+                
+                //if(!copyToTarget) $("[id=content]")[formula].appendChild(el);
+
+                
 
                 if( ( imgUrl || sysImg ) && imagem ){
                       let sElContent = $("[id=content]");
@@ -2493,39 +2947,161 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let sElRows = $("[id=blankRows]");
                       let sElNone = $("[id=blankNone]");
 
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+                      // this.teclado.teclas[0].pop();
+
+
+                  let randomColor =  this.getRandomColor();
+
                   for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
                     for(let col=0; col < this.globColumnQnty ; col++){
-                      
+                      if(col >= this.choppedNumber) continue;
+
                         let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
-                        $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
+                        
+                        
+
+                        if(this.IMAGE_TESTE){
+                          // console.log('TAM CONTENT: ' + sElContent.length)
+                          // formula = this.findElement(sElContent,this.imgLinesArray[imgLine], col )
+                          // if(this.imgLinesArray[imgLine] > 0){
+                          //   formula = formula + this.calculateSum(this.imgLinesArray[imgLine]); 
+                          // }
+                          // console.log("FORMULA FINAL: " + formula);
+                            //  console.log('Old formula: ' + formula)
+                            //   if(this.markOfRemove){
+                            //     if(this.imgLinesArray[imgLine] > 0){
+                            //       console.log("SOMA: " + this.calculateSum(this.imgLinesArray[imgLine]))
+                            //       //formula = formula - Math.abs(this.calculateSum(this.imgLinesArray[imgLine]));
+                            //       console.log('nova formula: ' + formula)
+                            //       //formula = formula - Math.abs( (this.globColumnQnty  - this.teclado.teclas[this.imgLinesArray[imgLine]].length ) ) 
+                            //     }
+                            //     if(!this.choppedLines.includes(this.imgLinesArray[imgLine]) ) {
+                            //         console.log("não é chopped");
+                            //         formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                            //     }    
+                            //   }
+                        }      
+
+                        if(this.ENABLE_TEXT_MODE){
+                          $($(sElContent)[formula]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
+                        }
+                        
                         $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                        
    
+                        //$($(sElContent)[formula]).css('background-color', randomColor);
+                        
+                        
+                        
+                        //$($(sElContent)[formula]).css('background-color', 'rgba(0,0,120,0.2');
+                        
+
+
+
+                        // if($($(sElContent)[formula]).find('div')[0].className === 'none'){
+                        //   $($(sElContent)[formula]).css('background-color', 'yellow');  
+                        // }
+                        
+                        //if( $($(sElContent)[formula])[0]).className.split(' ')[0].split('#')[0] >= this.choppedNumber )
+                        
+                        // if( Number( $($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0] ) >= this.choppedNumber ){
+                        //   $($(sElContent)[formula])[0].remove();
+                        //   $($(sElContent)[formula] ).detach() ;
+                        // }
+                        
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
            
-                        $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
-                        $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+                       
 
-                        $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
-                        $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
+                        if(this.ENABLE_TEXT_MODE){
+                          $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+                          $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+
+                          $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4 + this.textModeMarginFactor);
+                          $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4 + this.textModeMarginFactor);
+                        } else {
+                          $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+                          $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+
+                          $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
+                          $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
+                        }
+                        
+                          // $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 150);
+                          // $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 150);
                     }    
+                  }
+
+                  // for(let el = 0; el < sElContent.length; el++){
+                  //   if( Number($($(sElContent)[el])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber){
+                  //     $($($(sElContent)[el])[0]).css('display', 'none');
+                      
+                  //   }
+                  // }
+
+        
+                  for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+                    for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+                      let formula = this.globColumnQnty*Number(line)+Number(col);
+                      
+                      if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+                        && this.imgLinesArray.includes(line)){
+                        $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
+                        
+                        //$($($(sElContent)[formula])[0]).css('display', 'none');
+                      }
+                    }
                   }
  
                 }
 
+
+
               let sElContentTmp = $("[id=content]");
               for(let line = 0; line < this.imgLinesArray.length; line++){
                 for(let col = 0; col < this.globColumnQnty; col++){
+
+                  if(col >= this.choppedNumber) continue;
+
                   let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
+
+                  // if(this.markOfRemove){
+                  //   if(y > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                  // }
+                  formula = this.findElement(sElContentTmp,this.imgLinesArray[line], col )
+
+
+                  //console.log($(sElContentTmp)[formula]);
+
+                  if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                  if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                   if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                    if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-                    if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-                    $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                    if(this.ENABLE_TEXT_MODE){
+                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);  
+                    } else {
+                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+                    }
+                    
+                  } 
+                  if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+                    if(this.ENABLE_TEXT_MODE){
+                      $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                    } else {
+                      $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                    }
+                    
                   }
-                  
 
                 }
               }    
+
 
 
               this.payloadSubscription.unsubscribe();
@@ -2538,7 +3114,156 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
+      private mapToNewFormula(x: number, y: number, receptacle: number, returnable: Array<any>){
+            // Arrays preparation phase
+            console.log()
+            let originalArray = new Array();
+            let joinOriginalArray = new Array();
+            let joinReceptacleArray = new Array();
+            let receptacleArray = new Array();
+            for(let unit = 0; unit < 14; unit++){
+              originalArray.push(unit);
+              joinReceptacleArray.push('');
+              joinOriginalArray.push('');
+            }
+            for(let unit = 0; unit < receptacle; unit++){
+              receptacleArray.push(unit)
+            }           
+            
+            this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray);
+      }
 
+      private mapToNewRecursive(x: number, y: number, originalArray: Array<any>, receptacleArray: Array<any>, joinOriginalArray: Array<any>, joinReceptacleArray: Array<any>){
+        // copying extremes
+        joinOriginalArray[0] = originalArray[0];
+        joinOriginalArray[joinOriginalArray.length-1] = originalArray[originalArray.length-1];
+
+        joinReceptacleArray[0] = receptacleArray[0];
+        joinReceptacleArray[joinReceptacleArray.length-1] = receptacleArray[receptacleArray.length-1];
+        
+        // copying the centers
+          let originalIsEven, receptacleIsEven;
+          let originalCenter, originalLowCenter, originalHighCenter, originalUniqueCenter = undefined;
+          let receptacleCenter, receptacleLowCenter, receptacleHighCenter, receptacleUniqueCenter = undefined;
+
+          //check if original has even lenght
+          if(originalArray.length % 2 === 0){
+            // even
+            originalIsEven = true;
+            console.log("original EVEN");
+            originalLowCenter = originalArray[Math.floor((originalArray.length-1)/2)];
+            originalHighCenter = originalArray[Math.ceil((originalArray.length-1)/2)];
+
+
+            joinOriginalArray[originalLowCenter] = originalArray[originalLowCenter];
+            joinOriginalArray[originalHighCenter] = originalArray[originalHighCenter];
+          } else {
+            // odd
+            console.log("original ODD");
+            originalIsEven = false;
+            originalUniqueCenter = originalArray[Math.ceil(originalArray.length/2)];
+
+            joinOriginalArray[originalUniqueCenter] = originalArray[originalUniqueCenter];
+        
+          }
+        
+          //check if receptacle has even lenght
+          console.log('rec lengh : '+ receptacleArray.length)
+          if(receptacleArray.length % 2 === 0){
+            // even
+            receptacleIsEven = true;
+            console.log("receptacle EVEN");
+            receptacleLowCenter = receptacleArray[Math.floor((receptacleArray.length-1)/2)];
+            receptacleHighCenter = receptacleArray[Math.ceil((receptacleArray.length-1)/2)];
+
+
+            if(originalIsEven){
+              joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleLowCenter];
+              joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleHighCenter];  
+            } else {
+              joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleLowCenter];
+            }
+            
+          } else {
+            console.log("receptacle ODD");
+            receptacleIsEven = false;
+            // odd
+            receptacleUniqueCenter = receptacleArray[Math.floor(receptacleArray.length/2)];
+
+            if(originalIsEven){
+              joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleUniqueCenter];
+              joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleUniqueCenter];
+            } else {
+              joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter];
+            }
+            
+          }
+
+          console.log("ORIGINAL:");
+          console.log(JSON.stringify(joinOriginalArray))
+          console.log("RECEPTACLE:");
+          console.log(JSON.stringify(joinReceptacleArray))
+
+          var ar = [1, 2, 3, 4, 5];
+          var ar2 = ar.slice(1, 1 + 3);
+          ////////
+          //Left Side
+          if(originalIsEven){
+            originalArray = originalArray.slice(1, originalLowCenter);
+          } else {
+            originalArray = originalArray.slice(1, originalUniqueCenter);
+          }
+          
+          if(receptacleIsEven){
+            receptacleArray = receptacleArray.slice(1, receptacleLowCenter);
+          } else {
+            receptacleArray = receptacleArray.slice(1, receptacleUniqueCenter);
+          }
+
+          // falta achar a base da recursão
+          this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray);
+          ////////
+          //Right Side
+          if(originalIsEven){
+            originalArray = originalArray.slice(originalHighCenter, originalArray.length-1);
+          }else {
+            originalArray = originalArray.slice(originalUniqueCenter, originalArray.length-1);
+          }
+
+          if(receptacleIsEven){
+            receptacleArray = receptacleArray.slice(receptacleHighCenter, receptacleArray.length-1);
+          } else {
+            receptacleArray = receptacleArray.slice(receptacleUniqueCenter, receptacleArray.length-1);
+          }
+
+          // falta achar a base da recursão
+          this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray);
+      }
+
+      public findElement(sElContent, x: number , y: number){
+        //let result = new Array()
+        for(let el = 0; el < sElContent.length; el++){
+          // //x
+          // result.push($(sElContent)[el].className.split(' ')[0].split('#')[0])
+          // //y
+          // result.push($(sElContent)[el].className.split(' ')[0].split('#')[1])
+
+          // result.push($(sElContent)[el].className.split(' ')[0].split('#')[1])
+          if($(sElContent)[el].className.split(' ')[0].split('#')[0].toString() === y.toString() &&
+               $(sElContent)[el].className.split(' ')[0].split('#')[1].toString() === x.toString()){
+                return el;
+          }
+        }
+        
+      }
+
+      public calculateSum(actualLine: number){
+        let removedNodes = 0;
+        for(let line = 1; line < actualLine; line++){
+          removedNodes = removedNodes + (this.globColumnQnty - this.teclado.teclas[line].length);
+        }
+        return removedNodes;
+      }
 
 
 
@@ -2555,11 +3280,53 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
         if(config === 'default'){
 
+
+          // for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+          //   for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+          //     let formula = this.globColumnQnty*Number(line)+Number(col);
+              
+          //     if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+          //       && this.imgLinesArray.includes(line)){
+          //       $($($(sElContent)[formula])[0]).css('visibility', 'visible');
+          //       let index = this.imgLinesArray.indexOf(line);
+          //       this.imgLinesArray.splice(index, 1);
+            
+          //       //$($($(sElContent)[formula])[0]).css('display', 'none');
+          //     }
+          //   }
+          // }
+
+          
+       
+          // for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+          //   for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+          //     let formula = this.globColumnQnty*Number(line)+Number(col);
+              
+          //     if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+          //       && this.imgLinesArray.includes(line)){
+          //       $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
+          
+          //     }
+          //   }
+          // }
+
+
+                //this.choppedNumber = this.globColumnQnty;
                 for(let col=0; col < this.globColumnQnty ; col++){
                   
                     let formula = this.globColumnQnty*Number(targetY)+Number(col);
+
+                    //  if(this.markOfRemove){
+                    //     if(targetY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                    //  }
+                    $($(sElContent)[formula]).css('visibility', 'visible');
                     $($(sElContent)[formula]).css('height', this.keysHeightSize);
-                    $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                    if(this.growthFactor > 1){
+                      $($(sElContent)[formula]).css('width', this.keysWidthSize/this.growthFactor);  
+                    } else {
+                      $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                    }
+                    
          
 
                     $($(sElLines)[targetY]).css('height', this.keysHeightSize);
@@ -2569,24 +3336,69 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     $($(sElRows)[targetY]).css('margin-bottom', 4 );
                 }    
 
+                // for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+                //   for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+                //     let formula = this.globColumnQnty*Number(line)+Number(col);
+                    
+                //     if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+                //       && this.imgLinesArray.includes(line)){
+                //       $($($(sElContent)[formula])[0]).css('visibility', 'visible');
+                      
+                //       //$($($(sElContent)[formula])[0]).css('display', 'none');
+                //     }
+                //   }
+                // }
+
+
         } else if( config === 'imgSize'){
-   
+
+               
               
                   for(let col=0; col < this.globColumnQnty ; col++){
                     
                   let formula = this.globColumnQnty*Number(targetY)+Number(col);
-                  $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
+
+                //   if(this.markOfRemove){
+                //     if(targetY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                //  }
+
+                 
+                    
+                  
                   $($(sElContent)[formula]).css('width', this.keysWidthSize);
      
 
-                  $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize);
-                  $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize); 
                   
-                  $($(sElLines)[targetY]).css('margin-bottom', 4 );
-                  $($(sElRows)[targetY]).css('margin-bottom', 4 );
+                  if(this.ENABLE_TEXT_MODE){
+                    $($(sElContent)[formula]).css('height', this.imgMaxHeightSize + this.textModeFactor);    
+                    $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize + this.textModeFactor );
+                    $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize + this.textModeFactor); 
+
+                    $($(sElLines)[targetY]).css('margin-bottom', 4 + this.textModeMarginFactor );
+                    $($(sElRows)[targetY]).css('margin-bottom', 4 + this.textModeMarginFactor);
+                  } else {
+                    $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);  
+                    $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize);
+                    $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize); 
+
+                    $($(sElLines)[targetY]).css('margin-bottom', 4 );
+                    $($(sElRows)[targetY]).css('margin-bottom', 4 );
+                  }
+                  
 
               }    
        
+              for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+                for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+                  let formula = this.globColumnQnty*Number(line)+Number(col);
+                  console.log(this.choppedNumber)
+                  if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+                    && this.imgLinesArray.includes(line)){
+                    $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
+                    
+                  }
+                }
+              }
         }      
       }  
 
@@ -2615,6 +3427,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         el.css("transform", 'translateX('+ percent +'%)');
         el.css("height", height);
         el.css("width", width);
+
+        // el.css('filter', 'alpha(Opacity=30)')
+        // el.css('opacity', '0.3');
       }
 
       public checkExistence(iR: number){
