@@ -21,8 +21,8 @@
             </div>
             <div>
                     <button class="button-keyboard-menu" (click)="updateReplicant(keyboardToEdit)"><i class="icon ion-load-b" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_LOAD')}}</button>
-            </div>        
-            
+            </div>  
+               
             <div>                   
               
                     <select id="loadKeyboard" style="width: 200px; height: 30px; margin: 5px 10px" [(ngModel)]="keyboardToEdit"  (click)="reloadList()">
@@ -32,7 +32,15 @@
                         </option>
                     </select>
                 
-            </div> 
+            </div>
+            <!--
+            <div *ngIf="true" style="margin-left: 40px;">
+                <label for="linguagem" class="label-margin-bottom">Magnificência</label>
+                <mat-slider color="primary" class="rzslider" min="1.00" max="2.00" step="0.01" value="{{growthFactor}}" style="width: 300px" [(ngModel)]="growthFactor"
+                     [ngModelOptions]="{standalone: true}"></mat-slider>
+                     <label for="linguagem" class="label-margin-bottom">{{growthFactor.toFixed(2)}}</label>
+          </div>
+        -->  
         </div>
     </div>
     <div class="box-teclado" style="height: 30%;">

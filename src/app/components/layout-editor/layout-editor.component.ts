@@ -113,7 +113,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public choppedNumber: number = 14;
     public choppedMap = new Map<number,number>();
     
-    private growthFactor = 1;
+    private growthFactor = 1.5;
     private ENABLE_TEXT_MODE: boolean = false;
     private textModeFactor: number = 23;
     private textModeMarginFactor: number = 3;
@@ -209,7 +209,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       //PARA IMAGENS MAIORES
       if(this.IMAGE_TESTE) {
-        this.growthFactor = 1.5;
+        //this.growthFactor = 1.5;
+        this.growthFactor = 2;
         this.keysWidthSize = this.keysWidthSize * this.growthFactor;
       }  
 
@@ -307,7 +308,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
 
-      
+      let quantity = Math.floor(this.keyboardContainerSize / this.keysWidthSize)
+      this.choppedNumber = quantity;
+
       let user = this.authService.getLocalUser();
       //this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email, user.jwt).subscribe(async (data)=>{
         this.tecladoService.loadSingleKeyboard(nameString, user.email, user.jwt).subscribe(async (data)=>{  
@@ -620,7 +623,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private onRemove(value){
-      let DEBUG = false;
+      let DEBUG = true;
 
       if(DEBUG) console.log("MARK1");
         let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, index, found;
@@ -639,6 +642,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img'){
         isImage = true;
       }
+
+
+      console.log('sourceY: ' + sourceY);
+
 
       if(DEBUG) console.log("MARK2");
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
@@ -666,18 +673,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               
               if(!found || this.count >= 1){
                 if(DEBUG) console.log("MARK5");
-                if(this.imgLinesArray.includes(sourceY.toString())){
+                //if(this.imgLinesArray.includes(sourceY.toString())){
                   if(DEBUG) console.log('SOURCE: ' + sourceY);
-                  index = this.imgLinesArray.indexOf[sourceY];
+                  //index = this.imgLinesArray.indexOf[sourceY];
                   for(let i = 0; i < this.imgLinesArray.length; i++){
                     if(this.imgLinesArray[i] === sourceY){
                       if(DEBUG) console.log("MARK6");
+                      
                       index = i;
+                      break;
                     }
-                  }
+                  //}
 
                   if(DEBUG)  console.log('INDEX: ' + index);
                   this.imgLinesArray.splice(index, 1);
+                  console.log(JSON.stringify(this.imgLinesArray));
                 }
               }
               
@@ -770,6 +780,24 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               drainY = drainParts[1];
           }    
 
+          // if(this.choppedNumber !== 14 && drainY !== sourceY){
+          //   let sElContentTmp = $('[id=content]');
+          //   let formula = this.globColumnQnty*Number(drainY)+Number(drainX);
+            
+          //   //sElContentTmp[formula].remove();
+
+            
+          //   drainX = this.mapToNewFormula(drainX,drainY, this.choppedNumber);
+          //   let newFormula = this.globColumnQnty*Number(drainY)+Number(drainX);
+          //   let elCopy = sElContentTmp[newFormula].cloneNode(true);
+          //   //sElContentTmp[newFormula].remove();
+          //   let coord = $(value[1])[0].className.split(' ');
+          //   //$(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+          //   $(elCopy).find('div')[0].className = drainX + '#' + drainY + ' ' + coord[1];
+          //   sElContentTmp[0].appendChild($(elCopy).find('div')[0]);
+                        
+            
+          // }
 
 
         
@@ -1279,43 +1307,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
  
                     this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
                   
-                  // if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
-  
-                      
-                  //         let sElContentTmp = $('[id=content]');
-                  //         for(let step = 0 ; step < 14; step++){
-                            
-                  //           let formula = this.globColumnQnty*Number(drainY)+Number(step);
-  
-                  //           if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                  //             $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                  //           } else {
-                  //             $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                  //           }
-
-                  //         }
-                  //   }
-
-
-                  //   if(!this.checkLineHasImage(sourceY) ){
- 
-                      
-                  //     this.changeLineSize(sourceY, 'default');
-                  //     let sElContentTmp = $('[id=content]');
-                  //     for(let step = 0 ; step < 14; step++){
-      
-                  //       let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-      
-                  //       if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                  //         $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                  //       } else {
-                  //         $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                  //       }
-           
-                  //     }
-                  //   } 
-                  
-
+                    console.log(JSON.stringify(this.tecladoReplicant.teclas) )
 
 
                   return;
@@ -1541,7 +1533,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                               value[1].remove();
-                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";   
 
@@ -1912,43 +1904,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               
 
                   this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
-                
-                  // if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
-
-                  //       let sElContentTmp = $('[id=content]');
-                  //       for(let step = 0 ; step < 14; step++){
-                          
-                  //         let formula = this.globColumnQnty*Number(drainY)+Number(step);
-      
-                  //         if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                  //           $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                  //         } else {
-                  //           $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                  //         }
-      
-                  //       }
-                  // }
-
-                  // if(!this.checkLineHasImage(sourceY) ){
-
-                    
-                  //   this.changeLineSize(sourceY, 'default');
-                  //   let sElContentTmp = $('[id=content]');
-                  //   for(let step = 0 ; step < 14; step++){
-    
-                  //     let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-            
-                  //     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                  //       $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                  //     } else {
-                  //       $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                  //     }
-     
-                  //   }
-                  // } 
-                
-      
-   
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas) )
+              
              
     }    
 
@@ -2844,17 +2801,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              
 
                 if(this.choppedNumber !== 14){
-                  let returnable = new Array();
-                  this.mapToNewFormula(x,y, this.choppedNumber, returnable)
-                  //let returnable = new Array();
-                  //returnable = mapToNewRecursive(x,y, this.choppedNumber, returnable)
-                  //formula = returnable[0];
-                  //x = returnable[1];
-
-
-                  //formula = mapToNewFormula(x, y, this.choppedNumber)[0]
-                  //x = mapToNewFormula(x,y,this.choppedNumber)[1]
-                  x = 0;
+                  x = this.mapToNewFormula(x,y, this.choppedNumber);
                 }
 
                 this.tecladoReplicant.action[y][x] = buttonAction;
@@ -2930,13 +2877,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 if(this.choppedNumber !== 14){
                   
-                  formula = this.globColumnQnty*Number(y)+Number(0);
+                  formula = this.globColumnQnty*Number(y)+Number(x);
 
                   if(!copyToTarget) $("[id=content]")[formula].appendChild(el);  
                 } else {
                   if(!copyToTarget) $("[id=content]")[formula].appendChild(el);  
                 }
                 
+                console.log('imgLinesArray:')
+                console.log(JSON.stringify(this.imgLinesArray))
                 //if(!copyToTarget) $("[id=content]")[formula].appendChild(el);
 
                 
@@ -3114,9 +3063,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
-      private mapToNewFormula(x: number, y: number, receptacle: number, returnable: Array<any>){
+      private mapToNewFormula(x: number, y: number, receptacle: number):number{
             // Arrays preparation phase
-            console.log()
+            console.log('X ENVIADO: ' + x)
             let originalArray = new Array();
             let joinOriginalArray = new Array();
             let joinReceptacleArray = new Array();
@@ -3129,17 +3078,56 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             for(let unit = 0; unit < receptacle; unit++){
               receptacleArray.push(unit)
             }           
+ 
+            console.clear();
+            this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray, false, false);
+
+            console.log("************************************");
             
-            this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray);
+            console.log('ORIGINAL: ' + joinOriginalArray.length);
+            console.log('RECEPTACLE: ' + joinReceptacleArray.length);
+            console.log("FINAL JOINS:")
+            console.log(JSON.stringify(joinOriginalArray) )
+            console.log(JSON.stringify(joinReceptacleArray) )
+
+            for(let original = 0; original < joinOriginalArray.length; original++){
+                
+                console.log(joinOriginalArray[original] + ' ----> ' + x)
+                console.log(joinReceptacleArray[original] + ' **** ' + x)  
+                if(joinOriginalArray[original].toString() === x.toString()){
+                  if(joinReceptacleArray[original] === undefined || joinReceptacleArray[original] === null){
+                    for(let unit = 0; unit < joinReceptacleArray.length; unit++){
+                      if(joinReceptacleArray[unit] !== null) return joinReceptacleArray[unit];    
+                    }
+                  }  
+                  console.log('VALOR ACHADO:')
+                  console.log(JSON.stringify(joinReceptacleArray[original] ) )
+                  return joinReceptacleArray[original];
+                }
+            }
+
       }
 
-      private mapToNewRecursive(x: number, y: number, originalArray: Array<any>, receptacleArray: Array<any>, joinOriginalArray: Array<any>, joinReceptacleArray: Array<any>){
-        // copying extremes
-        joinOriginalArray[0] = originalArray[0];
-        joinOriginalArray[joinOriginalArray.length-1] = originalArray[originalArray.length-1];
+      private mapToNewRecursive(x: number, y: number, originalArray: Array<any>, receptacleArray: Array<any>, joinOriginalArray: Array<any>,
+           joinReceptacleArray: Array<any>, left: boolean, right: boolean){
+        let copyOriginal = originalArray.slice(), copyReceptacle = receptacleArray.slice();
+        console.log('------------------------------')
+        console.log("ORIGINAL:")
+        console.log(JSON.stringify(originalArray) )
+        console.log("RECEPTACLE:")
+        console.log(JSON.stringify(receptacleArray) )
 
-        joinReceptacleArray[0] = receptacleArray[0];
-        joinReceptacleArray[joinReceptacleArray.length-1] = receptacleArray[receptacleArray.length-1];
+        console.log("JOINS:")
+        console.log(JSON.stringify(joinOriginalArray) )
+        console.log(JSON.stringify(joinReceptacleArray) )
+        
+
+        // copying extremes
+        joinOriginalArray[originalArray[0]] = originalArray[0];
+        joinOriginalArray[originalArray[originalArray.length-1]] = originalArray[originalArray.length-1];
+
+        joinReceptacleArray[originalArray[0]] = receptacleArray[0];
+        joinReceptacleArray[originalArray[originalArray.length-1]] = receptacleArray[receptacleArray.length-1];
         
         // copying the centers
           let originalIsEven, receptacleIsEven;
@@ -3147,98 +3135,259 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           let receptacleCenter, receptacleLowCenter, receptacleHighCenter, receptacleUniqueCenter = undefined;
 
           //check if original has even lenght
-          if(originalArray.length % 2 === 0){
+          if(originalArray.length % 2 === 0 && originalArray.length !== 0){
             // even
             originalIsEven = true;
-            console.log("original EVEN");
+            //console.log("original EVEN");
             originalLowCenter = originalArray[Math.floor((originalArray.length-1)/2)];
             originalHighCenter = originalArray[Math.ceil((originalArray.length-1)/2)];
 
-
+            if(joinOriginalArray[originalLowCenter] !== '' && joinOriginalArray[originalHighCenter] !== '') {console.log('MARK1'); return;}
             joinOriginalArray[originalLowCenter] = originalArray[originalLowCenter];
             joinOriginalArray[originalHighCenter] = originalArray[originalHighCenter];
           } else {
             // odd
-            console.log("original ODD");
+            //console.log("original ODD");
             originalIsEven = false;
-            originalUniqueCenter = originalArray[Math.ceil(originalArray.length/2)];
+            
+            if(originalArray.length > 1){
+              originalUniqueCenter = originalArray[Math.floor((originalArray.length-1)/2)];
+              //console.log("ORIGINAL CENTER: " + originalUniqueCenter)
 
-            joinOriginalArray[originalUniqueCenter] = originalArray[originalUniqueCenter];
+              if(joinOriginalArray[originalUniqueCenter] !== '') {console.log('MARK2'); return;}
+              
+              
+
+              for(let unit = 0; unit < copyOriginal.length; unit++){
+                if(copyOriginal[unit] === originalUniqueCenter){
+                  //leftOriginalArray = copyOriginal.slice(1, unit);
+                  joinOriginalArray[originalUniqueCenter] = originalArray[unit];  
+                  break;
+                }
+              }              
+
+            
+            } else {
+                  console.log('VALOR DENTRO DO ARRAY: ' + originalArray[0])
+                  if(joinOriginalArray[originalArray[0]] !== "") {console.log('MARK3'); return;}    
+                  joinOriginalArray[originalArray[0]] = originalArray[0];  
+            }
+            
         
           }
         
           //check if receptacle has even lenght
-          console.log('rec lengh : '+ receptacleArray.length)
-          if(receptacleArray.length % 2 === 0){
+          if(receptacleArray.length % 2 === 0 && receptacleArray.length !== 0){
             // even
             receptacleIsEven = true;
-            console.log("receptacle EVEN");
+            //console.log("receptacle EVEN");
             receptacleLowCenter = receptacleArray[Math.floor((receptacleArray.length-1)/2)];
             receptacleHighCenter = receptacleArray[Math.ceil((receptacleArray.length-1)/2)];
 
 
             if(originalIsEven){
+              if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {console.log('MARK4'); return;}
               joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleLowCenter];
               joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleHighCenter];  
             } else {
-              joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleLowCenter];
+              joinReceptacleArray[receptacleArray[0]] = receptacleArray[0];
             }
             
           } else {
-            console.log("receptacle ODD");
+            //console.log("receptacle ODD");
             receptacleIsEven = false;
             // odd
-            receptacleUniqueCenter = receptacleArray[Math.floor(receptacleArray.length/2)];
 
-            if(originalIsEven){
-              joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleUniqueCenter];
-              joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleUniqueCenter];
+            if(receptacleArray.length > 1){
+                  receptacleUniqueCenter = receptacleArray[Math.floor((receptacleArray.length-1)/2)];
+                if(originalIsEven){
+                  if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {console.log('MARK5'); return;}
+                  //joinReceptacleArray[originalLowCenter] = receptacleArray[originalLowCenter];
+                  joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleUniqueCenter];
+                  //joinReceptacleArray[originalHighCenter] = receptacleArray[originalHighCenter];
+                  joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleUniqueCenter];
+                } else {
+                  if(joinReceptacleArray[originalUniqueCenter] !== '') {console.log('MARK6'); return;}
+                  
+                  if(left) joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter-1];
+                  if(right)joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter-(receptacleUniqueCenter-1)];
+                }
             } else {
-              joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter];
+              joinReceptacleArray[originalUniqueCenter] = receptacleArray[0];
             }
+            
             
           }
 
-          console.log("ORIGINAL:");
-          console.log(JSON.stringify(joinOriginalArray))
-          console.log("RECEPTACLE:");
-          console.log(JSON.stringify(joinReceptacleArray))
+          console.log("ALTERED JOINS:")
+          console.log(JSON.stringify(joinOriginalArray) )
+          console.log(JSON.stringify(joinReceptacleArray) )
+          
 
-          var ar = [1, 2, 3, 4, 5];
-          var ar2 = ar.slice(1, 1 + 3);
+            ////////////////////////////////////////
+           ////  CORTE ESQUERDO      //////////////
+          ////////////////////////////////////////
+          
+          let leftOriginalArray, leftReceptacleArray;
           ////////
           //Left Side
-          if(originalIsEven){
-            originalArray = originalArray.slice(1, originalLowCenter);
+          if(originalIsEven && copyOriginal.length > 1){
+          
+            for(let unit = 0; unit < copyOriginal.length; unit++){
+              if(copyOriginal[unit] === originalLowCenter){
+                leftOriginalArray = copyOriginal.slice(1, unit);
+                break;
+              }
+            }
+
+          } else if (!originalIsEven && copyOriginal.length > 1){
+            
+            console.log("UNIQUE CENTER: " + originalUniqueCenter)
+
+            for(let unit = 0; unit < copyOriginal.length; unit++){
+              if(copyOriginal[unit] === originalUniqueCenter){
+                leftOriginalArray = copyOriginal.slice(1, unit);
+                break;
+              }
+            }
+
+
+          }else {
+            leftOriginalArray = originalArray;
+          }
+
+          if(receptacleIsEven && copyReceptacle.length > 1){
+          
+            for(let unit = 0; unit < copyReceptacle.length; unit++){
+              if(copyReceptacle[unit] === receptacleLowCenter){
+                leftReceptacleArray = copyReceptacle.slice(1, unit);
+                break;
+              }
+            }
+            
+
+          } else if (!receptacleIsEven && copyReceptacle.length > 1){
+            console.log('R UNIQUE CENTER: ' + receptacleUniqueCenter)
+            for(let unit = 0; unit < copyReceptacle.length; unit++){
+              if(copyReceptacle[unit] === receptacleUniqueCenter){
+                leftReceptacleArray = copyReceptacle.slice(1, unit+1);
+                console.log(unit);
+                break;
+              }
+            }
+           
+ 
           } else {
-            originalArray = originalArray.slice(1, originalUniqueCenter);
+            leftReceptacleArray = receptacleArray;
+          }
+
+
+            ////////////////////////////////////////
+           ////  CORTE DIREITO       //////////////
+          ////////////////////////////////////////
+
+           let rightOriginalArray, rightReceptacleArray; 
+           if(originalIsEven && copyOriginal.length > 1){
+
+             rightOriginalArray = copyOriginal.slice(originalHighCenter+1, copyOriginal.length-1);
+ 
+           } else if (!originalIsEven && copyOriginal.length > 1){
+             console.log("UNIQUE CENTER: " + originalUniqueCenter)
+             
+             for(let unit = 0; unit < copyOriginal.length; unit++){
+              if(copyOriginal[unit] === originalUniqueCenter){
+                rightOriginalArray = copyOriginal.slice(unit+1, copyOriginal.length-1);
+                console.log(unit);
+                break;
+              }
+            }
+ 
+           }else {
+             rightOriginalArray = originalArray;
+           }
+           
+           if(receptacleIsEven && copyReceptacle.length > 1){
+
+             rightReceptacleArray = copyReceptacle.slice(receptacleHighCenter+1, copyReceptacle.length-1);
+
+           } else if (!receptacleIsEven && copyReceptacle.length > 1){
+            if(copyReceptacle.length === 3 ) {
+
+              rightReceptacleArray = copyReceptacle.slice(1,2);
+
+            } else {
+
+                rightReceptacleArray = copyReceptacle.slice(receptacleUniqueCenter+1, copyOriginal.length-1);
+            }   
+  
+           } else {
+             rightReceptacleArray = receptacleArray;
+           }
+
+
+          console.log("SLICED LEFT ORIGINAL:")
+          console.log(JSON.stringify(leftOriginalArray) )
+          console.log("SLICED LEFT RECEPTACLE:")
+          console.log(JSON.stringify(leftReceptacleArray) )
+          
+          
+          // falta achar a base da recursão
+          let foundReceptacleEmpty = false
+          for(let unit = 0; unit < joinReceptacleArray.length; unit++){
+            if(joinReceptacleArray[unit] === '' ){
+              foundReceptacleEmpty = true;
+              break;
+            } 
+          }
+
+          let foundOriginalEmpty = false
+          for(let unit = 0; unit < joinOriginalArray.length; unit++){
+            if(joinOriginalArray[unit] === '' ){
+              foundOriginalEmpty = true;
+              break;
+            } 
           }
           
-          if(receptacleIsEven){
-            receptacleArray = receptacleArray.slice(1, receptacleLowCenter);
-          } else {
-            receptacleArray = receptacleArray.slice(1, receptacleUniqueCenter);
+          if( !foundOriginalEmpty && !foundReceptacleEmpty && leftOriginalArray.length <= 1 && leftReceptacleArray.length <= 1) return;
+        
+          console.log("RECURSION LEFT")
+          this.mapToNewRecursive(x, y, leftOriginalArray, leftReceptacleArray, joinOriginalArray, joinReceptacleArray, true, false);
+          console.log("BACK FROM RECURSION LEFT")
+
+
+          console.log("BEFORE SLICE RIGHT ORIGINAL:")
+          console.log(JSON.stringify(copyOriginal) )
+          console.log("BEFORE SLICE RIGHT RECEPTACLE:")
+          console.log(JSON.stringify(copyReceptacle) )
+
+          console.log("SLICED RIGHT ORIGINAL:")
+          console.log(JSON.stringify(rightOriginalArray) )
+          console.log("SLICED RIGHT RECEPTACLE:")
+          console.log(JSON.stringify(rightReceptacleArray) )
+
+          foundReceptacleEmpty = false
+          for(let unit = 0; unit < joinReceptacleArray.length; unit++){
+            if(joinReceptacleArray[unit] === '' ){
+              foundReceptacleEmpty = true;
+              break;
+            } 
           }
 
-          // falta achar a base da recursão
-          this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray);
-          ////////
-          //Right Side
-          if(originalIsEven){
-            originalArray = originalArray.slice(originalHighCenter, originalArray.length-1);
-          }else {
-            originalArray = originalArray.slice(originalUniqueCenter, originalArray.length-1);
+          foundOriginalEmpty = false
+          for(let unit = 0; unit < joinOriginalArray.length; unit++){
+            if(joinOriginalArray[unit] === '' ){
+              foundOriginalEmpty = true;
+              break;
+            } 
           }
 
-          if(receptacleIsEven){
-            receptacleArray = receptacleArray.slice(receptacleHighCenter, receptacleArray.length-1);
-          } else {
-            receptacleArray = receptacleArray.slice(receptacleUniqueCenter, receptacleArray.length-1);
-          }
-
-          // falta achar a base da recursão
-          this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray);
+          if( !foundOriginalEmpty && !foundReceptacleEmpty && rightOriginalArray.length <= 1 && rightReceptacleArray.length <= 1) return;
+          console.log("RECURSION RIGHT")
+          this.mapToNewRecursive(x, y, rightOriginalArray, rightReceptacleArray, joinOriginalArray, joinReceptacleArray, false, true);
+          console.log("BACK FROM RECURSION RIGHT")
+     
       }
+
 
       public findElement(sElContent, x: number , y: number){
         //let result = new Array()
@@ -3392,6 +3541,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
                   let formula = this.globColumnQnty*Number(line)+Number(col);
                   console.log(this.choppedNumber)
+                  //if($($(sElContent)[formula])[0] === undefined ) continue;
                   if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
                     && this.imgLinesArray.includes(line)){
                     $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
