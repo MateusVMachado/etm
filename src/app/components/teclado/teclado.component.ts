@@ -184,16 +184,15 @@ export class TecladoComponent implements OnInit, OnDestroy {
      clearInterval(this.timerId);  
   }
 
-  ngOnInit() { ///////////////////////////////////// ALTERADO RECENTEMENTE DE ngAfterViewInit PARA ngOnInit ///////////////////////////////////
+   ngOnInit() { ///////////////////////////////////// ALTERADO RECENTEMENTE DE ngAfterViewInit PARA ngOnInit ///////////////////////////////////
 
-    this.teclado.teclas = [];
-
-    // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
-    this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
-        if(result === 'caps'){
-          this.capsLock();
-        }
-    });
+        this.teclado.teclas = [];
+        // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
+        this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) =>{
+            if(result === 'caps'){
+              this.capsLock();
+            }
+        });
 
     let user = this.authService.getLocalUser();
 
@@ -461,6 +460,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
           for(let y = 0 ; y < this.teclado.teclas[x].length; y++ ){
             if(this.teclado.teclas[x][y].split('$')[0] === '*img' ){
               if(!this.imagesLinesArray.includes(x)) this.imagesLinesArray.push(x);
+
               if(this.imgMaxHeightSize < this.teclado.teclas[x][y].split('$')[1].split('#')[0]){
                 this.imgMaxHeightSize = this.teclado.teclas[x][y].split('$')[1].split('#')[0];
               }
@@ -491,6 +491,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
                           let width = this.teclado.teclas[line][col].split('$')[1].split('#')[1];
                           $(el).css("height", height);
                           $(el).css("width", width);
+
+                          console.log("MAX WIDHT: " + this.imgMaxWidthtSize);
+                          
+                          $(el).css("position", "relative") ;
+                          $(el).css("margin-right", this.imgMaxWidthtSize) ;
+                          
                           
                           if(height > this.imgMaxHeightSize){
                             this.imgMaxHeightSize = height;
