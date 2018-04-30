@@ -1,19 +1,30 @@
 import { HeaderService } from '../../header/header.service';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import swal from 'sweetalert';
 import { TranslateService } from "@ngx-translate/core";
 import {SideBarService} from "../../sidebar/sidebar.service" 
+import { Subscription } from 'rxjs';
 
 @Injectable()
-export class MessageService {
+export class MessageService implements OnDestroy{
+
+    private setLanguageSubscription: Subscription;
+    private getTranslationSubscription: Subscription;
 
     constructor(private translateService: TranslateService, private sidebarService: SideBarService, 
         private headerService: HeaderService) {
         translateService.setDefaultLang('pt-br');
     }
 
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.setLanguageSubscription.unsubscribe();
+        this.getTranslationSubscription.unsubscribe();
+    }
+
     setLanguage(idioma: string){
-        this.translateService.use(idioma).subscribe(() => {
+        this.setLanguageSubscription = this.translateService.use(idioma).subscribe(() => {
             this.sidebarService.emitSideBarCommand('reload');
             this.headerService.emitHeaderCommand('reload');
         });
@@ -55,7 +66,7 @@ export class MessageService {
 
     public getTranslation(message: string){
       let translate: string;
-      this.translateService.get(message).subscribe((res: string) => {
+      this.getTranslationSubscription = this.translateService.get(message).subscribe((res: string) => {
         translate = res;
       });
       return translate;

@@ -7,6 +7,7 @@ import { EditorTecladoComponent } from './editor-teclado.component';
 import { EditorComponent } from '../editor/editor.component';
 import { EditorModule } from '../editor/editor.module';
 import { routes } from "./editor-teclado.routing";
+import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
     declarations: [ EditorTecladoComponent ],
@@ -14,6 +15,7 @@ import { routes } from "./editor-teclado.routing";
         CommonModule, 
         TecladoModule, 
         EditorModule, 
+        AngularSplitModule,
         RouterModule.forChild(routes) 
     ],
     providers: []

@@ -12,7 +12,7 @@ export class EditorTecladoComponent implements OnInit {
     public tamanho: number;
     public initEditor: boolean;
     constructor(private editorTecladoService: EditorTecladoService, private sidebarService: SideBarService,
-                private tecladoService: TecladoService) {
+                private tecladoService: TecladoService) {        
 
                 }
                 
@@ -59,5 +59,20 @@ export class EditorTecladoComponent implements OnInit {
             };
             t = document.getElementsByTagName('script')[0];
             t.parentNode.insertBefore(s, t);
+    }
+
+    public callEvent(event){
+        console.log("HELLO");
+        console.log(JSON.stringify(event))
+        //let split = document.getElementById('split')
+        let split = $('[id=split]');
+        console.log( $($(split)[0]).find('split-area')[0] );
+        console.log( $($(split)[0]).find('split-area')[1] );
+
+        // Esses dois valores devem ser salvos nas configurações do usuário
+        let flexSup = $($(split)[0]).find('split-area')[0].style.flex;
+        let flexUnd = $($(split)[0]).find('split-area')[1].style.flex;
+
+        console.log("flexSup: " + flexSup + " flexUnd: " + flexUnd );
     }
 }

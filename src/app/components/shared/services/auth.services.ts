@@ -21,8 +21,16 @@ export class AuthService extends AppServiceBase {
         super(injector);
     }
     
-    authenticate(user: UserAndGPS) {
+    // authenticate(user: UserAndGPS) {
+    //     return this.http.post(this.backendAddress + '/login', user, { responseType: 'text'});
+    // }
+
+    authenticate(user: User) {
         return this.http.post(this.backendAddress + '/login', user, { responseType: 'text'});
+    }
+
+    setUserGPS(user: any) {
+        return this.http.post(this.backendAddress + '/loginLogger', user, { responseType: 'text'});
     }
 
     isAuthenticated() {

@@ -29,6 +29,7 @@ import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 
+
 @Component({
   selector: 'app-teclado',
   templateUrl: './teclado.component.html',
@@ -110,6 +111,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
               this.teclado.text = [];
               this.teclado.action = [];
               this.teclado.image = [];
+
+              this.keyboardContainerSize = $(document.getElementById('teclado-container')).width();
+
+                
+
 
               let user = this.authService.getLocalUser();
               this.userSession.user = user.email; 
@@ -271,8 +277,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
 
     
-    this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container-editor')).width();
-      
+    //this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container-editor')).width();
+    this.keyboardContainerSize = $(document.getElementById('teclado-container-editor')).width();  
     //this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
     this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*5.5) )/this.globColumnQnty;
 
@@ -309,7 +315,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         if(imageL.length > 0) this.teclado.image.push(imageL); 
       } 
       this.teclado.type = layout.nameLayout; 
-
+      this.teclado.magnify = layout.magnify; 
       
 
   }
@@ -453,7 +459,38 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   public adjustKeys(){
+        this.imagesLinesArray = [];
+        //ADJUST FLEX SIZE OF SPLIT
+        let split = $('[id=split]');
+        //console.log( $($(split)[0]).find('split-area')[0] );
+        //console.log( $($(split)[0]).find('split-area')[1] );
 
+          // These values should be loaded from database
+        let flexSup = "0 0 calc(24.1758% - 2.9011px)";
+        let flexUnd = "0 0 calc(75.8242% - 9.0989px)";
+
+        $($($(split)[0]).find('split-area')[0]).css('flex', flexSup);
+        $($($(split)[0]).find('split-area')[1]).css('flex', flexUnd);   
+
+        console.log('MAGNIFY DO TECLADO COMPONENT: ' + this.teclado.magnify)
+        //DO THE MAGNIFY PROCESS IF NECESSARY
+        //let sElContentUpdate = $('[id=notImage]');
+        for(let x = 0 ; x < this.teclado.teclas.length; x++){
+          for(let y = 0 ; y < this.teclado.teclas[x].length; y ++){
+            let formula = this.globColumnQnty*Number(y)+Number(x);
+            let el = $('[id=notImage' + x + 'x' + y)
+            $(el).css('font-size', 18*this.teclado.magnify);
+          }
+        }
+
+
+        // for(let unit = 0; unit < sElContentUpdate.length; unit++){
+        //   console.log($(sElContentUpdate)[unit]);
+        //   $($(sElContentUpdate)[unit]).css('font-size',  18*this.teclado.magnify);
+        // }
+
+
+        // COMPUTE IMAGE SIZES
         let values = []
         for(let x = 0; x < this.teclado.teclas.length; x++){
           values.push(this.teclado.teclas[x].length);
@@ -471,17 +508,31 @@ export class TecladoComponent implements OnInit, OnDestroy {
           }
         }
 
-
+        //APPLY NECESSARY CHANGES
         if(this.teclado.image.length !== 0){
 
                 let sElLines = $('[id=sElLines]');
                 let sElRows = $('[id=sElRows]');
                 let sElouterBox = $('[id=outerBox]');
                 let sElNotImage = $('[id=notImage]');
+
+                let imgcount = 0;
+                let normcount = 0;
+                let totalcount = 0;
                 for(let line = 0; line < this.teclado.teclas.length; line ++ ){
                   for(let col = 0 ; col < this.teclado.teclas[line].length; col ++){
-                    let el = $('#images'+line+'x'+col)[0];
+                    if(this.teclado.teclas[line][col] !== ''){
+                      totalcount += 1
+                    }
+                  }
+                }
 
+                for(let line = 0; line < this.teclado.teclas.length; line ++ ){
+                  for(let col = 0 ; col < this.teclado.teclas[line].length; col ++){
+                    imgcount = 0;
+                    normcount = 0;
+                    let el = $('#images'+line+'x'+col)[0];
+                    
 
                     if(this.teclado.teclas[line][col].split('$')[0] === '*img'){
                           if(!this.imagesLinesArray.includes(line)) this.imagesLinesArray.push(line);
@@ -489,13 +540,39 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
                           let height =  this.teclado.teclas[line][col].split('$')[1].split('#')[0];
                           let width = this.teclado.teclas[line][col].split('$')[1].split('#')[1];
+                          $(el).css("position", 'relative');
+
+                            for(let subcol = 0 ; subcol < col; subcol ++){
+                              if(this.teclado.teclas[line][subcol].split('$')[0] === '*img'){
+                                imgcount += 1;    
+                              }
+                              if(this.teclado.teclas[line][subcol].split('$')[0] !== '*img'){
+                                normcount += 1;    
+                              }
+                            }
+                          
+                            this.keyboardContainerSize = $(document.getElementById('teclado-container')).width();
+                            console.log('container: ' + this.keyboardContainerSize)
+                            let mFactor = 1 - 1/(this.keyboardContainerSize/(imgcount+normcount-2) );
+                            console.log('mFactor: ' + mFactor)
+
+                            console.log("IMGCOUNT: " + imgcount)
+                            console.log("NORMCOUNT: " + normcount)
+                          if(col !== 0){
+                              if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
+
+                                $(el).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50  );
+                              }else {
+                                $(el).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor) -25 );
+                              }
+                          }    
                           $(el).css("height", height);
                           $(el).css("width", width);
 
                           console.log("MAX WIDHT: " + this.imgMaxWidthtSize);
                           
-                          $(el).css("position", "relative") ;
-                          $(el).css("margin-right", this.imgMaxWidthtSize) ;
+                          //$(el).css("position", "relative") ;
+                          
                           
                           
                           if(height > this.imgMaxHeightSize){
@@ -506,6 +583,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                             this.imgMaxWidthtSize = width;
                           }
                           
+
 
 
                           $($(sElLines)[line]).css('height', height);
@@ -527,10 +605,39 @@ export class TecladoComponent implements OnInit, OnDestroy {
                     } else if(this.teclado.teclas[line][col].split('$')[0] !== '*img'){
 
    
+                      for(let subcol = 0 ; subcol < col; subcol ++){
+                        if(this.teclado.teclas[line][subcol].split('$')[0] === '*img'){
+                          imgcount += 1;    
+                        }
+                        if(this.teclado.teclas[line][subcol].split('$')[0] !== '*img'){
+                          normcount += 1;    
+                        }
+                      }
+
+                                this.keyboardContainerSize = $(document.getElementById('teclado-container')).width();
+                                console.log('container: ' + this.keyboardContainerSize)
+                                let mFactor = 1 - 1/(this.keyboardContainerSize/(imgcount+normcount-2) );
+                                console.log('mFactor: ' + mFactor)
+
+
                         if(this.imagesLinesArray.includes(line)){
                           let el1 = $('#notImage'+line+'x'+col)[0];
+                          if(col !== 0){
+                            if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
+                              $(el1).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50 );
+                            }else {
+                              // $(el1).css("margin-left", (this.imgMaxWidthtSize/2)); 
+                              $(el1).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50 );
+                            }   
 
+                            // if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
+                            //   $(el1).css("margin-left", 10*Math.abs(normcount-col));
+                            // }else {
+                            //   $(el1).css("margin-left", '117px');
+                            // }
+                        } 
                           $(el1).css('height', this.imgMaxHeightSize);
+                          $(el1).css('width', this.imgMaxWidthtSize);
                           $($(sElLines)[line]).css('height', this.imgMaxHeightSize);
                           $($(sElRows)[line]).css('height', this.imgMaxHeightSize); 
                         }

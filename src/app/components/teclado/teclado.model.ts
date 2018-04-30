@@ -5,6 +5,7 @@ export class TecladoModel {
     action: any;
     image: any;
     type: string;
+    magnify: number;
 
 
     constructor() {
@@ -13,5 +14,6 @@ export class TecladoModel {
         this.action = [];
         this.image = [];
         this.type = 'normal';
+        this.magnify = 1.0;
     }
 }

@@ -6,11 +6,13 @@ import { CommonModule } from '@angular/common';
 import { TecladoService } from './teclado.service';
 
 import { FormsModule } from '@angular/forms';
+import { AngularSplitModule } from 'angular-split';
 
 @NgModule({
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+        AngularSplitModule,
     ],
     declarations: [
         TecladoComponent
