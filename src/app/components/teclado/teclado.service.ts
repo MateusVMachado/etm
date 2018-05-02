@@ -96,4 +96,8 @@ export class TecladoService extends AppServiceBase {
         return this.http.get<OpenFACLayout>(this.backendAddress + `/getSingleKeyboard?nameLayout=${nameLayout}&email=${email}`, {headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + jwt}});
     }
 
+
+    loginLogger(user: any) {
+        return this.http.post(this.backendAddress + '/loginLogger', user, { responseType: 'text'});
+    }
 }

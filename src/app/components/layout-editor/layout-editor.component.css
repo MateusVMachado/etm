@@ -1,3 +1,16 @@
+.rzslider {
+
+    transition: left linear 0.4s;
+}
+.rzslider:hover{
+transition: none; 
+}
+
+.rzslider:noanimate{
+        transition: none; 
+
+}   
+
 .upper {
     height: 100%;
     width: 100%;
@@ -65,7 +78,7 @@
     width: calc((100% / 14) - 6px);
     position: relative;
     top: 0;
-    margin-right: 6px; 
+    margin-right: 2px; 
     border-radius:  8px;
     display: inline-block;
     text-align: center;
@@ -103,6 +116,8 @@ div[tooltip]:not([tooltip-persistent]):before {
 div[tooltip]:before {            
      position : absolute;
      padding: 3px;
+     margin-top: -5px;
+     z-index: 1;
      white-space:nowrap;
      transition: 100ms;
      word-wrap: none;
@@ -111,11 +126,13 @@ div[tooltip]:before {
      color: white;
      content : attr(tooltip);
      opacity : 0;
+     font-size: 50px;
 }
 
 div[tooltip]:hover:before {  
     transition: opacity 2.5s;      
     opacity: 1;
+    font-size: 20px;
 
 }
 

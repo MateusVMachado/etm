@@ -7,6 +7,9 @@ export class User {
     password: string;
     picture: Picture;
     jwt: string;
+    longitude: number;
+    latitude: number;
+    accessToken: string;
 
     constructor(){
         this.picture = new Picture();

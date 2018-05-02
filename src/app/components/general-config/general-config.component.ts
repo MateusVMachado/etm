@@ -115,6 +115,8 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
             this.config.tmpVarreduraLns = result.openFacConfig.ScanTimeLines;
             this.config.tmpVarreduraCls = result.openFacConfig.ScanTimeColumns;
             this.config.lastKeyboard = result.lastKeyboard;
+            this.config.flexSup = result.flexSup;
+            this.config.flexUnd = result.flexUnd;
         }, (error: any) => {
             let message = this.messageService.getTranslation('MENSAGEM_ERRO_BUSCAR_CONFIGS');
             this.messageService.error(message, "Oops..");

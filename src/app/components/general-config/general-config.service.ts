@@ -34,9 +34,21 @@ export class GeneralConfigService extends AppServiceBase{
         configOpenFAC.openFacConfig.KeyboardLayout = config.layout;
         configOpenFAC.lastKeyboard = keyboardName;
         configOpenFAC.level = level;
+        configOpenFAC.flexSup = config.flexSup;
+        configOpenFAC.flexUnd = config.flexUnd;
         
 
         return this.http.post(this.backendAddress + '/configuration', configOpenFAC, { responseType: 'text'});
+    }
+
+    public updateFlexConfiguration(newFlexSup: string, newFlexUnd: string, email: string){
+        let payload = [];
+        payload.push(newFlexSup);
+        payload.push(newFlexUnd);
+        payload.push(email);
+
+        console.log("PAYLOAD: " + payload);
+        return this.http.post(this.backendAddress + '/configurationUpdate', payload, { responseType: 'text'});
     }
 
     public saveOnlyLastKeyboard(keyboardName?:string){
@@ -63,4 +75,5 @@ export class GeneralConfigService extends AppServiceBase{
           return this.generalConfigPayloadSubject.asObservable();      
     }
 
+    
 }

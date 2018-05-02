@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injector, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import * as $ from 'jquery';
@@ -22,7 +22,7 @@ import { LayoutEditorService } from './layout-editor.service';
 import { LayoutModalComponent } from './layout-modal/layout-modal.component';
 import { LayoutButton, LayoutLine, OpenFACLayout } from './layout.model';
 import { SaveModalComponent } from './save-layout/save-modal.component';
-import { ChangeDetectorRef } from '@angular/core';
+
 
 
 @Component({
@@ -104,6 +104,26 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public keyboardToEdit: string = 'pt-br';
 
     private timer: any;
+    private markOfRemove: boolean = false;
+
+
+    public IMAGE_TESTE = true;
+    public choppedLines = new Array();
+    public choppedNumber: number = 14;
+    public choppedMap = new Map<number,number>();
+    
+    private growthFactor = 1.5;
+    private growthTextFactor = 0.0;
+    private ENABLE_TEXT_MODE: boolean = false;
+    private textModeFactor: number = 23;
+    private textModeMarginFactor: number = 3;
+    public randomTextShouldBeArray: string = 'Random text'
+    private once = true;
+    private keysWidthSizeOriginal: number;
+
+    private oldPositions = new Array();
+    private smallerScreenSize: boolean;
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -122,6 +142,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
      
 
+      let availHeight = window.screen.availHeight;
+      let availWidht = window.screen.availWidth;
+      //console.log(availHeight + 'x' + availWidht );
+      if(availHeight === 728 && availWidht === 1024){
+        this.smallerScreenSize = true;
+        this.globColumnQnty = 13;
+      } else {
+        this.smallerScreenSize = false;
+      }           
+      
+      this.choppedNumber = this.globColumnQnty;
 
       this.userSession = new UserSessionModel();
       this.userSession.layoutEditorIntervals = new Array();
@@ -168,8 +199,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
     ngAfterViewInit() {
-      //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-      //Add 'implements AfterViewInit' to the class.
       this.keyboardToEdit = 'pt-br';
     }
 
@@ -187,16 +216,29 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     ngOnInit() {
 
+      //Initializing OldPositions Array
+      for(let unit = 0; unit < this.globColumnQnty; unit++){
+        this.oldPositions = [];
+        this.oldPositions[unit] = '';
+      }
+
       this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container-editor')).width();
       
-      //this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
       this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*5.5) )/this.globColumnQnty;
+      
+      //PARA IMAGENS MAIORES
+      if(this.IMAGE_TESTE) {
+        //this.growthFactor = 1.5;
+        //this.growthFactor = 1.85;
+        this.growthFactor = 2;
+        this.keysWidthSizeOriginal = this.keysWidthSize;
+        this.keysWidthSize = this.keysWidthSize * this.growthFactor;
+      }  
 
       let self = this;
 
       
       $('#newKeyboard').on('click', function(){
-        console.clear();
         self.imgLinesArray = [];
         self.newKeyboard = true;
         self.editMode = false;
@@ -225,13 +267,55 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
         }
 
+        // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+        let sElContent = $("[id=content]");
+        for(let x = 0; x < self.tecladoReplicant.teclas.length; x++){
+          for(let y=0; y< self.tecladoReplicant.teclas[x].length; y++){
+            let formula = self.globColumnQnty*Number(x)+Number(y);
+            if(!self.imgLinesArray.includes(x) ){
+                    $($(sElContent)[formula]).css('width', self.keysWidthSizeOriginal);
+            }      
+          }
+        }
+
+        self.growthTextFactor = 0.0;
 
 
       });
 
     }
 
+  public alterImgSize(){
+    // let sElContent = $('[id=content]');
+    // for(let x = 0; x< this.teclado.teclas.lenght; x++){
+    //   for(let y = 0; y< this.teclado.teclas[x].lenght; y++){
+    //     if(this.teclado.teclas[x][y].split('$')[0] === '*img'){
+    //       let formula = this.globColumnQnty*Number(y)+Number(x);
+    //       this.changeLineSize(y, '')
+    //     }
+    //   }
+    // }
 
+    // for(let unit = 0; unit < sElContent.length; unit++){
+    //   $($(sElContent)[unit]).css('font-size',  18*this.growthTextFactor);
+    // }
+  }  
+
+  public alterFontSize(){
+    let sElContent = $('[id=content]');
+    for(let unit = 0; unit < sElContent.length; unit++){
+      $($(sElContent)[unit]).css('font-size',  18*this.growthTextFactor);
+    }
+  }
+
+  public getRandomColor() {
+      let letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+  }
 
 
     private newCheckRound(){
@@ -259,13 +343,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
 
-
-
-
-
-     //////////////////////////////////////
-    // LOAD DO TECLADO VIA COPY DRAGULA //
-   ////////////////////////////////////// 
+        /////////////////////////////
+     ///////////////////////////////////////////////////////
+    // LOAD DO TECLADO VIA COPY DOS ELEMENTOS DO DRAGULA //
+   ///////////////////////////////////////////////////////
+    ////////////////////////////
 
 
     public updateReplicant(nameString: string){
@@ -276,12 +358,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
 
-      
+      let quantity = Math.floor(this.keyboardContainerSize / this.keysWidthSize)
+      this.choppedNumber = quantity-1;
+
       let user = this.authService.getLocalUser();
-      //this.tecladoService.loadSingleKeyboard(this.keyboardToEdit, user.email, user.jwt).subscribe(async (data)=>{
+      
         this.tecladoService.loadSingleKeyboard(nameString, user.email, user.jwt).subscribe(async (data)=>{  
         
       this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
+
+          //console.log(JSON.stringify(replicantFromDatabase));
+          if(replicantFromDatabase.magnify !== undefined ||  replicantFromDatabase.magnify !== null){
+            this.growthTextFactor = Number(replicantFromDatabase.magnify);
+          } else {
+            this.growthTextFactor = Number(1.0.toFixed(2));
+          }
+          
 
       this.imgLinesArray = [];
 
@@ -518,6 +610,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       
                    
         
+                    let sElContentUpdate = $('[id=content]');
+                    for(let unit = 0; unit < sElContentUpdate.length; unit++){
+                      $($(sElContentUpdate)[unit]).css('font-size',  18*replicantFromDatabase.magnify);
+                    }
                     
        })
        
@@ -525,6 +621,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }
   
+
+    
+        /////////////////////////////
+     ////////////////////////
+    // FUNÇÃO AUXILIAR    //
+   ////////////////////////
+    ////////////////////////////
 
 
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
@@ -551,7 +654,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         keyboard.image.push(imageL);  ////////////////////////////////ADICIONADO RECENTEMENTE /////////////////////////////// 
       } 
 
-      keyboard.type = layout.nameLayout
+      keyboard.type = layout.nameLayout;
+      keyboard.magnify = layout.magnify;
 
   }
 
@@ -573,8 +677,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
 
 
+    
+        /////////////////////////////
+     //////////////////////////////
+    // EVENTO REMOVE DO DRAGULA //
+   //////////////////////////////
+    ////////////////////////////
+
+
     private onRemove(value){
-      let DEBUG = false;
+      let DEBUG = true;
 
       if(DEBUG) console.log("MARK1");
         let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, index, found;
@@ -594,6 +706,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         isImage = true;
       }
 
+
+      //console.log('sourceY: ' + sourceY);
+
+
       if(DEBUG) console.log("MARK2");
       this.tecladoReplicant.teclas[sourceY][sourceX] = "";
       this.tecladoReplicant.text[sourceY][sourceX] = "";
@@ -610,9 +726,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   found = true;
                   this.count +=1;
                   if(DEBUG) console.log("MARK4");
-                  //if(!this.imgLinesArray.includes(sourceY.toString())){
-                  //  this.imgLinesArray.push(sourceY);
-                 // }
+
                 }
               }
               if(DEBUG) console.log(found);
@@ -620,18 +734,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               
               if(!found || this.count >= 1){
                 if(DEBUG) console.log("MARK5");
-                if(this.imgLinesArray.includes(sourceY.toString())){
+                //if(this.imgLinesArray.includes(sourceY.toString())){
                   if(DEBUG) console.log('SOURCE: ' + sourceY);
-                  index = this.imgLinesArray.indexOf[sourceY];
+                  //index = this.imgLinesArray.indexOf[sourceY];
                   for(let i = 0; i < this.imgLinesArray.length; i++){
                     if(this.imgLinesArray[i] === sourceY){
                       if(DEBUG) console.log("MARK6");
+                      
                       index = i;
+                      break;
                     }
-                  }
+                  //}
 
                   if(DEBUG)  console.log('INDEX: ' + index);
                   this.imgLinesArray.splice(index, 1);
+                  //console.log(JSON.stringify(this.imgLinesArray));
                 }
               }
               
@@ -643,7 +760,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(isImage){
           if(!this.checkLineHasImage(sourceY)){
             //console.log("ATIVOU DEFAULT 5")
-            console.log('SIZE CHANGER X2');
+            //console.log('SIZE CHANGER X2');
             this.changeLineSize(sourceY, 'default');
           }
       }
@@ -665,19 +782,38 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           } else {
             $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
           }
+          if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+            $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.keysHeightSize);
+          } else {
+            $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.keysHeightSize);
+          }
   
         }
       }
  
+      console.log(JSON.stringify(this.imgLinesArray) )
+      console.log(JSON.stringify(this.tecladoReplicant.teclas))
+      console.log(JSON.stringify(this.tecladoReplicant.action))
+      console.log(JSON.stringify(this.tecladoReplicant.text))
 
 
     }  
 
 
+
+    
+        /////////////////////////////
+     ////////////////////////////
+    // EVENTO DROP DO DRAGULA //
+   ////////////////////////////
+    ////////////////////////////
+
     private onDrop(value) {
+      console.log("NEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEW")
+      //console.clear();
+      let DEBUG = true;
 
 
-      let DEBUG = false;
       if (value[2] == null) {//dragged outside any of the bags
           return;
       }    
@@ -711,7 +847,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
-        
             for(let i = 0; i < this.imgLinesArray.length; i++){
               if(this.imgLinesArray[i].toString() === sourceY.toString()){
                 if(DEBUG) console.log("MARK-DROP-8");
@@ -720,53 +855,158 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 break;
               }
             }
-          //}
+     
 
-         
+            if(DEBUG) console.log("MARK-NEWDROP-1");
   
             
          
           if(! $($(value[1])[0]).find('button')[0] && isContent && $($(value[1])[0]).find('input')[0] !== undefined){
-   
+            if(DEBUG) console.log("MARK-NEWDROP-2");
               if( $($(value[1])[0]).find('input')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
-                
+                if(DEBUG) console.log("MARK-NEWDROP-3");
    
                   if($($(value[1])[0].attributes)[4]){  
+                    if(DEBUG) console.log("MARK-NEWDROP-4");
                     if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                      
-    
+                      if(DEBUG) console.log("MARK-NEWDROP-5");
+                      //console.log("SPLICE 1");
                       this.imgLinesArray.splice(this.cutIndex, 1);
                     }
                   }   
               }
           } else if(! $($(value[1])[0]).find('input')[0] && isContent && $($(value[1])[0]).find('button')[0] !== undefined) {
-
+            if(DEBUG) console.log("MARK-NEWDROP-6");
             if( $($(value[1])[0]).find('button')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
               
-
+              if(DEBUG) console.log("MARK-NEWDROP-7");
               if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                
-    
+                if(DEBUG) console.log("MARK-NEWDROP-8");
+               // console.log("SPLICE 2");
+
                 this.imgLinesArray.splice(this.cutIndex, 1);
               }  
             }
           }     
      
 
+  
 
+          if(DEBUG) console.log("MARK-NEWDROP-1A");
+          console.log(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0])
+         // console.log(JSON.stringify(this.tecladoReplicant.teclas) ) 
 
           if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && drainY !== sourceY){
 
-            this.imgLinesArray.push(Number(drainY)) ;
 
+            if(DEBUG) console.log("MARK-NEWDROP-9");
               
+
+
+            if(this.choppedNumber !== 14){
+              if(DEBUG) console.log("MARK-NEWDROP-10");
+              let found = false;
+              for(let unit = 0; unit < this.imgLinesArray.length; unit++){
+                //console.log(this.imgLinesArray[unit] + ' ####> ' + drainY)
+                if(this.imgLinesArray[unit].toString() === drainY.toString()){
+                  found = true;
+                  break;
+                }
+              }
+
+              if(this.imgLinesArray.length === 0){
+                // REMANEJAMENTO DE TODOS OS BOTÕES DE ACORDO COM O ARRAY RECURSIVO!!!
+                                        //FAZ REMANEJAMENTO DE TECLAS
+                        
+                      //   let sElContent = $("[id=content]")
+                      //   for( let uRow = 0; uRow < this.tecladoReplicant.teclas.length; uRow++){
+
+                      //     for(let uCol = 0; uCol < this.tecladoReplicant.teclas[uRow].length; uCol++){
+                      
+                      //       let rearrangedFormula = this.globColumnQnty*Number(uRow)+Number(uCol);
+                          
+                      //       if($(sElContent[rearrangedFormula]).find('input')[0]){
+                          
+                      //         let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+                      //         $(sElContent[rearrangedFormula]).find('input')[0].remove();
+                      //         let newUnit = this.mapToNewFormula(uCol, uRow, this.choppedNumber);
+                      //         if(newUnit === x && newUnit !== 0){
+                      //           console.log("IGUAL 1")
+                      //           newUnit = newUnit - 1;
+                      //         }
+                      //         rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                      //         sElContent[rearrangedFormula].appendChild(copy);
+                      //         console.log('x: ' + x + ' uCol: ' + uCol);
+                           
+                      //       } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+                         
+                      //         let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+                      //         $(sElContent[rearrangedFormula]).find('button')[0].remove();
+                      //         let newUnit = this.mapToNewFormula(uCol, uRow, this.choppedNumber);
+                      //         if(newUnit === x && newUnit !== 0){
+                      //           console.log("IGUAL 2")
+                      //           newUnit = newUnit - 1;
+                      //         }
+                      //         rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                      //         sElContent[rearrangedFormula].appendChild(copy);
+                      //         console.log('x: ' + x + ' uCol: ' + uCol);
+  
+                      //       } else if( this.tecladoReplicant.teclas[uRow][uCol].split('$')[0] === '*img' ){
+                              
+                      //         let copy = sElContent[rearrangedFormula].cloneNode(true);
+                      //         sElContent[rearrangedFormula].remove();
+                      //         let newUnit = this.mapToNewFormula(uCol, uRow, this.choppedNumber);
+                      //         if(newUnit === x && newUnit !== 0){
+                      //           console.log("IGUAL 2")
+                      //           newUnit = newUnit - 1;
+                      //         }
+                      //         rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                      //         sElContent[rearrangedFormula].appendChild(copy);
+                      //         console.log('x: ' + x + ' uCol: ' + uCol);
+                      //       }    
+                      //   }
+                      // }  
+                //found = true;
+              }
+  
+              //console.log("FOUND: " + found)
+              //console.log("drainY: " + drainY);
+              //console.log("ARRAY:");
+              //console.log(JSON.stringify(this.imgLinesArray))
+                  //if(this.imgLinesArray.includes(drainY)){
+                    if(!found){
+                      if(DEBUG) console.log("MARK-NEWDROP-11");
+                        let sElContentTmp = $('[id=content]');
+                        //sElContentTmp[0] = $(value[1])[0];
+                        let el = $(value[1])[0].cloneNode(true);
+                        $(value[1])[0].remove();
+  
+                        let derivedX;
+      
+                        //console.log("RECURSÃO ATIVADA NO DROP");
+                        derivedX = this.mapToNewFormula(drainX, drainY, this.choppedNumber);//
+                      
+
+                        let formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
+                        //let formula = this.globColumnQnty*Number(drainY)+Number(drainX);
+                        
+                        drainX = derivedX;
+                        sElContentTmp[formula].appendChild(el);
+                  }     
+        
+            }
+
+            // console.log("PUSH 1");
+             this.imgLinesArray.push(Number(drainY)) ;
+
               let choice = false;
   
 
             
 
               if( !this.checkLineHasImage(drainY) ) {
-
+                if(DEBUG) console.log("MARK-NEWDROP-12");
+                //console.log("MARK-DROP-1")
 
                   this.changeLineSize(drainY, 'imgSize');
                       let sElContentTmp = $('[id=content]');
@@ -777,25 +1017,37 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                         if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                          if(this.ENABLE_TEXT_MODE){
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                          } else {
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                          }
+                          
                         } else {
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                          if(this.ENABLE_TEXT_MODE){
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                          } else {
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                          }
+                          
                         }
                 
                       }
               }        
 
   
-              if(this.checkLineHasImage(sourceY) ){
+  
 
-     
+              if(this.checkLineHasImage(sourceY) ){
+                if(DEBUG) console.log("MARK-NEWDROP-13");
+                //console.log("MARK-DROP-2")
                 
                 this.changeLineSize(sourceY, 'default');
                 let sElContentTmp = $('[id=content]');
                 for(let step = 0 ; step < 14; step++){
 
                   let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-         
+
                   if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
                     $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
                   } else {
@@ -807,14 +1059,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             
 
               if(!this.checkLineHasImage(sourceY) ){
+                if(DEBUG) console.log("MARK-NEWDROP-14");
 
-                
+                //console.log("MARK-DROP-3")
                 this.changeLineSize(sourceY, 'default');
                 let sElContentTmp = $('[id=content]');
                 for(let step = 0 ; step < 14; step++){
 
                   let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-            
+                  
+
                   if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
                     $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
                   } else {
@@ -825,31 +1079,55 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               } 
 
 
-            }
+            } 
             
 
             if( !this.checkLineHasImage(drainY) ) {
+              if(DEBUG) console.log("MARK-NEWDROP-15");
 
-              if(isContent) $($(value[1])[0]).find('input').css('height', this.keysHeightSize);
-              
+              if(isContent) {
+                 $($(value[1])[0]).find('input').css('height', this.keysHeightSize);
+              } else {
+                $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
+              }   
+              //console.log("MARK-DROP-4")
             }
 
             if( this.checkLineHasImage(drainY) ) {
-
+              if(DEBUG) console.log("MARK-NEWDROP-16");
               if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
               if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-              if(isContent) $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
+              if(isContent){
+                if(this.ENABLE_TEXT_MODE){
+                  $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize + this.textModeFactor);
+                } else {
+                  $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
+                  //console.log("MARK-DROP-5")
+                }
+                
+              } 
               let sElContentTmp = $('[id=content]');
               
               for(let line = 0 ; line < this.imgLinesArray.length; line++){
                   for(let step = 0 ; step < 14; step++){
                     
                     let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(step);
-  
+                    
                     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      if(DEBUG) console.log("MARK-NEWDROP-17");
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);    
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      }
+                      
                     } else {
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      }
+                      
                     }
                   }
               }    
@@ -857,6 +1135,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
 
             if( this.checkLineHasImage(sourceY) ) {
+              if(DEBUG) console.log("MARK-NEWDROP-18");
 
               if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
               if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
@@ -868,10 +1147,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     
                     let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(step);
    
+  
+
                     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                      }
+                      
                     } else {
-                      $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      if(this.ENABLE_TEXT_MODE){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                      }
                     }
                   }
               }    
@@ -888,11 +1178,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 let trueValue, copyObj, objClass, trueObj, toSource;
 
                 if($(value).find('button')){
+                  if(DEBUG) console.log("MARK-NEWDROP-19");
                   
                   this.lastKind = $(value[1])[0].id ; 
                   trueValue = $($(value[1])[0]).val() ;
                   
                   if(!this.editMode){
+                    if(DEBUG) console.log("MARK-NEWDROP-20");
                           if($(value[2]).children().length > 2 ) {   
               
                             if(DEBUG) console.log("MARK-DROP-9");
@@ -952,11 +1244,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               if(DEBUG) console.log("MARK-DROP-13");
 
                               if(trueValue){
+                                if(DEBUG) console.log("MARK-DROP-13A");
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.teclas[drainY][drainX] = trueValue;
                  
                               
                               } else {
+                                if(DEBUG) console.log("MARK-DROP-13B");
                                 this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                               }
@@ -969,10 +1263,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";  
 
                                 if(this.tecladoReplicant.image[sourceY][sourceX] !== ""){
+                                  if(DEBUG) console.log("MARK-DROP-13C");
                                   this.tecladoReplicant.image[drainY][drainX] = this.tecladoReplicant.image[sourceY][sourceX];  
                                   this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                 } else {
-                                  this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+                                  if(DEBUG) console.log("MARK-DROP-13D");
+                                  //this.tecladoReplicant.image[sourceY][sourceX] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
                                 }
               
 
@@ -993,7 +1289,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                           if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                           if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-                          $($(value[1])[0]).css('height', this.imgMaxHeightSize);
+                          if(this.checkLineHasImage(drainY)){
+                            $($(value[1])[0]).css('height', this.imgMaxHeightSize);
+                          } else {
+                            $($(value[1])[0]).css('height', this.keysHeightSize);
+                          }
+                          
                           
                  
                   } else {
@@ -1121,7 +1422,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
                           if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                           if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-                          $($(value[1])[0]).css('height', this.imgMaxHeightSize);
+                          if(this.checkLineHasImage(drainY)){
+                            $($(value[1])[0]).css('height', this.imgMaxHeightSize);  
+                          } else {
+                            $($(value[1])[0]).css('height', this.keysHeightSize);
+                          }
+                          
 
                           if($($(value[1])[0]).find('input')[0]){ 
                                   $($($(value[1])[0]).find('input')[0]).css('class', 'tamanho-button-especial-big' + ' ' + drainX + '#' + drainY + '');
@@ -1147,44 +1453,47 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }
 
  
+                    this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
                   
-                  if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
-  
-                      
-                          let sElContentTmp = $('[id=content]');
-                          for(let step = 0 ; step < 14; step++){
-                            
-                            let formula = this.globColumnQnty*Number(drainY)+Number(step);
-  
-                            if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                            } else {
-                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                            }
+                    //console.log(JSON.stringify(this.tecladoReplicant.teclas) )
 
-                          }
+                    // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                    let sElContent = $("[id=content]");
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                        let formula = this.globColumnQnty*Number(x)+Number(y);
+                        if(!this.imgLinesArray.includes(x) ){
+                                $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
+                        }      
+                      }
+                    } 
+
+
+
+                    let found = false;
+                    for(let x = 0 ; x < this.imgLinesArray.length; x++){
+                      console.log(this.imgLinesArray[x] + ' *** ' + drainY)
+                      if(this.imgLinesArray[x].toString() === drainY.toString()){
+                        found = true;
+                        break;
+                      }
                     }
 
 
-                    if(!this.checkLineHasImage(sourceY) ){
- 
-                      
-                      this.changeLineSize(sourceY, 'default');
-                      let sElContentTmp = $('[id=content]');
-                      for(let step = 0 ; step < 14; step++){
-      
-                        let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-      
-                        if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-                        } else {
-                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-                        }
-           
-                      }
-                    } 
-                  
+                    //console.log(JSON.stringify(this.imgLinesArray));
+                    //console.log(drainY);
+                    //console.log("FOUND1: " + found );
 
+                    if( (!this.checkLineHasImage(drainY) )  &&
+                    (this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' || 
+                     this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img') ){
+                      if(DEBUG) console.log("MARK-NEWDROP-21");
+                        this.keysRelocation(drainX,drainY);
+                    }      
+
+                   // console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                    //console.log(JSON.stringify(this.tecladoReplicant.action))
+                   //console.log(JSON.stringify(this.tecladoReplicant.text))
 
 
                   return;
@@ -1410,7 +1719,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                               value[1].remove();
-                      this.tecladoReplicant.teclas[sourceY][sourceX] = "";
+                                this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                                 this.tecladoReplicant.text[sourceY][sourceX] = ""; 
                                 this.tecladoReplicant.action[sourceY][sourceX] = "";   
 
@@ -1780,26 +2089,123 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
               
 
+                  this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
+                  //console.log(JSON.stringify(this.tecladoReplicant.teclas) )
+              
+                  // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                  let sElContent = $("[id=content]");
+                  for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                    for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                      let formula = this.globColumnQnty*Number(x)+Number(y);
+                      if(!this.imgLinesArray.includes(x) ){
+                              $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
+                      }      
+                    }
+                  }                   
 
-                
+
+                  found = false;
+                  for(let x = 0 ; x < this.imgLinesArray.length; x++){
+                    //console.log(this.imgLinesArray[x] + ' *** ' + drainY)
+                    if(this.imgLinesArray[x].toString() === drainY.toString()){
+                      found = true;
+                      break;
+                    }
+                  }
+
+
+                  //console.log(JSON.stringify(this.imgLinesArray));
+                  //console.log(drainY);
+                  //console.log("FOUND2: " + found );
+
+                  if( (!this.checkLineHasImage(drainY) )  &&
+                  (this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' || 
+                   this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img') ){
+                    if(DEBUG) console.log("MARK-NEWDROP-22");
+                      this.keysRelocation(drainX,drainY);
+                  }    
+
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                  console.log(JSON.stringify(this.tecladoReplicant.action))
+                  console.log(JSON.stringify(this.tecladoReplicant.text))
+             
+    }    
+
+    
+        /////////////////////////////
+     //////////////////////////////////////
+    // FAZ AJUSTE DO TAMANHO DAS LINHAS //
+   //////////////////////////////////////
+    ////////////////////////////
+
+
+    private adjustLinesSizes(drainY: number, drainX: number, sourceY: number, sourceX: number){
+                //console.log(JSON.stringify(this.imgLinesArray));
+                //console.log(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0]);
+                //if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
                   if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
-
+                      //console.log("CHANGER-1")
                         let sElContentTmp = $('[id=content]');
                         for(let step = 0 ; step < 14; step++){
                           
                           let formula = this.globColumnQnty*Number(drainY)+Number(step);
       
+                          // if(this.markOfRemove){
+                          //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                          // }
+
                           if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                            if(this.ENABLE_TEXT_MODE){
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize + this.textModeFactor);  
+                            } else {
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                            }
+                            
                           } else {
-                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                            if(this.ENABLE_TEXT_MODE){
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize + this.textModeFactor);  
+                            } else {
+                              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                            }
+                            
                           }
       
                         }
                   }
 
-                  if(!this.checkLineHasImage(sourceY) ){
+                  if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img'){
+                    //console.log("CHANGER-2")
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < 14; step++){
+                      
+                      let formula = this.globColumnQnty*Number(drainY)+Number(step);
 
+                      // if(this.markOfRemove){
+                      //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                      // }
+
+                      //console.log($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]);
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+  
+                    }
+              }
+
+                  if(!this.checkLineHasImage(sourceY) ){
+                    //console.log("CHANGER-3")
                     
                     this.changeLineSize(sourceY, 'default');
                     let sElContentTmp = $('[id=content]');
@@ -1807,20 +2213,107 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     
                       let formula = this.globColumnQnty*Number(sourceY)+Number(step);
             
-                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                      // if(this.markOfRemove){
+                      //   if(sourceY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                      // }
+
+                      if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+                        $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.keysHeightSize);
                       } else {
-                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                        $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.keysHeightSize);
                       }
      
                     }
-                  } 
-                
-      
-   
-             
-    }    
+                  }
 
+                  if(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' ){
+                    //console.log("CHANGER-4");
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < 14; step++){
+    
+                      let formula = this.globColumnQnty*Number(drainY)+Number(step);
+                      
+                      // if(this.markOfRemove){
+                      //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                      // }
+                      
+                      //console.log( $(sElContentTmp)[formula]);
+  
+                      
+
+                      //console.log('altura: ' + this.imgMaxHeightSize);
+
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        //console.log("CHANGER-4-A1");
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        //console.log("CHANGER-4-B1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+
+                      
+                      if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+                        //console.log("CHANGER-4-A1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        //console.log("CHANGER-4-B1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[1]).find('button')[0]).css('height', this.imgMaxHeightSize);  
+                        }
+                        
+                      }
+
+                      if( $($(sElContentTmp)[formula]).find('input')[0] ){
+                        //console.log("CHANGER-4-A1")
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($(sElContentTmp)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+                        } else {
+                          $($($(sElContentTmp)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        //console.log("CHANGER-4-B1")
+                        if(this.ENABLE_TEXT_MODE) {
+                          $($($(sElContentTmp)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($(sElContentTmp)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+
+
+
+     
+                    }
+                  }
+                  
+                  
+    }
+
+
+    
+        /////////////////////////////
+     ////////////////////////
+    // FUNÇÕES AUXILIARES //
+   ////////////////////////
+    ////////////////////////////
     
     public showModal(component){
         const activeModal = this.modalService.open(component, {size: 'lg', container: 'nb-layout'});
@@ -1836,6 +2329,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let openFacLayout = new OpenFACLayout(); 
       openFacLayout.nameLayout = replicant.type;
       openFacLayout.email = email; 
+      openFacLayout.magnify = replicant.magnify;
 
       let teclado = replicant; // FAZER ATRIBUIÇÃO DO TECLADO QUE ESTÀ SENDO GERADO 
       let qntyLines = teclado.teclas.length;
@@ -1865,7 +2359,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    }
 
 
+
+   
+        /////////////////////////////
+     ////////////////////
+    // SALVAR TECLADO //
+   ////////////////////
+    ////////////////////////////
+
+
    public saveKeyboardLayout(saveAs?: boolean){
+     //console.log('MAGNIFY: ' + this.growthTextFactor)
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
               let message = this.messageService.getTranslation('MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA');
@@ -1931,6 +2435,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                   let user = this.authService.getLocalUser();
                   finalKeyboard.type = this.keyboardName;
+                  finalKeyboard.magnify = this.growthTextFactor;
                   let layout = this.populateLayout(finalKeyboard, user.email);
                   
                   this.layoutEditorService.saveNewKeyboard(layout, user.email).subscribe((result)=>{
@@ -1946,7 +2451,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         if(result === "confirm"){
                                let user = this.authService.getLocalUser();
                                finalKeyboard.type = this.keyboardToEdit;
-                              
+                               finalKeyboard.magnify = this.growthTextFactor;
                                let layout = this.populateLayout(finalKeyboard, user.email);
                                layout.nameLayout = this.keyboardName;
 
@@ -1987,6 +2492,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
              if(result === "confirm"){
             let user = this.authService.getLocalUser();
             finalKeyboard.type = this.keyboardToEdit;
+            finalKeyboard.magnify = this.growthTextFactor;
             let layout = this.populateLayout(finalKeyboard, user.email);
             
             this.layoutEditorService.saveUpdateKeyboard(layout, user.email).subscribe((result)=>{
@@ -2015,6 +2521,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
    }
 
+
+   
+        /////////////////////////////
+     /////////////////////////////////////////////
+    // RECARREGA LISTA DE TECLADOS PARA EDITAR //
+   /////////////////////////////////////////////
+    ////////////////////////////
+
   public reloadList(){
       
       this.keyboardNamesSubscribe.unsubscribe();
@@ -2027,9 +2541,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    }
 
 
+   
+        /////////////////////////////
+     //////////////////////////////////
+    // CRIAÇÂO DE TECLADO EM BRANCO //
+   //////////////////////////////////
+    ////////////////////////////
+
     private createEmptyKeyboard(){
-     
-      for (let i = 0; i < 5; i++) {
+      let rows = 5;
+      if(this.smallerScreenSize){
+        rows = 6;
+      }
+
+      for (let i = 0; i < rows; i++) {
         this.teclado.teclas[i] = [[]];
         this.teclado.text[i] = [[]]; 
         this.teclado.action[i] = [[]];
@@ -2054,7 +2579,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
          textReplicant = [];
          actionReplicant = [];   
          imageReplicant = [];    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
-          for (let j = 0; j < 14; j++) {
+          for (let j = 0; j < this.globColumnQnty; j++) {
               line[j] = "";
               textL[j] = "";  
               actionL[j] = "";   
@@ -2078,18 +2603,31 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.lines = this.teclado.teclas.length;
       }  
       
+      let row: string[], pRow: string[], sRow: string[], tRow: string[], zRow: string[], zzRow: string[]; 
+      if(this.smallerScreenSize){
+        row = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='];
+        pRow = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']'];
+        sRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA'];
+        tRow = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup'];
+        zRow = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', ''];
+        zzRow = ['*bckspc', '\\', '*arrowdown', '', '', '', '', '', '', '', '', '', '']
+      } else {
+        row = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
+        pRow = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
+        sRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', '*arrowdown'];
+        tRow = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup', ''];
+        zRow = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
+      }
 
-      var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
-      var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
-      var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', '*arrowdown'];
-      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup', ''];
-      var zRow: string[] = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
-
+  
        this.masterKeys.teclas.push(row);
        this.masterKeys.teclas.push(pRow);
        this.masterKeys.teclas.push(sRow);
        this.masterKeys.teclas.push(tRow);
        this.masterKeys.teclas.push(zRow); 
+       if(this.smallerScreenSize){
+        this.masterKeys.teclas.push(zzRow); 
+       }
 
 
     }
@@ -2134,11 +2672,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
+
+        /////////////////////////////
+     ////////////////////////
+    // INSERT DAS IMAGENS //
+   ////////////////////////
+    ////////////////////////////
+
     public editCaptionNText(event){
       
    
-        
-      
          this.showModal(CaptionTextModalComponent);
         
         let parts = event.target.className.split(' ');
@@ -2267,10 +2810,35 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let x = parts[0].split('#')[0];
               let y = parts[0].split('#')[1];
             
-         
+
+
+              let formula = this.globColumnQnty*Number(y)+Number(x);
+
+
+              //console.log('x: ' + x);
+              //console.log('y: ' + y);
+
+              this.markOfRemove = false;
+
+
+               if(imagem && this.IMAGE_TESTE){
+                    this.markOfRemove = true;
+                  
+                        let quantity = Math.floor(this.keyboardContainerSize / this.keysWidthSize)
+                          this.choppedNumber = quantity-1;
+                          this.choppedLines.push(y);
+     
+               } 
+
+
+               let notX = false;
+
+
+
+
               $(event.target).attr('value', buttonCaption);
 
-
+               
             
 
               let validator = parts.length > 1 ? (parts[1].indexOf('#') !== -1 && imagem) : true;
@@ -2285,16 +2853,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    
 
                 
-                let formula = this.globColumnQnty*Number(y)+Number(x);
+                //let formula = this.globColumnQnty*Number(y)+Number(x);
                 
 
                 let el, copied, copyToTarget = false;
+                //if(event.target.value){
                 if(event.target.value){
-                  
+                  //console.log("MARK-IN-1");
                   el = $(event.target);
                   copyToTarget = true;
+                  //console.log("WITH TARGET!");
                 } else {
-                  
+                  //console.log("MARK-IN-2");
                     let sEl = $("[id=copy]").clone();
                     
                     let el1 = document.getElementsByClassName('@copyArea$'+ x +'#'+ y +'');
@@ -2304,11 +2874,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     
                     if(sEl[<number>formula] === undefined) {
-                  
+                      //console.log("MARK-IN-3");
                       el = $(event.target);
                       copyToTarget = true;
                     } else {
-                  
+                      //console.log("MARK-IN-4");
                       //el = sEl[<number>formula].cloneNode(true);
                       el = sEl[0].cloneNode(true);
                     }
@@ -2316,17 +2886,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
 
 
-
+                //console.log(el);
                 let normal = false;
 
                 if($(el).find('input')[0]){
+                 // console.log("MARK-IN-5");
+                  //console.log("TEM INPUT");
                   normal = true;
 
-
+                 // console.log("CAPTION: " + buttonCaption);
                   if(buttonCaption !== "*img") {
-
+                   // console.log("MARK-IN-6");
+                    //console.log("NÃO É IMAGEM");
                       $($(el).find('input')[0]).attr('value', buttonCaption);
-
                       
                       let found = false;
                       for(let step=0; step< this.imgLinesArray.length; step++){
@@ -2339,13 +2911,130 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       if( found ) $($(el).find('input')[0]).css('height', this.imgMaxHeightSize);
                   } else {
-
+                   // console.log("MARK-IN-7");
+                    //console.log("É IMAGEM");
                     $($(el).find('input')[0]).attr('value', '');
                   }    
                    
 
                   
                   if(( imgUrl || sysImg) && imagem  ){
+                   // console.log("MARK-IN-8");
+                          //console.log('(imUrl || sysImg && imagem)')
+                      let found = false; 
+
+                     // console.log("ANTES DE TUDO: " )
+                     // console.log(JSON.stringify(this.imgLinesArray))
+      
+                      if(this.choppedNumber !== 14){
+      
+                        for(let unit = 0; unit < this.imgLinesArray.length; unit++){
+                          if(this.imgLinesArray[unit].toString() === y.toString()){
+                            //console.log('Array value' + this.imgLinesArray[unit]);
+                            //console.log('Y: ' + y);
+                            found = true;
+                            break;
+                          }
+                        }
+      
+                        let oldValueX = x;
+                        //console.log("FOUND: " + found);
+                        if(!found) {
+                          //console.log("RECURSÃO ATIVADA NO INSERT")
+                          x = this.mapToNewFormula(x,y, this.choppedNumber);
+                          notX = true;
+                        }
+
+                          ////////////////////           ///////////
+                         //////////////////////////////////////////
+                        //     FAZ REMANEJAMENTO DE TECLAS      //
+                       ////////////////////////////////////////// 
+                      /////////                     ////////////
+                        
+                      let sElContent = $("[id=content]")
+                        //for( let uRow = 0; uRow < this.tecladoReplicant.teclas.length; uRow++){
+                        if(!this.checkLineHasImage(y)){
+                            this.keysRelocation(x,y);
+                              //   for(let uCol = 0; uCol < this.tecladoReplicant.teclas[y].length; uCol++){
+                            
+                              //     let rearrangedFormula = this.globColumnQnty*Number(y)+Number(uCol);
+                                
+                              //     if($(sElContent[rearrangedFormula]).find('input')[0]){
+                                
+                              //       let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+                              //       $(sElContent[rearrangedFormula]).find('input')[0].remove();
+                              //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber);
+                              //       if(newUnit === x && newUnit !== 0){
+                              //         console.log("IGUAL 1")
+                              //         newUnit = newUnit - 1;
+                              //       }
+                              //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                              //       sElContent[rearrangedFormula].appendChild(copy);
+
+                              //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                              //       this.tecladoReplicant.teclas[y][uCol] = "";
+                              //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                              //       this.tecladoReplicant.action[y][uCol] = "";
+                              //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                              //       this.tecladoReplicant.text[y][uCol] = "";
+                              //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                              //       this.tecladoReplicant.image[y][uCol] = "";
+
+                              //       console.log('x: ' + x + ' uCol: ' + uCol);
+                                
+                              //     } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+                              
+                              //       let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+                              //       $(sElContent[rearrangedFormula]).find('button')[0].remove();
+                              //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber);
+                              //       if(newUnit === x && newUnit !== 0){
+                              //         console.log("IGUAL 2")
+                              //         newUnit = newUnit - 1;
+                              //       }
+                              //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                              //       sElContent[rearrangedFormula].appendChild(copy);
+
+                              //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                              //       this.tecladoReplicant.teclas[y][uCol] = "";
+                              //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                              //       this.tecladoReplicant.action[y][uCol] = "";
+                              //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                              //       this.tecladoReplicant.text[y][uCol] = "";
+                              //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                              //       this.tecladoReplicant.image[y][uCol] = "";
+                              //       console.log('x: ' + x + ' uCol: ' + uCol);
+        
+                              //     } else if( this.tecladoReplicant.teclas[y][uCol].split('$')[0] === '*img' ){
+                                    
+                              //       let copy = sElContent[rearrangedFormula].cloneNode(true);
+                              //       sElContent[rearrangedFormula].remove();
+                              //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber);
+                              //       if(newUnit === x && newUnit !== 0){
+                              //         console.log("IGUAL 2")
+                              //         newUnit = newUnit - 1;
+                              //       }
+                              //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                              //       sElContent[rearrangedFormula].appendChild(copy);
+
+                              //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                              //       this.tecladoReplicant.teclas[y][uCol] = "";
+                              //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                              //       this.tecladoReplicant.action[y][uCol] = "";
+                              //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                              //       this.tecladoReplicant.text[y][uCol] = "";
+                              //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                              //       this.tecladoReplicant.image[y][uCol] = "";
+                              //       console.log('x: ' + x + ' uCol: ' + uCol);
+                              //     }    
+                              // }
+                      }        
+                      //}  
+
+                      //console.log(JSON.stringify(this.oldPositions))
+
+   
+                        //formula = this.globColumnQnty*Number(y)+Number(x);
+                 }  
 
 
                       this.imgLinesArray.push(Number(y));
@@ -2358,7 +3047,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                         this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
                       } else {
- 
+                        
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                         this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
@@ -2371,6 +3060,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 } else if($(el).find('button')[0]){
+
+                  //console.log("TEM BUTTON");
                   normal = true;
 
                   
@@ -2378,18 +3069,55 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   
                   $($(el).find('button')[0]).text(buttonCaption);
                   if(buttonCaption !== "*img") {
-     
                       $($(el).find('button')[0]).attr('value', buttonCaption);
                       if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       if(this.imgLinesArray.includes(x)) $($(el).find('button')[0]).css('height', this.imgMaxHeightSize);
                   } else {
-      
                     $($(el).find('button')[0]).attr('value', '');
                   }        
                   
                   if( (imgUrl || sysImg ) & imagem){
     
+                          
+                      let found = false; 
+
+                      //console.log("ANTES DE TUDO: " )
+                     // console.log(JSON.stringify(this.imgLinesArray))
+      
+                      if(this.choppedNumber !== 14){
+      
+                        for(let unit = 0; unit < this.imgLinesArray.length; unit++){
+                          if(this.imgLinesArray[unit].toString() === y.toString()){
+                            //console.log('Array value' + this.imgLinesArray[unit]);
+                            //console.log('Y: ' + y);
+                            found = true;
+                            break;
+                          }
+                        }
+      
+                        let oldValueX = x;
+                        //console.log("FOUND: " + found);
+                        if(!found) {
+                          //console.log("RECURSÃO ATIVADA NO INSERT")
+                          x = this.mapToNewFormula(x,y, this.choppedNumber, false);
+                          notX = true;
+                        }
+
+                    // //FAZ REMANEJAMENTO DE TECLAS
+                    // let diff = Math.abs(x - oldValueX);
+                    // let sElContent = $("[id=content]")
+                    // for(let unit=0; unit < sElContent.length; unit++){
+                    //     let formula = this.globColumnQnty*Number(y)+Number(unit);
+                    //     let newEl = sElContent[formula].cloneNode(true);
+                    //     sElContent[formula].remove();
+                        
+                    //     formula = this.globColumnQnty*Number(y)+Number(Math.abs(unit-diff) );
+                    //     sElContent[formula].appendChild(newEl);
+                    // }
+                 }
+
+
                     this.imgLinesArray.push(Number(this.y) );
                     
   
@@ -2400,7 +3128,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
                     } else {
-          
                       if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
@@ -2416,9 +3143,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 if(!imagem) buttonImage = "";
 
 
-
-                if(x.split("$")[0] === '@copyArea') x = x.split('$')[1];
+                if(!notX){
+                    if(x.split("$")[0] === '@copyArea') x = x.split('$')[1];
+                }    
              
+
 
                 this.tecladoReplicant.action[y][x] = buttonAction;
 
@@ -2438,15 +3167,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                
 
                 if(!normal){
-  
+                  //console.log("Não é normal!");
                   if($(el).find('mat-icon')[0]) $(el).find('mat-icon')[0].remove();
                   
                   $(el).text(buttonCaption);
                   if(buttonCaption !== "*img") {
-   
                       $(el).attr('value', buttonCaption);
                   } else {
-    
                     $(el).attr('value', '');
                   }        
                   
@@ -2456,13 +3183,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     this.imgLinesArray.push(Number(y) );
                     
-     
 
-                    if(sysImg){
-
-       
-
-             
+                    if(sysImg){             
                       if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
@@ -2476,16 +3198,27 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
      
                   } 
 
-
-
                 }
 
                 $(el).removeAttr('tooltip');
                 
+
+
+
+                if(this.choppedNumber !== 14){
+                  
+                  formula = this.globColumnQnty*Number(y)+Number(x);
+                  
+
+                  if(!copyToTarget) $("[id=content]")[formula].appendChild(el);  
+                } else {
+                  $("[id=content]")[formula].appendChild(el);  
+                }
                 
-                if(!copyToTarget) $("[id=content]")[formula].appendChild(el);
+               // console.log('imgLinesArray:')
+                //console.log(JSON.stringify(this.imgLinesArray))
 
-
+                
 
                 if( ( imgUrl || sysImg ) && imagem ){
                       let sElContent = $("[id=content]");
@@ -2493,42 +3226,146 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       let sElRows = $("[id=blankRows]");
                       let sElNone = $("[id=blankNone]");
 
-                  for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
-                    for(let col=0; col < this.globColumnQnty ; col++){
-                      
-                        let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
-                        $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
-                        $($(sElContent)[formula]).css('width', this.keysWidthSize);
-   
+                      let randomColor =  this.getRandomColor();
+
+                      for(let imgLine = 0; imgLine < this.imgLinesArray.length ; imgLine++ ){
+                        for(let col=0; col < this.globColumnQnty ; col++){
+                          if(col >= this.choppedNumber) continue;
+
+                            let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
+                            
+                            
+                            if(this.ENABLE_TEXT_MODE){
+                              $($(sElContent)[formula]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                            } else {
+                              $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
+                            }
+                            
+                            $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                            
+
+                            
+                            
+                            if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                            if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
+              
+                          
+
+                            if(this.ENABLE_TEXT_MODE){
+                              $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+                              $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+
+                              $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4 + this.textModeMarginFactor);
+                              $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4 + this.textModeMarginFactor);
+                            } else {
+                              $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+                              $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+
+                              $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
+                              $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
+                            }
+                            
+
+                        }    
+                      }
+
+
+        
+                      for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+                        for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+                          let formula = this.globColumnQnty*Number(line)+Number(col);
+                          
+                              if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+                                && this.imgLinesArray.includes(line)){
+                                $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
+                
+                              }
+                              
+                        }
+                      }
+    
+                    }
+
+
+
+                    let sElContentTmp = $("[id=content]");
+                    for(let line = 0; line < this.imgLinesArray.length; line++){
+                      for(let col = 0; col < this.globColumnQnty; col++){
+
+                        if(col >= this.choppedNumber) continue;
+
+                        let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
+
+                        formula = this.findElement(sElContentTmp,this.imgLinesArray[line], col )
+
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-           
-                        $($(sElLines)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
-                        $($(sElRows)[this.imgLinesArray[imgLine]]).css('height', this.imgMaxHeightSize);
+                        if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                          if(this.ENABLE_TEXT_MODE){
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);  
+                          } else {
+                            $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);
+                          }
+                          
+                        } 
+                        if( $($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0] ){
+                          if(this.ENABLE_TEXT_MODE){
+                            $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                          } else {
+                            $($($($(sElContentTmp)[formula]).find('div')[1]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                          }
+                          
+                        }
 
-                        $($(sElLines)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
-                        $($(sElRows)[this.imgLinesArray[imgLine]]).css('margin-bottom', 4);
+                      }
                     }    
-                  }
- 
-                }
-
-              let sElContentTmp = $("[id=content]");
-              for(let line = 0; line < this.imgLinesArray.length; line++){
-                for(let col = 0; col < this.globColumnQnty; col++){
-                  let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
-                  if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-                    if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-                    if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-                    $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
-                  }
-                  
-
-                }
-              }    
 
 
-              this.payloadSubscription.unsubscribe();
+                    //CLEAR ALL ELEMENTS BIGGER THAN CHOPPEDNUMBER
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y = 0 ; y  < this.tecladoReplicant.teclas[x].length; y++){
+                        if(x > this.choppedNumber){
+                          this.tecladoReplicant.teclas[x][y] = "";
+                        }
+                      }
+                    }
+
+                    // CHANGE SIZE OF NORMAL KEYS
+                    let sElContent = $("[id=content]");
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                        let formula = this.globColumnQnty*Number(x)+Number(y);
+                        
+                       // console.log(JSON.stringify(this.imgLinesArray))
+                        //console.log(JSON.stringify(x.toString()))
+                        //console.log(this.imgLinesArray.includes(x) );
+                        if( $($(sElContent)[formula]).find('input')[0] && this.imgLinesArray.includes(x) ){
+                          $($($(sElContent)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        } else if( $($(sElContent)[formula]).find('button')[0] && this.imgLinesArray.includes(x) ){
+                          $($($(sElContent)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                      }
+                    }
+
+                    // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                    sElContent = $("[id=content]");
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                        let formula = this.globColumnQnty*Number(x)+Number(y);
+                        if(!this.imgLinesArray.includes(x) ){
+                               $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
+                        }      
+                      }
+                    }
+
+                    this.payloadSubscription.unsubscribe();
+
+
+
+                   // console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                  //  console.log(JSON.stringify(this.tecladoReplicant.action))
+                  //  console.log(JSON.stringify(this.tecladoReplicant.text))
+                  //  console.log(JSON.stringify(this.tecladoReplicant.image))
 
 
         })
@@ -2539,6 +3376,444 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
+      public keysRelocation(x: number, y: number){
+         // console.log("RELOCATION ACTIVATED!");
+
+            let sElContent = $('[id=content]');
+
+            for(let uCol = 0; uCol < this.tecladoReplicant.teclas[y].length; uCol++){
+                                
+              let rearrangedFormula = this.globColumnQnty*Number(y)+Number(uCol);
+            
+              if($(sElContent[rearrangedFormula]).find('input')[0]){
+            
+                let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+                $(sElContent[rearrangedFormula]).find('input')[0].remove();
+                let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+                if(newUnit === x && newUnit !== 0){
+                  //console.log("IGUAL 1")
+                  newUnit = newUnit - 1;
+                }
+                rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                sElContent[rearrangedFormula].appendChild(copy);
+
+                this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                this.tecladoReplicant.teclas[y][uCol] = "";
+                this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                this.tecladoReplicant.action[y][uCol] = "";
+                this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                this.tecladoReplicant.text[y][uCol] = "";
+                this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                this.tecladoReplicant.image[y][uCol] = "";
+
+                //console.log('x: ' + x + ' uCol: ' + uCol);
+            
+              } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+          
+                let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+                $(sElContent[rearrangedFormula]).find('button')[0].remove();
+                let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+                if(newUnit === x && newUnit !== 0){
+                  //console.log("IGUAL 2")
+                  newUnit = newUnit - 1;
+                }
+                rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                sElContent[rearrangedFormula].appendChild(copy);
+
+                this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                this.tecladoReplicant.teclas[y][uCol] = "";
+                this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                this.tecladoReplicant.action[y][uCol] = "";
+                this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                this.tecladoReplicant.text[y][uCol] = "";
+                this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                this.tecladoReplicant.image[y][uCol] = "";
+                //console.log('x: ' + x + ' uCol: ' + uCol);
+
+              } else if( this.tecladoReplicant.teclas[y][uCol].split('$')[0] === '*img' ){
+                
+                let copy = sElContent[rearrangedFormula].cloneNode(true);
+                sElContent[rearrangedFormula].remove();
+                let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+                if(newUnit === x && newUnit !== 0){
+                  //console.log("IGUAL 2")
+                  newUnit = newUnit - 1;
+                }
+                rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                sElContent[rearrangedFormula].appendChild(copy);
+
+                this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                this.tecladoReplicant.teclas[y][uCol] = "";
+                this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                this.tecladoReplicant.action[y][uCol] = "";
+                this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                this.tecladoReplicant.text[y][uCol] = "";
+                this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                this.tecladoReplicant.image[y][uCol] = "";
+                //console.log('x: ' + x + ' uCol: ' + uCol);
+              }    
+          }
+      }
+
+
+
+      private mapToNewFormula(x: number, y: number, receptacle: number, inverse?: boolean):number{
+            let DEBUG = false;                                                      
+            //console.log("EXECUTADO FUNÇÃO RECURSIVA")
+            // Arrays preparation phase
+            //console.log('X ENVIADO: ' + x)
+            let originalArray = new Array();
+            let joinOriginalArray = new Array();
+            let joinReceptacleArray = new Array();
+            let receptacleArray = new Array();
+            for(let unit = 0; unit < 14; unit++){
+              originalArray.push(unit);
+              joinReceptacleArray.push('');
+              joinOriginalArray.push('');
+            }
+            for(let unit = 0; unit < receptacle; unit++){
+              receptacleArray.push(unit)
+            }           
+ 
+            //console.clear();
+            this.mapToNewRecursive(x, y, originalArray, receptacleArray, joinOriginalArray, joinReceptacleArray, false, false, DEBUG);
+
+            if(DEBUG) console.log("************************************");
+            
+            if(DEBUG) console.log('ORIGINAL: ' + joinOriginalArray.length);
+            if(DEBUG) console.log('RECEPTACLE: ' + joinReceptacleArray.length);
+            if(DEBUG) console.log("FINAL JOINS:")
+            if(DEBUG) console.log(JSON.stringify(joinOriginalArray) )
+            if(DEBUG) console.log(JSON.stringify(joinReceptacleArray) )
+
+            for(let original = 0; original < joinOriginalArray.length; original++){
+                
+                 if(DEBUG) console.log(joinOriginalArray[original] + ' ----> ' + x)
+                 if(DEBUG) console.log(joinReceptacleArray[original] + ' **** ' + x)  
+                if(joinOriginalArray[original].toString() === x.toString()){
+                  if(joinReceptacleArray[original] === undefined || joinReceptacleArray[original] === null){
+                    for(let unit = 0; unit < joinReceptacleArray.length; unit++){
+                      if(joinReceptacleArray[unit] !== null) return joinReceptacleArray[unit];    
+                    }
+                  }  
+                  if(DEBUG) console.log('VALOR ACHADO:')
+                  if(DEBUG) console.log(JSON.stringify(joinReceptacleArray[original] ) )
+                  if(inverse){
+                    return joinOriginalArray[original];  
+                  } else {
+                    return joinReceptacleArray[original];
+                  }  
+                }
+            }
+
+      }
+
+      private mapToNewRecursive(x: number, y: number, originalArray: Array<any>, receptacleArray: Array<any>, joinOriginalArray: Array<any>,
+           joinReceptacleArray: Array<any>, left: boolean, right: boolean, DEBUG: boolean){
+        let copyOriginal = originalArray.slice(), copyReceptacle = receptacleArray.slice();
+        
+        if(DEBUG) console.log('------------------------------')
+        if(DEBUG) console.log("ORIGINAL:")
+        if(DEBUG) console.log(JSON.stringify(originalArray) )
+        if(DEBUG) console.log("RECEPTACLE:")
+        if(DEBUG) console.log(JSON.stringify(receptacleArray) )
+
+        if(DEBUG)  console.log("JOINS:")
+        if(DEBUG) console.log(JSON.stringify(joinOriginalArray) )
+        if(DEBUG) console.log(JSON.stringify(joinReceptacleArray) )
+        
+
+        // copying extremes
+        joinOriginalArray[originalArray[0]] = originalArray[0];
+        joinOriginalArray[originalArray[originalArray.length-1]] = originalArray[originalArray.length-1];
+
+        joinReceptacleArray[originalArray[0]] = receptacleArray[0];
+        joinReceptacleArray[originalArray[originalArray.length-1]] = receptacleArray[receptacleArray.length-1];
+        
+        // copying the centers
+          let originalIsEven, receptacleIsEven;
+          let originalCenter, originalLowCenter, originalHighCenter, originalUniqueCenter = undefined;
+          let receptacleCenter, receptacleLowCenter, receptacleHighCenter, receptacleUniqueCenter = undefined;
+
+          //check if original has even lenght
+          if(originalArray.length % 2 === 0 && originalArray.length !== 0){
+            // even
+            originalIsEven = true;
+            //console.log("original EVEN");
+            originalLowCenter = originalArray[Math.floor((originalArray.length-1)/2)];
+            originalHighCenter = originalArray[Math.ceil((originalArray.length-1)/2)];
+
+            if(joinOriginalArray[originalLowCenter] !== '' && joinOriginalArray[originalHighCenter] !== '') {console.log('MARK1'); return;}
+            joinOriginalArray[originalLowCenter] = originalArray[originalLowCenter];
+            joinOriginalArray[originalHighCenter] = originalArray[originalHighCenter];
+          } else {
+            // odd
+            //console.log("original ODD");
+            originalIsEven = false;
+            
+            if(originalArray.length > 1){
+              originalUniqueCenter = originalArray[Math.floor((originalArray.length-1)/2)];
+              //console.log("ORIGINAL CENTER: " + originalUniqueCenter)
+
+              if(joinOriginalArray[originalUniqueCenter] !== '') {console.log('MARK2'); return;}
+              
+              
+
+              for(let unit = 0; unit < copyOriginal.length; unit++){
+                if(copyOriginal[unit] === originalUniqueCenter){
+                  //leftOriginalArray = copyOriginal.slice(1, unit);
+                  joinOriginalArray[originalUniqueCenter] = originalArray[unit];  
+                  break;
+                }
+              }              
+
+            
+            } else {
+                  if(DEBUG) console.log('VALOR DENTRO DO ARRAY: ' + originalArray[0])
+                  if(joinOriginalArray[originalArray[0]] !== "") {console.log('MARK3'); return;}    
+                  joinOriginalArray[originalArray[0]] = originalArray[0];  
+            }
+            
+        
+          }
+        
+          //check if receptacle has even lenght
+          if(receptacleArray.length % 2 === 0 && receptacleArray.length !== 0){
+            // even
+            receptacleIsEven = true;
+            //console.log("receptacle EVEN");
+            receptacleLowCenter = receptacleArray[Math.floor((receptacleArray.length-1)/2)];
+            receptacleHighCenter = receptacleArray[Math.ceil((receptacleArray.length-1)/2)];
+
+
+            if(originalIsEven){
+              if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {console.log('MARK4'); return;}
+              joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleLowCenter];
+              joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleHighCenter];  
+            } else {
+              joinReceptacleArray[receptacleArray[0]] = receptacleArray[0];
+            }
+            
+          } else {
+            //console.log("receptacle ODD");
+            receptacleIsEven = false;
+            // odd
+
+            if(receptacleArray.length > 1){
+                  receptacleUniqueCenter = receptacleArray[Math.floor((receptacleArray.length-1)/2)];
+                if(originalIsEven){
+                  if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {console.log('MARK5'); return;}
+                  //joinReceptacleArray[originalLowCenter] = receptacleArray[originalLowCenter];
+                  joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleUniqueCenter];
+                  //joinReceptacleArray[originalHighCenter] = receptacleArray[originalHighCenter];
+                  joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleUniqueCenter];
+                } else {
+                  if(joinReceptacleArray[originalUniqueCenter] !== '') {console.log('MARK6'); return;}
+                  
+                  if(left) joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter-1];
+                  if(right)joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter-(receptacleUniqueCenter-1)];
+                }
+            } else {
+              joinReceptacleArray[originalUniqueCenter] = receptacleArray[0];
+            }
+            
+            
+          }
+
+          if(DEBUG) console.log("ALTERED JOINS:")
+          if(DEBUG) console.log(JSON.stringify(joinOriginalArray) )
+          if(DEBUG) console.log(JSON.stringify(joinReceptacleArray) )
+          
+
+            ////////////////////////////////////////
+           ////  CORTE ESQUERDO      //////////////
+          ////////////////////////////////////////
+          
+          let leftOriginalArray, leftReceptacleArray;
+          ////////
+          //Left Side
+          if(originalIsEven && copyOriginal.length > 1){
+          
+            for(let unit = 0; unit < copyOriginal.length; unit++){
+              if(copyOriginal[unit] === originalLowCenter){
+                leftOriginalArray = copyOriginal.slice(1, unit);
+                break;
+              }
+            }
+
+          } else if (!originalIsEven && copyOriginal.length > 1){
+            
+            if(DEBUG) console.log("UNIQUE CENTER: " + originalUniqueCenter)
+
+            for(let unit = 0; unit < copyOriginal.length; unit++){
+              if(copyOriginal[unit] === originalUniqueCenter){
+                leftOriginalArray = copyOriginal.slice(1, unit);
+                break;
+              }
+            }
+
+
+          }else {
+            leftOriginalArray = originalArray;
+          }
+
+          if(receptacleIsEven && copyReceptacle.length > 1){
+          
+            for(let unit = 0; unit < copyReceptacle.length; unit++){
+              if(copyReceptacle[unit] === receptacleLowCenter){
+                leftReceptacleArray = copyReceptacle.slice(1, unit);
+                break;
+              }
+            }
+            
+
+          } else if (!receptacleIsEven && copyReceptacle.length > 1){
+            if(DEBUG) console.log('R UNIQUE CENTER: ' + receptacleUniqueCenter)
+            for(let unit = 0; unit < copyReceptacle.length; unit++){
+              if(copyReceptacle[unit] === receptacleUniqueCenter){
+                leftReceptacleArray = copyReceptacle.slice(1, unit+1);
+                if(DEBUG) console.log(unit);
+                break;
+              }
+            }
+           
+ 
+          } else {
+            leftReceptacleArray = receptacleArray;
+          }
+
+
+            ////////////////////////////////////////
+           ////  CORTE DIREITO       //////////////
+          ////////////////////////////////////////
+
+           let rightOriginalArray, rightReceptacleArray; 
+           if(originalIsEven && copyOriginal.length > 1){
+
+             rightOriginalArray = copyOriginal.slice(originalHighCenter+1, copyOriginal.length-1);
+ 
+           } else if (!originalIsEven && copyOriginal.length > 1){
+            if(DEBUG) console.log("UNIQUE CENTER: " + originalUniqueCenter)
+             
+             for(let unit = 0; unit < copyOriginal.length; unit++){
+              if(copyOriginal[unit] === originalUniqueCenter){
+                rightOriginalArray = copyOriginal.slice(unit+1, copyOriginal.length-1);
+                if(DEBUG) console.log(unit);
+                break;
+              }
+            }
+ 
+           }else {
+             rightOriginalArray = originalArray;
+           }
+           
+           if(receptacleIsEven && copyReceptacle.length > 1){
+
+             rightReceptacleArray = copyReceptacle.slice(receptacleHighCenter+1, copyReceptacle.length-1);
+
+           } else if (!receptacleIsEven && copyReceptacle.length > 1){
+            if(copyReceptacle.length === 3 ) {
+
+              rightReceptacleArray = copyReceptacle.slice(1,2);
+
+            } else {
+
+                rightReceptacleArray = copyReceptacle.slice(receptacleUniqueCenter+1, copyOriginal.length-1);
+            }   
+  
+           } else {
+             rightReceptacleArray = receptacleArray;
+           }
+
+
+           if(DEBUG) console.log("SLICED LEFT ORIGINAL:")
+           if(DEBUG) console.log(JSON.stringify(leftOriginalArray) )
+           if(DEBUG) console.log("SLICED LEFT RECEPTACLE:")
+           if(DEBUG) console.log(JSON.stringify(leftReceptacleArray) )
+          
+          
+          // falta achar a base da recursão
+          let foundReceptacleEmpty = false
+          for(let unit = 0; unit < joinReceptacleArray.length; unit++){
+            if(joinReceptacleArray[unit] === '' ){
+              foundReceptacleEmpty = true;
+              break;
+            } 
+          }
+
+          let foundOriginalEmpty = false
+          for(let unit = 0; unit < joinOriginalArray.length; unit++){
+            if(joinOriginalArray[unit] === '' ){
+              foundOriginalEmpty = true;
+              break;
+            } 
+          }
+          
+          if( !foundOriginalEmpty && !foundReceptacleEmpty && leftOriginalArray.length <= 1 && leftReceptacleArray.length <= 1) return;
+        
+          if(DEBUG) console.log("RECURSION LEFT")
+          this.mapToNewRecursive(x, y, leftOriginalArray, leftReceptacleArray, joinOriginalArray, joinReceptacleArray, true, false, DEBUG);
+          if(DEBUG) console.log("BACK FROM RECURSION LEFT")
+
+
+          if(DEBUG) console.log("BEFORE SLICE RIGHT ORIGINAL:")
+          if(DEBUG) console.log(JSON.stringify(copyOriginal) )
+          if(DEBUG) console.log("BEFORE SLICE RIGHT RECEPTACLE:")
+          if(DEBUG) console.log(JSON.stringify(copyReceptacle) )
+
+          if(DEBUG) console.log("SLICED RIGHT ORIGINAL:")
+          if(DEBUG) console.log(JSON.stringify(rightOriginalArray) )
+          if(DEBUG) console.log("SLICED RIGHT RECEPTACLE:")
+          if(DEBUG) console.log(JSON.stringify(rightReceptacleArray) )
+
+          foundReceptacleEmpty = false
+          for(let unit = 0; unit < joinReceptacleArray.length; unit++){
+            if(joinReceptacleArray[unit] === '' ){
+              foundReceptacleEmpty = true;
+              break;
+            } 
+          }
+
+          foundOriginalEmpty = false
+          for(let unit = 0; unit < joinOriginalArray.length; unit++){
+            if(joinOriginalArray[unit] === '' ){
+              foundOriginalEmpty = true;
+              break;
+            } 
+          }
+
+          if( !foundOriginalEmpty && !foundReceptacleEmpty && rightOriginalArray.length <= 1 && rightReceptacleArray.length <= 1) return;
+          if(DEBUG) console.log("RECURSION RIGHT")
+          this.mapToNewRecursive(x, y, rightOriginalArray, rightReceptacleArray, joinOriginalArray, joinReceptacleArray, false, true, DEBUG);
+          if(DEBUG) console.log("BACK FROM RECURSION RIGHT")
+     
+      }
+
+
+      public findElement(sElContent, x: number , y: number){
+        //let result = new Array()
+        for(let el = 0; el < sElContent.length; el++){
+          // //x
+          // result.push($(sElContent)[el].className.split(' ')[0].split('#')[0])
+          // //y
+          // result.push($(sElContent)[el].className.split(' ')[0].split('#')[1])
+
+          // result.push($(sElContent)[el].className.split(' ')[0].split('#')[1])
+          if($(sElContent)[el].className.split(' ')[0].split('#')[0].toString() === y.toString() &&
+               $(sElContent)[el].className.split(' ')[0].split('#')[1].toString() === x.toString()){
+                return el;
+          }
+        }
+        
+      }
+
+      public calculateSum(actualLine: number){
+        let removedNodes = 0;
+        for(let line = 1; line < actualLine; line++){
+          removedNodes = removedNodes + (this.globColumnQnty - this.teclado.teclas[line].length);
+        }
+        return removedNodes;
+      }
 
 
 
@@ -2555,11 +3830,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
         if(config === 'default'){
 
+
                 for(let col=0; col < this.globColumnQnty ; col++){
                   
                     let formula = this.globColumnQnty*Number(targetY)+Number(col);
+
+                    //  if(this.markOfRemove){
+                    //     if(targetY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
+                    //  }
+                    $($(sElContent)[formula]).css('visibility', 'visible');
                     $($(sElContent)[formula]).css('height', this.keysHeightSize);
-                    $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                    if(this.growthFactor > 1 ){
+                      $($(sElContent)[formula]).css('width', this.keysWidthSize/this.growthFactor);  
+                    } else {
+                      $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                    }
+                    
          
 
                     $($(sElLines)[targetY]).css('height', this.keysHeightSize);
@@ -2569,24 +3855,53 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     $($(sElRows)[targetY]).css('margin-bottom', 4 );
                 }    
 
+
+
+
         } else if( config === 'imgSize'){
-   
+
+               
               
                   for(let col=0; col < this.globColumnQnty ; col++){
                     
                   let formula = this.globColumnQnty*Number(targetY)+Number(col);
-                  $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
+
+  
                   $($(sElContent)[formula]).css('width', this.keysWidthSize);
      
 
-                  $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize);
-                  $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize); 
                   
-                  $($(sElLines)[targetY]).css('margin-bottom', 4 );
-                  $($(sElRows)[targetY]).css('margin-bottom', 4 );
+                  if(this.ENABLE_TEXT_MODE){
+                    $($(sElContent)[formula]).css('height', this.imgMaxHeightSize + this.textModeFactor);    
+                    $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize + this.textModeFactor );
+                    $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize + this.textModeFactor); 
+
+                    $($(sElLines)[targetY]).css('margin-bottom', 4 + this.textModeMarginFactor );
+                    $($(sElRows)[targetY]).css('margin-bottom', 4 + this.textModeMarginFactor);
+                  } else {
+                    $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);  
+                    $($(sElLines)[targetY]).css('height', this.imgMaxHeightSize);
+                    $($(sElRows)[targetY]).css('height', this.imgMaxHeightSize); 
+
+                    $($(sElLines)[targetY]).css('margin-bottom', 4 );
+                    $($(sElRows)[targetY]).css('margin-bottom', 4 );
+                  }
+                  
 
               }    
        
+              for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
+                for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
+                  let formula = this.globColumnQnty*Number(line)+Number(col);
+                  //console.log(this.choppedNumber)
+
+                  if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+                    && this.imgLinesArray.includes(line)){
+                    $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
+                    
+                  }
+                }
+              }
         }      
       }  
 
@@ -2615,6 +3930,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         el.css("transform", 'translateX('+ percent +'%)');
         el.css("height", height);
         el.css("width", width);
+
+        // el.css('filter', 'alpha(Opacity=30)')
+        // el.css('opacity', '0.3');
       }
 
       public checkExistence(iR: number){
