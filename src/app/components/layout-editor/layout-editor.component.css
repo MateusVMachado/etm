@@ -116,6 +116,8 @@ div[tooltip]:not([tooltip-persistent]):before {
 div[tooltip]:before {            
      position : absolute;
      padding: 3px;
+     margin-top: -5px;
+     z-index: 1;
      white-space:nowrap;
      transition: 100ms;
      word-wrap: none;
@@ -124,11 +126,13 @@ div[tooltip]:before {
      color: white;
      content : attr(tooltip);
      opacity : 0;
+     font-size: 50px;
 }
 
 div[tooltip]:hover:before {  
     transition: opacity 2.5s;      
     opacity: 1;
+    font-size: 20px;
 
 }
 

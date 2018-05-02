@@ -121,6 +121,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private once = true;
     private keysWidthSizeOriginal: number;
 
+    private oldPositions = new Array();
+    private smallerScreenSize: boolean;
+
     constructor(private router: Router, 
                 private tecladoService: TecladoService, 
                 private dragulaService: DragulaService,
@@ -136,9 +139,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 private cdr: ChangeDetectorRef) {
       super(injector);       
       this.timer = setInterval(this.newCheckRound.bind(this), 100);            
-      this.choppedNumber = this.globColumnQnty;
+      
      
 
+      let availHeight = window.screen.availHeight;
+      let availWidht = window.screen.availWidth;
+      console.log(availHeight + 'x' + availWidht );
+      if(availHeight === 728 && availWidht === 1024){
+        this.smallerScreenSize = true;
+        this.globColumnQnty = 13;
+      } else {
+        this.smallerScreenSize = false;
+      }           
+      
+      this.choppedNumber = this.globColumnQnty;
 
       this.userSession = new UserSessionModel();
       this.userSession.layoutEditorIntervals = new Array();
@@ -202,6 +216,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     ngOnInit() {
 
+      //Initializing OldPositions Array
+      for(let unit = 0; unit < this.globColumnQnty; unit++){
+        this.oldPositions = [];
+        this.oldPositions[unit] = '';
+      }
+
       this.keyboardContainerSize = $(document.getElementsByClassName('teclado-container-editor')).width();
       
       this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*5.5) )/this.globColumnQnty;
@@ -247,6 +267,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
         }
 
+        // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+        let sElContent = $("[id=content]");
+        for(let x = 0; x < self.tecladoReplicant.teclas.length; x++){
+          for(let y=0; y< self.tecladoReplicant.teclas[x].length; y++){
+            let formula = self.globColumnQnty*Number(x)+Number(y);
+            if(!self.imgLinesArray.includes(x) ){
+                    $($(sElContent)[formula]).css('width', self.keysWidthSizeOriginal);
+            }      
+          }
+        }
+
+        self.growthTextFactor = 0.0;
 
 
       });
@@ -327,7 +359,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let replicantFromDatabase = new TecladoModel();
 
       let quantity = Math.floor(this.keyboardContainerSize / this.keysWidthSize)
-      this.choppedNumber = quantity;
+      this.choppedNumber = quantity-1;
 
       let user = this.authService.getLocalUser();
       
@@ -675,7 +707,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
-      console.log('sourceY: ' + sourceY);
+      //console.log('sourceY: ' + sourceY);
 
 
       if(DEBUG) console.log("MARK2");
@@ -760,6 +792,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
  
       console.log(JSON.stringify(this.imgLinesArray) )
+      console.log(JSON.stringify(this.tecladoReplicant.teclas))
+      console.log(JSON.stringify(this.tecladoReplicant.action))
+      console.log(JSON.stringify(this.tecladoReplicant.text))
+
 
     }  
 
@@ -773,7 +809,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     ////////////////////////////
 
     private onDrop(value) {
-
+      console.log("NEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEWNEW")
       //console.clear();
       let DEBUG = true;
 
@@ -809,7 +845,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               drainY = drainParts[1];
           }    
 
-        
+
+
             for(let i = 0; i < this.imgLinesArray.length; i++){
               if(this.imgLinesArray[i].toString() === sourceY.toString()){
                 if(DEBUG) console.log("MARK-DROP-8");
@@ -820,50 +857,57 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
      
 
-         
+            if(DEBUG) console.log("MARK-NEWDROP-1");
   
             
          
           if(! $($(value[1])[0]).find('button')[0] && isContent && $($(value[1])[0]).find('input')[0] !== undefined){
-   
+            if(DEBUG) console.log("MARK-NEWDROP-2");
               if( $($(value[1])[0]).find('input')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
-                
+                if(DEBUG) console.log("MARK-NEWDROP-3");
    
                   if($($(value[1])[0].attributes)[4]){  
+                    if(DEBUG) console.log("MARK-NEWDROP-4");
                     if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                      
-                      console.log("SPLICE 1");
+                      if(DEBUG) console.log("MARK-NEWDROP-5");
+                      //console.log("SPLICE 1");
                       this.imgLinesArray.splice(this.cutIndex, 1);
                     }
                   }   
               }
           } else if(! $($(value[1])[0]).find('input')[0] && isContent && $($(value[1])[0]).find('button')[0] !== undefined) {
-
+            if(DEBUG) console.log("MARK-NEWDROP-6");
             if( $($(value[1])[0]).find('button')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
               
-
+              if(DEBUG) console.log("MARK-NEWDROP-7");
               if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                
-                console.log("SPLICE 2");
+                if(DEBUG) console.log("MARK-NEWDROP-8");
+               // console.log("SPLICE 2");
 
                 this.imgLinesArray.splice(this.cutIndex, 1);
               }  
             }
           }     
      
-          console.log(JSON.stringify(this.tecladoReplicant.teclas) ) 
+
+  
+
+          if(DEBUG) console.log("MARK-NEWDROP-1A");
+          console.log(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0])
+         // console.log(JSON.stringify(this.tecladoReplicant.teclas) ) 
 
           if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && drainY !== sourceY){
 
 
-
+            if(DEBUG) console.log("MARK-NEWDROP-9");
               
 
 
             if(this.choppedNumber !== 14){
+              if(DEBUG) console.log("MARK-NEWDROP-10");
               let found = false;
               for(let unit = 0; unit < this.imgLinesArray.length; unit++){
-                console.log(this.imgLinesArray[unit] + ' ####> ' + drainY)
+                //console.log(this.imgLinesArray[unit] + ' ####> ' + drainY)
                 if(this.imgLinesArray[unit].toString() === drainY.toString()){
                   found = true;
                   break;
@@ -872,15 +916,66 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
               if(this.imgLinesArray.length === 0){
                 // REMANEJAMENTO DE TODOS OS BOTÕES DE ACORDO COM O ARRAY RECURSIVO!!!
-                found = true;
+                                        //FAZ REMANEJAMENTO DE TECLAS
+                        
+                      //   let sElContent = $("[id=content]")
+                      //   for( let uRow = 0; uRow < this.tecladoReplicant.teclas.length; uRow++){
+
+                      //     for(let uCol = 0; uCol < this.tecladoReplicant.teclas[uRow].length; uCol++){
+                      
+                      //       let rearrangedFormula = this.globColumnQnty*Number(uRow)+Number(uCol);
+                          
+                      //       if($(sElContent[rearrangedFormula]).find('input')[0]){
+                          
+                      //         let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+                      //         $(sElContent[rearrangedFormula]).find('input')[0].remove();
+                      //         let newUnit = this.mapToNewFormula(uCol, uRow, this.choppedNumber);
+                      //         if(newUnit === x && newUnit !== 0){
+                      //           console.log("IGUAL 1")
+                      //           newUnit = newUnit - 1;
+                      //         }
+                      //         rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                      //         sElContent[rearrangedFormula].appendChild(copy);
+                      //         console.log('x: ' + x + ' uCol: ' + uCol);
+                           
+                      //       } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+                         
+                      //         let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+                      //         $(sElContent[rearrangedFormula]).find('button')[0].remove();
+                      //         let newUnit = this.mapToNewFormula(uCol, uRow, this.choppedNumber);
+                      //         if(newUnit === x && newUnit !== 0){
+                      //           console.log("IGUAL 2")
+                      //           newUnit = newUnit - 1;
+                      //         }
+                      //         rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                      //         sElContent[rearrangedFormula].appendChild(copy);
+                      //         console.log('x: ' + x + ' uCol: ' + uCol);
+  
+                      //       } else if( this.tecladoReplicant.teclas[uRow][uCol].split('$')[0] === '*img' ){
+                              
+                      //         let copy = sElContent[rearrangedFormula].cloneNode(true);
+                      //         sElContent[rearrangedFormula].remove();
+                      //         let newUnit = this.mapToNewFormula(uCol, uRow, this.choppedNumber);
+                      //         if(newUnit === x && newUnit !== 0){
+                      //           console.log("IGUAL 2")
+                      //           newUnit = newUnit - 1;
+                      //         }
+                      //         rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                      //         sElContent[rearrangedFormula].appendChild(copy);
+                      //         console.log('x: ' + x + ' uCol: ' + uCol);
+                      //       }    
+                      //   }
+                      // }  
+                //found = true;
               }
   
-              console.log("FOUND: " + found)
-              console.log("drainY: " + drainY);
-              console.log("ARRAY:");
+              //console.log("FOUND: " + found)
+              //console.log("drainY: " + drainY);
+              //console.log("ARRAY:");
               console.log(JSON.stringify(this.imgLinesArray))
                   //if(this.imgLinesArray.includes(drainY)){
                     if(!found){
+                      if(DEBUG) console.log("MARK-NEWDROP-11");
                         let sElContentTmp = $('[id=content]');
                         //sElContentTmp[0] = $(value[1])[0];
                         let el = $(value[1])[0].cloneNode(true);
@@ -888,7 +983,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
   
                         let derivedX;
       
-                        console.log("RECURSÃO ATIVADA NO DROP");
+                        //console.log("RECURSÃO ATIVADA NO DROP");
                         derivedX = this.mapToNewFormula(drainX, drainY, this.choppedNumber);//
                       
 
@@ -901,8 +996,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
             }
 
-            console.log("PUSH 1");
-            this.imgLinesArray.push(Number(drainY)) ;
+             console.log("PUSH 1");
+             this.imgLinesArray.push(Number(drainY)) ;
 
               let choice = false;
   
@@ -910,7 +1005,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             
 
               if( !this.checkLineHasImage(drainY) ) {
-                console.log("MARK-DROP-1")
+                if(DEBUG) console.log("MARK-NEWDROP-12");
+                //console.log("MARK-DROP-1")
 
                   this.changeLineSize(drainY, 'imgSize');
                       let sElContentTmp = $('[id=content]');
@@ -940,9 +1036,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               }        
 
   
-              if(this.checkLineHasImage(sourceY) ){
+  
 
-                console.log("MARK-DROP-2")
+              if(this.checkLineHasImage(sourceY) ){
+                if(DEBUG) console.log("MARK-NEWDROP-13");
+                //console.log("MARK-DROP-2")
                 
                 this.changeLineSize(sourceY, 'default');
                 let sElContentTmp = $('[id=content]');
@@ -961,8 +1059,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             
 
               if(!this.checkLineHasImage(sourceY) ){
+                if(DEBUG) console.log("MARK-NEWDROP-14");
 
-                console.log("MARK-DROP-3")
+                //console.log("MARK-DROP-3")
                 this.changeLineSize(sourceY, 'default');
                 let sElContentTmp = $('[id=content]');
                 for(let step = 0 ; step < 14; step++){
@@ -980,21 +1079,22 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               } 
 
 
-            }
+            } 
             
 
             if( !this.checkLineHasImage(drainY) ) {
+              if(DEBUG) console.log("MARK-NEWDROP-15");
 
               if(isContent) {
                  $($(value[1])[0]).find('input').css('height', this.keysHeightSize);
               } else {
                 $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
               }   
-              console.log("MARK-DROP-4")
+              //console.log("MARK-DROP-4")
             }
 
             if( this.checkLineHasImage(drainY) ) {
-
+              if(DEBUG) console.log("MARK-NEWDROP-16");
               if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
               if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
               if(isContent){
@@ -1002,7 +1102,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize + this.textModeFactor);
                 } else {
                   $($(value[1])[0]).find('input').css('height', this.imgMaxHeightSize);
-                  console.log("MARK-DROP-5")
+                  //console.log("MARK-DROP-5")
                 }
                 
               } 
@@ -1014,6 +1114,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(step);
                     
                     if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                      if(DEBUG) console.log("MARK-NEWDROP-17");
                       if(this.ENABLE_TEXT_MODE){
                         $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);    
                       } else {
@@ -1034,6 +1135,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
 
             if( this.checkLineHasImage(sourceY) ) {
+              if(DEBUG) console.log("MARK-NEWDROP-18");
 
               if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
               if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
@@ -1076,11 +1178,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 let trueValue, copyObj, objClass, trueObj, toSource;
 
                 if($(value).find('button')){
+                  if(DEBUG) console.log("MARK-NEWDROP-19");
                   
                   this.lastKind = $(value[1])[0].id ; 
                   trueValue = $($(value[1])[0]).val() ;
                   
                   if(!this.editMode){
+                    if(DEBUG) console.log("MARK-NEWDROP-20");
                           if($(value[2]).children().length > 2 ) {   
               
                             if(DEBUG) console.log("MARK-DROP-9");
@@ -1351,7 +1455,45 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
  
                     this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
                   
-                    console.log(JSON.stringify(this.tecladoReplicant.teclas) )
+                    //console.log(JSON.stringify(this.tecladoReplicant.teclas) )
+
+                    // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                    let sElContent = $("[id=content]");
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                        let formula = this.globColumnQnty*Number(x)+Number(y);
+                        if(!this.imgLinesArray.includes(x) ){
+                                $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
+                        }      
+                      }
+                    } 
+
+
+
+                    let found = false;
+                    for(let x = 0 ; x < this.imgLinesArray.length; x++){
+                      console.log(this.imgLinesArray[x] + ' *** ' + drainY)
+                      if(this.imgLinesArray[x].toString() === drainY.toString()){
+                        found = true;
+                        break;
+                      }
+                    }
+
+
+                    console.log(JSON.stringify(this.imgLinesArray));
+                    console.log(drainY);
+                    console.log("FOUND1: " + found );
+
+                    if( (!this.checkLineHasImage(drainY) )  &&
+                    (this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' || 
+                     this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img') ){
+                      if(DEBUG) console.log("MARK-NEWDROP-21");
+                        this.keysRelocation(drainX,drainY);
+                    }      
+
+                    console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                    console.log(JSON.stringify(this.tecladoReplicant.action))
+                    console.log(JSON.stringify(this.tecladoReplicant.text))
 
 
                   return;
@@ -1948,8 +2090,44 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               
 
                   this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
-                  console.log(JSON.stringify(this.tecladoReplicant.teclas) )
+                  //console.log(JSON.stringify(this.tecladoReplicant.teclas) )
               
+                  // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                  let sElContent = $("[id=content]");
+                  for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                    for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                      let formula = this.globColumnQnty*Number(x)+Number(y);
+                      if(!this.imgLinesArray.includes(x) ){
+                              $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
+                      }      
+                    }
+                  }                   
+
+
+                  found = false;
+                  for(let x = 0 ; x < this.imgLinesArray.length; x++){
+                    console.log(this.imgLinesArray[x] + ' *** ' + drainY)
+                    if(this.imgLinesArray[x].toString() === drainY.toString()){
+                      found = true;
+                      break;
+                    }
+                  }
+
+
+                  console.log(JSON.stringify(this.imgLinesArray));
+                  console.log(drainY);
+                  console.log("FOUND2: " + found );
+
+                  if( (!this.checkLineHasImage(drainY) )  &&
+                  (this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' || 
+                   this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img') ){
+                    if(DEBUG) console.log("MARK-NEWDROP-22");
+                      this.keysRelocation(drainX,drainY);
+                  }    
+
+                  console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                  console.log(JSON.stringify(this.tecladoReplicant.action))
+                  console.log(JSON.stringify(this.tecladoReplicant.text))
              
     }    
 
@@ -1963,7 +2141,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     private adjustLinesSizes(drainY: number, drainX: number, sourceY: number, sourceX: number){
                 console.log(JSON.stringify(this.imgLinesArray));
-                console.log(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0]);
+                //console.log(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0]);
                 //if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
                   if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
                       //console.log("CHANGER-1")
@@ -2006,7 +2184,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       //   if(drainY > 0) formula = formula - Math.abs( (this.globColumnQnty*this.teclado.teclas.length) - $('[id=content]').length )
                       // }
 
-                      console.log($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]);
+                      //console.log($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]);
                       if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
                         if(this.ENABLE_TEXT_MODE){
                           $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
@@ -2191,7 +2369,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
    public saveKeyboardLayout(saveAs?: boolean){
-     console.log('MAGNIFY: ' + this.growthTextFactor)
+     //console.log('MAGNIFY: ' + this.growthTextFactor)
      if(!saveAs){
             if(this.keyboardToEdit === 'pt-br'){
               let message = this.messageService.getTranslation('MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA');
@@ -2371,8 +2549,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     ////////////////////////////
 
     private createEmptyKeyboard(){
-     
-      for (let i = 0; i < 5; i++) {
+      let rows = 5;
+      if(this.smallerScreenSize){
+        rows = 6;
+      }
+
+      for (let i = 0; i < rows; i++) {
         this.teclado.teclas[i] = [[]];
         this.teclado.text[i] = [[]]; 
         this.teclado.action[i] = [[]];
@@ -2397,7 +2579,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
          textReplicant = [];
          actionReplicant = [];   
          imageReplicant = [];    ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
-          for (let j = 0; j < 14; j++) {
+          for (let j = 0; j < this.globColumnQnty; j++) {
               line[j] = "";
               textL[j] = "";  
               actionL[j] = "";   
@@ -2421,18 +2603,31 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           this.lines = this.teclado.teclas.length;
       }  
       
+      let row: string[], pRow: string[], sRow: string[], tRow: string[], zRow: string[], zzRow: string[]; 
+      if(this.smallerScreenSize){
+        row = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '='];
+        pRow = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']'];
+        sRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA'];
+        tRow = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup'];
+        zRow = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', ''];
+        zzRow = ['*bckspc', '\\', '*arrowdown', '', '', '', '', '', '', '', '', '', '']
+      } else {
+        row = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
+        pRow = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
+        sRow = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', '*arrowdown'];
+        tRow = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup', ''];
+        zRow = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
+      }
 
-      var row: string[] = ['\'', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '*bckspc'];
-      var pRow: string[] = ['*tab', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\\'];
-      var sRow: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ç',  ';', '*kbdrtrn', 'PULA', '*arrowdown'];
-      var tRow: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', '*arrowleft', '*arrowright', '*arrowup', ''];
-      var zRow: string[] = ['*mic', '*space', '', '', '', '', '', '', '', '', '', '', '', ''];
-
+  
        this.masterKeys.teclas.push(row);
        this.masterKeys.teclas.push(pRow);
        this.masterKeys.teclas.push(sRow);
        this.masterKeys.teclas.push(tRow);
        this.masterKeys.teclas.push(zRow); 
+       if(this.smallerScreenSize){
+        this.masterKeys.teclas.push(zzRow); 
+       }
 
 
     }
@@ -2620,8 +2815,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let formula = this.globColumnQnty*Number(y)+Number(x);
 
 
-              console.log('x: ' + x);
-              console.log('y: ' + y);
+              //console.log('x: ' + x);
+              //console.log('y: ' + y);
 
               this.markOfRemove = false;
 
@@ -2630,26 +2825,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     this.markOfRemove = true;
                   
                         let quantity = Math.floor(this.keyboardContainerSize / this.keysWidthSize)
-                          this.choppedNumber = quantity;
+                          this.choppedNumber = quantity-1;
                           this.choppedLines.push(y);
-
-                          
-
-
-
-                        console.log(JSON.stringify(this.choppedLines))
-                        console.log('choppNumber: ' + quantity)                      
-
-                        console.log("LINHA: " + y)
-
-                        console.log('Qntd na linha atual: ' + this.teclado.teclas[y].length )
-
      
                } 
 
-
-
-               console.log(JSON.stringify(this.teclado.teclas))
 
                let notX = false;
 
@@ -2679,12 +2859,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 let el, copied, copyToTarget = false;
                 //if(event.target.value){
                 if(event.target.value){
-                  
+                  //console.log("MARK-IN-1");
                   el = $(event.target);
                   copyToTarget = true;
-                  console.log("WITH TARGET!");
+                  //console.log("WITH TARGET!");
                 } else {
-                  
+                  //console.log("MARK-IN-2");
                     let sEl = $("[id=copy]").clone();
                     
                     let el1 = document.getElementsByClassName('@copyArea$'+ x +'#'+ y +'');
@@ -2694,11 +2874,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     
                     if(sEl[<number>formula] === undefined) {
-                  
+                      //console.log("MARK-IN-3");
                       el = $(event.target);
                       copyToTarget = true;
                     } else {
-                  
+                      //console.log("MARK-IN-4");
                       //el = sEl[<number>formula].cloneNode(true);
                       el = sEl[0].cloneNode(true);
                     }
@@ -2706,16 +2886,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }
 
 
-                console.log(el);
+                //console.log(el);
                 let normal = false;
 
                 if($(el).find('input')[0]){
-                  console.log("TEM INPUT");
+                 // console.log("MARK-IN-5");
+                  //console.log("TEM INPUT");
                   normal = true;
 
-                  console.log("CAPTION: " + buttonCaption);
+                 // console.log("CAPTION: " + buttonCaption);
                   if(buttonCaption !== "*img") {
-                    console.log("NÃO É IMAGEM");
+                   // console.log("MARK-IN-6");
+                    //console.log("NÃO É IMAGEM");
                       $($(el).find('input')[0]).attr('value', buttonCaption);
                       
                       let found = false;
@@ -2729,64 +2911,129 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       if( found ) $($(el).find('input')[0]).css('height', this.imgMaxHeightSize);
                   } else {
-                    console.log("É IMAGEM");
+                   // console.log("MARK-IN-7");
+                    //console.log("É IMAGEM");
                     $($(el).find('input')[0]).attr('value', '');
                   }    
                    
 
                   
                   if(( imgUrl || sysImg) && imagem  ){
-
-                          console.log('(imUrl || sysImg && imagem)')
+                   // console.log("MARK-IN-8");
+                          //console.log('(imUrl || sysImg && imagem)')
                       let found = false; 
 
-                      console.log("ANTES DE TUDO: " )
-                      console.log(JSON.stringify(this.imgLinesArray))
+                     // console.log("ANTES DE TUDO: " )
+                     // console.log(JSON.stringify(this.imgLinesArray))
       
                       if(this.choppedNumber !== 14){
       
                         for(let unit = 0; unit < this.imgLinesArray.length; unit++){
                           if(this.imgLinesArray[unit].toString() === y.toString()){
-                            console.log('Array value' + this.imgLinesArray[unit]);
-                            console.log('Y: ' + y);
+                            //console.log('Array value' + this.imgLinesArray[unit]);
+                            //console.log('Y: ' + y);
                             found = true;
                             break;
                           }
                         }
       
                         let oldValueX = x;
-                        console.log("FOUND: " + found);
+                        //console.log("FOUND: " + found);
                         if(!found) {
-                          console.log("RECURSÃO ATIVADA NO INSERT")
+                          //console.log("RECURSÃO ATIVADA NO INSERT")
                           x = this.mapToNewFormula(x,y, this.choppedNumber);
                           notX = true;
                         }
 
-                        //FAZ REMANEJAMENTO DE TECLAS
-                    
-                        // let diff = Math.abs(x - oldValueX);
-                        // let sElContent = $("[id=content]")
-                        // let jump = false;
-                        // for(let unit=0; unit < sElContent.length; unit++){
-                        //   let formula = this.globColumnQnty*Number(y)+Number(unit);
-                        //   if($(sElContent[formula]).find('input')[0] || $(sElContent[formula]).find('button')[0]){
-                        //     jump = true;
-                        //   }
-                        // }
+                          ////////////////////           ///////////
+                         //////////////////////////////////////////
+                        //     FAZ REMANEJAMENTO DE TECLAS      //
+                       ////////////////////////////////////////// 
+                      /////////                     ////////////
+                        
+                      let sElContent = $("[id=content]")
+                        //for( let uRow = 0; uRow < this.tecladoReplicant.teclas.length; uRow++){
+                        if(!this.checkLineHasImage(y)){
+                            this.keysRelocation(x,y);
+                              //   for(let uCol = 0; uCol < this.tecladoReplicant.teclas[y].length; uCol++){
+                            
+                              //     let rearrangedFormula = this.globColumnQnty*Number(y)+Number(uCol);
+                                
+                              //     if($(sElContent[rearrangedFormula]).find('input')[0]){
+                                
+                              //       let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+                              //       $(sElContent[rearrangedFormula]).find('input')[0].remove();
+                              //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber);
+                              //       if(newUnit === x && newUnit !== 0){
+                              //         console.log("IGUAL 1")
+                              //         newUnit = newUnit - 1;
+                              //       }
+                              //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                              //       sElContent[rearrangedFormula].appendChild(copy);
 
-                        // if(jump){
-                        //       // for(let unit=0; unit < sElContent.length; unit++){
-                        //       //     let formula = this.globColumnQnty*Number(y)+Number(unit);
-                        //       //     let newEl = sElContent[formula].cloneNode(true);
-                        //       //     sElContent[formula].remove();
-                                  
-                        //       //     console.log('diff: ' +Math.abs(unit-diff) )
-                        //       //     formula = this.globColumnQnty*Number(y)+Number(Math.abs(unit-diff) );
-                        //       //     if(sElContent[formula]!== undefined) sElContent[formula].appendChild(newEl);
-                        //       // }
-                             
-                        // }      
-                        // formula = this.globColumnQnty*Number(y)+Number(x);
+                              //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                              //       this.tecladoReplicant.teclas[y][uCol] = "";
+                              //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                              //       this.tecladoReplicant.action[y][uCol] = "";
+                              //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                              //       this.tecladoReplicant.text[y][uCol] = "";
+                              //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                              //       this.tecladoReplicant.image[y][uCol] = "";
+
+                              //       console.log('x: ' + x + ' uCol: ' + uCol);
+                                
+                              //     } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+                              
+                              //       let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+                              //       $(sElContent[rearrangedFormula]).find('button')[0].remove();
+                              //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber);
+                              //       if(newUnit === x && newUnit !== 0){
+                              //         console.log("IGUAL 2")
+                              //         newUnit = newUnit - 1;
+                              //       }
+                              //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                              //       sElContent[rearrangedFormula].appendChild(copy);
+
+                              //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                              //       this.tecladoReplicant.teclas[y][uCol] = "";
+                              //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                              //       this.tecladoReplicant.action[y][uCol] = "";
+                              //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                              //       this.tecladoReplicant.text[y][uCol] = "";
+                              //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                              //       this.tecladoReplicant.image[y][uCol] = "";
+                              //       console.log('x: ' + x + ' uCol: ' + uCol);
+        
+                              //     } else if( this.tecladoReplicant.teclas[y][uCol].split('$')[0] === '*img' ){
+                                    
+                              //       let copy = sElContent[rearrangedFormula].cloneNode(true);
+                              //       sElContent[rearrangedFormula].remove();
+                              //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber);
+                              //       if(newUnit === x && newUnit !== 0){
+                              //         console.log("IGUAL 2")
+                              //         newUnit = newUnit - 1;
+                              //       }
+                              //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                              //       sElContent[rearrangedFormula].appendChild(copy);
+
+                              //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                              //       this.tecladoReplicant.teclas[y][uCol] = "";
+                              //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                              //       this.tecladoReplicant.action[y][uCol] = "";
+                              //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                              //       this.tecladoReplicant.text[y][uCol] = "";
+                              //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                              //       this.tecladoReplicant.image[y][uCol] = "";
+                              //       console.log('x: ' + x + ' uCol: ' + uCol);
+                              //     }    
+                              // }
+                      }        
+                      //}  
+
+                      console.log(JSON.stringify(this.oldPositions))
+
+   
+                        //formula = this.globColumnQnty*Number(y)+Number(x);
                  }  
 
 
@@ -2800,7 +3047,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                         this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
                       } else {
- 
+                        
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                         this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
@@ -2813,7 +3060,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
                 } else if($(el).find('button')[0]){
-                  console.log("TEM BUTTON");
+
+                  //console.log("TEM BUTTON");
                   normal = true;
 
                   
@@ -2821,13 +3069,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   
                   $($(el).find('button')[0]).text(buttonCaption);
                   if(buttonCaption !== "*img") {
-     
                       $($(el).find('button')[0]).attr('value', buttonCaption);
                       if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       if(this.imgLinesArray.includes(x)) $($(el).find('button')[0]).css('height', this.imgMaxHeightSize);
                   } else {
-      
                     $($(el).find('button')[0]).attr('value', '');
                   }        
                   
@@ -2843,18 +3089,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
                         for(let unit = 0; unit < this.imgLinesArray.length; unit++){
                           if(this.imgLinesArray[unit].toString() === y.toString()){
-                            console.log('Array value' + this.imgLinesArray[unit]);
-                            console.log('Y: ' + y);
+                            //console.log('Array value' + this.imgLinesArray[unit]);
+                            //console.log('Y: ' + y);
                             found = true;
                             break;
                           }
                         }
       
                         let oldValueX = x;
-                        console.log("FOUND: " + found);
+                        //console.log("FOUND: " + found);
                         if(!found) {
-                          console.log("RECURSÃO ATIVADA NO INSERT")
-                          x = this.mapToNewFormula(x,y, this.choppedNumber);
+                          //console.log("RECURSÃO ATIVADA NO INSERT")
+                          x = this.mapToNewFormula(x,y, this.choppedNumber, false);
                           notX = true;
                         }
 
@@ -2882,7 +3128,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
                     } else {
-          
                       if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
@@ -2903,28 +3148,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 }    
              
 
-                //  let found = false; 
-
-                // console.log("ANTES DE TUDO: " )
-                // console.log(JSON.stringify(this.imgLinesArray))
-
-                // if(this.choppedNumber !== 14){
-
-                //   for(let unit = 0; unit < this.imgLinesArray.length; unit++){
-                //     if(this.imgLinesArray[unit].toString() === y.toString()){
-                //       console.log('Array value' + this.imgLinesArray[unit]);
-                //       console.log('Y: ' + y);
-                //       found = true;
-                //       break;
-                //     }
-                //   }
-
-                //   console.log("FOUND: " + found);
-                //   if(!found) {
-                //     console.log("RECURSÃO ATIVADA NO INSERT")
-                //     x = this.mapToNewFormula(x,y, this.choppedNumber);
-                //   }
-                // }
 
                 this.tecladoReplicant.action[y][x] = buttonAction;
 
@@ -2944,15 +3167,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                
 
                 if(!normal){
-                  console.log("Não é normal!");
+                  //console.log("Não é normal!");
                   if($(el).find('mat-icon')[0]) $(el).find('mat-icon')[0].remove();
                   
                   $(el).text(buttonCaption);
                   if(buttonCaption !== "*img") {
-   
                       $(el).attr('value', buttonCaption);
                   } else {
-    
                     $(el).attr('value', '');
                   }        
                   
@@ -2982,14 +3203,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 $(el).removeAttr('tooltip');
                 
 
-                
-                if(this.markOfRemove && y!== 0) {
-                  
-                  console.log("FORMULA: " + formula)
-                }  
 
-
-                
 
                 if(this.choppedNumber !== 14){
                   
@@ -3020,8 +3234,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                             let formula = this.globColumnQnty*Number(this.imgLinesArray[imgLine])+Number(col);
                             
-                              
-
+                            
                             if(this.ENABLE_TEXT_MODE){
                               $($(sElContent)[formula]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
                             } else {
@@ -3029,6 +3242,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             }
                             
                             $($(sElContent)[formula]).css('width', this.keysWidthSize);
+                            
+
                             
                             
                             if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
@@ -3060,11 +3275,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
                           let formula = this.globColumnQnty*Number(line)+Number(col);
                           
-                          if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
-                            && this.imgLinesArray.includes(line)){
-                            $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
-            
-                          }
+                              if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+                                && this.imgLinesArray.includes(line)){
+                                $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
+                
+                              }
+                              
                         }
                       }
     
@@ -3080,11 +3296,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                         let formula = this.globColumnQnty*Number(this.imgLinesArray[line])+Number(col);
 
-
                         formula = this.findElement(sElContentTmp,this.imgLinesArray[line], col )
-
-
-                        //console.log($(sElContentTmp)[formula]);
 
                         if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                         if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
@@ -3109,8 +3321,51 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }    
 
 
+                    //CLEAR ALL ELEMENTS BIGGER THAN CHOPPEDNUMBER
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y = 0 ; y  < this.tecladoReplicant.teclas[x].length; y++){
+                        if(x > this.choppedNumber){
+                          this.tecladoReplicant.teclas[x][y] = "";
+                        }
+                      }
+                    }
+
+                    // CHANGE SIZE OF NORMAL KEYS
+                    let sElContent = $("[id=content]");
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                        let formula = this.globColumnQnty*Number(x)+Number(y);
+                        
+                       // console.log(JSON.stringify(this.imgLinesArray))
+                        //console.log(JSON.stringify(x.toString()))
+                        //console.log(this.imgLinesArray.includes(x) );
+                        if( $($(sElContent)[formula]).find('input')[0] && this.imgLinesArray.includes(x) ){
+                          $($($(sElContent)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        } else if( $($(sElContent)[formula]).find('button')[0] && this.imgLinesArray.includes(x) ){
+                          $($($(sElContent)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                      }
+                    }
+
+                    // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                    sElContent = $("[id=content]");
+                    for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+                      for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+                        let formula = this.globColumnQnty*Number(x)+Number(y);
+                        if(!this.imgLinesArray.includes(x) ){
+                               $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
+                        }      
+                      }
+                    }
 
                     this.payloadSubscription.unsubscribe();
+
+
+
+                    console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                    console.log(JSON.stringify(this.tecladoReplicant.action))
+                    console.log(JSON.stringify(this.tecladoReplicant.text))
+                    console.log(JSON.stringify(this.tecladoReplicant.image))
 
 
         })
@@ -3120,11 +3375,93 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
-      private mapToNewFormula(x: number, y: number, receptacle: number):number{
-            let DEBUG = true;                                                      
-            console.log("EXECUTADO FUNÇÃO RECURSIVA")
+
+      public keysRelocation(x: number, y: number){
+          console.log("RELOCATION ACTIVATED!");
+
+            let sElContent = $('[id=content]');
+
+            for(let uCol = 0; uCol < this.tecladoReplicant.teclas[y].length; uCol++){
+                                
+              let rearrangedFormula = this.globColumnQnty*Number(y)+Number(uCol);
+            
+              if($(sElContent[rearrangedFormula]).find('input')[0]){
+            
+                let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+                $(sElContent[rearrangedFormula]).find('input')[0].remove();
+                let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+                if(newUnit === x && newUnit !== 0){
+                  //console.log("IGUAL 1")
+                  newUnit = newUnit - 1;
+                }
+                rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                sElContent[rearrangedFormula].appendChild(copy);
+
+                this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                this.tecladoReplicant.teclas[y][uCol] = "";
+                this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                this.tecladoReplicant.action[y][uCol] = "";
+                this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                this.tecladoReplicant.text[y][uCol] = "";
+                this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                this.tecladoReplicant.image[y][uCol] = "";
+
+                //console.log('x: ' + x + ' uCol: ' + uCol);
+            
+              } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+          
+                let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+                $(sElContent[rearrangedFormula]).find('button')[0].remove();
+                let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+                if(newUnit === x && newUnit !== 0){
+                  //console.log("IGUAL 2")
+                  newUnit = newUnit - 1;
+                }
+                rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                sElContent[rearrangedFormula].appendChild(copy);
+
+                this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                this.tecladoReplicant.teclas[y][uCol] = "";
+                this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                this.tecladoReplicant.action[y][uCol] = "";
+                this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                this.tecladoReplicant.text[y][uCol] = "";
+                this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                this.tecladoReplicant.image[y][uCol] = "";
+                //console.log('x: ' + x + ' uCol: ' + uCol);
+
+              } else if( this.tecladoReplicant.teclas[y][uCol].split('$')[0] === '*img' ){
+                
+                let copy = sElContent[rearrangedFormula].cloneNode(true);
+                sElContent[rearrangedFormula].remove();
+                let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+                if(newUnit === x && newUnit !== 0){
+                  //console.log("IGUAL 2")
+                  newUnit = newUnit - 1;
+                }
+                rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+                sElContent[rearrangedFormula].appendChild(copy);
+
+                this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+                this.tecladoReplicant.teclas[y][uCol] = "";
+                this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+                this.tecladoReplicant.action[y][uCol] = "";
+                this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+                this.tecladoReplicant.text[y][uCol] = "";
+                this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+                this.tecladoReplicant.image[y][uCol] = "";
+                //console.log('x: ' + x + ' uCol: ' + uCol);
+              }    
+          }
+      }
+
+
+
+      private mapToNewFormula(x: number, y: number, receptacle: number, inverse?: boolean):number{
+            let DEBUG = false;                                                      
+            //console.log("EXECUTADO FUNÇÃO RECURSIVA")
             // Arrays preparation phase
-            console.log('X ENVIADO: ' + x)
+            //console.log('X ENVIADO: ' + x)
             let originalArray = new Array();
             let joinOriginalArray = new Array();
             let joinReceptacleArray = new Array();
@@ -3161,7 +3498,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }  
                   if(DEBUG) console.log('VALOR ACHADO:')
                   if(DEBUG) console.log(JSON.stringify(joinReceptacleArray[original] ) )
-                  return joinReceptacleArray[original];
+                  if(inverse){
+                    return joinOriginalArray[original];  
+                  } else {
+                    return joinReceptacleArray[original];
+                  }  
                 }
             }
 
@@ -3499,7 +3840,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     //  }
                     $($(sElContent)[formula]).css('visibility', 'visible');
                     $($(sElContent)[formula]).css('height', this.keysHeightSize);
-                    if(this.growthFactor > 1){
+                    if(this.growthFactor > 1 ){
                       $($(sElContent)[formula]).css('width', this.keysWidthSize/this.growthFactor);  
                     } else {
                       $($(sElContent)[formula]).css('width', this.keysWidthSize);
@@ -3552,8 +3893,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
                 for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
                   let formula = this.globColumnQnty*Number(line)+Number(col);
-                  console.log(this.choppedNumber)
-                  //if($($(sElContent)[formula])[0] === undefined ) continue;
+                  //console.log(this.choppedNumber)
+
                   if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
                     && this.imgLinesArray.includes(line)){
                     $($($(sElContent)[formula])[0]).css('visibility', 'hidden');

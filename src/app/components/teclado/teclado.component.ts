@@ -49,6 +49,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private sideBarServiceSubscribe: Subscription;
   private configServiceSubscribe: Subscription;
   private routeSubscription: Subscription;
+
+  private newInstanceSizeSubscription: Subscription;
+
   private tecladoServiceSubscription: Subscription;
   private capsIndex: number;
   private ptbrIndex: number; 
@@ -91,6 +94,15 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private keysWidthSize: number;
   private keysHeightSize: number = 48;
 
+  private flexConfigSubscription: Subscription;
+  private flexSup: string;
+  private flexUnd: string;
+  private split: any;
+
+  private editor: any;
+  private newEditorHeight: number;
+  private newEditorWidth: number;
+
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
               private zone: NgZone,
@@ -99,7 +111,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private authService: AuthService,
               private router: Router,
               private route: ActivatedRoute,
-              private backLoggerService: BackLoggerService) {
+              private backLoggerService: BackLoggerService,
+              private generalConfigService: GeneralConfigService) {
 
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
@@ -113,6 +126,14 @@ export class TecladoComponent implements OnInit, OnDestroy {
               this.teclado.image = [];
 
               this.keyboardContainerSize = $(document.getElementById('teclado-container')).width();
+
+              this.newInstanceSizeSubscription = this.editorTecladoService.subscribeToNewInstanceSizeSubject().subscribe((result) => {
+                  this.newEditorHeight = result[0];
+                  this.newEditorWidth = result[1];
+                  if(this.newEditorHeight !== undefined && this.newEditorWidth !== undefined && this.editor !== undefined){
+                      this.editor.resize(this.newEditorWidth,this.newEditorHeight);
+                  }    
+              })
 
                 
 
@@ -186,11 +207,14 @@ export class TecladoComponent implements OnInit, OnDestroy {
      this.userSession.keyboardIntervals.push(this.timeInterval);
      this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(()=>{   });
 
+     this.newInstanceSizeSubscription.unsubscribe();
+
      this.engine.Stop();
      clearInterval(this.timerId);  
   }
 
    ngOnInit() { ///////////////////////////////////// ALTERADO RECENTEMENTE DE ngAfterViewInit PARA ngOnInit ///////////////////////////////////
+
 
         this.teclado.teclas = [];
         // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
@@ -234,14 +258,32 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
 
-          this.configureAll();
+          
+          this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) =>{
+            // console.log(JSON.stringify(result))
+            this.split = $('[id=split]');
+            // console.log(result)
+            this.flexSup = result.flexSup;
+            this.flexUnd = result.flexUnd;
+            this.configureAll();
+          });
+          //this.configureAll();
 
               this.tecladoService.emitTecladoReady(true);
 
               this.editorTecladoServiceSubscribe = 
                       this.editorTecladoService.subscribeToEditorSubject().subscribe((editor) => {
-                        
-                  this.configureAll(editor);
+                        this.editor = editor;
+                  
+                        this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) =>{
+                          // console.log(JSON.stringify(result))
+                          this.split = $('[id=split]');
+                          // console.log(result)
+                          this.flexSup = result.flexSup;
+                          this.flexUnd = result.flexUnd;
+                          this.configureAll(editor);
+                        });      
+                  //this.configureAll(editor);
                   
 
               });
@@ -264,7 +306,15 @@ export class TecladoComponent implements OnInit, OnDestroy {
                           if(!found) this.openFacLayout = (data[0]); 
                           this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
 
-                          this.configureSome(); 
+                          this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) =>{
+                            // console.log(JSON.stringify(result))
+                            this.split = $('[id=split]');
+                            // console.log(result)
+                            this.flexSup = result.flexSup;
+                            this.flexUnd = result.flexUnd;
+                            this.configureSome();
+                          });
+                          //this.configureSome(); 
                           this.tecladoService.emitTecladoReady(true);  
 
                           
@@ -439,6 +489,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   private timer1_Tick(): void {
     if (this.engine !== null) {
+      if(this.teclado.teclas.length === 1)  this.engine.SetCurrentState(EngineState.ColumnRight);
+
       if (this.engine.CurrentState() == EngineState.LineDown) {
         clearInterval(this.timerId);  
         
@@ -459,20 +511,49 @@ export class TecladoComponent implements OnInit, OnDestroy {
   }
 
   public adjustKeys(){
+    // console.log('FLEX: '  + this.flexSup + ' ' + this.flexUnd)
         this.imagesLinesArray = [];
         //ADJUST FLEX SIZE OF SPLIT
-        let split = $('[id=split]');
-        //console.log( $($(split)[0]).find('split-area')[0] );
-        //console.log( $($(split)[0]).find('split-area')[1] );
+        // if(this.flexSup === undefined && this.flexUnd === undefined){
+        //  this.flexSup = '0 0 calc(51.9802% - 6.23762px)';
+        //  this.flexUnd = '0 0 calc(48.0198% - 5.76238px)';
+        // }
 
-          // These values should be loaded from database
-        let flexSup = "0 0 calc(24.1758% - 2.9011px)";
-        let flexUnd = "0 0 calc(75.8242% - 9.0989px)";
+        
 
-        $($($(split)[0]).find('split-area')[0]).css('flex', flexSup);
-        $($($(split)[0]).find('split-area')[1]).css('flex', flexUnd);   
+          //These values should be loaded from database
+          // console.log(this.split)
+          // console.log('---------------------');
+          // console.log( $($(this.split)[0]).find('split-area')[0] )
+          // console.log( $($(this.split)[0]).find('split-area')[1] )
+          // console.log('---------------------');
 
-        console.log('MAGNIFY DO TECLADO COMPONENT: ' + this.teclado.magnify)
+          // console.log("FLEX: " + this.flexSup + ' ' + this.flexUnd);
+
+          $($($(this.split)[0]).find('split-area')[0]).css('flex', this.flexSup);
+          $($($(this.split)[0]).find('split-area')[1]).css('flex', this.flexUnd);  
+
+
+          this.newEditorHeight = ($("#EditorTecladoContainer").height()) - ($("#teclado").height());
+          this.newEditorWidth = $("#EditorTecladoContainer").width();
+
+          if(this.newEditorHeight !== undefined && this.newEditorWidth !== undefined && this.editor !== undefined){
+              this.editor.resize(this.newEditorWidth,this.newEditorHeight);
+          }    
+          
+
+          // if($(this.split)[0] ){
+          //     $($($(this.split)[0]).find('split-area')[0]).css('flex', this.flexSup);
+          //     $($($(this.split)[0]).find('split-area')[1]).css('flex', this.flexUnd);   
+          // } else {
+          //     $($($(this.split)[1]).find('split-area')[0]).css('flex', this.flexSup);
+          //     $($($(this.split)[1]).find('split-area')[1]).css('flex', this.flexUnd);
+          // }    
+
+
+        
+
+        // console.log('MAGNIFY DO TECLADO COMPONENT: ' + this.teclado.magnify)
         //DO THE MAGNIFY PROCESS IF NECESSARY
         //let sElContentUpdate = $('[id=notImage]');
         for(let x = 0 ; x < this.teclado.teclas.length; x++){
@@ -552,12 +633,12 @@ export class TecladoComponent implements OnInit, OnDestroy {
                             }
                           
                             this.keyboardContainerSize = $(document.getElementById('teclado-container')).width();
-                            console.log('container: ' + this.keyboardContainerSize)
+                            // console.log('container: ' + this.keyboardContainerSize)
                             let mFactor = 1 - 1/(this.keyboardContainerSize/(imgcount+normcount-2) );
-                            console.log('mFactor: ' + mFactor)
+                            // console.log('mFactor: ' + mFactor)
 
-                            console.log("IMGCOUNT: " + imgcount)
-                            console.log("NORMCOUNT: " + normcount)
+                            // console.log("IMGCOUNT: " + imgcount)
+                            // console.log("NORMCOUNT: " + normcount)
                           if(col !== 0){
                               if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
 
@@ -569,7 +650,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                           $(el).css("height", height);
                           $(el).css("width", width);
 
-                          console.log("MAX WIDHT: " + this.imgMaxWidthtSize);
+                          // console.log("MAX WIDHT: " + this.imgMaxWidthtSize);
                           
                           //$(el).css("position", "relative") ;
                           
@@ -615,9 +696,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
                       }
 
                                 this.keyboardContainerSize = $(document.getElementById('teclado-container')).width();
-                                console.log('container: ' + this.keyboardContainerSize)
+                                // console.log('container: ' + this.keyboardContainerSize)
                                 let mFactor = 1 - 1/(this.keyboardContainerSize/(imgcount+normcount-2) );
-                                console.log('mFactor: ' + mFactor)
+                                // console.log('mFactor: ' + mFactor)
 
 
                         if(this.imagesLinesArray.includes(line)){

@@ -23,7 +23,7 @@
                     <button class="button-keyboard-menu" (click)="updateReplicant(keyboardToEdit)"><i class="icon ion-load-b" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_LOAD')}}</button>
             </div>  
                
-            <div style="margin-top: 25px">                   
+            <div style="margin-top: 13px">                   
               
                     <select id="loadKeyboard" style="width: 200px; height: 30px; margin: 5px 10px" [(ngModel)]="keyboardToEdit"  (click)="reloadList()">
                         <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
@@ -34,13 +34,14 @@
                 
             </div>
     <div>
+        <!--
             <div *ngIf="true" style="margin-left: 40px;">
                 <label for="linguagem" class="label-margin-bottom">Ampliar Imagem</label>
                 <mat-slider color="primary" class="rzslider" min="1.00" max="2.00" step="0.01" value="{{growthFactor}}" style="width: 200px" [(ngModel)]="growthFactor"
                      [ngModelOptions]="{standalone: true}" (change)=" alterImgSize()"></mat-slider>
                      <label for="linguagem" class="label-margin-bottom">{{growthFactor.toFixed(2)}}</label>
-          </div>
-          <div *ngIf="true" style="margin-left: 40px;">
+          </div>-->
+          <div *ngIf="true" style="margin-left: 10px; margin-top: 13px" >
                 <label for="linguagem" class="label-margin-bottom">Ampliar Texto &nbsp;&nbsp;&nbsp;&nbsp;</label>
                 <mat-slider color="primary" class="rzslider" min="1.00" max="2.00" step="0.01" value="{{growthTextFactor}}" style="width: 200px" [(ngModel)]="growthTextFactor"
                      [ngModelOptions]="{standalone: true}" (change)=" alterFontSize()"></mat-slider>
@@ -51,7 +52,7 @@
         </div>
     </div>
     <div class="box-teclado" style="height: 30%;">
-        <div class="teclado-container-editor">
+        <div class="teclado-container-editor" >
             <div style="z-index: 0" >
                 <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px;">
                     <div class="col-md-12 line">
@@ -137,15 +138,15 @@
     </div>
 
     <div id="outerBox" class="box-teclado-bottom" style="height: 30%; ">
-            <div class="teclado-container " >
-                    <div id="blankRows" class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px;"> 
+            <div class="teclado-container " style="height: 100%">
+                    <div id="blankRows" class="row" *ngFor="let row of tecladoReplicant.teclas; index as iR" style="padding-left:15px;"> 
 
                         <div id="blankLines" class="col-md-12 lineBlanks" >
                                 <!--*ngIf="choppedLines.includes(iR.toString()) ? (i < choppedNumber) : true"-->
                                 <!--*ngIf="(i < choppedNumber)"-->
                                 <ng-container *ngFor="let key of row; index as i">
                                         
-                                    <div tooltip="Duplo clique para editar." class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
+                                    <div tooltip="Duplo clique para editar."  class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" 
                                        
                                         [dragula]='"master-bag"' id="content"  (dblclick)="editCaptionNText($event)" >
                                         <ng-container *ngIf="ENABLE_TEXT_MODE && key.split('$')[0] === '*img'" >
