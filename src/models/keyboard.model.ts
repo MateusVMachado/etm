@@ -10,6 +10,7 @@ export class KeyboardModel {
     action: string[][];
     image: string[][];
     type: string;
+    magnify: number;
 
     constructor() {
         //this.userId = undefined;
@@ -18,6 +19,7 @@ export class KeyboardModel {
         this.action = [];
         this.image = [];
         this.type = 'none';
+        this.magnify = 1.0;
     }
 }
 

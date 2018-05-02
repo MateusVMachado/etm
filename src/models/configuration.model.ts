@@ -6,7 +6,9 @@ export class ConfigurationModel {
     openFacConfig: OpenFACConfig;
     lastKeyboard: string;
     level: number;
-    
+    flexSup: string;
+    flexUnd: string;
+
     constructor(){
         this.openFacConfig = new OpenFACConfig();
     }

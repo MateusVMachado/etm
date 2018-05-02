@@ -24,6 +24,10 @@ export class Logger extends BaseRoute{
 
 
     public logSessionStart(req: Request, res: Response, next: NextFunction, options?: string){
+        console.log("\n");
+        console.log("LOGADO NO START!!!");
+        console.log("\n");
+
         let userSession = new UserSessionModel();
         
         let email = req.body['email'];

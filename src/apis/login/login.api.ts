@@ -39,6 +39,7 @@ export class Login extends BaseRoute{
                 
                             } else {
                                 console.log("NÃO AUTENTICADO");
+                                //res.send('Dados inválidos');
                                 res.status(403).json({ message: 'Dados inválidos.' });
                             }
 

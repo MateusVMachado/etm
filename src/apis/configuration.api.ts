@@ -35,6 +35,21 @@ export class Configuration extends BaseRoute {
         }    
     }
 
+    public userConfigureUpdate(req: Request, res: Response, next: NextFunction){
+        //let config = req.body as ConfigurationModel;
+        let parts = req.body;
+        console.log("PARTS: " + parts);
+
+        res.locals.mongoAccess.coll[2].find({ "user": parts[2] }).toArray(function(err, config_list) {
+                    console.log("Fazendo update");
+                    console.log(parts[0] + ' ' + parts[1] );
+                    res.locals.mongoAccess.coll[2].update({ "user": parts[2] }, { $set: {"flexSup": parts[0] , "flexUnd": parts[1]} });
+                    res.status(200).send();
+            
+        });
+           
+    }
+
 
     public getUserConfigure(req: Request, res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[2].find({ "user": req.query.email }).toArray(function(err, config_list) {                    
@@ -48,6 +63,8 @@ export class Configuration extends BaseRoute {
                 config.openFacConfig.KeyboardLayout = "QWERTY";
                 config.lastKeyboard = "pt-br"
                 config.level = 0.30;
+                config.flexSup = '';
+                config.flexUnd = '';
 
                 res.status(200).send(config);
             } else {
@@ -57,6 +74,8 @@ export class Configuration extends BaseRoute {
                 config.language = configuration.language;
                 config.lastKeyboard = configuration.lastKeyboard;
                 config.level = configuration.level;
+                config.flexSup = configuration.flexSup;
+                config.flexUnd = configuration.flexUnd;
 
                 res.status(200).send(config);
             }
