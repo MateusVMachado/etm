@@ -104,8 +104,15 @@ export class IndexRoute extends BaseRoute {
     router.post("/login", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
       console.clear();
-      logger.logSessionStart(req,res,next);   
+      //logger.logSessionStart(req,res,next);   
       login.authenticateUser(req, res, next);
+    });
+
+    router.post("/loginLogger", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      //console.clear();
+      console.log("INDEX NO LOGIN LOGGER")
+      logger.logSessionStart(req,res,next);   
     });
 
 
@@ -147,6 +154,15 @@ export class IndexRoute extends BaseRoute {
       res.locals.mongoAccess = app.locals.mongoAccess;
       configuration.userConfigure(req, res, next);
     });
+
+    // Rota para salvar configurações
+    router.post("/configurationUpdate", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      console.clear();
+      console.log("UPDATE DE CONFIGURAÇÃO")
+      configuration.userConfigureUpdate(req, res, next);
+    });
+
 
     // Rota para buscar configurações
     router.get("/configuration", (req: Request, res: Response, next: NextFunction) => {
