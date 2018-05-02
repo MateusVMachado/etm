@@ -144,7 +144,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       let availHeight = window.screen.availHeight;
       let availWidht = window.screen.availWidth;
-      console.log(availHeight + 'x' + availWidht );
+      //console.log(availHeight + 'x' + availWidht );
       if(availHeight === 728 && availWidht === 1024){
         this.smallerScreenSize = true;
         this.globColumnQnty = 13;
@@ -367,7 +367,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
       this.convertLayoutToKeyboard(replicantFromDatabase, data[0]);
 
-          console.log(JSON.stringify(replicantFromDatabase));
+          //console.log(JSON.stringify(replicantFromDatabase));
           if(replicantFromDatabase.magnify !== undefined ||  replicantFromDatabase.magnify !== null){
             this.growthTextFactor = Number(replicantFromDatabase.magnify);
           } else {
@@ -972,7 +972,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               //console.log("FOUND: " + found)
               //console.log("drainY: " + drainY);
               //console.log("ARRAY:");
-              console.log(JSON.stringify(this.imgLinesArray))
+              //console.log(JSON.stringify(this.imgLinesArray))
                   //if(this.imgLinesArray.includes(drainY)){
                     if(!found){
                       if(DEBUG) console.log("MARK-NEWDROP-11");
@@ -996,7 +996,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
             }
 
-             console.log("PUSH 1");
+            // console.log("PUSH 1");
              this.imgLinesArray.push(Number(drainY)) ;
 
               let choice = false;
@@ -1480,9 +1480,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }
 
 
-                    console.log(JSON.stringify(this.imgLinesArray));
-                    console.log(drainY);
-                    console.log("FOUND1: " + found );
+                    //console.log(JSON.stringify(this.imgLinesArray));
+                    //console.log(drainY);
+                    //console.log("FOUND1: " + found );
 
                     if( (!this.checkLineHasImage(drainY) )  &&
                     (this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' || 
@@ -1491,9 +1491,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         this.keysRelocation(drainX,drainY);
                     }      
 
-                    console.log(JSON.stringify(this.tecladoReplicant.teclas))
-                    console.log(JSON.stringify(this.tecladoReplicant.action))
-                    console.log(JSON.stringify(this.tecladoReplicant.text))
+                   // console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                    //console.log(JSON.stringify(this.tecladoReplicant.action))
+                   //console.log(JSON.stringify(this.tecladoReplicant.text))
 
 
                   return;
@@ -2106,7 +2106,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                   found = false;
                   for(let x = 0 ; x < this.imgLinesArray.length; x++){
-                    console.log(this.imgLinesArray[x] + ' *** ' + drainY)
+                    //console.log(this.imgLinesArray[x] + ' *** ' + drainY)
                     if(this.imgLinesArray[x].toString() === drainY.toString()){
                       found = true;
                       break;
@@ -2114,9 +2114,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
 
 
-                  console.log(JSON.stringify(this.imgLinesArray));
-                  console.log(drainY);
-                  console.log("FOUND2: " + found );
+                  //console.log(JSON.stringify(this.imgLinesArray));
+                  //console.log(drainY);
+                  //console.log("FOUND2: " + found );
 
                   if( (!this.checkLineHasImage(drainY) )  &&
                   (this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] === '*img' || 
@@ -2140,7 +2140,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private adjustLinesSizes(drainY: number, drainX: number, sourceY: number, sourceX: number){
-                console.log(JSON.stringify(this.imgLinesArray));
+                //console.log(JSON.stringify(this.imgLinesArray));
                 //console.log(this.tecladoReplicant.teclas[drainY][drainX].split('$')[0]);
                 //if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
                   if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
@@ -3030,7 +3030,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       }        
                       //}  
 
-                      console.log(JSON.stringify(this.oldPositions))
+                      //console.log(JSON.stringify(this.oldPositions))
 
    
                         //formula = this.globColumnQnty*Number(y)+Number(x);
@@ -3082,8 +3082,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           
                       let found = false; 
 
-                      console.log("ANTES DE TUDO: " )
-                      console.log(JSON.stringify(this.imgLinesArray))
+                      //console.log("ANTES DE TUDO: " )
+                     // console.log(JSON.stringify(this.imgLinesArray))
       
                       if(this.choppedNumber !== 14){
       
@@ -3215,8 +3215,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   $("[id=content]")[formula].appendChild(el);  
                 }
                 
-                console.log('imgLinesArray:')
-                console.log(JSON.stringify(this.imgLinesArray))
+               // console.log('imgLinesArray:')
+                //console.log(JSON.stringify(this.imgLinesArray))
 
                 
 
@@ -3362,10 +3362,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
 
-                    console.log(JSON.stringify(this.tecladoReplicant.teclas))
-                    console.log(JSON.stringify(this.tecladoReplicant.action))
-                    console.log(JSON.stringify(this.tecladoReplicant.text))
-                    console.log(JSON.stringify(this.tecladoReplicant.image))
+                   // console.log(JSON.stringify(this.tecladoReplicant.teclas))
+                  //  console.log(JSON.stringify(this.tecladoReplicant.action))
+                  //  console.log(JSON.stringify(this.tecladoReplicant.text))
+                  //  console.log(JSON.stringify(this.tecladoReplicant.image))
 
 
         })
@@ -3377,7 +3377,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
       public keysRelocation(x: number, y: number){
-          console.log("RELOCATION ACTIVATED!");
+         // console.log("RELOCATION ACTIVATED!");
 
             let sElContent = $('[id=content]');
 
