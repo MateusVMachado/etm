@@ -60,7 +60,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     private keyboardNamesSubscribe: Subscription;
     private payloadSubscription: Subscription;
 
-    private globColumnQnty = 13;
+    private globColumnQnty = 14;
 
     private lastKind: string;
     
