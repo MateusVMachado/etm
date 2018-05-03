@@ -102,6 +102,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private editor: any;
   private newEditorHeight: number;
   private newEditorWidth: number;
+  private smallerScreenSize: boolean;
+
+  private availHeight: number;
+  private availWidth: number; 
+  private scale: number;
 
   constructor(private tecladoService: TecladoService, 
               private editorTecladoService: EditorTecladoService, 
@@ -113,6 +118,18 @@ export class TecladoComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private backLoggerService: BackLoggerService,
               private generalConfigService: GeneralConfigService) {
+
+
+                this.availHeight = window.screen.availHeight;
+                this.availWidth = window.screen.availWidth;
+
+                this.scale = this.availWidth/ 1920;
+
+                //   if(this.availWidth < 1280){
+                //   this.smallerScreenSize = true;
+                // } else {
+                //   this.smallerScreenSize = false;
+                // }   
 
               this.userSession = new UserSessionModel();
               this.userSession.keyboardIntervals = new Array();
@@ -612,10 +629,11 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   for(let col = 0 ; col < this.teclado.teclas[line].length; col ++){
                     imgcount = 0;
                     normcount = 0;
-                    let el = $('#images'+line+'x'+col)[0];
                     
 
                     if(this.teclado.teclas[line][col].split('$')[0] === '*img'){
+                      let el = $('#images'+line+'x'+col)[0];
+                    console.log('line: ' + line + ' col: ' + col);
                           if(!this.imagesLinesArray.includes(line)) this.imagesLinesArray.push(line);
                           if(!this.imagesColsArray.includes(col)) this.imagesColsArray.push(col);
 
@@ -637,18 +655,38 @@ export class TecladoComponent implements OnInit, OnDestroy {
                             let mFactor = 1 - 1/(this.keyboardContainerSize/(imgcount+normcount-2) );
                             // console.log('mFactor: ' + mFactor)
 
+                            let gain = (this.imgMaxWidthtSize - this.keysWidthSize)/2;
+
                             // console.log("IMGCOUNT: " + imgcount)
                             // console.log("NORMCOUNT: " + normcount)
-                          if(col !== 0){
+                          //if(col !== 0){
+                            if(col > 0){
+                            let value = 1.63;
                               if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
-
-                                $(el).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50  );
+                                // if(this.smallerScreenSize){
+                                //   value = 1.90;
+                                //   console.log("TESTE 1")
+                                //   $(el).css("margin-left", (((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50)*value)*this.scale  );
+                                // } else {
+                                  // [NÃO IMAGEM] [IMAGEM]
+                                  $(el).css("margin-left", (((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor))*(1.2-0.1))*this.scale  );
+                                // }
+                                
                               }else {
-                                $(el).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor) -25 );
+                                value = 1.63;
+                                // if(this.smallerScreenSize){
+                                //   if(col === 1) value = 4.0
+                                //   console.log("TESTE 2")
+                                //   $(el).css("margin-left", (((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor) -25)*value)*this.scale );
+                                // } else {
+                                  // [IMAGEM] [IMAGEM]
+                                  $(el).css("margin-left", ((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)*(1.3-0.1))*this.scale );
+                                // }
+                                
                               }
                           }    
-                          $(el).css("height", height);
-                          $(el).css("width", width);
+                          $(el).css("height", height*this.scale);
+                          $(el).css("width", width*this.scale);
 
                           // console.log("MAX WIDHT: " + this.imgMaxWidthtSize);
                           
@@ -703,12 +741,33 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
                         if(this.imagesLinesArray.includes(line)){
                           let el1 = $('#notImage'+line+'x'+col)[0];
-                          if(col !== 0){
+                          $(el1).css("position", 'relative');
+                          //if(col !== 0){
+                            if(col > 0){
+                            let value = 1.63;
+                            //tecla anterior
                             if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
-                              $(el1).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50 );
+                              // if(this.smallerScreenSize){
+                              //   value = 1.90;
+                              //   console.log("TESTE 3")
+                              //   $(el1).css("margin-left", (((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50)*value)*this.scale );
+                              // } else {
+                                // [NÃO IMAGEM] [NÃO IMAGEM]
+                                $(el1).css("margin-left", ((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)*(1.2-0.1))*this.scale );
+                              // }
+                              
                             }else {
                               // $(el1).css("margin-left", (this.imgMaxWidthtSize/2)); 
-                              $(el1).css("margin-left", (((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50 );
+                              value = 1.63;
+                              // if(this.smallerScreenSize){
+                              //   console.log("TESTE 4")
+                              //   if(col === 1) value = 4.0
+                              //   $(el1).css("margin-left", (((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)-50)*value)*this.scale );
+                              // } else {
+                                //  [IMAGEM] [NÃO IMAGEM]
+                                $(el1).css("margin-left", ((((this.imgMaxWidthtSize/2)*imgcount-1+(this.imgMaxWidthtSize/2)*normcount-1)*mFactor)*(1.2-0.1))*this.scale );
+                              // }
+                              
                             }   
 
                             // if(this.teclado.teclas[line][col-1].split('$')[0] !== '*img'){
@@ -717,8 +776,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
                             //   $(el1).css("margin-left", '117px');
                             // }
                         } 
-                          $(el1).css('height', this.imgMaxHeightSize);
-                          $(el1).css('width', this.imgMaxWidthtSize);
+                          $(el1).css('height', this.imgMaxHeightSize*this.scale);
+                          $(el1).css('width', this.imgMaxWidthtSize*this.scale);
                           $($(sElLines)[line]).css('height', this.imgMaxHeightSize);
                           $($(sElRows)[line]).css('height', this.imgMaxHeightSize); 
                         }
