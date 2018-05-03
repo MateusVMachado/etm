@@ -13,6 +13,7 @@ export class OpenFACLayout {
     public Lines: Array<LayoutLine>;
     public nameLayout: string;
     public email: string;
+	public magnify: number;
 }
 /*[DataContract]*/
 export class LayoutLine {
