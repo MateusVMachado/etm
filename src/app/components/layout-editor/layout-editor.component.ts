@@ -911,34 +911,39 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             console.log("imgLINES ANTES DO CORTE:")
             console.log(JSON.stringify(this.imgLinesArray))
 
-          if(! $($(value[1])[0]).find('button')[0] && isContent && $($(value[1])[0]).find('input')[0] !== undefined){
-            if(DEBUG) console.log("MARK-NEWDROP-2");
-              if( $($(value[1])[0]).find('input')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
-                if(DEBUG) console.log("MARK-NEWDROP-3");
-   
-                  if($($(value[1])[0].attributes)[4]){  
-                    if(DEBUG) console.log("MARK-NEWDROP-4");
-                    if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                      if(DEBUG) console.log("MARK-NEWDROP-5");
-                      console.log("SPLICE 1");
-                      this.imgLinesArray.splice(this.cutIndex, 1);
-                    }
-                  }   
-              }
-          } else if(! $($(value[1])[0]).find('input')[0] && isContent && $($(value[1])[0]).find('button')[0] !== undefined) {
-            if(DEBUG) console.log("MARK-NEWDROP-6");
-            if( $($(value[1])[0]).find('button')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
-              
-              if(DEBUG) console.log("MARK-NEWDROP-7");
-              if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
-                if(DEBUG) console.log("MARK-NEWDROP-8");
-                console.log("SPLICE 2");
-
-                this.imgLinesArray.splice(this.cutIndex, 1);
-              }  
+            if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img'){
+              this.imgLinesArray.splice(this.cutIndex, 1);
             }
-          }     
+          // if(! $($(value[1])[0]).find('button')[0] && isContent && $($(value[1])[0]).find('input')[0] !== undefined){
+          //   if(DEBUG) console.log("MARK-NEWDROP-2");
+          //     if( $($(value[1])[0]).find('input')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
+          //       if(DEBUG) console.log("MARK-NEWDROP-3");
+   
+          //         if($($(value[1])[0].attributes)[4]){  
+          //           if(DEBUG) console.log("MARK-NEWDROP-4");
+          //           if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
+          //             if(DEBUG) console.log("MARK-NEWDROP-5");
+          //             console.log("SPLICE 1");
+          //             this.imgLinesArray.splice(this.cutIndex, 1);
+          //           }
+          //         }   
+          //     }
+          // } else if(! $($(value[1])[0]).find('input')[0] && isContent && $($(value[1])[0]).find('button')[0] !== undefined) {
+          //   if(DEBUG) console.log("MARK-NEWDROP-6");
+          //   if( $($(value[1])[0]).find('button')[0].className.split(' ')[0] === 'tamanho-button-especial-big' ){
+              
+          //     if(DEBUG) console.log("MARK-NEWDROP-7");
+          //     if(sourceY !== drainY && !isCopy && $($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') {
+          //       if(DEBUG) console.log("MARK-NEWDROP-8");
+          //       console.log("SPLICE 2");
+
+          //       this.imgLinesArray.splice(this.cutIndex, 1);
+          //     }  
+          //   }
+          // }     
      
+
+
 
           console.log("imgLINES DEPOIS DO CORTE:")
           console.log(JSON.stringify(this.imgLinesArray))
