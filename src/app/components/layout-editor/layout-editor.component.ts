@@ -848,7 +848,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       console.log("-------------------DROPS---------------------")
       console.log(JSON.stringify(this.tecladoReplicant.teclas));
       //console.clear();
-      let DEBUG = true;
+      let DEBUG = false;
 
 
       if (value[2] == null) {//dragged outside any of the bags
