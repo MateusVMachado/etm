@@ -1538,8 +1538,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     let checagem = false;
                     // console.log("$(value[3]).find('input')[0] : " + $(value[3]).find('input')[0])
                     // console.log("$(value[3]).find('button')[0] : " + $(value[3]).find('button')[0])
-
-                    if($($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') checagem = true; 
+                    if($($(value[1])[0].attributes)[4]){
+                      if($($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') checagem = true; 
+                    }  
 
                     // //if($(value[3]).find('input')[0] || $(value[3]).find('button')[0] ) isImage = false; 
                     if( this.tecladoReplicant.teclas[drainY][drainX].split("$")[0] !== '*img' ) isImage = false; 
@@ -2239,8 +2240,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     let checagem = false;
                     // console.log("$(value[3]).find('input')[0] : " + $(value[3]).find('input')[0])
                     // console.log("$(value[3]).find('button')[0] : " + $(value[3]).find('button')[0])
-
-                    if($($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') checagem = true; 
+                    if($($(value[1])[0].attributes)[4]){
+                      if($($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background') checagem = true; 
+                    }  
 
                     // //if($(value[3]).find('input')[0] || $(value[3]).find('button')[0] ) isImage = false; 
                     if( this.tecladoReplicant.teclas[drainY][drainX].split("$")[0] !== '*img' ) isImage = false; 
