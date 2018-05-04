@@ -89,12 +89,12 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
                 }
        
                 this.authService.getUser(usuario.email).subscribe((res:User) => {
-                  // if(navigator.geolocation){
-                  //   navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
-                  //   {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
-                  // } else {
-                  //   this.geolocationFailure();
-                  // }
+                  if(navigator.geolocation){
+                    navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
+                    {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
+                  } else {
+                    this.geolocationFailure();
+                  }
                   this.authService.setUser(res, usuario.jwt);
                   this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
       
