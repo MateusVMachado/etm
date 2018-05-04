@@ -1498,6 +1498,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
                             }
                                 
+                        } else {
+                          $($(sElContent)[formula]).css('height', this.imgMaxHeightSize);
                         }      
                       }
                     } 
