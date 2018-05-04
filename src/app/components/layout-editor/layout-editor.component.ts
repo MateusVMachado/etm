@@ -911,7 +911,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             console.log("imgLINES ANTES DO CORTE:")
             console.log(JSON.stringify(this.imgLinesArray))
 
-            if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img'){
+            if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && sourceY !== drainY){
               this.imgLinesArray.splice(this.cutIndex, 1);
             }
           // if(! $($(value[1])[0]).find('button')[0] && isContent && $($(value[1])[0]).find('input')[0] !== undefined){
@@ -1487,6 +1487,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     //console.log(JSON.stringify(this.tecladoReplicant.teclas) )
 
                     // CHANGE SIZE OF ALL ROWS FOR NORMALIZING
+                    console.log("imgLines ANTES DE NORMALIZAR: ")
+                    console.log(JSON.stringify(this.imgLinesArray))
+
                     let sElContent = $("[id=content]");
                     for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
                       for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
@@ -1496,8 +1499,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal-15); 
                             } else {
                               $($(sElContent)[formula]).css('width', this.keysWidthSizeOriginal);
-                            }
-                                
+                            }   
                         }     
                       }
                     } 
