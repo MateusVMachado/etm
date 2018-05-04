@@ -1580,6 +1580,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     //   if(DEBUG) console.log("MARK-NEWDROP-21");
                     //     this.keysRelocation(drainX,drainY);
                     // }      
+                      console.log(JSON.stringify(this.imgLinesArray))
 
                     console.log(JSON.stringify(this.tecladoReplicant.teclas))
                     console.log(JSON.stringify(this.tecladoReplicant.action))
@@ -2288,6 +2289,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   //   if(DEBUG) console.log("MARK-NEWDROP-22");
                   //     this.keysRelocation(drainX,drainY);
                   // }    
+
+                  console.log(JSON.stringify(this.imgLinesArray))
 
                   console.log(JSON.stringify(this.tecladoReplicant.teclas))
                   console.log(JSON.stringify(this.tecladoReplicant.action))
@@ -3864,7 +3867,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
       private mapToNewFormula(x: number, y: number, receptacle: number, inverse?: boolean):number{
-            let DEBUG = true;                                                      
+            let DEBUG = false;                                                      
             //console.log("EXECUTADO FUNÇÃO RECURSIVA")
             // Arrays preparation phase
             //console.log('X ENVIADO: ' + x)
