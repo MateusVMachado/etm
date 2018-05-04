@@ -42,7 +42,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
 
 
     public ngOnDestroy(): void {
-      this.loginSubscription.unsubscribe();
+      if(this.loginSubscription) this.loginSubscription.unsubscribe();
       clearInterval(this.timer);
     }
 
