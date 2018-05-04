@@ -1564,7 +1564,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       
                       if(!this.checkLineHasImage(drainY) && isImage){
-                        this.keysRelocation(drainX, drainY);
+                        //this.keysRelocation(drainX, drainY);
                         console.log(this.choppedNumber)
                       }
               
@@ -2266,7 +2266,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       
                       if(!this.checkLineHasImage(drainY) && isImage){
-                        this.keysRelocation(drainX, drainY);
+                        //this.keysRelocation(drainX, drainY);
                         console.log(this.choppedNumber)
                       }
                      
