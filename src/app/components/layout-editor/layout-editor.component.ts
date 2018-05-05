@@ -685,7 +685,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log("-------------------REMOVE---------------------")
 
       if(DEBUG) console.log("MARK1");
-        let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, index, found;
+        let drainX, drainY, drainParts, sourceX, sourceY, sourceParts, index = -1, found;
         if(value[3].id === 'copy'){  
           sourceParts = value[3].className.split('$')[1].split('#');
           sourceX = sourceParts[0];
@@ -728,21 +728,24 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 if(DEBUG) console.log("MARK5");
                 
                   if(DEBUG) console.log('SOURCE: ' + sourceY);
-                
+                  if(DEBUG) console.log("ANTES DO CORTE:")
+                  if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
                   for(let i = 0; i < this.imgLinesArray.length; i++){
+                    if(DEBUG) console.log("imgLine[" + i + "]: " + this.imgLinesArray[i] + ' sourceY: ' + sourceY);
                     if(this.imgLinesArray[i] === sourceY){
                       if(DEBUG) console.log("MARK6");
-                      console.log("imgLine: " + this.imgLinesArray + ' sourceY: ' + sourceY);
+                      if(DEBUG) console.log("imgLine: " + this.imgLinesArray + ' sourceY: ' + sourceY);
                       index = i;
                       break;
                     }
                 
 
-                  this.imgLinesArray.splice(index, 1);
+                  //this.imgLinesArray.splice(index, 1);
                   
-                  break;
+                  //break;
 
                 }
+                if(index !== -1) this.imgLinesArray.splice(index, 1);
               }
               
               if(DEBUG) console.log("MARK7");
