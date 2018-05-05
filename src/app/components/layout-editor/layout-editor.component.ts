@@ -679,7 +679,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
 
     private onRemove(value){
-      let DEBUG = false;
+      let DEBUG = true;
 
       if(DEBUG) console.clear();
       if(DEBUG) console.log("-------------------REMOVE---------------------")
@@ -785,7 +785,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.teclas))
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
-      console.log(JSON.stringify(this.imgLinesArray))
+      
 
 
     }  
