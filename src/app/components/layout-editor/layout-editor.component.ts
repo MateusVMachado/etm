@@ -734,7 +734,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                   for(let i = 0; i < this.imgLinesArray.length; i++){
                     if(DEBUG) console.log("imgLine[" + i + "]: " + this.imgLinesArray[i] + ' sourceY: ' + sourceY);
-                    if(this.imgLinesArray[i] === sourceY){
+                    if(this.imgLinesArray[i].toString() === sourceY.toString()){
                       if(DEBUG) console.log("MARK6");
                       if(DEBUG) console.log("imgLine: " + this.imgLinesArray + ' sourceY: ' + sourceY);
                       index = i;
