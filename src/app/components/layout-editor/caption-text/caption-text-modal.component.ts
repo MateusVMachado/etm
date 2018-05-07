@@ -74,6 +74,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.buttonAction = result[2];
                             this.buttonImage = result[3];
                             
+                            console.log('button: ' + this.buttonImage)
+
                             if(this.buttonImage) {
                                 this.imagem = true;
                             
