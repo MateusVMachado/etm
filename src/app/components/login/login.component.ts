@@ -17,9 +17,26 @@ import { Subscription } from 'rxjs';
     templateUrl: './login.component.html',
 })
 
+
+///<reference path='../events/EventDispatcher.ts'/>
+
+/**
+ * The {{#crossLink "LoginComponent"}}{{/crossLink}} class handles the login process.
+ *
+ * @class LoginComponent
+ * @extends AppBaseComponent
+ * @implements OnInit, OnDestroy, AfterViewInit
+ * @constructor
+ **/
 export class LoginComponent extends AppBaseComponent implements AfterViewInit, OnInit, OnDestroy  {
   
-  
+     /**
+     * A reference to the Subscription Object instance to enable further unsubscribe process.
+     *
+     * @property loginSubscription
+     * @type {Subscription}
+     * @readonly
+     */
   private loginSubscription: Subscription;
 
   @ViewChild('form') form: NgForm;
@@ -29,6 +46,13 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
       rememberMe: ''
     };
 
+      /**
+     * A variable to store the user Latitude.
+     *
+     * @property latitude
+     * @type {number}
+     * @readonly
+     */
     public latitude: number;
     public longitude: number;
     public clickedOnce: boolean = false;
@@ -67,7 +91,6 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
     }    
     
 
-
     public login(): void {
         this.timer = setInterval(this.reset.bind(this), 2500);
         if(!this.clickedOnce){
@@ -75,9 +98,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
           let usuario: User = new User();
 
           usuario = this.user;
-          console.log('MARK1')
               this.loginSubscription = this.authService.authenticate(this.user).subscribe((res) => {
-                console.log('MARK2')
                 let resObj = JSON.parse(res);
                 
                 usuario.jwt = resObj.accessToken;
@@ -115,14 +136,22 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
       this.clickedOnce = false;
     }
     
+
+      /**
+     * This callback gets the latitude and longitude from the position event triggered by the 'navigator.geolocation.getCurrentPosition(sucessCallBack, failureCallBack)' method.
+     * Modifies a LoginComponent instanced object 'newUserAndGPS' via 'authService' a external service.
+     * Sets the object latitude, longitude, user email and user password.
+     *
+     * @method geolocationSuccess
+     * @param position {position} The position event instance to access.
+     * @returns {void}
+     * @public
+     */
     public geolocationSuccess(position){
       let newUserAndGPS = new UserAndGPS();
 
       this.latitude = position.coords.latitude;
       this.longitude = position.coords.longitude;
-
-      console.log('latitude: ' + this.latitude);
-      console.log('latitude: ' + this.longitude);
 
       newUserAndGPS.latitude = this.latitude.toString();
       newUserAndGPS.longitude = this.longitude.toString();

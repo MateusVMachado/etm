@@ -32,6 +32,16 @@ import { SaveModalComponent } from './save-layout/save-modal.component';
 })
 
 
+///<reference path='../events/EventDispatcher.ts'/>
+
+/**
+ * The {{#crossLink "LayoutEditorComponent"}}{{/crossLink}} class is responsible to manage all keyboard layout creation process.
+ *
+ * @class LayoutEditorComponent
+ * @extends AppBaseComponent
+ * @implements OnInit, OnDestroy
+ * @constructor
+ **/
 export class LayoutEditorComponent extends AppBaseComponent implements OnInit, OnDestroy {
     
     public masterKeys: TecladoModel = new TecladoModel(); 
@@ -228,7 +238,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       //PARA IMAGENS MAIORES
       if(this.IMAGE_TESTE) {
-        this.scale = this.availWidth/ 1920;
+        let adjustValue = 300;
+        this.scale = this.availWidth/ (1920 + adjustValue);
         
         this.growthFactor = 2;
         this.keysWidthSizeOriginal = this.keysWidthSize;
@@ -263,7 +274,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                self.tecladoReplicant.teclas[i][j] = "";
                self.tecladoReplicant.text[i][j] = "";
                self.tecladoReplicant.action[i][j] = "";  
-               self.tecladoReplicant.image[i][j] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+               self.tecladoReplicant.image[i][j] = "";   
             }
         }
 
@@ -290,6 +301,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }
 
+ /**
+ * For each dragula unit that contains text, resizes by the mangnify amount
+ *
+ * @method alterFontSize 
+ * @param void {void} 
+ * @returns void {void}
+ * @public
+ */
   public alterFontSize(){
     let sElContent = $('[id=content]');
     for(let unit = 0; unit < sElContent.length; unit++){
@@ -297,6 +316,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }
   }
 
+   /**
+ * Generates a random color in string format representing an hexadecimal
+ *
+ * @method getRandomColor
+ * @param void {void} 
+ * @returns {string}
+ * @public
+ */
   public getRandomColor() {
       let letters = '0123456789ABCDEF';
       let color = '#';
@@ -306,12 +333,26 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       return color;
   }
 
-
+   /**
+ * Detect changes in angular internal states
+ *
+ * @method newCheckRound
+ * @param void {void} 
+ * @returns void {void}
+ * @public
+ */
     private newCheckRound(){
       this.cdr.detectChanges();
   }
 
-
+   /**
+ * Remove all dragula units and clear the replicant 
+ *
+ * @method reStartBoard
+ * @param void {void} 
+ * @returns {void}
+ * @public
+ */
     public reStartBoard(){
       this.newKeyboard = true;
       this.editMode = false;
@@ -325,7 +366,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             this.tecladoReplicant.teclas[i][j] = "";
             this.tecladoReplicant.text[i][j] = ""; 
             this.tecladoReplicant.action[i][j] = "";  
-            this.tecladoReplicant.image[i][j] = "";   ////////////////////////////////ADICIONADO RECENTEMENTE ///////////////////////////////
+            this.tecladoReplicant.image[i][j] = "";   
           }
       }
 
@@ -338,11 +379,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    ///////////////////////////////////////////////////////
     ////////////////////////////
 
-
+   /**
+ * This method is rensponsable for loading all dragula units in its proper locations. It loads the specific keyboard choosed by the user, using the 'nameString' param to 
+ * locate it in the database. Using the returned array it maps all keys in the matrix and clone the dragula's units and append it in the appropriate locations.
+ *
+ * @method updateReplicant
+ * @param nameString {string}  
+ * @returns void {void}
+ * @public
+ */
     public updateReplicant(nameString: string){
       
       
-
       this.newKeyboard = false;
       this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
@@ -371,9 +419,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       this.imgLinesArray = [];
 
-      var counter = 0;
+      let counter = 0;
 
-      var drake = dragula({});
+      let drake = dragula({});
 
       let totalLength = 0;
 
@@ -384,7 +432,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       });
 
 
-      var elem2;
+      let elem2;
       elem2 = $("[id=copy]")[1].cloneNode(true);
       
 
@@ -622,7 +670,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    ////////////////////////
     ////////////////////////////
 
-
+   /**
+ * This method receives a 'OpenFACLayout' object (layout) and converts it to a 'TecladoModel' populating a keyboard object passed as parameter.
+ *
+ * @method convertLayoutToKeyboard
+ * @param keyboard {TecladoModel}
+ * @param layout {OpenFACLayout}
+ * @returns {void}
+ * @public
+ */
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout){
       if(!layout) return;
       keyboard.teclas = [];
@@ -652,24 +708,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
   }
 
-
-    public setKeyboardState(value){
-
-
-      let newTitle = value[2].className.split('@');
-      let title = newTitle[1];
-
-      let parts = title.split("#");
-      let x = <number>parts[0];
-      let y = <number>parts[1];
-      this.tecladoReplicant.teclas[y][x] = "";
-      this.tecladoReplicant.text[y][x] = "";
-      this.tecladoReplicant.action[y][x] = "";  
-      this.tecladoReplicant.image[y][x] = "";   
-
-    }
-
-
     
         /////////////////////////////
      //////////////////////////////
@@ -677,9 +715,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    //////////////////////////////
     ////////////////////////////
 
-
+   /**
+ * This method handles all the aftercomes of the dragula remove event. Rearranges all matrix affected positions. 
+ *
+ * @method onRemove
+ * @param value {any} Value passed by the dragula event that captures the element being removed
+ * @returns void {void}
+ * @public
+ */
     private onRemove(value){
-      let DEBUG = true;
+      let DEBUG = false;
 
       if(DEBUG) console.clear();
       if(DEBUG) console.log("-------------------REMOVE2---------------------")
@@ -742,10 +787,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }
                 
 
-                  //this.imgLinesArray.splice(index, 1);
-                  
-                  //break;
-
                 }
                 if(index !== -1) this.imgLinesArray.splice(index, 1);
               }
@@ -804,12 +845,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    ////////////////////////////
     ////////////////////////////
 
+  /**
+ * This method handles all the aftercomes of the dragula drop event. Rearranges all matrix affected positions and relocates dragula units. Resize lines if dropped element
+ * is a picture and resize lines that had, but no longer have a picture in it´.
+ * 
+ * @method onDrop
+ * @param value {any} Value passed by the dragula event that captures the element being dropped
+ * @returns void {void}
+ * @public
+ */
     private onDrop(value) {
-      let DEBUG = true;
+      let DEBUG = false;
       let DEBUG2 = false;
-      //console.clear();
-      //if(DEBUG) console.clear();
-      //if(DEBUG2) console.clear();
+
       if(DEBUG) console.log("-------------------DROPS---------------------")
       if(DEBUG2) console.log("-------------------DROPS---------------------")
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.teclas));
@@ -872,17 +920,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             if(DEBUG2) console.log("imgLINES ANTES DO CORTE:")
             if(DEBUG2) console.log(JSON.stringify(this.imgLinesArray))
 
-
-            // if($($(value[1])[0].attributes)[4]){
-            //   if($($(value[1])[0].attributes)[4].textContent.substring(0,10) === 'background' && sourceY !== drainY){
-            //       //if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && sourceY !== drainY){
-            //         this.imgLinesArray.splice(this.cutIndex, 1);
-            //       }
-            // }      
+    
          
-            console.log("VALUE")
-            console.log(value[3])
-            console.log('ID: ' + value[3].id)
+            if(DEBUG) console.log("VALUE")
+            if(DEBUG) console.log(value[3])
+            if(DEBUG) console.log('ID: ' + value[3].id)
             if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && sourceY !== drainY && value[3].id !== 'copy'){
               this.imgLinesArray.splice(this.cutIndex, 1);
             }
@@ -935,29 +977,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                           }
                         }
 
-
-                        // let foundBlank = false;
-                        // while(this.tecladoReplicant.teclas[drainY][derivedX] !== '' && derivedX < this.choppedNumber){
-                        //   derivedX = derivedX + 1;
-                        // }
-                        // if(derivedX >= this.choppedNumber){
-                        //   while(this.tecladoReplicant.teclas[drainY][derivedX] !== '' && derivedX > 0){
-                        //     derivedX = derivedX - 1;
-                        //   }
-
-                        //   if(derivedX <= 0){
-
-                        //     formula = this.globColumnQnty*Number(sourceY)+Number(sourceX);
-                        //     sElContentTmp[formula].appendChild(el);
-                        //     return;
-                        //   }
-                        // }
-
-
                         formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
                         sElContentTmp[formula].appendChild(el);
                         
-  
                   }     
         
             }
@@ -1208,10 +1230,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               
                               } else if( !isCopy){
                                 if(DEBUG) console.log("MARK-DROP-13B");
-                                console.log("NO SOURCE!")
-                                console.log(this.tecladoReplicant.teclas[sourceY][sourceX]);
-                                console.log("NOVO DRAIN:")
-                                console.log('drainX: ' + drainX + ' drainY: ' + drainY)
+                                if(DEBUG) console.log("NO SOURCE!")
+                                if(DEBUG) console.log(this.tecladoReplicant.teclas[sourceY][sourceX]);
+                                if(DEBUG) console.log("NOVO DRAIN:")
+                                if(DEBUG) console.log('drainX: ' + drainX + ' drainY: ' + drainY)
                                 this.tecladoReplicant.teclas[drainY][drainX] = this.tecladoReplicant.teclas[sourceY][sourceX];
                                 this.tecladoReplicant.teclas[sourceY][sourceX] = "";
                               }
@@ -1461,17 +1483,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       }
                     }  
 
-                    // console.log('this.tecladoReplicant.teclas[drainY][drainX].split("$")[0]: ' + this.tecladoReplicant.teclas[drainY][drainX].split("$")[0]);
-                    // console.log('\nthis.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0]: ' + this.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0]);
-                    // if( this.tecladoReplicant.teclas[drainY][drainX].split("$")[0] !== '*img' 
-                    //       && this.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0] !== '*img') isImage = false; 
-
 
                       let ignoreTransfer = false;
                       if(imageTransfer && drainY === sourceY) ignoreTransfer = true;
 
-                      console.log("**********UPPER***********")
-                      console.log('!this.checkLineHasImage(drainY): ' + !this.checkLineHasImage(drainY) + ' \nisImage: ' + isImage + 
+                      if(DEBUG) console.log("**********UPPER***********")
+                      if(DEBUG) console.log('!this.checkLineHasImage(drainY): ' + !this.checkLineHasImage(drainY) + ' \nisImage: ' + isImage + 
                       ' \nimageTransfer: ' + imageTransfer + ' \nignoreTransfer: ' + ignoreTransfer)
 
                       
@@ -1479,28 +1496,21 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         let self = this;
                       if(imageTransfer && isImage && !ignoreTransfer){
 
-                        //this.keysRelocation(drainX, drainY);
-                          //for(let unit =0; unit < sElContent.length; unit++){
-                        
-                          //FALTA ALTERAR VALORES NO TECLADO REPLICANT
-                        console.log("MODO REALOCAÇÃO IMINENTE2!");
+ 
+                          if(DEBUG) console.log("MODO REALOCAÇÃO IMINENTE2!");
 
 
                         if(DEBUG) console.log(this.choppedNumber)
-                        // console.log(JSON.stringify(this.tecladoReplicant.teclas));
-                        // console.log("TAM: " + this.tecladoReplicant.teclas.length)
-                        // for(let line = 0; line < this.tecladoReplicant.teclas.lenght; line ++){
-                        //   console.log("loop1")
-                        // }
-                                          // REMOVE EXTRA KEYS
+    
+                        // REMOVE EXTRA KEYS
                   
-                  //for(let line = 0; line < this.tecladoReplicant.teclas.length; line++){
+                
                     let line = drainY;
                     for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-                      //console.log('col: ' + col + ' choppedNumber: ' + this.choppedNumber + 'replicant: ' + this.tecladoReplicant.teclas[line][col])
-                      console.log(this.choppedNumber)
+  
+                      if(DEBUG) console.log(this.choppedNumber)
                       if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
-                        console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
+                        if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
                         let newformula = this.globColumnQnty*Number(line)+Number(col);
                         if($($('[id=content]')[newformula]).find('input')[0]){
                           $($('[id=content]')[newformula]).find('input')[0].remove();
@@ -1515,17 +1525,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                       }
                     }
-                  //}
+            
 
 
 
                         if(sourceY !== drainY){
-                              //for(let line = 0; line < this.tecladoReplicant.teclas.length; line++)  {
+          
                                 let line = drainY
                                 for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-                                  //console.log("Loooop | col: " + col + ' l: ' + this.choppedNumber);
+                   
                                   if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col]!== '' ){
-                                    console.log("Encontrado elemento além do limiar: " + this.tecladoReplicant.teclas[line][col]);
+                                    if(DEBUG) console.log("Encontrado elemento além do limiar: " + this.tecladoReplicant.teclas[line][col]);
                                     let formula = this.globColumnQnty*Number(line)+Number(col);
                                     let clone;
                                     if($(sElContent[formula]).find('input')[0]) {
@@ -1536,11 +1546,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                         clone = $(sElContent[formula]).find('button')[0].cloneNode(true);
                                         $(sElContent[formula]).find('button')[0].remove();
                                     } 
-                                    console.log(clone);
+                                    if(DEBUG) console.log(clone);
 
                                     for(let x = col ; x > 0; x--){
                                       if(this.tecladoReplicant.teclas[line][x] === '' && x < this.choppedNumber && col !== drainY){
-                                        console.log('Encontrada lacuna em branco em: ' + x);
+                                        if(DEBUG) console.log('Encontrada lacuna em branco em: ' + x);
                                         formula  = this.globColumnQnty*Number(line)+Number(x);
                                         this.tecladoReplicant.teclas[line][x] = this.tecladoReplicant.teclas[line][col];
                                         this.tecladoReplicant.action[line][x] = this.tecladoReplicant.action[line][col];
@@ -1561,16 +1571,13 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                   }
                                 }
                                 
-                             //}
+                        
                           } 
 
  
   
                       }
               
-                      
-                      
-                      //this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
                       
                             
                       if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
@@ -1579,13 +1586,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
                       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
 
-                      console.log(JSON.stringify(this.imgLinesArray))
-
-                      console.log(JSON.stringify(this.tecladoReplicant.teclas))
-                      console.log(JSON.stringify(this.tecladoReplicant.action))
-                      console.log(JSON.stringify(this.tecladoReplicant.text))
-                      
-
+                    
                   return;
                 }
 
@@ -2220,46 +2221,29 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     }
                   }  
 
-                  // console.log('this.tecladoReplicant.teclas[drainY][drainX].split("$")[0]: ' + this.tecladoReplicant.teclas[drainY][drainX].split("$")[0]);
-                  // console.log('\nthis.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0]: ' + this.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0]);
-                  // if( this.tecladoReplicant.teclas[drainY][drainX].split("$")[0] !== '*img' 
-                  //       && this.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0] !== '*img') isImage = false; 
-
 
                     let ignoreTransfer = false;
                     if(imageTransfer && drainY === sourceY) ignoreTransfer = true;
 
-                    console.log("**********UPPER***********")
-                    console.log('!this.checkLineHasImage(drainY): ' + !this.checkLineHasImage(drainY) + ' \nisImage: ' + isImage + 
+                    if(DEBUG) console.log("**********UPPER***********")
+                    if(DEBUG) console.log('!this.checkLineHasImage(drainY): ' + !this.checkLineHasImage(drainY) + ' \nisImage: ' + isImage + 
                     ' \nimageTransfer: ' + imageTransfer + ' \nignoreTransfer: ' + ignoreTransfer)
 
                     
-                    //if(!this.checkLineHasImage(drainY) && isImage){
                       let self = this;
                     if(imageTransfer && isImage && !ignoreTransfer){
 
-                      //this.keysRelocation(drainX, drainY);
-                        //for(let unit =0; unit < sElContent.length; unit++){
-                      
-                        //FALTA ALTERAR VALORES NO TECLADO REPLICANT
-                      console.log("MODO REALOCAÇÃO IMINENTE2!");
-
+                      if(DEBUG) console.log("MODO REALOCAÇÃO IMINENTE2!");
 
                       if(DEBUG) console.log(this.choppedNumber)
-                      // console.log(JSON.stringify(this.tecladoReplicant.teclas));
-                      // console.log("TAM: " + this.tecladoReplicant.teclas.length)
-                      // for(let line = 0; line < this.tecladoReplicant.teclas.lenght; line ++){
-                      //   console.log("loop1")
-                      // }
-                                        // REMOVE EXTRA KEYS
+   
+                      // REMOVE EXTRA KEYS
                 
-                //for(let line = 0; line < this.tecladoReplicant.teclas.length; line++){
                   let line = drainY;
                   for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-                    //console.log('col: ' + col + ' choppedNumber: ' + this.choppedNumber + 'replicant: ' + this.tecladoReplicant.teclas[line][col])
-                    console.log(this.choppedNumber)
+                    if(DEBUG) console.log(this.choppedNumber)
                     if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
-                      console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
+                      if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
                       let newformula = this.globColumnQnty*Number(line)+Number(col);
                       if($($('[id=content]')[newformula]).find('input')[0]){
                         $($('[id=content]')[newformula]).find('input')[0].remove();
@@ -2274,17 +2258,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                     }
                   }
-                //}
+          
 
 
 
                       if(sourceY !== drainY){
-                            //for(let line = 0; line < this.tecladoReplicant.teclas.length; line++)  {
+                  
                               let line = drainY
                               for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-                                //console.log("Loooop | col: " + col + ' l: ' + this.choppedNumber);
+                
                                 if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col]!== '' ){
-                                  console.log("Encontrado elemento além do limiar: " + this.tecladoReplicant.teclas[line][col]);
+                                  if(DEBUG) console.log("Encontrado elemento além do limiar: " + this.tecladoReplicant.teclas[line][col]);
                                   let formula = this.globColumnQnty*Number(line)+Number(col);
                                   let clone;
                                   if($(sElContent[formula]).find('input')[0]) {
@@ -2295,11 +2279,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                       clone = $(sElContent[formula]).find('button')[0].cloneNode(true);
                                       $(sElContent[formula]).find('button')[0].remove();
                                   } 
-                                  console.log(clone);
+                                  if(DEBUG) console.log(clone);
 
                                   for(let x = col ; x > 0; x--){
                                     if(this.tecladoReplicant.teclas[line][x] === '' && x < this.choppedNumber && col !== drainY){
-                                      console.log('Encontrada lacuna em branco em: ' + x);
+                                      if(DEBUG) console.log('Encontrada lacuna em branco em: ' + x);
                                       formula  = this.globColumnQnty*Number(line)+Number(x);
                                       this.tecladoReplicant.teclas[line][x] = this.tecladoReplicant.teclas[line][col];
                                       this.tecladoReplicant.action[line][x] = this.tecladoReplicant.action[line][col];
@@ -2318,15 +2302,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                                 }
                               }
-                              
-                           //}
+  
                         } 
 
 
 
                     }
             
-                    //this.adjustLinesSizes(drainY, drainX, sourceY, sourceX);
+    
                     
                           
                     if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
@@ -2335,13 +2318,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                     if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
                     if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
 
-                    console.log(JSON.stringify(this.imgLinesArray))
-
-                    console.log(JSON.stringify(this.tecladoReplicant.teclas))
-                    console.log(JSON.stringify(this.tecladoReplicant.action))
-                    console.log(JSON.stringify(this.tecladoReplicant.text))
-                    
-                  
+               
              
     }    
 
@@ -2351,6 +2328,19 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       ///// FAZER REMANEJAMENTO DE TECLAS //  
         ///////////////////////////////////////
 
+        /**
+       * This method receives the (x, y) coordinates from the dragula unit origin position and the dragula unit destination position. It checks if there is elements 
+       * outside the desired range in the destination line and if it is, the function searchs for empty spaces in the array to append it. Otherwise the element is eliminated.
+       *
+       * @method relocKeys
+       * @param drainX {number} x coordinate of the dragula unit destination
+       * @param drainY {number} y coordinate of the dragula unit destination
+       * @param sourceX {number} x coordinate of the dragula unit origin
+       * @param sourceY {number} y coordinate of the dragula unit origin
+       * @param value? {any} optional parameter that carries the dragula units from the drop event
+       * @returns void {void}
+       * @public
+       */
         private relocKeys( drainX: number, drainY: number, sourceX: number, sourceY: number, value?: any){
           let DEBUG = false;
 
@@ -2381,43 +2371,29 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             }
           }  
 
-          // console.log('this.tecladoReplicant.teclas[drainY][drainX].split("$")[0]: ' + this.tecladoReplicant.teclas[drainY][drainX].split("$")[0]);
-          // console.log('\nthis.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0]: ' + this.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0]);
-          // if( this.tecladoReplicant.teclas[drainY][drainX].split("$")[0] !== '*img' 
-          //       && this.tecladoReplicant.teclas[sourceY][sourceX].split("$")[0] !== '*img') isImage = false; 
-
 
             let ignoreTransfer = false;
             if(imageTransfer && drainY === sourceY) ignoreTransfer = true;
 
-            console.log("**********UPPER***********")
-            console.log('!this.checkLineHasImage(drainY): ' + !this.checkLineHasImage(drainY) + ' \nisImage: ' + isImage + 
+            if(DEBUG) console.log("**********UPPER***********")
+            if(DEBUG) console.log('!this.checkLineHasImage(drainY): ' + !this.checkLineHasImage(drainY) + ' \nisImage: ' + isImage + 
             ' \nimageTransfer: ' + imageTransfer + ' \nignoreTransfer: ' + ignoreTransfer)
 
             
-            //if(!this.checkLineHasImage(drainY) && isImage){
               let self = this;
             if(imageTransfer && isImage && !ignoreTransfer){
 
-              //this.keysRelocation(drainX, drainY);
-                //for(let unit =0; unit < sElContent.length; unit++){
-              
-                //FALTA ALTERAR VALORES NO TECLADO REPLICANT
-              console.log("MODO REALOCAÇÃO IMINENTE2!");
+                if(DEBUG) console.log("MODO REALOCAÇÃO IMINENTE2!");
 
 
               if(DEBUG) console.log(this.choppedNumber)
-              // console.log(JSON.stringify(this.tecladoReplicant.teclas));
-              // console.log("TAM: " + this.tecladoReplicant.teclas.length)
-              // for(let line = 0; line < this.tecladoReplicant.teclas.lenght; line ++){
-              //   console.log("loop1")
-              // }
+
               if(sourceY !== drainY){
                     for(let line = 0; line < this.tecladoReplicant.teclas.length; line++)  {
                       for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-                        //console.log("Loooop | col: " + col + ' l: ' + this.choppedNumber);
+      
                         if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col]!== '' ){
-                          console.log("Encontrado elemento além do limiar: " + this.tecladoReplicant.teclas[line][col]);
+                          if(DEBUG) console.log("Encontrado elemento além do limiar: " + this.tecladoReplicant.teclas[line][col]);
                           let formula = this.globColumnQnty*Number(line)+Number(col);
                           let clone;
                           if($(sElContent[formula]).find('input')[0]) {
@@ -2428,11 +2404,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               clone = $(sElContent[formula]).find('button')[0].cloneNode(true);
                               $(sElContent[formula]).find('button')[0].remove();
                           } 
-                          console.log(clone);
+                          if(DEBUG) console.log(clone);
 
                           for(let x = col ; x > 0; x--){
                             if(this.tecladoReplicant.teclas[line][x] === '' && x < this.choppedNumber && col !== drainY){
-                              console.log('Encontrada lacuna em branco em: ' + x);
+                              if(DEBUG) console.log('Encontrada lacuna em branco em: ' + x);
                               formula  = this.globColumnQnty*Number(line)+Number(x);
                               this.tecladoReplicant.teclas[line][x] = this.tecladoReplicant.teclas[line][col];
                               this.tecladoReplicant.action[line][x] = this.tecladoReplicant.action[line][col];
@@ -2467,18 +2443,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
             if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
 
-            console.log(JSON.stringify(this.imgLinesArray))
-
-            console.log(JSON.stringify(this.tecladoReplicant.teclas))
-            console.log(JSON.stringify(this.tecladoReplicant.action))
-            console.log(JSON.stringify(this.tecladoReplicant.text))
         }
-
-
-
-
-
-
 
 
 
@@ -2488,7 +2453,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    //////////////////////////////////////
     ////////////////////////////
 
-
+        /**
+       * This method check if the destination line or the origin line has images. If a line receives an image and don't have already a image on it, it expands its dimensions 
+       * to fit it. Otherwise if a line has images and lose all of it, the line shrinks to fit only normal keys.
+       *
+       * @method adjustLinesSizes
+       * @param drainX {number} x coordinate of the dragula unit destination
+       * @param drainY {number} y coordinate of the dragula unit destination
+       * @param sourceX {number} x coordinate of the dragula unit origin
+       * @param sourceY {number} y coordinate of the dragula unit origin
+       * @returns void {void}
+       * @public
+       */
     private adjustLinesSizes(drainY: number, drainX: number, sourceY: number, sourceX: number){
  
                   if(!this.checkLineHasImage(drainY) && this.tecladoReplicant.teclas[drainY][drainX].split('$')[0] !== '*img'){
@@ -2639,17 +2615,43 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     // FUNÇÕES AUXILIARES //
    ////////////////////////
     ////////////////////////////
-    
+      
+    /**
+       * Shows a modal window
+       *
+       * @method showModal
+       * @param component {any} the component to be showed in a modal form
+       * @returns void {void}
+       * @public
+       */
     public showModal(component){
         const activeModal = this.modalService.open(component, {size: 'lg', container: 'nb-layout'});
         this.modal = activeModal;
     }
 
+        /**
+       * Close an open modal window
+       *
+       * @method closeModal
+       * @param component {any} the component to be showed in a modal form
+       * @returns void {void}
+       * @public
+       */
     public closeModal(){
       this.modal.close();
       this.modal = null;
   } 
 
+
+      /**
+       * Consumes all information in the replicant and populates the OpenFACLayout object with it.
+       *
+       * @method populateLayout
+       * @param replicant {TecladoModel} the matrix representation of the keyboard that are being replicated and generated
+       * @param email {string} user email
+       * @returns openFacLayout {OpenFACLayout} the object containing all leyboard layout information
+       * @public
+       */
     public populateLayout(replicant: TecladoModel, email: string): OpenFACLayout{
       let openFacLayout = new OpenFACLayout(); 
       openFacLayout.nameLayout = replicant.type;
@@ -2675,10 +2677,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       return openFacLayout;
    }
 
+        /**
+       * Show a window for the user select the keyboard to delete.
+       *
+       * @method deleteKeyboardLayout
+       * @param void {void}
+       * @returns void {void} 
+       * @public
+       */
    public deleteKeyboardLayout(){
     this.showModal(DeleteLayoutModalComponent);
-    
-
+  
     this.keyboardItems.KeyboardsNames.push(this.keyboardName);
     this.keyboardToEdit = this.keyboardName;
    }
@@ -2692,7 +2701,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    ////////////////////
     ////////////////////////////
 
-
+        /**
+       * Creates a new TecladoModel object to be inserted into database. Sets all informations and send it to backend.
+       *
+       * @method saveKeyboardLayout
+       * @param saveAs? {boolean} Optional param to inform if is a normal save or a save as some specific file.
+       * @returns void {void} 
+       * @public
+       */
    public saveKeyboardLayout(saveAs?: boolean){
 
      if(!saveAs){
@@ -2854,6 +2870,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    /////////////////////////////////////////////
     ////////////////////////////
 
+    
+        /**
+       * Check for addition or subtraction in the number of user keyboards. So, it triggers an event that reload the names of keyboards still existent.
+       *
+       * @method  reloadList
+       * @param void {void} 
+       * @returns void {void} 
+       * @public
+       */
   public reloadList(){
       
       this.keyboardNamesSubscribe.unsubscribe();
@@ -2873,6 +2898,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
    //////////////////////////////////
     ////////////////////////////
 
+        /**
+       * Creates all the basic and empty structure of a keyboard, then populates the global replicant with this structure. Also creates the basic keyboard that
+       * serves the Keyboard Layout Editor.
+       *
+       * @method  createEmptyKeyboard
+       * @param void {void} 
+       * @returns void {void} 
+       * @public
+       */
+    
     private createEmptyKeyboard(){
       let rows = 5;
       if(this.smallerScreenSize){
@@ -2957,6 +2992,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
     }
 
+       /**
+       * Inserts a blank line in the replicant and the main keyboard matrix.
+       *
+       * @method  addLine
+       * @param void {void} 
+       * @returns void {void} 
+       * @public
+       */
     public addLine(){
         let line = new Array();
         let lineReplicant = new Array();
@@ -2978,6 +3021,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         this.lines = this.teclado.teclas.length;
     }  
     
+        /**
+       * Remove a line in the replicant and the main keyboard matrix.
+       *
+       * @method  removeLine
+       * @param void {void} 
+       * @returns void {void} 
+       * @public
+       */
     public removeLine(){
       if(this.teclado.teclas.length > 5){
           this.teclado.teclas.pop();
@@ -2996,20 +3047,26 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     }  
 
 
-
-
         /////////////////////////////
      ////////////////////////
     // INSERT DAS IMAGENS //
    ////////////////////////
     ////////////////////////////
 
+    
+        /**
+       * This method shows a modal window for capture user information about button labels, text, image and action type.
+       *
+       * @method  editCaptionNText
+       * @param event {any} parameter passed by the double click event over a dragula unit. 
+       * @returns void {void} 
+       * @public
+       */
     public editCaptionNText(event){
         let DEBUG = true;
         let DEBUG2 = true;
         
         if(DEBUG) console.clear();
-        //if(DEBUG2) console.clear();
         if(DEBUG) console.log("-------------------INSERT---------------------")
 
         this.showModal(CaptionTextModalComponent);
@@ -3027,7 +3084,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           let x = <number>parts[0].split('#')[0];
           let y = <number>parts[0].split('#')[1];
 
-          console.log('x: ' + x + ' y: ' + y)
+          if(DEBUG) console.log('x: ' + x + ' y: ' + y)
           this.x = x;
           this.y = y;
 
@@ -3042,7 +3099,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
           let x = <number>parts[1].split('#')[0];
           let y = <number>parts[1].split('#')[1];
-          console.log('x: ' + x + ' y: ' + y)
+          if(DEBUG) console.log('x: ' + x + ' y: ' + y)
           
           this.x = x;
           this.y = y;
@@ -3064,7 +3121,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         payload.push(event);
         payload.push(text);
         payload.push(action);
-        console.log('IMAGE: ' + image)
+        if(DEBUG) console.log('IMAGE: ' + image)
         payload.push(image);
         payload.push(teclas);
 
@@ -3145,7 +3202,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               let parts = event.target.className.split(' ');
               let x, y;
 
-              console.log(parts);
+              if(DEBUG) console.log(parts);
               if(parts[0] === '@copyArea$') {
                   parts = parts[1];
                   x = parts.split('#')[0];
@@ -3184,38 +3241,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               $(event.target).attr('value', buttonCaption);
 
 
-             // let validator = parts.length > 1 ? (parts[1].indexOf('#') !== -1 && imagem) : true;
-
-                
-                //let validator2 = parts.length > 1 ? (parts[1].indexOf('#') !== -1 && imagem) : false;
-                //if( validator2 ) parts[0] = parts[1];
-
-               // if(parts[0].substring(0,1) === "@") parts[0] = parts[0].split('$')[1];
-
-
-
                 let el, copied, copyToTarget = false;
                 if(DEBUG) console.log("MARK-LAYOUT-1");
 
                 if(event.target.value){
                   if(DEBUG) console.log("MARK-LAYOUT-2");
-                  // let x = $(event.target)[0].className.split(' ')[0].split('#')[0];
-                  // let y = $(event.target)[0].className.split(' ')[0].split('#')[1];
-                  // let sElContent = $('[id=content]');
-                  // let formular = this.globColumnQnty*Number(y)+Number(y);
-                  // if($(sElContent[formula]).find('input')[0]){
-                  //   $(sElContent[formula]).find('input')[0].remove();
-                  //   el = $(sElContent[formula]).find('input')[0].cloneNode(true);  
-                  // }
-                  // if($(sElContent[formula]).find('button')[0]){
-                  //   $(sElContent[formula]).find('button')[0].remove();
-                  //   el = $(sElContent[formula]).find('button')[0].cloneNode(true);  
-                  // }
-                  //el = sElContent[formula].cloneNode(true);
-                  //sElContent[formula].remove();
-                  el = $(event.target)[0];
-                 // $(event.target)[0].remove();
 
+                  el = $(event.target)[0];
+ 
                   copyToTarget = true;
                 } else {
                   if(DEBUG) console.log("MARK-LAYOUT-3");
@@ -3272,7 +3305,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       if( found ) { 
                         if(DEBUG) console.log("MARK-LAYOUT-10");
-                          console.log("SIZE CHANGER 1")
+                        if(DEBUG) console.log("SIZE CHANGER 1")
                           $($(el).find('input')[0]).css('height', this.imgMaxHeightSize);
                       }    
                   } else {
@@ -3315,22 +3348,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               }
                             }
 
-                            
-
-                            // let foundBlank = false;
-                            // while(this.tecladoReplicant.teclas[y][x] !== '' && x < this.choppedNumber){
-                            //   x = x + 1;
-                            // }
-                            // if(x >= this.choppedNumber){
-                            //   while(this.tecladoReplicant.teclas[y][x] !== '' && x > 0){
-                            //     x = x - 1;
-                            //   }
-
-                            //   if(x <= 0){
-                            //     return;
-                            //   }
-                            // }
-
 
                               notX = true;
                         }
@@ -3357,7 +3374,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                             }
                         }
 
-/////////////////////////////////////EXPERIMENTAL
                         if(inputCount < this.choppedNumber || buttonCount < this.choppedNumber){
                             if(!this.checkLineHasImage(y)){
                               if(DEBUG) console.log("MARK-LAYOUT-16");
@@ -3434,29 +3450,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                                 }
                               }
 
-                            //   let foundBlank = false;
-                            // while(this.tecladoReplicant.teclas[y][x] !== '' && x < this.choppedNumber){
-                            //   x = x + 1;
-                            // }
-                            // if(x >= this.choppedNumber){
-                            //   while(this.tecladoReplicant.teclas[y][x] !== '' && x > 0){
-                            //     x = x - 1;
-                            //   }
-
-                            //   if(x <= 0){
-                            //     return;
-                            //   }
-                            // }
-
-
-
                               notX = true;
                         }
 
 
                  }
 
-                    //this.imgLinesArray.push(Number(this.y) );
                     
                     if(sysImg){
                       if(DEBUG) console.log("MARK-LAYOUT-27");
@@ -3503,8 +3502,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                 this.tecladoReplicant.image[y][x] = buttonImage; 
 
-                console.log(JSON.stringify(this.imgLinesArray))
-                console.log('!this.imgLinesArray.includes(y.toString()): ' + !this.imgLinesArray.includes(y.toString()))
+                if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
+                if(DEBUG) console.log('!this.imgLinesArray.includes(y.toString()): ' + !this.imgLinesArray.includes(y.toString()))
 
                 let found = false;
                 for(let step=0; step< this.imgLinesArray.length; step++){
@@ -3517,7 +3516,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                 if(this.tecladoReplicant.teclas[y][x].split('$')[0] === '*img' && !found) {
                   this.imgLinesArray.push(Number(y));
                 }  
-                console.log(JSON.stringify(this.imgLinesArray))
+                if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
 
                 if(!normal){
                   if(DEBUG) console.log("MARK-LAYOUT-31");
@@ -3534,7 +3533,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   
                   if( (imgUrl !== "" || sysImg ) & imagem){
                     if(DEBUG) console.log("MARK-LAYOUT-34");
-                    //this.imgLinesArray.push(Number(y) );
                     
                     if(sysImg){     
                       if(DEBUG) console.log("MARK-LAYOUT-35");        
@@ -3560,7 +3558,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   if(DEBUG) console.log("MARK-LAYOUT-37");
                   formula = this.globColumnQnty*Number(y)+Number(x);
                   
-                  console.log('inputCount: ' + inputCount + ' buttonCount: ' + buttonCount)
+                  if(DEBUG) console.log('inputCount: ' + inputCount + ' buttonCount: ' + buttonCount)
                   if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
                         if(!this.checkLineHasImage(y)){
                           if(DEBUG) console.log("MARK-LAYOUT-16");
@@ -3568,20 +3566,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                         }     
                   }      
 
-
-                  // $(el).attr('class', '@copyArea$' + ' ' + x + '#' + y + '');
-                  
-                  // if(!copyToTarget) $("[id=content]")[formula].appendChild(el);  
-
-                  // REMOVE EXTRA KEYS
-                  
-                 // for(let line = 0; line < this.tecladoReplicant.teclas.length; line++){
                    let line = y;
                     for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-                      //console.log('col: ' + col + ' choppedNumber: ' + this.choppedNumber + 'replicant: ' + this.tecladoReplicant.teclas[line][col])
-                      console.log(this.choppedNumber)
+                      
+                      if(DEBUG) console.log(this.choppedNumber)
                       if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
-                        console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
+                        if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
                         let newformula = this.globColumnQnty*Number(line)+Number(col);
                         if($($('[id=content]')[newformula]).find('input')[0]){
                           $($('[id=content]')[newformula]).find('input')[0].remove();
@@ -3596,17 +3586,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
                       }
                     }
-                //  }
 
                 } else {
                   if(DEBUG) console.log("MARK-LAYOUT-38");
 
                       // REMOVE EXTRA KEYS
                       let line = y;
-                      //for(let line = 0; line < this.tecladoReplicant.teclas.length; line++){
+                     
                         for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
                           if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
-                            console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
+                            if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
                             let newformula = this.globColumnQnty*Number(line)+Number(col);
                             if($($('[id=content]')[newformula]).find('input')[0]){
                               $($('[id=content]')[newformula]).find('input')[0].remove();
@@ -3621,7 +3610,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     
                           }
                         }
-                      //}
+               
 
                       if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
                           if(!this.checkLineHasImage(y)){
@@ -3629,26 +3618,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               this.keysRelocation(x,y);
                           }        
                       }    
-                      console.log(el);
-                  //     $(el).attr('class', '@copyArea$' + ' ' + x + '#' + y + '');
-
-                  //     let removeFormula = this.globColumnQnty*Number(y)+Number(x);
-                  //     //$("[class=@copyArea$ " + y + '#' + x + "]").remove();
-                      
-
-                  // $("[id=content]")[formula].appendChild(el);  
+                      if(DEBUG) console.log(el);
+ 
                 }
                      
 
                 if(imagem) $(el).attr('class', '@copyArea$' + ' ' + x + '#' + y + '');
                   
                 if(!copyToTarget){
-                  console.log($("[id=content]")[formula])
+                if(DEBUG) console.log($("[id=content]")[formula])
                if($($("[id=content]")[formula]).find('div')[0]) $($("[id=content]")[formula]).find('div')[0].remove();
                if($($("[id=content]")[formula]).find('div')[0]) $($("[id=content]")[formula]).find('div')[0].remove();
 
-               console.log("OBTIDO:")
-               console.log("x: " + x + ' y: ' + y);
+               if(DEBUG) console.log("OBTIDO:")
+               if(DEBUG) console.log("x: " + x + ' y: ' + y);
              
 
                    $("[id=content]")[formula].appendChild(el);  
@@ -3657,14 +3640,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(imagem) $(el).attr('class', '@copyArea$' + ' ' + x + '#' + y + '');
 
                       let removeFormula = this.globColumnQnty*Number(y)+Number(x);
-                      //$("[class=@copyArea$ " + y + '#' + x + "]").remove();
+     
                       if($($("[id=content]")[formula]).find('div')[0]) $($("[id=content]")[formula]).find('div')[0].remove();
                       if($($("[id=content]")[formula]).find('div')[0]) $($("[id=content]")[formula]).find('div')[0].remove();
-                      console.log($("[id=content]")[formula])
+                      if(DEBUG) console.log($("[id=content]")[formula])
 
 
-                      console.log("OBTIDO:")
-                      console.log("x: " + x + ' y: ' + y);
+                      if(DEBUG) console.log("OBTIDO:")
+                      if(DEBUG) console.log("x: " + x + ' y: ' + y);
             
                       
                       $("[id=content]")[formula].appendChild(el);  
@@ -3834,12 +3817,20 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
-
-      public keysRelocation(x: number, y: number, element?: any){
+        /**
+       * This method relocates all dragula's units surrounding the (x,y) position of the input image, to fill available spaces or discard elements in excess.
+       *
+       * @method  keysRelocation
+       * @param x {number} x position of the input image
+       * @param y {number} y position of the input image
+       * @returns void {void} 
+       * @public
+       */
+      public keysRelocation(x: number, y: number){
        
           let DEBUG = true;
 
-            console.log("--------------RELOCATION-ACTIVATED!!!--------")
+          if(DEBUG) console.log("--------------RELOCATION-ACTIVATED!!!--------")
 
             if(DEBUG) console.log("RELOCATION ACTIVATED!");
             if(DEBUG) console.log("CHOPPED NUMBER:")
@@ -3849,7 +3840,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
             let numberOfElements = 1;
             for(let unit = 0; unit < this.choppedNumber; unit++){
-              console.log("loop1")
+              if(DEBUG) console.log("loop1")
               if(this.tecladoReplicant.teclas[y][unit] !== ''){
                 numberOfElements += 1;
               }
@@ -3909,8 +3900,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
                   
                   if(!foundBlank && numberOfElements !== this.choppedNumber) {
-                    console.log('nElements: ' + numberOfElements);
-                    console.log("!foundBlank");
+                    if(DEBUG) console.log('nElements: ' + numberOfElements);
+                    if(DEBUG)  console.log("!foundBlank");
                     return;
                   } 
                   
@@ -3984,8 +3975,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   }
 
                   if(!foundBlank && numberOfElements !== this.choppedNumber) {
-                    console.log('nElements: ' + numberOfElements);
-                    console.log("!foundBlank");
+                    if(DEBUG) console.log('nElements: ' + numberOfElements);
+                    if(DEBUG)  console.log("!foundBlank");
                     return;
                   } 
                 
@@ -4013,7 +4004,17 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
-
+        /**
+       * Preparation method for a recursive mapping method.
+       *
+       * @method  mapToNewFormula
+       * @param x {number} x position of the input image
+       * @param y {number} y position of the input image
+       * @param receptacle {number} size of the receptacle array
+       * @param inverse {boolean} to decide if return an inverse mapping
+       * @returns void {void} 
+      * @public
+       */
       private mapToNewFormula(x: number, y: number, receptacle: number, inverse?: boolean):number{
             let DEBUG = false;                                                      
 
@@ -4064,6 +4065,23 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       }
 
+        /**
+       * This functions use a divide-and-conquer method to separate the centers and extremes recursevely of the original array and maps its position to the positions 
+       * of an smaller array called receptacle array. In the end it sets the final mapping array for creating a ilusion of congruence in the positioning of the image keys.
+       *
+       * @method  mapToNewRecursive
+       * @param x {number} x position of the input image
+       * @param y {number} y position of the input image
+       * @param originalArray {Array<any>} the array containing the original positions 
+       * @param receptacleArray {Array<any>} the array containing the positions to be mapped from originalArray
+       * @param joinOriginalArray {Array<any>} the final mapping of the original array
+       * @param joinReceptacleArray {Array<any>} the final mapping of the receptacle array
+       * @param left {boolean} indicates if the recursion is coming from the left side
+       * @param right {boolean} indicates if the recursion is coming from the right side
+       * @param DEBUG {boolean} for debug purposes
+       * @returns void {void} 
+       * @public
+       */
       private mapToNewRecursive(x: number, y: number, originalArray: Array<any>, receptacleArray: Array<any>, joinOriginalArray: Array<any>,
            joinReceptacleArray: Array<any>, left: boolean, right: boolean, DEBUG: boolean){
         let copyOriginal = originalArray.slice(), copyReceptacle = receptacleArray.slice();
@@ -4343,6 +4361,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       }
 
 
+        /**
+       * Finds a element whithin a dragula unit array.
+       *
+       * @method  indElement
+       * @param sElContent {number} array of dragula units
+       * @param x {number} x position of the searched unit
+       * @param y {number} y position of the searched unit
+       * @returns el {number} 
+       * @public
+       */
       public findElement(sElContent, x: number , y: number){
 
         for(let el = 0; el < sElContent.length; el++){
@@ -4355,16 +4383,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
       }
 
-      public calculateSum(actualLine: number){
-        let removedNodes = 0;
-        for(let line = 1; line < actualLine; line++){
-          removedNodes = removedNodes + (this.globColumnQnty - this.teclado.teclas[line].length);
-        }
-        return removedNodes;
-      }
 
-
-
+        /**
+       * Change line size to original or to the image size.
+       *
+       * @method changeLineSize
+       * @param targetY {number} target line to change size
+       * @param config {string} 'default' indicates that the line should change to original conditions, and 'imgSize' to expand it to image size.
+       * @returns el {number} 
+       * @public
+       */
       public changeLineSize(targetY: number, config: string){
         let sElContent = $("[id=content]");
         let sElLines = $("[id=blankLines]");
@@ -4445,32 +4473,31 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               for(let line = 0 ; line < this.tecladoReplicant.teclas.length; line++){
                 for(let col = 0 ; col < this.tecladoReplicant.teclas[line].length; col++){
                   let formula = this.globColumnQnty*Number(line)+Number(col);
-                  //if($($(sElContent)[formula])[0]){
-                  //if( Number($($(sElContent)[formula])[0].className.split(' ')[0].split('#')[0]) >= this.choppedNumber 
+
                   if( col >= this.choppedNumber && this.imgLinesArray.includes(line)){
                           $($($(sElContent)[formula])[0]).css('visibility', 'hidden');
                           
                         }
-                  //} else {
-
-                  //}      
+      
                 }
               }
         }      
       }  
 
 
-      public changeDragulaElSize(el: any, height:number, width:number){
-          if(width === -1){
-            el.css("height", height);
-          } else if(height === -1){
-            el.css("width", width);
-          } else {
-            el.css("height", height);
-            el.css("width", width);
-          }
-      }
-
+        /**
+       * Sets a image as background inside a dragula unit and configures it.
+       *
+       * @method changeDragulaBackground
+       * @param el {any} dragula unit to be changed  
+       * @param url {string} image background url
+       * @param height {number} image height
+       * @param width {number} image width
+       * @param percentX {number} percentual that images occupies in x axis
+       * @param percentY {number} percentual that images occupies in y axis
+       * @returns void {void} 
+       * @public
+       */
       public changeDragulaBackground(el: any, url:string, height: number, width: number, percentX:number, percentY:number){
 
         el.css("background", "url("+ url +") no-repeat");
@@ -4490,10 +4517,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
 
       }
 
-      public checkExistence(iR: number){
-        this.exist = this.imgLinesArray.includes(iR.toString());
- 
-      }
+      /**
+       * Check if line of index Y has an image on it.
+       *
+       * @method checkLineHasImage
+       * @param Y {number} line index
+       * @returns boolean {boolean} 
+       * @public
+       */
 
       public checkLineHasImage(Y: number) {
     
