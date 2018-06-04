@@ -1,14 +1,14 @@
 .rzslider {
-
+    
     transition: left linear 0.4s;
 }
 .rzslider:hover{
-transition: none; 
+    transition: none; 
 }
 
 .rzslider:noanimate{
-        transition: none; 
-
+    transition: none; 
+    
 }   
 
 .upper {
@@ -33,7 +33,9 @@ transition: none;
     margin: auto;
     max-height: 40%;
 }
-
+.button-keyboard-menu:hover{
+    padding: 10px !important;
+}
 .box-teclado-bottom{
     height: 100%;
     padding-top: 12px;
@@ -114,39 +116,46 @@ div[tooltip]:not([tooltip-persistent]):before {
 }
 
 div[tooltip]:before {            
-     position : absolute;
-     padding: 3px;
-     margin-top: -5px;
-     z-index: 1;
-     white-space:nowrap;
-     transition: 100ms;
-     word-wrap: none;
-     top: -60%;
-     background-color: rgb(26, 86, 216);
-     color: white;
-     content : attr(tooltip);
-     opacity : 0;
-     font-size: 50px;
+    position : absolute;
+    top: 102%;
+    right: -200%;
+    left: -200%;
+    overflow: visible;
+    padding: 2% 1%;
+    z-index: 1;
+    background-color: rgba(26, 86, 216,.9);
+    color: white;
+    content : attr(tooltip);
+    opacity : 0;
+    font-size: 20px;
 }
 
 div[tooltip]:hover:before {  
-    transition: opacity 2.5s;      
     opacity: 1;
-    font-size: 20px;
-
+    text-align: center;
+    transition: opacity 1s;      
+    transition-delay: .5s;
 }
-
+.tooltipLeft div[tooltip]:before, .tooltipLeft:before{
+    left: 0 !important;
+    right: -400% !important;
+}
+.tooltipRight div[tooltip]:before, .tooltipRight:before{
+    left: -400% !important;
+    right: 0 !important;
+}
+/* SÓ PARA OS DE BAIXO */
 
 .tamanho-button-especial-full{
     background-color: whitesmoke;
     color:black;
     height:48px;
-
+    
     width: 100%;
     position: relative;
     top: 0;
     margin-right: 6px; 
-
+    
     border-radius:  8px;
     display: inline-block;
     text-align: center;
@@ -275,7 +284,13 @@ div[tooltip]:hover:before {
 }
 
 .row {
-
+    
     position: relative;
+    
+}
 
+@media all and (max-width: 800px){
+    .tecladoShare{
+        text-align: left;
+    }
 }

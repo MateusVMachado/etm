@@ -1,15 +1,14 @@
-import { AuthService } from '../shared/services/auth.services';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { TecladoModel } from './teclado.model';
-
-import { HttpClient, HttpResponse } from '@angular/common/http';
-
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
 import { Subject } from 'rxjs';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AuthService } from '../shared/services/auth.services';
+import { TecladoModel } from './teclado.model';
+
+
 
 @Injectable()
 export class TecladoService extends AppServiceBase {
@@ -94,10 +93,5 @@ export class TecladoService extends AppServiceBase {
 
     loadSingleKeyboard(nameLayout: string, email: string, jwt: any){
         return this.http.get<OpenFACLayout>(this.backendAddress + `/getSingleKeyboard?nameLayout=${nameLayout}&email=${email}`, {headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + jwt}});
-    }
-
-
-    loginLogger(user: any) {
-        return this.http.post(this.backendAddress + '/loginLogger', user, { responseType: 'text'});
     }
 }

@@ -1,0 +1,164 @@
+.imgUsuarioTeclado{
+    width: 75px;
+    height: 75px;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+.c-10{
+    float: left;
+    width: 83.333%;
+    text-align: left;
+}
+.c-9{
+    float: left;
+    width: 75%;
+    text-align: left;
+}
+.c-8{
+    float: left;
+    width: 66.666%;
+    text-align: left;
+}
+.c-7{
+    float: left;
+    width: 58.333%;
+    text-align: left;
+}
+.c-6{
+    float: left;
+    width: 50%;
+    text-align: left;
+}
+.c-5{
+    float: left;
+    width: 41.666%;
+    text-align: left;
+}
+.c-4{
+    float: left;
+    width: 33.333%;
+    text-align: left;
+}
+.c-3{
+    float: left;
+    width: 25%;
+    text-align: left;
+}
+.c-2{
+    float: left;
+    width: 16.666%;
+    text-align: left;
+}
+.btn_teclado_compartilhado .btn{
+    margin: 2% 0;
+    cursor: pointer;
+    text-transform: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+.btn_teclado_compartilhado .btn:hover{
+    background-color: rgb(26, 86, 216) !important;
+    color: #fff !important;
+}
+.btn_teclado_compartilhado .btn.usar{
+    background-color: #a0a0a0;
+}
+.btn_teclado_compartilhado .btn.compartilhar{
+    background-color: #fff;
+}
+
+
+
+
+.item_teclado {
+    width: 100%;
+    background-color: gainsboro;
+    text-shadow: 1px 1px 1px #fff;
+    font-family: sans-serif !important;
+    font-size: 0.8rem;
+    line-height: 7px;
+}
+.item_teclado .center{
+    text-align: center;
+}
+
+.item_teclado .item_teclado_topo {
+    min-height: 50px;
+    padding: 2%;
+    color: #000;
+    margin: 2%;
+}
+.item_teclado .item_teclado_topo h4 {
+    margin: 0;
+    margin-bottom: 5px;
+    color: #000;
+}
+.item_teclado .item_teclado_topo .estrelas {
+    min-height: 50px;
+    padding: 2%;
+    color: #000;
+}
+.item_teclado .item_teclado_topo .estrelas .estrela{
+    cursor: pointer;
+}
+.item_teclado .item_teclado_topo .estrelas .estrela polygon,.item_teclado .item_teclado_topo .estrelas .estrela path{
+    fill: #606060;
+    color: #606060;
+}
+.item_teclado .item_teclado_topo .topo_footer {
+    width: 100%;
+    clear: both;
+    padding: 2% 0;
+}
+
+.item_teclado .item_teclado_topo .topo_footer div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item_teclado .item_teclado_topo .topo_footer .left img {
+    margin-right: 10px
+}
+
+.item_teclado .item_teclado_topo .topo_footer .left a {
+    color: #5e78f5;
+}
+
+.div_teclado {
+    clear: both;
+    max-width: 95%;
+    margin: 0 2.5%;
+    padding-bottom: 5%;
+    background-color: #dcdcdc;
+}
+
+.item_teclado .footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 1% 0;
+}
+
+.item_teclado .footer .btn {
+    background-color: #415167;
+    border: 1px solid #192533;
+    border-radius: 25rem;
+    color: #fff;
+    text-transform: none;
+    letter-spacing: inherit;
+    font-family: 'Roboto',sans-serif;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* MEDIA */
+ 
+@media all and (max-width: 700px) {
+    .c-10,.c-9,.c-8,.c-7,.c-6,.c-5,.c-4,.c-3,.c-2{
+        width: 100%;
+        text-align: center !important;
+    }
+}

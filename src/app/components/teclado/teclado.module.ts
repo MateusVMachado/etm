@@ -1,18 +1,19 @@
-import { NgModule } from '@angular/core';
-import { TecladoComponent } from './teclado.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
 import { CommonModule } from '@angular/common';
-import { TecladoService } from './teclado.service';
-
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSplitModule } from 'angular-split';
+import { TecladoBaseModule } from '../teclado-base/teclado-base.module';
+import { TecladoComponent } from './teclado.component';
+import { TecladoService } from './teclado.service';
+
+
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         AngularSplitModule,
+        TecladoBaseModule
     ],
     declarations: [
         TecladoComponent

@@ -3,16 +3,12 @@
  * Copyright Akveo. All Rights Reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  */
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
-import { User } from '../shared/models/user';
-import { AppBaseComponent } from '../shared/components/app-base.component';
-import { HttpResponse } from '@angular/common/http/src/response';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, Inject, ViewChild, OnInit } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../shared/services/auth.services';
 import 'rxjs/add/operator/catch';
-import { Injector } from '@angular/core';
+import { AppBaseComponent } from '../shared/components/app-base.component';
+import { User } from '../shared/models/user';
+import { AuthService } from '../shared/services/auth.services';
 
 @Component({
     selector: 'nb-register',
@@ -30,11 +26,12 @@ export class RegisterComponent extends AppBaseComponent {
 
     emailRequired: boolean = true;
 
-    passwordMinLen: number = 7;
-    passwordMaxLen: number = 12;
+    passwordMinLen: number = 4;
+    passwordMaxLen: number = 20;
     passwordRequired: boolean = true;
 
     passwordConfRequired: boolean = true;
+    termsCheckbox
  
     constructor(protected service: AuthService, protected router: Router, injector: Injector) { 
       super(injector) 
@@ -50,7 +47,7 @@ export class RegisterComponent extends AppBaseComponent {
               this.router.navigate(['./auth/login']);
             });
           }, (error) => {
-            if(error.message === "MENSAGEM_EMAIL_JA_CADASTRADO"){
+            if(error.message === "Esse email já foi cadastrado!"){
               let message = this.messageService.getTranslation('MENSAGEM_EMAIL_JA_CADASTRADO');
               this.messageService.error(message, 'Oops..');
             }

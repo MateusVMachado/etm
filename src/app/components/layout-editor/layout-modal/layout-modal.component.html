@@ -1,26 +1,25 @@
 <div style="background-color: white;" *ngIf="isKeyboardName">
     <div class="modal-header">
         <span>{{ messageService.getTranslation('MODAL_SALVAR_TITULO') }}</span>
-        <button class="close" aria-label="Close" (click)="closeModal()">
+        <button class="close" style="cursor: pointer;" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <form (ngSubmit)="saveKeyboardName()" #form="ngForm" autocomplete="off">
         <div class="modal-body">
-
-            <div class="from-group line">
+            
+            <div class="form-group line">
                 <label for="name">{{ messageService.getTranslation('MODAL_SALVAR_INPUT') }}</label>
                 <input type="text" id="name" name="name" [(ngModel)]="keyboardName" #name="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('MODAL_SALVAR_INPUT_PLACEHOLDER') }}"
-                    [class.form-control-danger]="name.invalid && name.touched" [required]="true"
+                [class.form-control-danger]="name.invalid && name.touched" [required]="true"
                 />
                 <small class="form-text error" *ngIf="name.invalid && name.touched && name.errors?.required">
                     {{ messageService.getTranslation('NOME_TECLADO_OBRIGATORIO') }}
                 </small>
             </div>
-
-
+            
             <div class="modal-footer">
-                <button class="btn btn-primary" [disabled]="saved || bigImage || !form.valid">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
+                <button class="btn btn-primary" style="cursor: pointer;" [disabled]="saved || bigImage || !form.valid">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
             </div>
         </div>
     </form>

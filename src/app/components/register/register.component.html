@@ -5,7 +5,7 @@
             <label for="input-name" class="sr-only">{{ messageService.getTranslation('INPUT_NOME') }}</label>
             <input name="fullName" [(ngModel)]="user.fullName" id="input-name" #fullName="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_NOME') }}"
                 [class.form-control-danger]="fullName.invalid && fullName.touched" [required]="true"
-                autofocus>
+                autofocus autocomplete="name">
             <small class="form-text error" *ngIf="fullName.invalid && fullName.touched && fullName.errors?.required">
                 {{ messageService.getTranslation('NOME_OBRIGATORIO') }}
             </small>
@@ -13,7 +13,7 @@
         <div class="form-group">
             <label for="input-email" class="sr-only">{{ messageService.getTranslation('INPUT_EMAIL') }}</label>
             <input name="email" [(ngModel)]="user.email" id="input-email" #email="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_EMAIL') }}"
-                pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="true">
+                pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="true"  autocomplete="email">
             <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
                     {{ messageService.getTranslation('EMAIL_OBRIGATORIO') }}
             </small>
@@ -23,15 +23,15 @@
         </div>
         <div class="form-group">
             <label for="input-password" class="sr-only">{{ messageService.getTranslation('INPUT_SENHA') }}</label>
-            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_SENHA') }}"
-                #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="passwordRequired">
+            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" minlength="4" maxlength="20" placeholder="{{ messageService.getTranslation('INPUT_SENHA') }}"
+                #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="passwordRequired"  autocomplete="new-password">
             <small class="form-text error" *ngIf="password.invalid && password.touched && password.errors?.required">
                    {{ messageService.getTranslation('SENHA_OBRIGATORIA') }}
           </small>
         </div>
         <div class="form-group">
             <label for="input-re-password" class="sr-only">{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}</label>
-            <input name="rePass" [(ngModel)]="user.confirmPassword" type="password" id="input-re-password" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}"
+            <input name="rePass" [(ngModel)]="user.confirmPassword" type="password" id="input-re-password"  minlength="4" maxlength="20" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}"   autocomplete="new-password"
                 #rePass="ngModel" [class.form-control-danger]="(rePass.invalid || password.value != rePass.value) && rePass.touched"
                 [required]="passwordConfRequired">
             <small class="form-text error" *ngIf="rePass.invalid && rePass.touched && rePass.errors?.required">
@@ -42,11 +42,11 @@
             </small>
         </div>
         <div class="form-group accept-group col-sm-12">
-            <nb-checkbox name="terms" [(ngModel)]="user.terms" [required]="true">
+            <nb-checkbox #terms="ngModel" name="terms" [(ngModel)]="termsCheckbox" [required]="true">
                 {{ messageService.getTranslation('TERMO_DE_USO_TEXTO') }} <a href="#" target="_blank"><strong>{{ messageService.getTranslation('TERMO_DE_USO_LINK') }}</strong></a>
             </nb-checkbox>
         </div>
-        <button class="btn btn-block btn-hero-success">
+        <button class="btn btn-block btn-hero-success" [disabled]="form.invalid || terms.value != true || password.value != rePass.value || password.value.length < 4">
           {{ messageService.getTranslation('BTN_REGISTRAR') }}
         </button>
     </form>

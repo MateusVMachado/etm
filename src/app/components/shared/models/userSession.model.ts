@@ -1,4 +1,3 @@
-import { User } from "./user";
 
 export class UserAndGPS {
     email: string;
@@ -13,8 +12,6 @@ export class TimeIntervalUnit {
 }
 
 export class UserSessionModel {
-    
-
     ip: string;
     user: string;
     access: string;

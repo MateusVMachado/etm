@@ -1,7 +1,7 @@
 <div class="constainer-fluid" style="background-color: white; padding: 0;">
     <div class="modal-header">
-        <span>Configurações do Botão</span>
-        <button class="close" aria-label="Close" (click)="closeModal()">
+        <span>{{messageService.getTranslation('MODAL_KEY_TITULO')}}</span>
+        <button class="close" style="cursor: pointer;" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -10,14 +10,14 @@
 
             <div *ngIf="!imagem" class="from-group line">
 
-                <label *ngIf="!imagem" for="name">Insira o nome que irá aparecer em cima do botão</label>
-                   <input *ngIf="!imagem" type="text" id="name1" name1="name1" [(ngModel)]="buttonCaption" #name1="ngModel" class="form-control" placeholder="Nome do botão"
+                <label *ngIf="!imagem" for="name">{{messageService.getTranslation('MODAL_KEY_DESC_NOME')}}</label>
+                   <input *ngIf="!imagem" type="text" id="name1" name1="name1" [(ngModel)]="buttonCaption" #name1="ngModel" class="form-control" [placeholder]="messageService.getTranslation('MODAL_KEY_NOME')"
                         [class.form-control-danger]="name1.invalid && name1.touched" [ngModelOptions]="{standalone: true}"/>
 
             </div>
             <div class="from-group line">
-                <label for="name">Insira o texto do botão que será inserido no editor de texto ao pressionar</label>
-                    <input  type="text" id="name2" name2="name2" [(ngModel)]="buttonText" #name2="ngModel" class="form-control" placeholder="Texto do botão"
+                <label for="name">{{messageService.getTranslation('MODAL_KEY_DESC_TEXTO')}}</label>
+                    <input  type="text" id="name2" name2="name2" [(ngModel)]="buttonText" #name2="ngModel" class="form-control" [placeholder]="messageService.getTranslation('MODAL_KEY_TEXTO')"
                     [class.form-control-danger]="name2.invalid && name2.touched" [ngModelOptions]="{standalone: true}"/>
 
             </div>
@@ -66,23 +66,20 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="input-image">Imagem personalizada</label>
+                    <label for="input-image">{{messageService.getTranslation('IMAGEM_PERSONALIZADA')}}</label>
                     <input class="form-control" type="file" accept=".jpg, .png, .jpeg" id="input-image" (change)="onAddPicture($event)"/>
                     <small class="form-text error" *ngIf="bigImage">
                         {{ messageService.getTranslation('IMAGEM_TAMANHO_ULTRAPASSADO') }}
                     </small>
                 </div>
             </div>
-      
-
         </div>
     </form>
     <div class="modal-footer">
-        <button (click)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="false">Salvar</button>
+        <button (click)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="false">{{messageService.getTranslation('BTN_SALVAR')}}</button>
     </div>
 </div>

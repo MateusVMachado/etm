@@ -1,11 +1,12 @@
-import { AppBaseComponent } from '../shared/components/app-base.component';
+import { Component, Injector, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ProfileService } from './profile.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import { ProfileEditComponent } from './profile-edit/profile-edit.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Component, Injector, OnInit } from '@angular/core';
+import { ProfileService } from './profile.service';
 
 @Component({
     selector: 'app-profile',
@@ -28,6 +29,8 @@ export class ProfileComponent extends AppBaseComponent implements OnInit {
         this.usuario = this.authService.getLocalUser();
         this.user.name = this.usuario.fullName;
         this.user.email = this.usuario.email;
+        this.user.password = '';
+        this.user.confirmPassword = '';
         this.authService.getObservableUser().subscribe(result =>{
             this.usuario = result;
             if(result.picture.content){
@@ -46,7 +49,9 @@ export class ProfileComponent extends AppBaseComponent implements OnInit {
         this.usuario = this.authService.getLocalUser();
         this.usuario.fullName = this.user.name;
         if(this.user.password && this.user.confirmPassword){
-            this.usuario.password = this.user.password
+            if(this.user.password != ''){
+                this.usuario.password = this.user.password
+            }
         }
         this.profileService.updateUser(this.usuario).subscribe(() =>{
             this.authService.setUser(this.usuario);

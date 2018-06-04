@@ -1,6 +1,6 @@
-import { Component, ViewChild, AfterViewInit, Input } from '@angular/core';
-import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import * as $ from 'jquery';
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 
 @Component({
     selector: 'app-editor',
@@ -17,6 +17,7 @@ export class EditorComponent implements AfterViewInit {
     ngOnInit(){
         this.editorTecladoService.getHeight().subscribe((tamanho)=>{
                 this.editorConfig = { height: (tamanho - 140), removePlugins: 'elementspath'};
+                $('#editorContainer').css('height',tamanho-140);
         });
     }
     

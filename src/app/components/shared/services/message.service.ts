@@ -1,9 +1,9 @@
-import { HeaderService } from '../../header/header.service';
 import { Injectable, OnDestroy } from '@angular/core';
-import swal from 'sweetalert';
 import { TranslateService } from "@ngx-translate/core";
-import {SideBarService} from "../../sidebar/sidebar.service" 
 import { Subscription } from 'rxjs';
+import swal from 'sweetalert';
+import { HeaderService } from '../../header/header.service';
+import { SideBarService } from "../../sidebar/sidebar.service";
 
 @Injectable()
 export class MessageService implements OnDestroy{

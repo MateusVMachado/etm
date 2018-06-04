@@ -1,13 +1,6 @@
-import { ProfileComponent } from '../profile/profile.component';
-import { TecladoComponent } from '../teclado/teclado.component';
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
-
+import { Routes } from '@angular/router';
 import { SidebarComponent } from './sidebar.component';
-import { DashboardComponent } from '../dashboard/dashboard.component';
-import { EditorTecladoComponent } from '../editor-teclado/editor-teclado.component';
-import { GeneralConfigComponent } from '../general-config/general-config.component';
-import { LayoutEditorComponent } from '../layout-editor/layout-editor.component';
+
 
 export const routes: Routes = [{
   path: '',
@@ -37,6 +30,14 @@ export const routes: Routes = [{
     {
       path: 'profile',
       loadChildren: 'app/components/profile/profile.module#ProfileModule'
+    },
+    {
+      path: 'store',
+      loadChildren: 'app/components/store/store.module#StoreModule'
+    },
+    {
+      path: 'store/:id',
+      loadChildren: 'app/components/store/store.module#StoreModule'
     }
   ],
 }];

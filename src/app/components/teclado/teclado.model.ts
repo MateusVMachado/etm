@@ -6,6 +6,7 @@ export class TecladoModel {
     image: any;
     type: string;
     magnify: number;
+    shared: boolean;
 
 
     constructor() {

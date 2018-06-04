@@ -6,11 +6,13 @@ export class OpenFACConfig {
 }
 /*[DataContract]*/
 export class OpenFACLayout {
+    public _id: string;
     public Engine: string;
     public Lines: Array<LayoutLine>;
     public nameLayout: string;
     public email: string;
     public magnify: number;
+    public shared: boolean;
 }
 /*[DataContract]*/
 export class LayoutLine {
