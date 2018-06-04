@@ -65,7 +65,6 @@ export class EditorTecladoComponent implements OnInit, OnDestroy {
             s.id = 'ckeditor';
             s.src = src;
             s.onload = s.onreadystatechange = function() {
-                //console.log( this.readyState ); //uncomment this line to see which ready states are called.
                 if ( !r && (!this.readyState || this.readyState == 'complete') )
                 {
                     r = true;
@@ -77,13 +76,8 @@ export class EditorTecladoComponent implements OnInit, OnDestroy {
         }
         
         public callEvent(event){
-            //console.log("HELLO");
-            //console.log(JSON.stringify(event))
             //let split = document.getElementById('split')
             let split = $('[id=split]');
-            // console.log( $(split)[0])
-            //console.log( $($(split)[0]).find('split-area')[0] );
-            //console.log( $($(split)[0]).find('split-area')[1] );
             
             // Esses dois valores devem ser salvos nas configurações do usuário
             let flexSup, flexUnd;
@@ -100,16 +94,6 @@ export class EditorTecladoComponent implements OnInit, OnDestroy {
             
             
             let user = this.authService.getLocalUser();
-            
-            
-            
-            
-            // $('#split1').css('max-height',altura_resto);
-            // $('#split2').css('min-height',altura_teclado);
-            // console.log($(window).height());
-            // console.log(altura_resto);
-            // console.log(altura_teclado);
-            
             
             let altura_geral = $(window).height()
             $('#EditorTecladoContainer').css('max-height',altura_geral);

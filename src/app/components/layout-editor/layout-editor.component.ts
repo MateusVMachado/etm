@@ -4183,7 +4183,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           originalLowCenter = originalArray[Math.floor((originalArray.length-1)/2)];
           originalHighCenter = originalArray[Math.ceil((originalArray.length-1)/2)];
           
-          if(joinOriginalArray[originalLowCenter] !== '' && joinOriginalArray[originalHighCenter] !== '') {console.log('MARK1'); return;}
+          if(joinOriginalArray[originalLowCenter] !== '' && joinOriginalArray[originalHighCenter] !== '') {
+            return;
+          }
           joinOriginalArray[originalLowCenter] = originalArray[originalLowCenter];
           joinOriginalArray[originalHighCenter] = originalArray[originalHighCenter];
         } else {
@@ -4193,7 +4195,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           if(originalArray.length > 1){
             originalUniqueCenter = originalArray[Math.floor((originalArray.length-1)/2)];
             
-            if(joinOriginalArray[originalUniqueCenter] !== '') {console.log('MARK2'); return;}
+            if(joinOriginalArray[originalUniqueCenter] !== '') {
+              return;
+            }
             
             
             
@@ -4223,7 +4227,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
           
           if(originalIsEven){
-            if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {console.log('MARK4'); return;}
+            if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {
+              return;
+            }
             joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleLowCenter];
             joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleHighCenter];  
           } else {
@@ -4237,12 +4243,16 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           if(receptacleArray.length > 1){
             receptacleUniqueCenter = receptacleArray[Math.floor((receptacleArray.length-1)/2)];
             if(originalIsEven){
-              if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {console.log('MARK5'); return;}
+              if(joinReceptacleArray[originalLowCenter] !== '' && joinReceptacleArray[originalHighCenter] !== '') {
+                return;
+              }
               
               joinReceptacleArray[originalLowCenter] = receptacleArray[receptacleUniqueCenter];
               joinReceptacleArray[originalHighCenter] = receptacleArray[receptacleUniqueCenter];
             } else {
-              if(joinReceptacleArray[originalUniqueCenter] !== '') {console.log('MARK6'); return;}
+              if(joinReceptacleArray[originalUniqueCenter] !== '') {
+                return;
+              }
               
               if(left) joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter-1];
               if(right)joinReceptacleArray[originalUniqueCenter] = receptacleArray[receptacleUniqueCenter-(receptacleUniqueCenter-1)];

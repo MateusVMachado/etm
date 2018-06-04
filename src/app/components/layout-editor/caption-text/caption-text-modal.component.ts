@@ -74,7 +74,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.buttonAction = result[2];
                             this.buttonImage = result[3];
                             
-                            // console.log('button: ' + this.buttonImage)
 
                             if(this.buttonImage) {
                                 this.imagem = true;
@@ -246,7 +245,6 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                 img.onload = function() {
                     self.height = img.height;
                     self.width = img.width;
-                    // console.log(img.height + 'x' + img.width);
                  };
                  img.src = reader.result;
             };

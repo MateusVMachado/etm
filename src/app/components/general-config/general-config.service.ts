@@ -44,7 +44,6 @@ export class GeneralConfigService extends AppServiceBase{
         payload.push(newFlexUnd);
         payload.push(email);
 
-        // console.log("PAYLOAD: " + payload);
         return this.http.post(this.backendAddress + '/configurationUpdate', payload, { responseType: 'text'});
     }
 

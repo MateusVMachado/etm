@@ -45,7 +45,6 @@ export class RegisterComponent extends AppBaseComponent {
             let message = this.messageService.getTranslation('MENSAGEM_CADASTRO_CONCLUIDO');
             this.messageService.success(message).then(res => {
               this.router.navigate(['./auth/login']);
-              // console.log(res)
             });
           }, (error) => {
             if(error.message === "Esse email já foi cadastrado!"){

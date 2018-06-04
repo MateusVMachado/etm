@@ -277,9 +277,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
             this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
             
             this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) => {
-              // console.log(JSON.stringify(result))
               this.split = $('[id=split]');
-              // console.log(result)
               this.flexSup = result.flexSup;
               this.flexUnd = result.flexUnd;
               this.configureAll();
@@ -319,9 +317,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
                 
                 this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) => {
-                  // console.log(JSON.stringify(result))
                   this.split = $('[id=split]');
-                  // console.log(result)
                   this.flexSup = result.flexSup;
                   this.flexUnd = result.flexUnd;
                   this.configureSome();
@@ -583,7 +579,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
             
             if (this.teclado.teclas[line][col].split('$')[0] === '*img') {
               let el = $('#images' + line + 'x' + col)[0];
-              // console.log('line: ' + line + ' col: ' + col);
               if (!this.imagesLinesArray.includes(line)) this.imagesLinesArray.push(line);
               if (!this.imagesColsArray.includes(col)) this.imagesColsArray.push(col);
               
