@@ -95,8 +95,11 @@ export class Server {
              /* 1 */ mongoAccess.coll.push(mongoAccess.database.collection('keyboards'));
              /* 2 */ mongoAccess.coll.push(mongoAccess.database.collection('configurations'));
              /* 3 */ mongoAccess.coll.push(mongoAccess.database.collection('logs'));
-             /* 4 */ //mongoAccess.coll.push(mongoAccess.database.collection('favorites'));
-             /* 5 */ //mongoAccess.coll.push(mongoAccess.database.collection('passwords'));
+             /* 4 */ mongoAccess.coll.push(mongoAccess.database.collection('tec_compart'));
+             /* 5 */ mongoAccess.coll.push(mongoAccess.database.collection('tec_compart_notas'));
+             /* 6 */ mongoAccess.coll.push(mongoAccess.database.collection('password_log'));
+             /* 7 */ //mongoAccess.coll.push(mongoAccess.database.collection('favorites'));
+             /* 8 */ //mongoAccess.coll.push(mongoAccess.database.collection('passwords'));
              
         }) 
   }
@@ -141,7 +144,8 @@ export class Server {
 
     //jwt verify
     //this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/logout', '/register', '/configuration', '/user', '/keyboard/insertBasicIntoDatabase']}));
-    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/logout', '/register', '/configuration', '/user']}));
+    this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/logout', '/register',
+     '/configuration', '/user', '/emailRequestPassword','/isAccountBlocked', '/updateUserPassword','/blockAccount']}));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
@@ -161,8 +165,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-      //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      // res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
 
       // Request methods you wish to allow
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');

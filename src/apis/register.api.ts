@@ -22,7 +22,6 @@ export class Register extends BaseRoute {
             } else {
                 console.log("USER NOT FOUND!");
 
-
                 let user = new UserModel();
                 user.fullName = req.body['fullName'];
                 user.email = req.body['email'];
@@ -38,18 +37,10 @@ export class Register extends BaseRoute {
                     console.log("Usuário inserido na database!");
                 });  
 
- 
-                
-
                 console.log("Usuário cadastrado com sucesso!");
                 res.status(200).json({message: 'Registro feito com sucesso.'});
                 return false;
             }
     })
-        
-        
     }
-
-
-
 }
