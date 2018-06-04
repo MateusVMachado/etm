@@ -80,7 +80,7 @@ export class IndexRoute extends BaseRoute {
     });
     router.post("/keyboard/insertNewKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      console.log('entrou no post')
+      // console.log('entrou no post')
       keyboard.insertNewKeyboard(req,res,next);  
     });
     
@@ -181,8 +181,7 @@ export class IndexRoute extends BaseRoute {
     // Rota para salvar configurações
     router.post("/configurationUpdate", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      console.clear();
-      console.log("UPDATE DE CONFIGURAÇÃO")
+      // console.log("UPDATE DE CONFIGURAÇÃO")
       configuration.userConfigureUpdate(req, res, next);
     });
     

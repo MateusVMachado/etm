@@ -99,7 +99,6 @@ export class Keyboard extends BaseRoute {
     }     
     
     public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
-        console.log('teste 4');
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             if(keyboard_list.length >= 7){
                 res.send("maxNumber");
@@ -132,7 +131,7 @@ export class Keyboard extends BaseRoute {
                 return;
             } else {
                 res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
-                    console.log("Keyboard atualizado");
+                    // console.log("Keyboard atualizado");
                     res.send('updated');
                 })
                 
@@ -145,7 +144,7 @@ export class Keyboard extends BaseRoute {
         
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
-                console.log("Keyboard atualizado");
+                // console.log("Keyboard atualizado");
                 res.send('updated');
             })
         })
@@ -153,14 +152,14 @@ export class Keyboard extends BaseRoute {
     
     public insertBasicAtRegister(req: Request,  res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br', req.body.email), (err, result) => {
-            console.log("Keyboard inserido")
+            // console.log("Keyboard inserido")
         })
     }    
     
     
     public insertBasicIntoDatabase(req: Request,  res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
-            console.log("Keyboard inserido");
+            // console.log("Keyboard inserido");
             
         })
         //res.locals.mongoAccess.coll[1].insert(this.populateLayout('caps'), (err, result) => {

@@ -16,7 +16,6 @@ export class User extends BaseRoute{
         res.locals.mongoAccess.coll[0].find({"_id": mongoose.Types.ObjectId(user._id)}).toArray(function(err, user_list) {
             if(user_list){
                 res.locals.mongoAccess.coll[0].update({"_id": mongoose.Types.ObjectId(user._id)}, {"fullName": user.fullName, "email": user.email, "password": user.password, "picture": user.picture }, function(error, result) {
-                    console.log("update User");
                     res.status(200).send("");
                 });
             }

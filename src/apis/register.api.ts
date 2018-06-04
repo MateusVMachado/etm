@@ -12,15 +12,15 @@ export class Register extends BaseRoute {
     }
 
     public registerUser(req: Request, res: Response, next: NextFunction){
-        console.log("REGISTRO");
+        // console.log("REGISTRO");
         
         res.locals.mongoAccess.coll[0].find({"email": req.body['email']}).toArray(function(err, user_list) {         
             if(user_list.length !== 0){
-                console.log("Esse email já foi cadastrado!");
+                // console.log("Esse email já foi cadastrado!");
                 res.status(400).json({message: 'Esse email já foi cadastrado!'});
                 return true;
             } else {
-                console.log("USER NOT FOUND!");
+                // console.log("USER NOT FOUND!");
 
                 let user = new UserModel();
                 user.fullName = req.body['fullName'];
@@ -34,10 +34,10 @@ export class Register extends BaseRoute {
         
                 res.locals.mongoAccess.coll[0].insert(user, (err, result) => {
 
-                    console.log("Usuário inserido na database!");
+                    // console.log("Usuário inserido na database!");
                 });  
 
-                console.log("Usuário cadastrado com sucesso!");
+                // console.log("Usuário cadastrado com sucesso!");
                 res.status(200).json({message: 'Registro feito com sucesso.'});
                 return false;
             }
