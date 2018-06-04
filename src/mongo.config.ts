@@ -25,7 +25,7 @@ export class MongoConfig {
         //this.sys_teclados = this.loadKeyboard('en-us');        
         this.sys_teclados = this.loadKeyboard('en-us-caps');
         res.locals.mongoAccess.coll[1].insert(this.sys_teclados,  (err, result) => {
-            console.log("Teclado inserido na database");
+            // console.log("Teclado inserido na database");
         });
 
         //res.locals.mongoAccess.coll[1].insert(this.sys_teclados2, (err, result) => {

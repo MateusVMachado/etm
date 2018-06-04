@@ -16,17 +16,13 @@ export class Configuration extends BaseRoute {
         } else {
         let config = req.body as ConfigurationModel;
 
-            console.log(config.level);
 
         res.locals.mongoAccess.coll[2].find({ "user": config.user }).toArray(function(err, config_list) {
                 if(config_list.length === 0){
                 res.locals.mongoAccess.coll[2].insert(config, (err, result) => {
-                    console.log("configuração inserida");
                         res.status(200).send();
                 });
             } else {
-                    console.log("Fazendo update");
-                    console.log(config.level + ' ' + config.user );
                     res.locals.mongoAccess.coll[2].update({ "user": config.user }, { "openFacConfig": config.openFacConfig, "language": config.language, "user": config.user,
                          "lastKeyboard": config.lastKeyboard, "level": config.level });
                     res.status(200).send();
@@ -38,11 +34,8 @@ export class Configuration extends BaseRoute {
     public userConfigureUpdate(req: Request, res: Response, next: NextFunction){
         //let config = req.body as ConfigurationModel;
         let parts = req.body;
-        console.log("PARTS: " + parts);
 
         res.locals.mongoAccess.coll[2].find({ "user": parts[2] }).toArray(function(err, config_list) {
-                    console.log("Fazendo update");
-                    console.log(parts[0] + ' ' + parts[1] );
                     res.locals.mongoAccess.coll[2].update({ "user": parts[2] }, { $set: {"flexSup": parts[0] , "flexUnd": parts[1]} });
                     res.status(200).send();
             
@@ -69,7 +62,6 @@ export class Configuration extends BaseRoute {
                 res.status(200).send(config);
             } else {
                 let configuration = config_list[0];
-                console.log(JSON.stringify(configuration));
                 config.openFacConfig = configuration.openFacConfig;
                 config.language = configuration.language;
                 config.lastKeyboard = configuration.lastKeyboard;

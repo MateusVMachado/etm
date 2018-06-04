@@ -39,7 +39,6 @@ export class TecladoCompartihado extends BaseRoute{
         return true;
     };
     setTecladoCompartilhado(req: Request, res: Response, next: NextFunction){
-        console.clear()
         res.locals.mongoAccess.coll[4].find( { $and: [{ "id": req.body['id'] }] }).toArray(function(err, tec_compart_list) {
             if(tec_compart_list.length !== 0){
                 res.locals.mongoAccess.coll[4].update({ $and: [{ "id": req.body['id'] } ]}, req.body)

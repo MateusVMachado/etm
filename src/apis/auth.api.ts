@@ -10,7 +10,6 @@ import { backendConfig } from '../backend.config';
 export class Auth extends BaseRoute{
 
     public extractToken(req: Request): string {
-        //console.log("MARK1");
         let token = undefined;
         let parts: string[] = [];
         if (req.headers && req.headers.authorization) {
@@ -19,8 +18,6 @@ export class Auth extends BaseRoute{
             if (parts.length === 2 && parts[0] === 'Bearer') {
                 token = parts[1]
             }
-            console.log("PARTS: " + parts[1]);
-            //console.log("MARK2");
         }
         return token
     }

@@ -14,9 +14,7 @@ export class Logger extends BaseRoute{
     
     public logRequests(req: Request, options?: string){
         moment.locale('pt-br');
-        
-        console.log("\'" + req.method + " " + req.originalUrl + "\'"  + " from [client] " + req.ip + " --> to [server] " + 
-        "em " + moment().format('LLLL') );
+        // console.log("\'" + req.method + " " + req.originalUrl + "\'"  + " from [client] " + req.ip + " --> to [server] " + "em " + moment().format('LLLL') );
     }
     
     public logActions(req: Request, res: Response, next: NextFunction, options?: string){
@@ -25,7 +23,7 @@ export class Logger extends BaseRoute{
     
     
     public logSessionStart(req: Request, res: Response, next: NextFunction, options?: string){
-        console.log(options);
+        // console.log(options);
         let userSession = new UserSessionModel();
         let email = req.body['email'];
         let latitude = req.body['latitude'];
@@ -54,7 +52,7 @@ export class Logger extends BaseRoute{
             res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
                 if(userSessionList.length ===0){
                     res.locals.mongoAccess.coll[3].insert(userSession, (err, result) => {
-                        console.log(err || result)
+                        // console.log(err || result)
                     })
                 }   
             });
@@ -114,7 +112,7 @@ export class Logger extends BaseRoute{
                     
                     return;
                 } else {
-                    console.log("THERE IS NO UNCLOSED ENTRY");
+                    // console.log("THERE IS NO UNCLOSED ENTRY");
                 }
             })
         }        
