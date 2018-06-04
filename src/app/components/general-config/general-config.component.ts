@@ -1,21 +1,16 @@
+import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
+import { Subscription } from 'rxjs';
 import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
+import { TimeIntervalUnit, UserSessionModel } from '../shared/models/userSession.model';
 import { AuthService } from '../shared/services/auth.services';
+import { BackLoggerService } from '../shared/services/backLogger.service';
 import { ConfigModel } from './config.model';
 import { GeneralConfigService } from './general-config.service';
-import { NbAuthService } from '@nebular/auth';
-import { Router } from '@angular/router';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Injector, Input, OnInit, Injectable, OnDestroy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
-import { FormsModule, ReactiveFormsModule }   from '@angular/forms';
-import { UserSessionModel, TimeIntervalUnit } from '../shared/models/userSession.model';
 
-import * as moment from 'moment';
-import { BackLoggerService } from '../shared/services/backLogger.service';
-import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -29,7 +24,6 @@ export class GeneralConfigComponent extends AppBaseComponent implements OnInit, 
     public submitted: boolean;
     public config: any = {};
 
-    public micOptOn: boolean;
     public level: number;
 
     private userSession: UserSessionModel;

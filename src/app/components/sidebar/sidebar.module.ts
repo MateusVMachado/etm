@@ -1,12 +1,10 @@
-import { RouterModule } from '@angular/router';
-import { TecladoService } from '../teclado/teclado.service';
-import { SideBarService } from './sidebar.service';
-import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
-import { ProfileModule } from '../profile/profile.module';
 import { NgModule } from '@angular/core';
-import { SidebarComponent } from './sidebar.component';
-import { DashboardModule } from '../dashboard/dashboard.module';
+import { RouterModule } from '@angular/router';
 import { ThemeModule } from '../../theme.module';
+import { DashboardModule } from '../dashboard/dashboard.module';
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { TecladoService } from '../teclado/teclado.service';
+import { SidebarComponent } from './sidebar.component';
 import { routes } from "./sidebar.routing";
 
 const PAGES_COMPONENTS = [

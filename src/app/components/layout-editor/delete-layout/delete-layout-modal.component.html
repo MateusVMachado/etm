@@ -1,7 +1,7 @@
-<div style="background-color: white;">
+<div style="background-color: white;" id="modal_delete">
     <div class="modal-header">
         <span>{{ messageService.getTranslation('MODAL_DELETAR_TITULO') }}</span>
-        <button class="close" aria-label="Close" (click)="closeModal()">
+        <button class="close" style="cursor: pointer;" aria-label="Close" (click)="closeModal()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
@@ -10,7 +10,7 @@
 
             <div class="from-group line">
                 <label for="name">{{ messageService.getTranslation('MODAL_DELETAR_INPUT') }}</label>
-                    <select style="width: 200px; height: 40px;" [(ngModel)]="keyboardToDelete" [ngModelOptions]="{standalone: true}">
+                    <select required="required" style="width: 200px; height: 40px;" [(ngModel)]="keyboardToDelete" [ngModelOptions]="{standalone: true}">
                         <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
                         <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" [value]="keyboard" >
                             {{keyboard}}

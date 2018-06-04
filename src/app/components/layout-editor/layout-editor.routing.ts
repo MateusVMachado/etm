@@ -1,5 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { Routes } from '@angular/router';
 import { LayoutEditorComponent } from './layout-editor.component';
 
 export const routes: Routes = [

@@ -1,13 +1,10 @@
-import { AuthService } from '../shared/services/auth.services';
-import { RequestMethod, RequestOptions } from '@angular/http';
-import { ConfigModel } from './config.model';
 import { HttpClient } from '@angular/common/http';
-import { AppServiceBase } from '../shared/services/app-service-base.service';
-import { Injectable } from '@angular/core';
-import { OpenFACConfig, OpenFACLayout } from "openfac/OpenFac.ConfigContract";
-import { User } from '../shared/models/user';
-import { Injector } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
+import { OpenFACLayout } from "openfac/OpenFac.ConfigContract";
 import { Subject } from 'rxjs';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AuthService } from '../shared/services/auth.services';
+import { ConfigModel } from './config.model';
 
 @Injectable()
 export class GeneralConfigService extends AppServiceBase{
@@ -47,7 +44,7 @@ export class GeneralConfigService extends AppServiceBase{
         payload.push(newFlexUnd);
         payload.push(email);
 
-        console.log("PAYLOAD: " + payload);
+        // console.log("PAYLOAD: " + payload);
         return this.http.post(this.backendAddress + '/configurationUpdate', payload, { responseType: 'text'});
     }
 

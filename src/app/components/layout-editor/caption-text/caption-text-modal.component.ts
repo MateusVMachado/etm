@@ -74,7 +74,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.buttonAction = result[2];
                             this.buttonImage = result[3];
                             
-                            console.log('button: ' + this.buttonImage)
+                            // console.log('button: ' + this.buttonImage)
 
                             if(this.buttonImage) {
                                 this.imagem = true;
@@ -223,7 +223,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public onAddPicture(fileInput: any){
         this.sysImg = false;
         this.imageFile = new Picture();
-        if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 1000000) {
+        if (fileInput.target.files && fileInput.target.files[0] && fileInput.target.files[0].size < 500000) {
             this.bigImage = false;
             var reader = new FileReader();
             let self = this;
@@ -246,7 +246,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                 img.onload = function() {
                     self.height = img.height;
                     self.width = img.width;
-                    console.log(img.height + 'x' + img.width);
+                    // console.log(img.height + 'x' + img.width);
                  };
                  img.src = reader.result;
             };

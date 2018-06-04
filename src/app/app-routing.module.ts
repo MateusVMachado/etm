@@ -38,11 +38,15 @@ const routes: Routes = [
       {
         path: 'request-password',
         loadChildren: 'app/components/request-password/request-password.module#RequestPasswordModule'
+      },
+      {
+        path: 'request-password/:email',
+        loadChildren: 'app/components/request-password/request-password.module#RequestPasswordModule'
       }
     ],
   },
-  { path: '', redirectTo: 'pages', pathMatch: 'full' },
-  { path: '**', redirectTo: 'pages' },
+  { path: '', canActivate: [AuthGuard], redirectTo: 'pages', pathMatch: 'full' },
+  { path: '**', canActivate: [AuthGuard], redirectTo: 'pages' },
 ];
 
 const config: ExtraOptions = {

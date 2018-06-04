@@ -1,24 +1,24 @@
-import { AuthService } from '../shared/services/auth.services';
-import { Injectable, Injector } from '@angular/core';
-import { AppServiceBase } from '../shared/services/app-service-base.service';
-import { OpenFACLayout } from './layout.model';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AuthService } from '../shared/services/auth.services';
+import { OpenFACLayout } from './layout.model';
 
 @Injectable()
 export class LayoutEditorService extends AppServiceBase {
 
     public layoutEditorSubject = new Subject<any>(); 
-    public layoutEditorPayloadSubject = new Subject<any>(); 
+    public layoutEditorPayloadSubject = new Subject<any>();
     private user = this.authService.getLocalUser(); 
 
-    constructor(protected injector: Injector, private http: HttpClient, private authService: AuthService){
+    constructor(protected injector: Injector, private http: HttpClient,
+        private authService: AuthService){
         super(injector);
     }
 
     public saveUpdateKeyboard(layout: OpenFACLayout, email: string){
-        return this.http.post(this.backendAddress + `/keyboard/insertUpdateKeyboard?nameLayout=${layout.nameLayout}&email=${email}` , layout, { responseType: 'text' });
+        return this.http.post(this.backendAddress + `/keyboard/insertUpdateKeyboard?nameLayout=${layout.nameLayout}&email=${email}&shared=${layout.shared}` , layout, { responseType: 'text' });
     }   
 
     public updateOnlyKeyboard(layout: OpenFACLayout, email: string){
@@ -50,5 +50,4 @@ export class LayoutEditorService extends AppServiceBase {
     public subscribeToLayoutEditorPayloadSubject() {
           return this.layoutEditorPayloadSubject.asObservable();      
     }
-
 }

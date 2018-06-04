@@ -1,19 +1,18 @@
-import { LayoutEditorService } from './layout-editor.service';
-import { CaptionTextService } from './caption-text/caption-text.service';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { MatSlideToggleModule, MatSliderModule, MatToolbarModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core';
+import { DragulaModule } from 'ng2-dragula/ng2-dragula';
 import { ThemeModule } from '../../theme.module';
-import { LayoutEditorComponent } from './layout-editor.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DragulaModule } from  'ng2-dragula/ng2-dragula';
-import { LayoutModalComponent } from './layout-modal/layout-modal.component';
-import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
-import { SaveModalComponent } from './save-layout/save-modal.component';
+import { TecladoCompartilhadoService } from '../shared/services/teclado_compartilhado.service';
 import { CaptionTextModalComponent } from './caption-text/caption-text-modal.component';
-import { routes } from "./layout-editor.routing";
-import { MatSliderModule } from '@angular/material';
-import { MatToolbarModule } from '@angular/material';
-import { MatSlideToggleModule } from '@angular/material';
+import { CaptionTextService } from './caption-text/caption-text.service';
+import { DeleteLayoutModalComponent } from './delete-layout/delete-layout-modal.component';
+import { LayoutEditorComponent } from './layout-editor.component';
+import { routes } from './layout-editor.routing';
+import { LayoutEditorService } from './layout-editor.service';
+import { LayoutModalComponent } from './layout-modal/layout-modal.component';
+import { SaveModalComponent } from './save-layout/save-modal.component';
+
 
 @NgModule({
   imports: [
@@ -42,7 +41,8 @@ import { MatSlideToggleModule } from '@angular/material';
   ],
   providers: [
     CaptionTextService,
-    LayoutEditorService
+    LayoutEditorService,
+    TecladoCompartilhadoService
   ]
 })
 export class LayoutEditorModule { }

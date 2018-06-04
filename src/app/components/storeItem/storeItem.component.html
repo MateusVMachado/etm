@@ -1,0 +1,48 @@
+<div class="item_teclado" >
+    <div class="item_teclado_topo">
+        <div class="c-10">
+            <div class="c-7">
+                <div style="float: left;">  
+                    <img class="imgUsuarioTeclado" src="{{imgUsuario || '../../assets/images/avatarUser.png'}}" />
+                </div>
+                <div class="right">
+                    <h4>{{tecladoCompartilhado.nameLayout || 'Sem Título' }}</h4>
+                    <p>{{ messageService.getTranslation('STORE_ITEM_FEITO') }}&nbsp; <a href="#" style="color:#364150; font-weight: bold;" onclick="return false">{{usuario.fullName}}</a></p>
+                    <p>{{tecladoCompartilhado.dataPublicacao  || 'xx/xx/xx'}}</p>
+                </div>
+            </div>
+            <div class="c-5" style="text-align: right;padding-right: 4%;">
+                <div class="estrelas" *ngIf="tecladoCompartilhado.nota != undefined">
+                    <span *ngFor="let estrela_valor of estrelas" class="estrela">
+                        <a (tap)="avalie(estrela_valor)" [hidden]="estrela_valor <= tecladoCompartilhado.nota">
+                            <svg class="estrela" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 67 63" height="20px" version="1.1" viewBox="0 0 67 63" width="20px" xml:space="preserve">
+                                <path d="M33,10.822l5.797,11.746l1.163,2.357l2.602,0.378l12.963,1.884l-9.38,9.143l-1.882,1.835l0.444,2.591  l2.214,12.91L35.327,47.57L33,46.348l-2.327,1.223l-11.594,6.096l2.214-12.91l0.444-2.591l-1.882-1.835l-9.38-9.143l12.962-1.884  l2.602-0.378l1.163-2.357L33,10.822 M33-0.475L22.719,20.355L-0.27,23.696L16.365,39.91l-3.927,22.896L33,51.996l20.562,10.811  L49.635,39.91L66.27,23.696L43.28,20.355L33-0.475L33-0.475z" fill="#231F20"/>
+                            </svg>
+                        </a>
+                        <a (tap)="avalie(estrela_valor)" [hidden]="estrela_valor > tecladoCompartilhado.nota">
+                            <svg class="estrela" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 37 35" height="20px" version="1.1" viewBox="0 0 37 35" width="20px" xml:space="preserve">
+                                <polygon points="19,0.791 24.646,12.229 37.27,14.064 28.135,22.968 30.291,35.541 19,29.604 7.709,35.541   9.865,22.968 0.73,14.064 13.354,12.229 "/>
+                            </svg>
+                        </a>
+                    </span>
+                    <span>({{tecladoCompartilhado.numeroAvaliacoes}})</span>
+                </div>
+                <div class="msg_estrela" [hidden]="msg_avaliado===''">
+                    <p style="font-weight: bold; line-height: 15px;">{{msg_avaliado}}</p>
+                </div>
+                <p class="right">{{tecladoCompartilhado.numVisualizacao  || '0'}} {{ messageService.getTranslation('STORE_ITEM_PESSOAS_VISUALIZARAM') }}</p>
+                <p class="right">{{tecladoCompartilhado.numUsado  || '0'}} {{ messageService.getTranslation('STORE_ITEM_PESSOAS_UTILIZARAM') }}</p>
+            </div>
+        </div>
+        <div class="c-2 center btn_teclado_compartilhado">
+            <button class="btn btn-primary usar" (tap)="showModalUse()">&nbsp;{{ messageService.getTranslation('STORE_ITEM_USE_AGORA') }}&nbsp;&nbsp;</button>
+            <br />
+            <button class="btn btn-secondary compartilhar" (tap)="showModalCompartilhe()">{{ messageService.getTranslation('STORE_ITEM_COMPARTILHE') }}</button>
+        </div>
+    </div>
+    
+    <div class="div_teclado center">
+        <app-teclado-base *ngIf="carregado" [layout]="teclado"></app-teclado-base>
+    </div>
+    
+</div>

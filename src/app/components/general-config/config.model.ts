@@ -7,6 +7,7 @@ export class ConfigModel {
     level: number;
     flexSup: string;
     flexUnd: string;
+    ActiveSensor: string;
     
     constructor() {
        this.openFacConfig = new OpenFACConfig();

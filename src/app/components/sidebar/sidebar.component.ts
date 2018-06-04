@@ -1,18 +1,18 @@
-import { AppBaseComponent } from '../shared/components/app-base.component';
-import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
-
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AfterViewInit, Component, Injector, OnChanges, OnDestroy, OnInit } from '@angular/core';
-
+import { AfterViewInit, Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NbMenuItem } from '@nebular/theme';
+import { NbMenuService } from '@nebular/theme/components/menu/menu.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
+import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
+import { AppBaseComponent } from '../shared/components/app-base.component';
+import { AuthService } from '../shared/services/auth.services';
+import { TecladoService } from '../teclado/teclado.service';
+import { KeyboardNamesList } from './keyboards-list.model';
 import { SideBarService } from './sidebar.service';
 
-import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
-import { TecladoService } from '../teclado/teclado.service';
-import { NbMenuItem } from '@nebular/theme';
-import { KeyboardNamesList } from './keyboards-list.model';
-import { AuthService } from '../shared/services/auth.services';
-import { Subscription } from 'rxjs';
+
+
 
 
 @Component({
@@ -108,6 +108,12 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
         children: this.jsonArray
       },
       {
+        title: this.messageService.getTranslation('SIDEBAR_ITEM_STORE'),
+        icon: 'ion-ios-cart-outline', 
+        target: 'loja',
+        link: '/pages/store', 
+      },
+      {
         title: this.messageService.getTranslation('SIDEBAR_ITEM_CONFIGURACAO'),
         icon: 'nb-gear',
         target: 'config',
@@ -127,8 +133,4 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
 
      return myJson; 
   };
-
-
-
 }
-

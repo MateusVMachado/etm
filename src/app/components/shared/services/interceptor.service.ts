@@ -1,20 +1,8 @@
-import { AuthService } from './auth.services';
-import {
-    HttpErrorResponse,
-    HttpEvent,
-    HttpHandler,
-    HttpHeaderResponse,
-    HttpHeaders,
-    HttpInterceptor,
-    HttpProgressEvent,
-    HttpRequest,
-    HttpResponse,
-    HttpSentEvent,
-    HttpUserEvent,
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { Observable, ObservableInput } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
+import { AuthService } from './auth.services';
 
 @Injectable()
 export class InterceptorService implements HttpInterceptor{

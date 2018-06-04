@@ -1,7 +1,6 @@
-import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Injector } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()

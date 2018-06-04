@@ -6,7 +6,7 @@
         <div class="form-group">
             <label for="input-email" class="sr-only">{{ messageService.getTranslation('INPUT_EMAIL')}}</label>
             <input name="email" [(ngModel)]="user.email" id="input-email" pattern=".+@.+\..+" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_EMAIL')}}"
-                #email="ngModel" [class.form-control-danger]="email.invalid && email.touched" autofocus [required]="true">
+                #email="ngModel" [class.form-control-danger]="email.invalid && email.touched" autofocus [required]="true"  autocomplete="email">
             <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
             {{ messageService.getTranslation('EMAIL_OBRIGATORIO') }}
           </small>
@@ -18,7 +18,7 @@
             <label for="input-password" class="sr-only">{{ messageService.getTranslation('INPUT_SENHA')}}</label>
             <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_SENHA')}}"
                 #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="true" [minlength]="4"
-                [maxlength]="20">
+                [maxlength]="20" autocomplete="current-password">
             <small class="form-text error" *ngIf="password.invalid && password.touched && password.errors?.required">
                 {{ messageService.getTranslation('SENHA_OBRIGATORIA')}}            
             </small>
@@ -30,15 +30,15 @@
             <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">{{ messageService.getTranslation('REMEMBER_ME')}}</nb-checkbox>
             <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">{{ messageService.getTranslation('FORGOT_PASSWORD')}}</a>
         </div>
-        <button style="cursor:pointer;" class="btn btn-block btn-hero-success">
+        <button style="cursor:pointer;" class="btn btn-block btn-hero-success" [disabled]="(email.invalid && email.dirty) || (password.invalid && password.dirty)">
           {{ messageService.getTranslation('BTN_ENTRAR')}}
         </button>
     </form>
     <div class="row">
         <div class="col-md-3" style="margin: auto;">
-            <img id="pt-br" alt="Português" src="../../assets/images/br.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
-            <img id="en" alt="English" src="../../assets/images/gb.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
-            <img id="es" alt="Español" src="../../assets/images/es.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
+            <img id="pt-br" style="cursor: pointer;" alt="Português" src="../../assets/images/br.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
+            <img id="en" style="cursor: pointer;" alt="English" src="../../assets/images/gb.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
+            <img id="es" style="cursor: pointer;" alt="Español" src="../../assets/images/es.png" width="16" height="11" style="display: inline-block" (click)="changeLanguage($event)">
         </div>
     </div>
     <div class="links" style="margin-top: 16px; text-align: center;">

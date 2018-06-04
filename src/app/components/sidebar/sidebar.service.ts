@@ -1,10 +1,8 @@
-import { AuthService } from '../shared/services/auth.services';
-import { Injectable, Injector } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subject, Subscription } from 'rxjs';
-import { Observable } from 'rxjs/Observable';
-import { AppServiceBase } from '../shared/services/app-service-base.service';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, Injector } from '@angular/core';
+import { Subject } from 'rxjs';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AuthService } from '../shared/services/auth.services';
 import { KeyboardNamesList } from './keyboards-list.model';
 
 @Injectable()

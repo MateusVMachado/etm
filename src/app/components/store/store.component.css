@@ -1,0 +1,137 @@
+/* PESQUISA */
+.input_pesquisa{
+    position: relative;
+}
+.pesquisar_btn{
+    position: absolute;
+    right: 2%;
+    top: calc(50% - 12px);
+}
+
+#filter{
+    max-width: 100%;
+    padding: 1% 2%;
+    position: relative;
+    background-color: rgba(255,255,255,0.9);
+    z-index: 99;
+}
+#filtros_menu{
+    position: relative;
+}
+#filtros_menu #btn_filtros_menu{
+    float: left;
+    padding: 2% 0 1% 1%;
+    cursor: pointer;
+    width: fit-content;
+}
+#filtros_menu .redefinirFiltros{
+    float: right;
+    cursor: pointer;
+    margin-top: 2%;
+    color: #4799eb;
+}
+#filtros_gaveta.filtrosMostrar{
+    display: block;
+}
+#filtros_gaveta{
+    display: none;
+    clear: both;
+    width: 100%;
+    padding: 1% 2%;
+}
+#filtros_gaveta #div_btn_filtrar{
+    padding-top: 2%; 
+}
+#filtros_gaveta #btn_filtrar{
+    cursor: pointer;
+}
+#lista_teclados{
+    clear: both;
+}
+/* PAGINATION */
+.paginator{
+    text-align: center;
+    font-size: 1.25rem;
+    padding: 2% 5% 0 5%;
+}
+.paginator /deep/ li.current{
+    background-color: rgb(26, 86, 216);
+}
+.paginator /deep/ a{
+    color:#4799eb;
+}
+/* MODAL */
+.modal_usar_teclado .center, .modal_compartilhar_teclado .center {
+    text-align: center;
+}
+.btn_fechar_modal{
+    cursor: pointer;
+}
+.modal_background{
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+}
+
+.modal_teclado{
+    width: 90%;
+    max-height: 90%;
+    margin: 5% 5%;
+    background: #fff;
+    padding: 2%;
+    font-family: 'Roboto', sans-serif;
+    border-radius: 20px;
+    color: #000;
+    text-shadow: 1px 1px 1px #808080;
+    overflow: auto;
+}
+.modal_teclado .btn{
+    cursor: pointer;
+}
+.div_teclado {
+    clear: both;
+    max-width: 100%;
+    background-color: #dcdcdc;
+}
+/* COMPARTILHAR */
+.modal_compartilhar_teclado .input_url{
+    position: relative;
+}
+.modal_compartilhar_teclado .copiar_btn{
+    position: absolute;
+    right: 2%;
+    top: calc(50% - 12px);
+    cursor: pointer;
+}
+.modal_compartilhar_teclado .msg_copiado{
+    text-align: center;
+}
+.modal_compartilhar_teclado .msg_copiado button{
+    position: absolute;
+    bottom: 2%;
+    left: calc(50% - 175px);
+    width: 350px;
+    opacity: 0;
+    transform: translateY(150px);
+    transition: transform .5s, opacity 0.75s;
+}
+.modal_compartilhar_teclado .msg_copiado.mostrar button{
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* MEDIA */
+@media all and (min-width: 700px) {
+    .modal_teclado .right{
+        float: right;
+        text-align: right;
+    }
+    
+    .modal_teclado .left {
+        float: left;
+    }
+}

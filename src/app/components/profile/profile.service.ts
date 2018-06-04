@@ -1,10 +1,8 @@
-import { AuthService } from '../shared/services/auth.services';
-import { User } from '../shared/models/user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { Observable } from "rxjs/Observable";
-import { HttpHeaders } from '@angular/common/http';
+import { User } from '../shared/models/user';
 import { AppServiceBase } from '../shared/services/app-service-base.service';
+import { AuthService } from '../shared/services/auth.services';
 
 @Injectable()
 export class ProfileService extends AppServiceBase {
@@ -14,6 +12,10 @@ export class ProfileService extends AppServiceBase {
 
     updateUser(user: User) {
         return this.http.post(this.backendAddress + '/updateUser', user);
+    }
+    public updateUserPassword(userEmail : string, newPassword : string){
+        // let envio = [userEmail,newPassword];
+        return this.http.post(this.backendAddress + '/updateUserPassword', {"email": userEmail, "newPassword":newPassword});
     }
 
 }
