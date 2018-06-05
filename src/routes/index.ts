@@ -120,9 +120,9 @@ export class IndexRoute extends BaseRoute {
     });
     
     
-    router.post("/emailRequestPassword", (req: Request, res: Response, next: NextFunction) => {
+    router.post("/sendEmail", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      login.emailRequestPassword(req,res,next);
+      login.sendEmail(req,res,next);
     });
     router.get("/isAccountBlocked", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;

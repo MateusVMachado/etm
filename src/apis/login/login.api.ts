@@ -87,7 +87,7 @@ export class Login extends BaseRoute{
         });  
     }
     
-    public emailRequestPassword(req: Request, res: Response, next: NextFunction){
+    public sendEmail(req: Request, res: Response, next: NextFunction){
         let email = req.body["email"];
         let emailHostName = req.body["emailHostName"];
         let emailTitulo = req.body["emailTitulo"];
@@ -112,5 +112,7 @@ export class Login extends BaseRoute{
             ]
         };
         server.send(emailReal, function(err, message) {});
+
+        res.send();
     }
 }        
