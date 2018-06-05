@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, Input, OnInit } from "@angular/core";
 import * as $ from "jquery";
 import { OpenFACLayout } from "openfac/OpenFac.ConfigContract";
-import { isUndefined } from "util";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/timer';
+import { isNullOrUndefined, isUndefined } from "util";
 import { ActiveLineCol } from "../teclado/activeLine.model";
 import { TecladoModel } from "../teclado/teclado.model";
 
@@ -30,17 +32,22 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
             }
         }
         else{
+            this.idTeclado = this.teclado.type + Math.round((Math.random())*100);
             this.activeLine = new ActiveLineCol();
             this.activeLine.col = 1;
             this.activeLine.line = -1;
         }
     }
     ngAfterViewInit(){
-        this.adjustImages();
         let tecladoHtml = document.getElementById(this.idTeclado);
-        if ( $('.teclado-container').width() < $(tecladoHtml).width() ) $(tecladoHtml).addClass('overflow');
+        if ( $('.teclado-container').width() < $(tecladoHtml).width() )$(tecladoHtml).addClass('overflow');
+        
+        $( window ).resize(function() {
+            if ( $('.teclado-container').width() < $(tecladoHtml).width() )$(tecladoHtml).addClass('overflow');
+        });
+        Observable.timer(500).subscribe( () => this.adjustImages());
     }
-    setActiveLine(activeLine: ActiveLineCol) {
+    setActiveLine(activeLine: ActiveLineCol): void {
         if(this.teclado != undefined){
             this.activeLine = activeLine;
         }
@@ -81,20 +88,33 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
     }
     
     public adjustImages(){
+        let tecladoCols = 0;
+        
         if(this.teclado.magnify == null) this.teclado.magnify = 1;
         $('#'+this.idTeclado +' .notImage').css('font-size', 18 * this.teclado.magnify);
+        
         if(!this.possuiImagem){
+            for(let x = 0; x < this.teclado.teclas.length; x ++ ){
+                if(this.teclado.teclas[x].length > tecladoCols ) tecladoCols = this.teclado.teclas[x].length;
+            }
+            if(tecladoCols > 5) $('#'+this.idTeclado).addClass('expand');
             return;
         }
+        
+        
         let imgWidth = [];
         let lineHeight : number;
         let imgRows = [];
         for(let x = 0; x < this.teclado.teclas.length; x ++ ){
             lineHeight = 0;
+            if(this.teclado.teclas[x].length > tecladoCols ) tecladoCols = this.teclado.teclas[x].length
             for(let y = 0 ; y < this.teclado.teclas[x].length; y ++){
                 if(this.teclado.teclas[x][y].split('$')[0] === '*img'){
                     //CARREGAMENTO DA IMAGEM
-                    let imghtml = document.getElementById(this.idTeclado).getElementsByClassName('images'+x+'x'+y)[0];
+                    let imghtml
+                    if(document.getElementById(this.idTeclado) != null){
+                        imghtml = document.getElementById(this.idTeclado).getElementsByClassName('images'+x+'x'+y)[0];
+                    }
                     $(imghtml).css('background', 'url('+ this.layout.Lines["image"][x][y] +') no-repeat');
                     
                     let height : number = this.teclado.teclas[x][y].split('$')[1].split('#')[0];
@@ -109,7 +129,7 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
             }
             if(imgRows.includes(x)){
                 let row = document.getElementById(this.idTeclado).getElementsByTagName('tr')[x];
-                if(!isUndefined(row)){
+                if(!isNullOrUndefined(row)){
                     let imgs = row.getElementsByClassName('btn_com_img');
                     if(imgs.length > 0){
                         let keys = row.getElementsByClassName('notImage');
@@ -128,6 +148,7 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
                     }
                 }
             }
+            if(tecladoCols > 5) $('#'+this.idTeclado).addClass('expand');
         }
     }
 }

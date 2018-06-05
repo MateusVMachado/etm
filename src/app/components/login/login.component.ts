@@ -8,6 +8,7 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { UserAndGPS } from '../shared/models/userSession.model';
 import { AuthService } from '../shared/services/auth.services';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'nb-login',
@@ -42,7 +43,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
   @ViewChild('form') form: NgForm;
   user: any = {
     email: '',
-    password: 'inserir',
+    password: '',
     rememberMe: ''
   };
   
@@ -92,7 +93,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
     }            
     
     public ngAfterViewInit(){
-      this.user.password = 'inserir'; 
+      this.user.password = ''; 
     }    
     
     

@@ -202,6 +202,7 @@ div[tooltip]:hover:before {
     border: transparent;
     font-family: Exo;
     font-size: 14px;
+    cursor: pointer;
 }
 
 .button-keyboard-menu:hover{
