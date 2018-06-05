@@ -48,7 +48,7 @@ export class ProfileEditComponent extends AppBaseComponent implements OnInit, On
         let message;
         this.updateUserSubscription = this.profileService.updateUser(usuario).subscribe(() =>{
             this.authService.setUser(usuario);
-            message = this.messageService.getTranslation('MENSAGEM_CONFIGURACOES_SALVAS');
+            message = this.messageService.getTranslation('MENSAGEM_PERFIL_SALVO');
             this.messageService.success(message);
         });
     }

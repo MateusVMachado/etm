@@ -90,8 +90,8 @@ export class AuthService extends AppServiceBase {
     public setJWT(jwt){
         this.user.jwt = jwt;
     }
-    public sendEmailPasswordRequest(emailUser : string,emailHostName: string, emailTitulo : string,emailAssunto : string, emailBody : string){
-        return this.http.post(this.backendAddress + '/emailRequestPassword', {"email":emailUser,"emailHostName":emailHostName,"emailTitulo":emailTitulo, "emailAssunto": emailAssunto,"emailBody":emailBody}, { responseType: 'text'});
+    public sendEmail(emailUser : string,emailHostName: string, emailTitulo : string,emailAssunto : string, emailBody : string){
+        return this.http.post(this.backendAddress + '/sendEmail', {"email":emailUser,"emailHostName":emailHostName,"emailTitulo":emailTitulo, "emailAssunto": emailAssunto,"emailBody":emailBody}, { responseType: 'text'});
     }
     
     public isAccountBlocked(email : string){

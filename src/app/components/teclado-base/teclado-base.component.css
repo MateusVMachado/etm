@@ -1,10 +1,14 @@
-.tabela{
-    display: table;
-    z-index: 0;
-}
 .teclado-container{
     max-width: 100%;
     padding: 1% 2%;
+}
+.tabela{
+    display: table;
+    z-index: 0;
+    max-width: 100%;
+}
+.tabela.expand{
+    width: 100%;
 }
 .tabela tr{
     display: table-row;

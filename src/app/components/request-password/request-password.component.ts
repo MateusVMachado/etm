@@ -31,7 +31,7 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
   blockedAccount : boolean;
   countBlocks : number;
   mostraModal : boolean
-
+  
   private getUserSubscribe: Subscription;
   private isAccountBlockedSubscribe: Subscription;
   private updateUserPasswordSubscribe: Subscription;
@@ -172,38 +172,36 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
       }
       
       sendEmail(){
-        let emailTitulo : string;
-        let emailAssunto : string;
-        let emailHostName : string;
-        emailTitulo = this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_TITULO');
-        emailAssunto = this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_ASSUNTO');
-        emailHostName = this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_NOME_HOST');
-        let emailBody = this.getEmailBody(emailTitulo);
-        this.sendEmailSubscribe = this.authService.sendEmailPasswordRequest(this.user.email,emailHostName,emailTitulo,emailAssunto,emailBody).subscribe();
-        $('#modal_mensagem').text(this.messageService.getTranslation('RECUPERAR_SENHA_MSG_EMAIL_ENVIADO'));
-        $('#modal_mensagem_tempo').text(this.messageService.getTranslation('RECUPERAR_SENHA_MSG_EMAIL_ENVIADO_OBSERVACAO'));
-        
-        this.mostraModal = true
+        let emailTitulo : string = this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_TITULO');
+        let emailAssunto : string = this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_ASSUNTO');
+        let emailHostName : string = this.messageService.getTranslation('EMAIL_NOME_HOST');
+        let modal_mensagem : string = this.messageService.getTranslation('RECUPERAR_SENHA_MSG_EMAIL_ENVIADO');
+        let modal_mensagem_tempo : string = this.messageService.getTranslation('RECUPERAR_SENHA_MSG_EMAIL_ENVIADO_OBSERVACAO');
+        this.sendEmailSubscribe = this.authService.sendEmail(this.user.email,emailHostName,emailTitulo,emailAssunto,this.getEmailBody()).subscribe(() =>
+        {
+          $('#modal_mensagem').text(modal_mensagem);
+          $('#modal_mensagem_tempo').text(modal_mensagem_tempo);
+          this.mostraModal = true
+        });
       }
       
-      getEmailBody(emailTitulo){
+      getEmailBody(){
         let body : string = '';
         body ="<html>"
         body +="<head></head>"
         body +="<body  style='text-align:center;font-family:Roboto,sans-serif'>"
-        body +="<h1>"+ emailTitulo +"</h1>"
+        body +="<h1>"+ this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_TITULO') +"</h1>"
         body +="<hr>"
         body +="<div style='padding: 2% 0'>"
         body +="<h3 style='font-weight:normal'>"+ this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_BODY') +"</h3>"
         body +="<h1 style='font-weight:bold; margin-top: 2%;'>"+ this.codigoEmailEnviado + "</h1>"
         body +="</div>"
         body +="<footer style='padding: 2% 1%; background-color: #364150; color: #fff; text-shadow: 1px 1px 1px #000';>"
-        body +="<h4>" + this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_OBRIGADO') + "</h4>"
-        body +="<h4>" + this.messageService.getTranslation('RECUPERAR_SENHA_EMAIL_EQUIPE') + "</h4>"
+        body +="<h4>" + this.messageService.getTranslation('EMAIL_OBRIGADO') + "</h4>"
+        body +="<h4>" + this.messageService.getTranslation('EMAIL_EQUIPE') + "</h4>"
         body +="</footer>"
         body +="</body>"
         body +="</html>"
-        
         return body;
       }
     }

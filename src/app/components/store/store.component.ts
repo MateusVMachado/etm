@@ -283,7 +283,10 @@ export class StoreComponent extends AppBaseComponent implements OnInit, AfterVie
             this.teclado = arrayRecebido[1]
             this.mostraModalCompartilhar = true;
             $('#tecladoUrl').select();
-            let url = "localhost:4200/#/pages/store/"+ btoa(arrayRecebido[0]);
+
+            // let url = "localhost:4200/#/pages/store/"+ btoa(arrayRecebido[0]);
+            let url = "https://etm.korp.com.br/#/pages/store/"+ btoa(arrayRecebido[0]);
+
             this.formCompartilhe.controls["tecladoUrl"].setValue(url);
         }
         copiarUrl(){

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import * as $ from 'jquery';
 import { GeneralConfigService } from '../general-config/general-config.service';
 import { AuthService } from '../shared/services/auth.services';
@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
     selector: 'app-editor-component',
     templateUrl: './editor-teclado.component.html'
 })
-export class EditorTecladoComponent implements OnInit, OnDestroy { 
+export class EditorTecladoComponent implements OnInit, AfterViewInit, OnDestroy { 
     public tamanho: number;
     public initEditor: boolean;
     private subscribeToTecladoReadySubscription : Subscription
@@ -45,6 +45,19 @@ export class EditorTecladoComponent implements OnInit, OnDestroy {
                 
             }
         }
+
+        ngAfterViewInit(){
+            $( window ).resize(function() {
+                let keys = $('.overflow .tamanho-button')
+                keys.each(function() {
+                    if($(this).has('input.notImage')){
+                        $(this).css('width', ($('.main-content').innerWidth() * 0.9) / 14)
+                        $(this).css('maxWidth', ($('.main-content').innerWidth() * 0.9) / 14)
+                    }
+                });
+            });
+        }
+
         ngOnDestroy(){
             if(this.subscribeToTecladoReadySubscription) this.subscribeToTecladoReadySubscription.unsubscribe();
             
