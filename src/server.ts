@@ -145,7 +145,7 @@ export class Server {
     //jwt verify
     //this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/logout', '/register', '/configuration', '/user', '/keyboard/insertBasicIntoDatabase']}));
     this.app.use(jwt({ secret: backendConfig.secret }).unless({path: ['/login', '/logout', '/register',
-     '/configuration', '/user', '/emailRequestPassword','/isAccountBlocked', '/updateUserPassword','/blockAccount']}));
+     '/configuration', '/user', '/sendEmail','/isAccountBlocked', '/updateUserPassword','/blockAccount']}));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
