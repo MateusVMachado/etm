@@ -10,6 +10,7 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { AuthService } from '../shared/services/auth.services';
 import { Subscription } from 'rxjs';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'nb-register',
@@ -33,6 +34,7 @@ export class RegisterComponent extends AppBaseComponent implements OnDestroy {
   
   passwordConfRequired: boolean = true;
   termsCheckbox : any
+  usuarioCriado : boolean
   
   private sendEmailSubscribe: Subscription;
   
@@ -46,12 +48,13 @@ export class RegisterComponent extends AppBaseComponent implements OnDestroy {
   public register() {
     let usuario: User = new User();
     usuario = this.user;
+    if(!isUndefined(this.usuarioCriado)) return;
     this.authService.register(usuario).subscribe(
       (res: any) => {
+        this.sendEmail();
+        this.usuarioCriado = true;
         let message = this.messageService.getTranslation('MENSAGEM_CADASTRO_CONCLUIDO');
-        this.messageService.success(message).then(res => {
-          this.sendEmail();
-        });
+        this.messageService.success(message);
       }, (error) => {
         if(error.message === "Esse email já foi cadastrado!"){
           let message = this.messageService.getTranslation('MENSAGEM_EMAIL_JA_CADASTRADO');
@@ -68,7 +71,6 @@ export class RegisterComponent extends AppBaseComponent implements OnDestroy {
   sendEmail(){
     let emailTitulo : string = this.messageService.getTranslation('BOAS_VINDAS_EMAIL_TITULO');
     let emailHostName : string = this.messageService.getTranslation('EMAIL_NOME_HOST');
-    
     this.sendEmailSubscribe = this.authService.sendEmail(this.user.email,emailHostName,emailTitulo,emailTitulo,this.getEmailBody()).subscribe(() =>
     {
       this.router.navigate(['./auth/login']);
