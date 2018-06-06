@@ -31,6 +31,8 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
   blockedAccount : boolean;
   countBlocks : number;
   mostraModal : boolean
+  emailEnviado : boolean
+  senhaTrocada : boolean
   
   private getUserSubscribe: Subscription;
   private isAccountBlockedSubscribe: Subscription;
@@ -53,6 +55,8 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
     }
     
     ngOnInit(){
+      this.emailEnviado = false;
+      this.senhaTrocada = false;
       this.user = new User();
       this.mostraModal = false;
       this.countCodigos = 0;
@@ -73,6 +77,7 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
       if(this.blockAccountSubscribe) this.blockAccountSubscribe.unsubscribe();
     }
     requestPass(): void {
+      if(this.emailEnviado) return;
       if(!isNullOrUndefined(this.user.email) && this.user.email != ''){
         this.getUserSubscribe = this.authService.getUser(this.user.email).subscribe((res:User) => {
           if(!isNullOrUndefined(res)){
@@ -81,6 +86,7 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
             this.secondStep = true;
             this.firstStep = false;
             this.codigoEmailEnviado = String( Math.round(Math.random()*100) ) + String( Math.round(Math.random()*100) ) + String( Math.round(Math.random()*100) );
+            this.emailEnviado = true;
             
             this.isAccountBlockedSubscribe = this.authService.isAccountBlocked(this.user.email).subscribe((result) =>{
               result = result["status"];
@@ -116,10 +122,12 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
     }
     
     changePassword(){
+      if(this.senhaTrocada) return;
       if(!this.blockedAccount){
         if(this.confPassword === this.newPassword){
           if(this.codigoEmail === this.codigoEmailEnviado){
             this.updateUserPasswordSubscribe = this.profileService.updateUserPassword(this.user.email,this.newPassword).subscribe(result =>{
+              this.senhaTrocada = true;
               $('#modal_mensagem').text(this.messageService.getTranslation('RECUPERAR_SENHA_MSG_SENHA_ALTERADA'));
               $('#modal_mensagem_tempo').text('');
               $('#modal_btn').show();
