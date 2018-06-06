@@ -74,16 +74,15 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
     }
     requestPass(): void {
       if(!isNullOrUndefined(this.user.email) && this.user.email != ''){
-        this.authService.getUser(this.user.email).subscribe((res:User) => {
+        this.getUserSubscribe = this.authService.getUser(this.user.email).subscribe((res:User) => {
           if(!isNullOrUndefined(res)){
             this.erroEncontrarEmail = false;
-            this.user.password = btoa(res.password);
             this.user.jwt = res.jwt;
             this.secondStep = true;
             this.firstStep = false;
             this.codigoEmailEnviado = String( Math.round(Math.random()*100) ) + String( Math.round(Math.random()*100) ) + String( Math.round(Math.random()*100) );
             
-            this.authService.isAccountBlocked(this.user.email).subscribe((result) =>{
+            this.isAccountBlockedSubscribe = this.authService.isAccountBlocked(this.user.email).subscribe((result) =>{
               result = result["status"];
               if (result == 'false'){
                 this.blockedAccount = false;
@@ -154,7 +153,7 @@ export class RequestPasswordComponent extends AppBaseComponent implements OnInit
                 desbloqueio = new Date(new Date().getTime() +  9999*(24 * 60 * 60 * 1000)).toISOString().split('T')[0] + ' ' + new Date(new Date().getTime()).toLocaleTimeString();
                 break;
               }
-              this.authService.blockAccount(this.user.email,desbloqueio).subscribe(result =>
+              this.blockAccountSubscribe = this.authService.blockAccount(this.user.email,desbloqueio).subscribe(result =>
                 {
                   $('#modal_mensagem').text(this.messageService.getTranslation('RECUPERAR_SENHA_MSG_BLOQUEADO') + ' ' + this.messageService.getTranslation('RECUPERAR_SENHA_MSG_BLOQUEADO') );
                   $('#modal_mensagem_tempo').text( new Date(desbloqueio).toLocaleString() );

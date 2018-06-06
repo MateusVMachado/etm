@@ -23,6 +23,7 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
   public editorTecladoServiceSubscribe: any;
   public menuServiceSubscribe: any;
   public sidebarServiceSubscribe: Subscription;
+  private loadKeyboardsNamesSubscription : Subscription
 
   
   public menu: NbMenuItem[] = [];
@@ -68,7 +69,7 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
   }
 
   ngOnDestroy() {
-
+    if(this.loadKeyboardsNamesSubscription) this.loadKeyboardsNamesSubscription.unsubscribe();
     this.sidebarServiceSubscribe.unsubscribe();
   }
 
@@ -79,7 +80,8 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
 
   private loadSidebarKeyboardNames(){
     let user = this.authService.getLocalUser();
-    this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
+    if(this.loadKeyboardsNamesSubscription) this.loadKeyboardsNamesSubscription.unsubscribe();
+    this.loadKeyboardsNamesSubscription = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
         this.menu = this.generateMenuItem(result);
     });
   }
