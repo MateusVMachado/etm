@@ -24,6 +24,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   public usuario: User;
   public imgUrl;
   private headerSubscription: Subscription;
+  private sendNowSubscription: Subscription;
   
   userMenu = [{ title: this.messageService.getTranslation('HEADER_ITEM_PERFIL'), tag: 'perfil' }, { title:  this.messageService.getTranslation('HEADER_ITEM_SAIR'), tag: 'sair' }];
   
@@ -69,7 +70,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   }
   
   logout() {
-    this.sendNow().subscribe(()=>{
+    this.sendNowSubscription = this.sendNow().subscribe(()=>{
       
     }); 
     window.localStorage.removeItem('JWTtoken')
@@ -84,6 +85,7 @@ export class HeaderComponent extends AppBaseComponent implements OnInit, OnDestr
   }
   ngOnDestroy(): void {
     this.headerSubscription.unsubscribe();
+    if(this.sendNowSubscription) this.sendNowSubscription.unsubscribe();
   }
   
   
