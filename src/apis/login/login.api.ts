@@ -88,12 +88,29 @@ export class Login extends BaseRoute{
     }
     
     public sendEmail(req: Request, res: Response, next: NextFunction){
+        if(!req.body["email"]){
+            res.status(200).send();
+            return;
+        } 
         let email = req.body["email"];
         let emailHostName = req.body["emailHostName"];
         let emailTitulo = req.body["emailTitulo"];
         let emailAssunto = req.body["emailAssunto"];
         let emailBody = req.body["emailBody"];
-        let emailServer = require("emailjs");
+        let emailServer;
+        try {
+            emailServer = require("emailjs");
+        } catch (error) {
+            try {
+                emailServer = require("emailjs/email");
+            } catch (error) {
+                try {
+                    emailServer = require("./../../../node_modules/emailjs");
+                } catch (error) {
+                    emailServer = require("./../../../node_modules/emailjs/email");
+                }
+            }
+        }
         
         let server = emailServer.server.connect({
             user: emailConfig.user, 
@@ -112,7 +129,7 @@ export class Login extends BaseRoute{
             ]
         };
         server.send(emailReal, function(err, message) {});
-
-        res.send();
+        
+        res.status(200).send();
     }
 }        
