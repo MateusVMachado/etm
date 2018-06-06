@@ -1,11 +1,8 @@
-import {LoginAuthenticate } from './login-authenticate.model';
-import { NextFunction, Request, Response, Router } from "express";
-import { BaseRoute } from "../../routes/route";
-import { KeyboardModel } from '../../models/keyboard.model';
-import { MongoAccessModel } from "../../models/mongoAccess.model";
-import * as CryptoJS from 'crypto-js';
+import { NextFunction, Request, Response } from "express";
 import * as jwt from 'jsonwebtoken';
 import { backendConfig, emailConfig } from '../../backend.config';
+import { BaseRoute } from "../../routes/route";
+import { LoginAuthenticate } from './login-authenticate.model';
 
 //var jwt = require('jsonwebtoken');
 
@@ -88,8 +85,13 @@ export class Login extends BaseRoute{
     }
     
     public sendEmail(req: Request, res: Response, next: NextFunction){
+        console.log('\n');
+        console.log('\n');
+        console.log('\n');
+        console.log('\n');
         if(!req.body["email"]){
-            res.status(200).send();
+            console.log('-1');
+            res.status(200).send('-1');
             return;
         } 
         let email = req.body["email"];
@@ -97,6 +99,11 @@ export class Login extends BaseRoute{
         let emailTitulo = req.body["emailTitulo"];
         let emailAssunto = req.body["emailAssunto"];
         let emailBody = req.body["emailBody"];
+        console.log(email)
+        console.log(emailHostName)
+        console.log(emailTitulo)
+        console.log(emailAssunto)
+        console.log(emailBody)
         let emailServer;
         try {
             emailServer = require("emailjs");
@@ -107,11 +114,17 @@ export class Login extends BaseRoute{
                 try {
                     emailServer = require("./../../../node_modules/emailjs");
                 } catch (error) {
+                    try {
                     emailServer = require("./../../../node_modules/emailjs/email");
+                    } catch (error) {
+                        console.log('1');
+                        res.status(200).send('1');
+                        return;
+                    }
                 }
             }
         }
-        
+        console.log(emailServer || undefined)
         let server = emailServer.server.connect({
             user: emailConfig.user, 
             password:emailConfig.password, 
@@ -128,8 +141,15 @@ export class Login extends BaseRoute{
                 {data: emailBody, alternative:true}
             ]
         };
-        server.send(emailReal, function(err, message) {});
-        
-        res.status(200).send();
+        server.send(emailReal, function(err, message) {
+            console.log(err || message)
+            if(err){
+                res.send('erro');
+                return;
+            }
+            else{
+                res.status(200).send('2');
+            }
+        });
     }
 }        
