@@ -3129,8 +3129,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     * @public
     */
     public editCaptionNText(event){
-      let DEBUG = true;
-      let DEBUG2 = true;
+      let DEBUG = false;
+      let DEBUG2 = false;
       
       if(DEBUG) console.clear();
       if(DEBUG) console.log("-------------------INSERT---------------------")
@@ -3895,7 +3895,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     */
     public keysRelocation(x: number, y: number){
       
-      let DEBUG = true;
+      let DEBUG = false;
       
       if(DEBUG) console.log("--------------RELOCATION-ACTIVATED!!!--------")
       
