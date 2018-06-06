@@ -85,13 +85,8 @@ export class Login extends BaseRoute{
     }
     
     public sendEmail(req: Request, res: Response, next: NextFunction){
-        console.log('\n');
-        console.log('\n');
-        console.log('\n');
-        console.log('\n');
         if(!req.body["email"]){
-            console.log('-1');
-            res.status(200).send('-1');
+            res.status(200).send();
             return;
         } 
         let email = req.body["email"];
@@ -99,32 +94,13 @@ export class Login extends BaseRoute{
         let emailTitulo = req.body["emailTitulo"];
         let emailAssunto = req.body["emailAssunto"];
         let emailBody = req.body["emailBody"];
-        console.log(email)
-        console.log(emailHostName)
-        console.log(emailTitulo)
-        console.log(emailAssunto)
-        console.log(emailBody)
         let emailServer;
         try {
-            emailServer = require("emailjs");
+            emailServer = require("./../../../node_modules/emailjs/email");
         } catch (error) {
-            try {
-                emailServer = require("emailjs/email");
-            } catch (error) {
-                try {
-                    emailServer = require("./../../../node_modules/emailjs");
-                } catch (error) {
-                    try {
-                    emailServer = require("./../../../node_modules/emailjs/email");
-                    } catch (error) {
-                        console.log('1');
-                        res.status(200).send('1');
-                        return;
-                    }
-                }
-            }
+            res.status(200).send();
+            return;
         }
-        console.log(emailServer || undefined)
         let server = emailServer.server.connect({
             user: emailConfig.user, 
             password:emailConfig.password, 
@@ -142,14 +118,7 @@ export class Login extends BaseRoute{
             ]
         };
         server.send(emailReal, function(err, message) {
-            console.log(err || message)
-            if(err){
-                res.send('erro');
-                return;
-            }
-            else{
-                res.status(200).send('2');
-            }
         });
+        res.status(200).send();
     }
 }        
