@@ -56,12 +56,8 @@ export class OpenFacActionKeyboardAndTTS implements IOpenFacAction {
     public selectAll(){
         let data = this.editor.getData();
 
-        console.log('DEBUG: speak');
-        console.log('>data before', data);
-
         data = data.replace(/(<([^>]+)>)/ig,"");
-
-        console.log('>data after', data);
+        data = data.replace(/(&([^>]+);)/ig," ");
 
         return data;
     }
