@@ -24,11 +24,9 @@ export class OpenFacActionTTS implements IOpenFacAction {
         let bt = eg.GetCurrentButton();
 
         if(bt.Text === '*mic'){
-            console.log('DEBUG: chamando speak');
             this.speak(this.selectAll(), this.callback.bind(this));
         } else {
             let str = bt.Text;
-            console.log('DEBUG: chamando speak');
             this.speak(str, this.callback.bind(this));
         }
         
