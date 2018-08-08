@@ -84,11 +84,10 @@ export class OpenFacActionTTS implements IOpenFacAction {
 
     public selectAll(){
         let data = this.editor.getData();
-        console.log('Data before', data);
 
         data = data.replace(/(<([^>]+)>)/ig,"");
-
-        console.log('Data', data);
+        data = data.replace(/(&([^>]+);)/ig," ");
+    
         return data;
     }
 
