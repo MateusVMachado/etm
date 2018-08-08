@@ -1,7 +1,7 @@
 import { IOpenFacAction } from './OpenFac.Action.Interface';
 import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { OpenFacEngine } from './OpenFac.Engine';
-import { KeyboardWriterService } from 'openfac/OpenFAc.KeyboardWriterService';
+import { KeyboardWriterService } from './OpenFAc.KeyboardWriterService';
 
 export class OpenFacActionTTS implements IOpenFacAction {
     private editor: any;
@@ -82,7 +82,11 @@ export class OpenFacActionTTS implements IOpenFacAction {
 
     public selectAll(){
         let data = this.editor.getData();
+        console.log('Data before', data);
+
         data = data.replace(/(<([^>]+)>)/ig,"");
+
+        console.log('Data', data);
         return data;
     }
 
