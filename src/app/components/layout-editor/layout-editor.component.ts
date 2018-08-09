@@ -1520,8 +1520,9 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
           if(DEBUG) console.log(this.choppedNumber)
           
-          // REMOVE EXTRA KEYS
-          
+          /////////////////////////////////////////////
+          /////// REMOVE EXTRA KEYS
+          //////////////////////////////////////////////////////////////
           
           let line = drainY;
           for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
@@ -1606,6 +1607,38 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
         console.log(JSON.stringify(this.tecladoReplicant.teclas));
         
+                ///////////////////////////////////////////////////////////
+                /////////// CHANGE SIZE OF NORMAL KEYS
+                ////////////////////////////////////////////////////////////////////////////////////////////
+               // console.log('CHANGING SIZE SPECIAL 1');
+
+              //  let sElContentAdjust = $("[id=content]");
+              //  console.log('sElContentAdjust 56 e 57', $(sElContentAdjust)[56], $(sElContentAdjust)[57] );
+              //    console.log('Dentro do objeto', $($($(sElContentAdjust)[56]).find('div')[0]).find('button')[0]);
+
+              //  for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+              //    for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+              //     let formula = this.globColumnQnty*Number(x)+Number(y);
+                    
+              //      if( $($($(sElContentAdjust)[formula]).find('div')[0]).find('button')[0] && this.imgLinesArray.includes(x) ){
+              //        if(DEBUG) console.log("MARK-LAYOUT-51");
+              //        console.log('ACHOU O DIV!!!');
+              //        $($($($(sElContentAdjust)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+              //        $($($($(sElContentAdjust)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                  
+              //        const aux3 = $(sElContentAdjust)[formula].cloneNode(true);
+                      
+
+              //        $($($($("[id=content]")[formula]).find('div')[0]).find('button')[0]).find('mat-icon').remove();
+              //        $(aux3).css('height', this.imgMaxHeightSize);
+              //        $("[id=content]")[formula].appendChild(aux3);
+
+              //      } 
+              //    }
+              //  }
+
+
+
         return;
       }
       
@@ -2324,7 +2357,27 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
         } 
         
-        
+      
+                        ///////////////////////////////////////////////////////////
+                /////////// CHANGE SIZE OF NORMAL KEYS
+                ////////////////////////////////////////////////////////////////////////////////////////////
+               // console.log('CHANGING SIZE SPECIAL 2');
+
+              //  let sElContentAdjust = $("[id=content]");
+              //  for(let x = 0; x < this.tecladoReplicant.teclas.length; x++){
+              //    for(let y=0; y< this.tecladoReplicant.teclas[x].length; y++){
+              //      let formula = this.globColumnQnty*Number(x)+Number(y);
+                    
+              //      if( $($(sElContentAdjust)[formula]).find('input')[0] && this.imgLinesArray.includes(x) ){
+              //        if(DEBUG) console.log("MARK-LAYOUT-51");
+              //        $($($(sElContentAdjust)[formula]).find('input')[0]).css('height', this.imgMaxHeightSize);
+              //      } else if( $($(sElContentAdjust)[formula]).find('button')[0] && this.imgLinesArray.includes(x) ){
+              //        if(DEBUG) console.log("MARK-LAYOUT-52");
+              //        $($($(sElContentAdjust)[formula]).find('button')[0]).css('height', this.imgMaxHeightSize);
+              //      }
+              //    }
+              //  }
+
         
       }
       
@@ -2338,6 +2391,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
       
       console.log(JSON.stringify(this.tecladoReplicant.teclas));
+
+
+
+
       
     }    
     
