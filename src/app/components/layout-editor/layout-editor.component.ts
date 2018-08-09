@@ -860,7 +860,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     * @public
     */
     private onDrop(value) {
-      let DEBUG = false;
+      let DEBUG = true;
       let DEBUG2 = false;
       
       if(DEBUG) console.log("-------------------DROPS---------------------")
@@ -1311,7 +1311,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           } else {
             
             
-            if(DEBUG) console.log("MARK-DROP-14");
+            if(DEBUG) console.log("MARK-DROP-14B");
             
             
             if($(value[1]).find('input')[0]){
@@ -1411,7 +1411,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               }
             }    
             
-            
+            $(value[1])[0].className = drainX + '#' + drainY + ' ' + 'button-keyboard-down';
           } 
           
           let coord = $(value[1])[0].className.split(' ');
