@@ -236,7 +236,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
     
     ngOnInit() {
       // this.editor.resize(this.newEditorWidth, this.newEditorHeight);
-      
+
       this.teclado.teclas = [];
       // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
       this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) => {

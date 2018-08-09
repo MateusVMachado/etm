@@ -63,11 +63,18 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                     
-                        
+                        // result[0] (event); // 0
+                        // result[1] (text); // 1
+                        // result[2] (action); // 2
+                        // result[3] (image); // 3
+                        // result[4] h(teclas); // 4    
+
+                        // Se o texto indicativo nao for de imagem ou tecla especial
                         if(result[1].substring(0,1) === '*' && result[1] !== '*img'){
                             this.buttonCaption = "";
                             this.buttonText = "";
                             this.buttonAction = result[2]; 
+                            // Caso contratior eh imagem
                         } else {
                             this.buttonCaption = result[0].target.value;
                             this.buttonText = result[1];
