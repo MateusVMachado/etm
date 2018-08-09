@@ -920,6 +920,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       if(DEBUG) console.log("MARK-NEWDROP-1");
       
+      DEBUG2 = true;
       if(DEBUG2) console.log("imgLINES ANTES DO CORTE:")
       if(DEBUG2) console.log(JSON.stringify(this.imgLinesArray))
       
@@ -928,143 +929,151 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log("VALUE")
       if(DEBUG) console.log(value[3])
       if(DEBUG) console.log('ID: ' + value[3].id)
-      if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && sourceY !== drainY && value[3].id !== 'copy'){
-        this.imgLinesArray.splice(this.cutIndex, 1);
-      }
+
+                ///////////// IMAGEM
+                if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && sourceY !== drainY && value[3].id !== 'copy'){
+                  this.imgLinesArray.splice(this.cutIndex, 1);
+                }
       
       if(DEBUG2) console.log("imgLINES DEPOIS DO CORTE:")
       if(DEBUG2) console.log(JSON.stringify(this.imgLinesArray))
       
       if(DEBUG) console.log("MARK-NEWDROP-1A");
       
-      
-      if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && drainY !== sourceY ){
-        
-        
-        if(DEBUG) console.log("MARK-NEWDROP-9");
-        
-        
-        let derivedX = drainX;
-        
-        if(this.choppedNumber !== this.globColumnQnty){
-          if(DEBUG) console.log("MARK-NEWDROP-10");
-          let found = false;
-          for(let unit = 0; unit < this.imgLinesArray.length; unit++){
-            if(this.imgLinesArray[unit].toString() === drainY.toString()){
-              found = true;
-              break;
-            }
-          }
-          
-          
-          if(!found){
-            if(DEBUG) console.log("MARK-NEWDROP-11");
-            let sElContentTmp = $('[id=content]');
-            let el = $(value[1])[0].cloneNode(true);
-            $(value[1])[0].remove();
-            
-            
-            derivedX = this.mapToNewFormula(drainX, drainY, this.choppedNumber,false);//
-            
-            let formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
-            
-            drainX = derivedX;
-            
-            if(this.tecladoReplicant.teclas[drainY][derivedX] !== ''){
-              formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
-              if($($("[id=content]")[formula]).find('input')[0]){
-                $($("[id=content]")[formula]).find('input')[0].remove(); 
-              }
-              if($($("[id=content]")[formula]).find('button')[0]){
-                $($("[id=content]")[formula]).find('button')[0].remove();
-              }
-            }
-            
-            formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
-            sElContentTmp[formula].appendChild(el);
-            
-          }     
-          
-        }
-        
-        drainX = derivedX
-        if(value[3].id !== 'copy') this.imgLinesArray.push(Number(drainY)) ;
-        
-        
-        if(DEBUG2) console.log("imgLINES DEPOIS DO PUSH:")
-        if(DEBUG2) console.log(JSON.stringify(this.imgLinesArray))
-        
-        let choice = false;
-        
-        
-        if( !this.checkLineHasImage(drainY) ) {
-          if(DEBUG) console.log("MARK-NEWDROP-12");
-          
-          this.changeLineSize(drainY, 'imgSize');
-          let sElContentTmp = $('[id=content]');
-          for(let step = 0 ; step < this.globColumnQnty; step++){
-            
-            let formula = this.globColumnQnty*Number(drainY)+Number(step);
-            
-            if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-            if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-            if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-              if(this.ENABLE_TEXT_MODE){
-                $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
-              } else {
-                $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
-              }
-              
-            } else {
-              if(this.ENABLE_TEXT_MODE){
-                $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
-              } else {
-                $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
-              }
-              
-            }
-            
-          }
-        }        
-        
-        
-        if(this.checkLineHasImage(sourceY) ){
-          if(DEBUG) console.log("MARK-NEWDROP-13");
-          
-          this.changeLineSize(sourceY, 'default');
-          let sElContentTmp = $('[id=content]');
-          for(let step = 0 ; step < this.globColumnQnty; step++){
-            
-            let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-            
-            if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-            } else {
-              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-            }
-            
-          }
-        } 
-        
-        
-        if(!this.checkLineHasImage(sourceY) ){
-          if(DEBUG) console.log("MARK-NEWDROP-14");
-          
-          this.changeLineSize(sourceY, 'default');
-          let sElContentTmp = $('[id=content]');
-          for(let step = 0 ; step < this.globColumnQnty; step++){
-            
-            let formula = this.globColumnQnty*Number(sourceY)+Number(step);
-            
-            if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
-              $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
-            } else {
-              $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
-            }
-            
-          }
-        } 
-      } 
+                ///////////// IMAGEM
+                if(this.tecladoReplicant.teclas[sourceY][sourceX].split('$')[0] === '*img' && drainY !== sourceY ){
+                  
+                  
+                  if(DEBUG) console.log("MARK-NEWDROP-9");
+                  
+                  
+                  let derivedX = drainX;
+                  
+                  if(this.choppedNumber !== this.globColumnQnty){
+                    if(DEBUG) console.log("MARK-NEWDROP-10");
+                    let found = false;
+                    for(let unit = 0; unit < this.imgLinesArray.length; unit++){
+                      if(this.imgLinesArray[unit].toString() === drainY.toString()){
+                        found = true;
+                        break;
+                      }
+                    }
+                    
+                    
+                    if(!found){
+                      if(DEBUG) console.log("MARK-NEWDROP-11");
+                      let sElContentTmp = $('[id=content]');
+                      let el = $(value[1])[0].cloneNode(true);
+                      $(value[1])[0].remove();
+                      
+                      
+                      derivedX = this.mapToNewFormula(drainX, drainY, this.choppedNumber,false);//
+                      
+                      let formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
+                      
+                      drainX = derivedX;
+                      
+                      if(this.tecladoReplicant.teclas[drainY][derivedX] !== ''){
+                        formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
+                        if($($("[id=content]")[formula]).find('input')[0]){
+                          $($("[id=content]")[formula]).find('input')[0].remove(); 
+                        }
+                        if($($("[id=content]")[formula]).find('button')[0]){
+                          $($("[id=content]")[formula]).find('button')[0].remove();
+                        }
+                      }
+                      
+                      formula = this.globColumnQnty*Number(drainY)+Number(derivedX);
+                      sElContentTmp[formula].appendChild(el);
+                      
+                    }     
+                    
+                  }
+                  
+                  drainX = derivedX
+                  if(value[3].id !== 'copy') this.imgLinesArray.push(Number(drainY)) ;
+                  
+                  
+                  if(DEBUG2) console.log("imgLINES DEPOIS DO PUSH:")
+                  if(DEBUG2) console.log(JSON.stringify(this.imgLinesArray))
+                  
+                  let choice = false;
+                  
+                  
+
+                  console.log('this.imgLinesArray', JSON.stringify(this.imgLinesArray) );
+
+
+
+                  if( !this.checkLineHasImage(drainY) ) {
+                    if(DEBUG) console.log("MARK-NEWDROP-12");
+                    
+                    this.changeLineSize(drainY, 'imgSize');
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < this.globColumnQnty; step++){
+                      
+                      let formula = this.globColumnQnty*Number(drainY)+Number(step);
+                      
+                  
+                      if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                      if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      } else {
+                        if(this.ENABLE_TEXT_MODE){
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize + this.textModeFactor);  
+                        } else {
+                          $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.imgMaxHeightSize);
+                        }
+                        
+                      }
+                      
+                    }
+                  }        
+                  
+                  
+                  if(this.checkLineHasImage(sourceY) ){
+                    if(DEBUG) console.log("MARK-NEWDROP-13");
+                    
+                    this.changeLineSize(sourceY, 'default');
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < this.globColumnQnty; step++){
+                      
+                      let formula = this.globColumnQnty*Number(sourceY)+Number(step);
+                      
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                      }
+                      
+                    }
+                  } 
+                  
+                  
+                  if(!this.checkLineHasImage(sourceY) ){
+                    if(DEBUG) console.log("MARK-NEWDROP-14");
+                    
+                    this.changeLineSize(sourceY, 'default');
+                    let sElContentTmp = $('[id=content]');
+                    for(let step = 0 ; step < this.globColumnQnty; step++){
+                      
+                      let formula = this.globColumnQnty*Number(sourceY)+Number(step);
+                      
+                      if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0]).css('height', this.keysHeightSize);
+                      } else {
+                        $($($($(sElContentTmp)[formula]).find('div')[0]).find('button')[0]).css('height', this.keysHeightSize);
+                      }
+                      
+                    }
+                  } 
+                } 
       
       if( !this.checkLineHasImage(drainY) ) {
         if(DEBUG) console.log("MARK-NEWDROP-15");
@@ -1268,7 +1277,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           } 
           
           let coord = $(value[1])[0].className.split(' ');
-          $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+
+          /*
+          * Estava renderizando classe errada
+          */ 
+          // $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+          $(value[1])[0].className = drainX + '#' + drainY + ' ' + 'button-keyboard-down';
           
           if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
           if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
@@ -1411,10 +1425,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           }
           
           
-          if($($(value[1])[0]).find('input')[0]){ 
+
+
+          if($($(value[1])[0]).find('input')[0] ){ 
             $($($(value[1])[0]).find('input')[0]).css('class', 'tamanho-button-especial-big' + ' ' + drainX + '#' + drainY + '');
             
-          }          
+          }  
+          
+   
           
         }   
         
@@ -1586,6 +1604,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
         
+        console.log(JSON.stringify(this.tecladoReplicant.teclas));
         
         return;
       }
@@ -2318,7 +2337,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
       
-      
+      console.log(JSON.stringify(this.tecladoReplicant.teclas));
       
     }    
     
@@ -3115,7 +3134,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     
     /////////////////////////////
     ////////////////////////
-    // INSERT DAS IMAGENS //
+    // INSERT GERAL //
     ////////////////////////
     ////////////////////////////
     
@@ -3136,6 +3155,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log("-------------------INSERT---------------------")
       
       this.showModal(CaptionTextModalComponent);
+
+
       
       let parts = event.target.className.split(' ');
       
@@ -3144,6 +3165,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       let image; 
       let teclas;
       
+
+      // Se # esta presente na string
       if(parts[0].indexOf('#') !== -1){
         if(parts[0].substring(0,1) === "@") parts[0] = parts[0].split('$')[1];
         
@@ -3184,19 +3207,38 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       let payload = new Array();
       
-      payload.push(event);
-      payload.push(text);
-      payload.push(action);
+      payload.push(event); // 0
+      payload.push(text); // 1
+      payload.push(action); // 2
+      payload.push(image); // 3
+      payload.push(teclas); // 4
       if(DEBUG) console.log('IMAGE: ' + image)
-      payload.push(image);
-      payload.push(teclas);
-      
-      
+
+
+   ///////////// Para testes, remover depois   
+      let sEl = $("[id=content]").clone();
+      let sElArray = new Array();
+
+
+      console.log('sEl.lenght', sEl.length);
+      console.log(this.globColumnQnty);
+      console.log(JSON.stringify(this.imgLinesArray) );
+   //////////////////////////////////////////////////////////////
+
+
+      // Emit para caption-text-modal.components.ts
       this.captionTextService.emitCaptionText(payload);
       
       
       this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
         
+        if ( result === 'exit'){
+          this.payloadSubscription.unsubscribe();
+          return;
+        }
+        console.log('ENTROU NO SUBSCRIPTION');
+
+
         let inputCount = 0, buttonCount = 0;
         
         
@@ -3222,41 +3264,43 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         let sysImg = result[7];
         let imagem = result[8];
         
-        
-        
-        let maxAdmissibleSize = this.keysWidthSize;
-        let greaterDimension, smallerDimension;
-        if(height > width){
-          greaterDimension = height;
-          smallerDimension = width;
-        } else {
-          greaterDimension = width;
-          smallerDimension = height;
-        }
-        
-        let conversionFactor = smallerDimension / greaterDimension;
-        
-        if(height > maxAdmissibleSize) { 
-          height = maxAdmissibleSize;
-          width = maxAdmissibleSize * conversionFactor;
-          
-        } else if(width > maxAdmissibleSize){
-          width = maxAdmissibleSize;
-          height = maxAdmissibleSize * conversionFactor;
-        }
-        
-        
-        
-        
-        if(height > this.imgMaxHeightSize){
-          this.imgMaxHeightSize = height;
-        }
-        
-        if(width > this.imgMaxWidthSize){
-          this.imgMaxWidthSize = width;
-        }
-        
-        
+
+                    if ( imagem ){
+
+                            
+                            let maxAdmissibleSize = this.keysWidthSize;
+                            let greaterDimension, smallerDimension;
+                            if(height > width){
+                              greaterDimension = height;
+                              smallerDimension = width;
+                            } else {
+                              greaterDimension = width;
+                              smallerDimension = height;
+                            }
+                            
+                            let conversionFactor = smallerDimension / greaterDimension;
+                            
+                            if(height > maxAdmissibleSize) { 
+                              height = maxAdmissibleSize;
+                              width = maxAdmissibleSize * conversionFactor;
+                              
+                            } else if(width > maxAdmissibleSize){
+                              width = maxAdmissibleSize;
+                              height = maxAdmissibleSize * conversionFactor;
+                            }
+                            
+                            
+                            
+                            
+                            if(height > this.imgMaxHeightSize){
+                              this.imgMaxHeightSize = height;
+                            }
+                            
+                            if(width > this.imgMaxWidthSize){
+                              this.imgMaxWidthSize = width;
+                            }
+                            
+                    }
         
         if(buttonText === undefined) buttonText = " ";
         if(buttonCaption === undefined) buttonCaption = " ";
@@ -3310,12 +3354,15 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         let el, copied, copyToTarget = false;
         if(DEBUG) console.log("MARK-LAYOUT-1");
         
+        // Se tem valor
         if(event.target.value){
           if(DEBUG) console.log("MARK-LAYOUT-2");
           
           el = $(event.target)[0];
           
           copyToTarget = true;
+
+          
         } else {
           if(DEBUG) console.log("MARK-LAYOUT-3");
           let sEl = $("[id=copy]").clone();
@@ -3355,6 +3402,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           if(DEBUG) console.log("MARK-LAYOUT-8");
           normal = true;
           
+
+          // Nao eh imagem
           if(buttonCaption !== "*img") {
             if(DEBUG) console.log("MARK-LAYOUT-9");
             
@@ -3373,7 +3422,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
               if(DEBUG) console.log("MARK-LAYOUT-10");
               if(DEBUG) console.log("SIZE CHANGER 1")
               $($(el).find('input')[0]).css('height', this.imgMaxHeightSize);
-            }    
+            }   
+            
+            
+            ///// Eh Imagem
           } else {
             $($(el).find('input')[0]).attr('value', '');
             
@@ -3383,90 +3435,90 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
           
           
-          if(( imgUrl || sysImg) && imagem  ){
-            
-            
-            let found = false; 
-            if(DEBUG) console.log("MARK-LAYOUT-12");
-            
-            if(this.choppedNumber !== this.globColumnQnty){
-              if(DEBUG) console.log("MARK-LAYOUT-13");
-              for(let unit = 0; unit < this.imgLinesArray.length; unit++){
-                if(this.imgLinesArray[unit].toString() === y.toString()){
-                  found = true;
-                  break;
-                }
-              }
-              
-              let oldValueX = x;
-              if(!found) {
-                if(DEBUG) console.log("MARK-LAYOUT-14");
-                x = this.mapToNewFormula(x,y, this.choppedNumber,false);
-                
-                
-                if(this.tecladoReplicant.teclas[y][x] !== ''){
-                  formula = this.globColumnQnty*Number(y)+Number(x);
-                  if($($("[id=content]")[formula]).find('input')[0]){
-                    $($("[id=content]")[formula]).find('input')[0].remove(); 
-                  }
-                  if($($("[id=content]")[formula]).find('button')[0]){
-                    $($("[id=content]")[formula]).find('button')[0].remove();
-                  }
-                }
-                
-                
-                notX = true;
-              }
-              
-              ////////////////////           ///////////
-              //////////////////////////////////////////
-              //     FAZ REMANEJAMENTO DE TECLAS      //
-              ////////////////////////////////////////// 
-              /////////                     ////////////
-              
-              let sElContent = $("[id=content]")
-              if(DEBUG) console.log("MARK-LAYOUT-15");
-              
-              
-              for(let line = 0; line < this.tecladoReplicant.teclas.length; line++){
-                for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col ++){
-                  let newformula = this.globColumnQnty*Number(line)+Number(col);
-                  if($($('[id=content]')[newformula]).find('input')[0]){
-                    inputCount += 1 ;
-                  }
-                  if($($('[id=content]')[newformula]).find('button')[0]){
-                    buttonCount += 1 ;
-                  }
-                }
-              }
-              
-              if(inputCount < this.choppedNumber || buttonCount < this.choppedNumber){
-                if(!this.checkLineHasImage(y)){
-                  if(DEBUG) console.log("MARK-LAYOUT-16");
-                  this.keysRelocation(x,y);
-                }        
-              }
-              
-              
-            }  
-            
-            
-            if(sysImg){
-              if(DEBUG) console.log("MARK-LAYOUT-17");
-              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-              this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
-            } else {
-              if(DEBUG) console.log("MARK-LAYOUT-18");
-              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-              this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
-            }
-            if(DEBUG) console.log("MARK-LAYOUT-19");
-            $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
-            $($(el).find('input')[0]).attr('display', 'none');
-            
-          } 
+                          if(( imgUrl || sysImg) && imagem  ){
+                            
+                            
+                            let found = false; 
+                            if(DEBUG) console.log("MARK-LAYOUT-12");
+                            
+                            if(this.choppedNumber !== this.globColumnQnty){
+                              if(DEBUG) console.log("MARK-LAYOUT-13");
+                              for(let unit = 0; unit < this.imgLinesArray.length; unit++){
+                                if(this.imgLinesArray[unit].toString() === y.toString()){
+                                  found = true;
+                                  break;
+                                }
+                              }
+                              
+                              let oldValueX = x;
+                              if(!found) {
+                                if(DEBUG) console.log("MARK-LAYOUT-14");
+                                x = this.mapToNewFormula(x,y, this.choppedNumber,false);
+                                
+                                
+                                if(this.tecladoReplicant.teclas[y][x] !== ''){
+                                  formula = this.globColumnQnty*Number(y)+Number(x);
+                                  if($($("[id=content]")[formula]).find('input')[0]){
+                                    $($("[id=content]")[formula]).find('input')[0].remove(); 
+                                  }
+                                  if($($("[id=content]")[formula]).find('button')[0]){
+                                    $($("[id=content]")[formula]).find('button')[0].remove();
+                                  }
+                                }
+                                
+                                
+                                notX = true;
+                              }
+                              
+                              ////////////////////           ///////////
+                              //////////////////////////////////////////
+                              //     FAZ REMANEJAMENTO DE TECLAS      //
+                              ////////////////////////////////////////// 
+                              /////////                     ////////////
+                              
+                              let sElContent = $("[id=content]")
+                              if(DEBUG) console.log("MARK-LAYOUT-15");
+                              
+                              
+                              for(let line = 0; line < this.tecladoReplicant.teclas.length; line++){
+                                for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col ++){
+                                  let newformula = this.globColumnQnty*Number(line)+Number(col);
+                                  if($($('[id=content]')[newformula]).find('input')[0]){
+                                    inputCount += 1 ;
+                                  }
+                                  if($($('[id=content]')[newformula]).find('button')[0]){
+                                    buttonCount += 1 ;
+                                  }
+                                }
+                              }
+                              
+                              if(inputCount < this.choppedNumber || buttonCount < this.choppedNumber){
+                                if(!this.checkLineHasImage(y)){
+                                  if(DEBUG) console.log("MARK-LAYOUT-16");
+                                  this.keysRelocation(x,y);
+                                }        
+                              }
+                              
+                              
+                            }  
+                            
+                            
+                            if(sysImg){
+                              if(DEBUG) console.log("MARK-LAYOUT-17");
+                              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
+                              this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
+                            } else {
+                              if(DEBUG) console.log("MARK-LAYOUT-18");
+                              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
+                              this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
+                            }
+                            if(DEBUG) console.log("MARK-LAYOUT-19");
+                            $($(el).find('input')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
+                            $($(el).find('input')[0]).attr('display', 'none');
+                            
+                          } 
           
           
         } else if($(el).find('button')[0]){
@@ -3474,6 +3526,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           normal = true;
           
           if($($(el).find('button')[0]).find('mat-icon')[0]) $($(el).find('button')[0]).find('mat-icon')[0].remove();
+         
           if(DEBUG) console.log("MARK-LAYOUT-21");
           $($(el).find('button')[0]).text(buttonCaption);
           if(buttonCaption !== "*img") {
@@ -3487,58 +3540,58 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
             $($(el).find('button')[0]).attr('value', '');
           }        
           
-          if( (imgUrl || sysImg ) & imagem){
-            
-            if(DEBUG) console.log("MARK-LAYOUT-24");
-            let found = false; 
-            
-            if(this.choppedNumber !== this.globColumnQnty){
-              if(DEBUG) console.log("MARK-LAYOUT-25");
-              for(let unit = 0; unit < this.imgLinesArray.length; unit++){
-                if(this.imgLinesArray[unit].toString() === y.toString()){
-                  found = true;
-                  break;
-                }
-              }
-              
-              let oldValueX = x;
-              if(!found) {
-                if(DEBUG) console.log("MARK-LAYOUT-26");
-                x = this.mapToNewFormula(x,y, this.choppedNumber, false);
-                
-                if(this.tecladoReplicant.teclas[y][x] !== ''){
-                  formula = this.globColumnQnty*Number(y)+Number(x);
-                  if($($("[id=content]")[formula]).find('input')[0]){
-                    $($("[id=content]")[formula]).find('input')[0].remove(); 
-                  }
-                  if($($("[id=content]")[formula]).find('button')[0]){
-                    $($("[id=content]")[formula]).find('button')[0].remove();
-                  }
-                }
-                
-                notX = true;
-              }
-              
-              
-            }
-            
-            
-            if(sysImg){
-              if(DEBUG) console.log("MARK-LAYOUT-27");
-              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-              this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
-            } else {
-              if(DEBUG) console.log("MARK-LAYOUT-28");
-              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
-              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
-              this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
-            }
-            if(DEBUG) console.log("MARK-LAYOUT-29");
-            $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
-            $($(el).find('button')[0]).attr('display', 'none');
-            
-          } 
+                          if( (imgUrl || sysImg ) & imagem){
+                            
+                            if(DEBUG) console.log("MARK-LAYOUT-24");
+                            let found = false; 
+                            
+                            if(this.choppedNumber !== this.globColumnQnty){
+                              if(DEBUG) console.log("MARK-LAYOUT-25");
+                              for(let unit = 0; unit < this.imgLinesArray.length; unit++){
+                                if(this.imgLinesArray[unit].toString() === y.toString()){
+                                  found = true;
+                                  break;
+                                }
+                              }
+                              
+                              let oldValueX = x;
+                              if(!found) {
+                                if(DEBUG) console.log("MARK-LAYOUT-26");
+                                x = this.mapToNewFormula(x,y, this.choppedNumber, false);
+                                
+                                if(this.tecladoReplicant.teclas[y][x] !== ''){
+                                  formula = this.globColumnQnty*Number(y)+Number(x);
+                                  if($($("[id=content]")[formula]).find('input')[0]){
+                                    $($("[id=content]")[formula]).find('input')[0].remove(); 
+                                  }
+                                  if($($("[id=content]")[formula]).find('button')[0]){
+                                    $($("[id=content]")[formula]).find('button')[0].remove();
+                                  }
+                                }
+                                
+                                notX = true;
+                              }
+                              
+                              
+                            }
+                            
+                            
+                            if(sysImg){
+                              if(DEBUG) console.log("MARK-LAYOUT-27");
+                              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
+                              this.changeDragulaBackground( $($(el)), buttonImage, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);  
+                            } else {
+                              if(DEBUG) console.log("MARK-LAYOUT-28");
+                              if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
+                              if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
+                              this.changeDragulaBackground( $($(el)), "data:image/png;base64,"+ imgUrl, this.imgMaxHeightSize, this.imgMaxWidthSize, 100, 100);
+                            }
+                            if(DEBUG) console.log("MARK-LAYOUT-29");
+                            $($(el).find('button')[0]).attr('class', 'tamanho-button-especial-big' + ' ' + y + '#' + x + '');
+                            $($(el).find('button')[0]).attr('display', 'none');
+                            
+                          } 
           
         }
         
@@ -3552,17 +3605,18 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           
         }    
         
+        console.log('this.tecladoReplicant.teclas', JSON.stringify(this.tecladoReplicant.teclas) );
         
         
         this.tecladoReplicant.action[y][x] = buttonAction;
         
-        if(buttonCaption === '*img') {
-          
-          this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+this.imgMaxHeightSize+'#'+this.imgMaxWidthSize ;
-        } else {
-          
-          this.tecladoReplicant.teclas[y][x] = buttonCaption;
-        }  
+            if(buttonCaption === '*img') {
+              
+              this.tecladoReplicant.teclas[y][x] = buttonCaption + '$'+this.imgMaxHeightSize+'#'+this.imgMaxWidthSize ;
+            } else {
+              
+              this.tecladoReplicant.teclas[y][x] = buttonCaption;
+            }  
         
         this.tecladoReplicant.text[y][x] = buttonText;
         
@@ -3579,11 +3633,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           }
         }
         
-        if(this.tecladoReplicant.teclas[y][x].split('$')[0] === '*img' && !found) {
+        if(this.tecladoReplicant.teclas[y][x].split('$')[0] === '*img') {
           this.imgLinesArray.push(Number(y));
         }  
         if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
         
+
         if(!normal){
           if(DEBUG) console.log("MARK-LAYOUT-31");
           if($(el).find('mat-icon')[0]) $(el).find('mat-icon')[0].remove();
@@ -3619,75 +3674,77 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
         $(el).removeAttr('tooltip');
         
-        
-        if(this.choppedNumber !== this.globColumnQnty){
-          if(DEBUG) console.log("MARK-LAYOUT-37");
-          formula = this.globColumnQnty*Number(y)+Number(x);
-          
-          if(DEBUG) console.log('inputCount: ' + inputCount + ' buttonCount: ' + buttonCount)
-          if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
-            if(!this.checkLineHasImage(y)){
-              if(DEBUG) console.log("MARK-LAYOUT-16");
-              this.keysRelocation(x,y);
-            }     
-          }      
-          
-          let line = y;
-          for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-            
-            if(DEBUG) console.log(this.choppedNumber)
-            if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
-              if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
-              let newformula = this.globColumnQnty*Number(line)+Number(col);
-              if($($('[id=content]')[newformula]).find('input')[0]){
-                $($('[id=content]')[newformula]).find('input')[0].remove();
-              }
-              if($($('[id=content]')[newformula]).find('button')[0]){
-                $($('[id=content]')[newformula]).find('button')[0].remove();
-              }
-              this.tecladoReplicant.teclas[line][col] = '';
-              this.tecladoReplicant.action[line][col] = '';
-              this.tecladoReplicant.text[line][col] = '';
-              this.tecladoReplicant.image[line][col] = '';
-              
-            }
-          }
-          
-        } else {
-          if(DEBUG) console.log("MARK-LAYOUT-38");
-          
-          // REMOVE EXTRA KEYS
-          let line = y;
-          
-          for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
-            if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
-              if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
-              let newformula = this.globColumnQnty*Number(line)+Number(col);
-              if($($('[id=content]')[newformula]).find('input')[0]){
-                $($('[id=content]')[newformula]).find('input')[0].remove();
-              }
-              if($($('[id=content]')[newformula]).find('button')[0]){
-                $($('[id=content]')[newformula]).find('button')[0].remove();
-              }
-              this.tecladoReplicant.teclas[line][col] = '';
-              this.tecladoReplicant.action[line][col] = '';
-              this.tecladoReplicant.text[line][col] = '';
-              this.tecladoReplicant.image[line][col] = '';
-              
-            }
-          }
-          
-          
-          if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
-            if(!this.checkLineHasImage(y)){
-              if(DEBUG) console.log("MARK-LAYOUT-16");
-              this.keysRelocation(x,y);
-            }        
-          }    
-          if(DEBUG) console.log(el);
-          
+        if ( imagem ){
+                    console.log('PASSOU POR AQUI IMAGEM!!!');
+                    console.log('this.choppedNumber', this.choppedNumber);
+                    if(this.choppedNumber !== this.globColumnQnty){
+                      if(DEBUG) console.log("MARK-LAYOUT-37");
+                      formula = this.globColumnQnty*Number(y)+Number(x);
+                      
+                      if(DEBUG) console.log('inputCount: ' + inputCount + ' buttonCount: ' + buttonCount)
+                      if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
+                        if(!this.checkLineHasImage(y)){
+                          if(DEBUG) console.log("MARK-LAYOUT-16");
+                          this.keysRelocation(x,y);
+                        }     
+                      }      
+                      
+                      let line = y;
+                      for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
+                        
+                        if(DEBUG) console.log(this.choppedNumber)
+                        if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
+                          if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
+                          let newformula = this.globColumnQnty*Number(line)+Number(col);
+                          if($($('[id=content]')[newformula]).find('input')[0]){
+                            $($('[id=content]')[newformula]).find('input')[0].remove();
+                          }
+                          if($($('[id=content]')[newformula]).find('button')[0]){
+                            $($('[id=content]')[newformula]).find('button')[0].remove();
+                          }
+                          this.tecladoReplicant.teclas[line][col] = '';
+                          this.tecladoReplicant.action[line][col] = '';
+                          this.tecladoReplicant.text[line][col] = '';
+                          this.tecladoReplicant.image[line][col] = '';
+                          
+                        }
+                      }
+                      
+                    } else {
+                      if(DEBUG) console.log("MARK-LAYOUT-38");
+                      
+                      // REMOVE EXTRA KEYS
+                      let line = y;
+                      
+                      for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
+                        if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
+                          if(DEBUG) console.log("ENCONTROU ELEMENTO ALÉM DO LIMIAR: " + this.tecladoReplicant.teclas[line][col]);
+                          let newformula = this.globColumnQnty*Number(line)+Number(col);
+                          if($($('[id=content]')[newformula]).find('input')[0]){
+                            $($('[id=content]')[newformula]).find('input')[0].remove();
+                          }
+                          if($($('[id=content]')[newformula]).find('button')[0]){
+                            $($('[id=content]')[newformula]).find('button')[0].remove();
+                          }
+                          this.tecladoReplicant.teclas[line][col] = '';
+                          this.tecladoReplicant.action[line][col] = '';
+                          this.tecladoReplicant.text[line][col] = '';
+                          this.tecladoReplicant.image[line][col] = '';
+                          
+                        }
+                      }
+                      
+                      
+                      if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
+                        if(!this.checkLineHasImage(y)){
+                          if(DEBUG) console.log("MARK-LAYOUT-16");
+                          this.keysRelocation(x,y);
+                        }        
+                      }    
+                      if(DEBUG) console.log(el);
+                      
+                    }
         }
-        
         
         if(imagem) $(el).attr('class', '@copyArea$' + ' ' + x + '#' + y + '');
         
@@ -3875,6 +3932,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.teclas))
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
+        
+      
+        console.log('this.tecladoReplicant.teclas', JSON.stringify(this.tecladoReplicant.teclas) );
+
+
         
         
       })

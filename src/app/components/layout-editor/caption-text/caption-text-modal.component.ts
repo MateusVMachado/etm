@@ -63,11 +63,18 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
                     
-                        
+                        // result[0] (event); // 0
+                        // result[1] (text); // 1
+                        // result[2] (action); // 2
+                        // result[3] (image); // 3
+                        // result[4] h(teclas); // 4    
+
+                        // Se o texto indicativo nao for de imagem ou tecla especial
                         if(result[1].substring(0,1) === '*' && result[1] !== '*img'){
                             this.buttonCaption = "";
                             this.buttonText = "";
                             this.buttonAction = result[2]; 
+                            // Caso contratior eh imagem
                         } else {
                             this.buttonCaption = result[0].target.value;
                             this.buttonText = result[1];
@@ -141,6 +148,14 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public saveButtonConfiguration(stat?){
+        
+
+        if ( stat ) 
+        {
+            this.activeModal.close();
+            this.layoutEditorService.emitLayoutEditorPayload('exit');
+            return;
+        }
         if(this.sysImg) this.readLocalImg();
         
         let payload = new Array();    
@@ -170,12 +185,19 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         payload.push(this.sysImg);
         payload.push(this.imagem);
 
-        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+
         
+        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+        console.log('ENTROU NO SAVE E FEZ EMIT');
+
+        payload = undefined;
+
         if(stat){
+            this.layoutEditorService.emitLayoutEditorPayload('exit');
             return;
         } else {
-            this.closeModal();
+            this.activeModal.close();
+            //this.closeModal();
         }
         
     }
@@ -186,7 +208,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public closeModal(stat?) {
-        this.saveButtonConfiguration(true)
+        //this.saveButtonConfiguration(true);
+        this.saveButtonConfiguration(true);
         this.activeModal.close();
     }
 
