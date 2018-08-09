@@ -920,6 +920,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       if(DEBUG) console.log("MARK-NEWDROP-1");
       
+      DEBUG2 = true;
       if(DEBUG2) console.log("imgLINES ANTES DO CORTE:")
       if(DEBUG2) console.log(JSON.stringify(this.imgLinesArray))
       
@@ -999,6 +1000,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   let choice = false;
                   
                   
+
+                  console.log('this.imgLinesArray', JSON.stringify(this.imgLinesArray) );
+
+
+
                   if( !this.checkLineHasImage(drainY) ) {
                     if(DEBUG) console.log("MARK-NEWDROP-12");
                     
@@ -1008,6 +1014,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       
                       let formula = this.globColumnQnty*Number(drainY)+Number(step);
                       
+                  
                       if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
                       if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
                       if( $($($(sElContentTmp)[formula]).find('div')[0]).find('input')[0] ){
@@ -1270,7 +1277,12 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           } 
           
           let coord = $(value[1])[0].className.split(' ');
-          $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+
+          /*
+          * Estava renderizando classe errada
+          */ 
+          // $(value[1])[0].className = drainX + '#' + drainY + ' ' + coord[1];
+          $(value[1])[0].className = drainX + '#' + drainY + ' ' + 'button-keyboard-down';
           
           if(this.imgMaxHeightSize === 0 ) this.imgMaxHeightSize = this.keysHeightSize;
           if(this.imgMaxWidthSize === 0 ) this.imgMaxWidthSize = this.keysWidthSize;
@@ -1413,10 +1425,14 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           }
           
           
-          if($($(value[1])[0]).find('input')[0]){ 
+
+
+          if($($(value[1])[0]).find('input')[0] ){ 
             $($($(value[1])[0]).find('input')[0]).css('class', 'tamanho-button-especial-big' + ' ' + drainX + '#' + drainY + '');
             
-          }          
+          }  
+          
+   
           
         }   
         
@@ -3199,7 +3215,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log('IMAGE: ' + image)
 
 
-      
+   ///////////// Para testes, remover depois   
       let sEl = $("[id=content]").clone();
       let sElArray = new Array();
 
@@ -3207,13 +3223,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       console.log('sEl.lenght', sEl.length);
       console.log(this.globColumnQnty);
       console.log(JSON.stringify(this.imgLinesArray) );
-      //for(let i = 0; i< totalLength ; i++){
-      //  if($(sEl[i]).find('button')[0]){
-      //    sElArray.push($( $(sEl[i]).find('button')[0] ).val().toString().toLowerCase()); 
-      //  } else if($(sEl[i]).find('input')[0]){
-      //    sElArray.push($( $(sEl[i]).find('input')[0] ).val().toString().toLowerCase()); 
-      //  } 
-      //}
+   //////////////////////////////////////////////////////////////
 
 
       // Emit para caption-text-modal.components.ts
@@ -3623,7 +3633,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
           }
         }
         
-        if(this.tecladoReplicant.teclas[y][x].split('$')[0] === '*img' && !found) {
+        if(this.tecladoReplicant.teclas[y][x].split('$')[0] === '*img') {
           this.imgLinesArray.push(Number(y));
         }  
         if(DEBUG) console.log(JSON.stringify(this.imgLinesArray))
