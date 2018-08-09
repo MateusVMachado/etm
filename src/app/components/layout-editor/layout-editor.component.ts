@@ -3139,6 +3139,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log("-------------------INSERT---------------------")
       
       this.showModal(CaptionTextModalComponent);
+
+
       
       let parts = event.target.className.split(' ');
       
@@ -3196,12 +3198,37 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       payload.push(teclas); // 4
       if(DEBUG) console.log('IMAGE: ' + image)
 
+
+      
+      let sEl = $("[id=content]").clone();
+      let sElArray = new Array();
+
+
+      console.log('sEl.lenght', sEl.length);
+      console.log(this.globColumnQnty);
+      console.log(JSON.stringify(this.imgLinesArray) );
+      //for(let i = 0; i< totalLength ; i++){
+      //  if($(sEl[i]).find('button')[0]){
+      //    sElArray.push($( $(sEl[i]).find('button')[0] ).val().toString().toLowerCase()); 
+      //  } else if($(sEl[i]).find('input')[0]){
+      //    sElArray.push($( $(sEl[i]).find('input')[0] ).val().toString().toLowerCase()); 
+      //  } 
+      //}
+
+
       // Emit para caption-text-modal.components.ts
       this.captionTextService.emitCaptionText(payload);
       
       
       this.payloadSubscription = this.layoutEditorService.subscribeToLayoutEditorPayloadSubject().subscribe((result)=>{
         
+        if ( result === 'exit'){
+          this.payloadSubscription.unsubscribe();
+          return;
+        }
+        console.log('ENTROU NO SUBSCRIPTION');
+
+
         let inputCount = 0, buttonCount = 0;
         
         
@@ -3638,7 +3665,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         $(el).removeAttr('tooltip');
         
         if ( imagem ){
-        
+                    console.log('PASSOU POR AQUI IMAGEM!!!');
+                    console.log('this.choppedNumber', this.choppedNumber);
                     if(this.choppedNumber !== this.globColumnQnty){
                       if(DEBUG) console.log("MARK-LAYOUT-37");
                       formula = this.globColumnQnty*Number(y)+Number(x);
@@ -3897,6 +3925,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         
       
         console.log('this.tecladoReplicant.teclas', JSON.stringify(this.tecladoReplicant.teclas) );
+
+
+        
+        
       })
       
       

@@ -148,6 +148,14 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public saveButtonConfiguration(stat?){
+        
+
+        if ( stat ) 
+        {
+            this.activeModal.close();
+            this.layoutEditorService.emitLayoutEditorPayload('exit');
+            return;
+        }
         if(this.sysImg) this.readLocalImg();
         
         let payload = new Array();    
@@ -177,12 +185,19 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         payload.push(this.sysImg);
         payload.push(this.imagem);
 
-        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+
         
+        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+        console.log('ENTROU NO SAVE E FEZ EMIT');
+
+        payload = undefined;
+
         if(stat){
+            this.layoutEditorService.emitLayoutEditorPayload('exit');
             return;
         } else {
-            this.closeModal();
+            this.activeModal.close();
+            //this.closeModal();
         }
         
     }
@@ -193,7 +208,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public closeModal(stat?) {
-        this.saveButtonConfiguration(true)
+        //this.saveButtonConfiguration(true);
+        this.saveButtonConfiguration(true);
         this.activeModal.close();
     }
 
