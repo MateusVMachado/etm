@@ -60,8 +60,10 @@ export class SoundMeter {
       };
 
       public stop() {
-        this.mic.disconnect();
-        this.script.disconnect();
+          if ( this.mic && this.script){
+                this.mic.disconnect();
+                this.script.disconnect();
+          }      
       };
 
 
@@ -114,10 +116,12 @@ export class OpenFacSensorMicrophone extends OpenFacSensorBase {
 
     public Stop(): void{
         this.on = false;
-        this.soundMeter.stop();
-        this.audioContext.suspend();
-        clearInterval(this.time);
-        clearInterval(this.time2);
+        if( this.soundMeter && this.audioContext){
+                this.soundMeter.stop();
+                this.audioContext.suspend();
+                clearInterval(this.time);
+                clearInterval(this.time2);
+        }        
       }
 
     public Open(): void {
