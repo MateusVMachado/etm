@@ -8,7 +8,7 @@ import { AppBaseComponent } from '../shared/components/app-base.component';
 import { User } from '../shared/models/user';
 import { UserAndGPS } from '../shared/models/userSession.model';
 import { AuthService } from '../shared/services/auth.services';
-import { isUndefined } from 'util';
+import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'nb-login',
@@ -56,8 +56,9 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
   */
   public latitude: number;
   public longitude: number;
-  public clickedOnce: boolean = false;
+  
   public timer: any;
+  public isLogingIn: boolean;
   
   constructor(protected authService: AuthService,
     protected router: Router,
@@ -65,6 +66,7 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
     private configService: GeneralConfigService,
     private activatedRoute : ActivatedRoute) { 
       super(injector);
+      this.isLogingIn = false;
     }
     
     
@@ -94,53 +96,45 @@ export class LoginComponent extends AppBaseComponent implements AfterViewInit, O
     
     public ngAfterViewInit(){
       this.user.password = ''; 
-    }    
-    
+    }
     
     public login(): void {
       
-      this.timer = setInterval(this.reset.bind(this), 2500);
-      if(!this.clickedOnce){
-        this.clickedOnce = true;
-        let usuario: User = new User();
-        
-        usuario = this.user;
-        this.loginSubscription = this.authService.authenticate(this.user).subscribe((res) => {
-          if(res != ''){
-            let resObj = JSON.parse(res);
-            usuario.jwt = resObj.accessToken;
-            this.authService.setJWT(usuario.jwt);
-            
-            if(this.user.rememberMe){
-              window.localStorage.setItem('JWTtoken', resObj.accessToken);
-              window.localStorage.setItem('User', usuario.email);
-            }
-            
-            this.getUserSubscription = this.authService.getUser(usuario.email).subscribe((res:User) => {
-              if(navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
-                {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
-              } else {
-                this.geolocationFailure();
-              }
-              this.authService.setUser(res, usuario.jwt);
-              this.getConfigurationSubscription = this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
-                  this.router.navigate(["/pages"])
-              });
-            });
+      this.isLogingIn = true;
+      let usuario: User = new User();
+      usuario = this.user;
+      
+      this.loginSubscription = this.authService.authenticate(this.user).finally(() => {
+        this.isLogingIn = false;
+      }).subscribe((res) => {
+        if(res != ''){
+          let resObj = JSON.parse(res);
+          usuario.jwt = resObj.accessToken;
+          this.authService.setJWT(usuario.jwt);
+          
+          if(this.user.rememberMe){
+            window.localStorage.setItem('JWTtoken', resObj.accessToken);
+            window.localStorage.setItem('User', usuario.email);
           }
-        }, (error) =>{
-          this.messageService.error(this.messageService.getTranslation('DADOS_INVALIDOS'));
-        });
-        
-      }      
+          
+          this.getUserSubscription = this.authService.getUser(usuario.email).subscribe((res:User) => {
+            if(navigator.geolocation){
+              navigator.geolocation.getCurrentPosition(this.geolocationSuccess.bind(this),this.geolocationFailure.bind(this),
+              {maximumAge:60000, timeout:5000, enableHighAccuracy:true} ); 
+            } else {
+              this.geolocationFailure();
+            }
+            this.authService.setUser(res, usuario.jwt);
+            this.getConfigurationSubscription = this.configService.getConfiguration(usuario.email).subscribe((result: ConfigModel) => {
+                this.router.navigate(["/pages"])
+            });
+          });
+        }
+      }, (error) =>{
+        this.messageService.error(this.messageService.getTranslation('DADOS_INVALIDOS'));
+      });
       
     }    
-    
-    private reset(){
-      this.clickedOnce = false;
-    }
-    
     
     /**
     * This callback gets the latitude and longitude from the position event triggered by the 'navigator.geolocation.getCurrentPosition(sucessCallBack, failureCallBack)' method.

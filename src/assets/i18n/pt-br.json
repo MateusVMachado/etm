@@ -12,7 +12,7 @@
     "REMEMBER_ME": "Mantenha-me conectado",
     "FORGOT_PASSWORD": "Esqueceu?",
     "BTN_ENTRAR": "Entrar",
-    "DADOS_INVALIDOS": "Dados inválidos.",
+    "DADOS_INVALIDOS": "Usuário ou senha incorreto(s)",
     "LOGIN_TEXTO_CRIAR_CONTA": "Não tem uma conta?",
     "LOGIN_LINK_CRIAR_CONTA": "Crie uma",
     "REGISTRO_TITULO": "Criar conta",
