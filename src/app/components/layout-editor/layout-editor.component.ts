@@ -860,7 +860,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     * @public
     */
     private onDrop(value) {
-      let DEBUG = true;
+      let DEBUG = false;
       let DEBUG2 = false;
       
       if(DEBUG) console.log("-------------------DROPS---------------------")
@@ -1001,7 +1001,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                   
                   
 
-                  console.log('this.imgLinesArray', JSON.stringify(this.imgLinesArray) );
+               if( DEBUG )   console.log('this.imgLinesArray', JSON.stringify(this.imgLinesArray) );
 
 
 
@@ -1605,7 +1605,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
         
-        console.log(JSON.stringify(this.tecladoReplicant.teclas));
+        if( DEBUG )  console.log(JSON.stringify(this.tecladoReplicant.teclas));
         
                 ///////////////////////////////////////////////////////////
                 /////////// CHANGE SIZE OF NORMAL KEYS
@@ -2390,7 +2390,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.action))
       if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
       
-      console.log(JSON.stringify(this.tecladoReplicant.teclas));
+      if( DEBUG ) console.log(JSON.stringify(this.tecladoReplicant.teclas));
 
 
 
@@ -3272,16 +3272,6 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       if(DEBUG) console.log('IMAGE: ' + image)
 
 
-   ///////////// Para testes, remover depois   
-      let sEl = $("[id=content]").clone();
-      let sElArray = new Array();
-
-
-      console.log('sEl.lenght', sEl.length);
-      console.log(this.globColumnQnty);
-      console.log(JSON.stringify(this.imgLinesArray) );
-   //////////////////////////////////////////////////////////////
-
 
       // Emit para caption-text-modal.components.ts
       this.captionTextService.emitCaptionText(payload);
@@ -3552,7 +3542,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                               if(inputCount < this.choppedNumber || buttonCount < this.choppedNumber){
                                 if(!this.checkLineHasImage(y)){
                                   if(DEBUG) console.log("MARK-LAYOUT-16");
-                                  this.keysRelocation(x,y);
+                                  //this.keysRelocation(x,y);
+                                  this.keysRelocation2(x,y);
                                 }        
                               }
                               
@@ -3732,8 +3723,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         $(el).removeAttr('tooltip');
         
         if ( imagem ){
-                    console.log('PASSOU POR AQUI IMAGEM!!!');
-                    console.log('this.choppedNumber', this.choppedNumber);
+          if( DEBUG ) console.log('PASSOU POR AQUI IMAGEM!!!');
+          if( DEBUG )  console.log('this.choppedNumber', this.choppedNumber);
                     if(this.choppedNumber !== this.globColumnQnty){
                       if(DEBUG) console.log("MARK-LAYOUT-37");
                       formula = this.globColumnQnty*Number(y)+Number(x);
@@ -3742,7 +3733,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
                         if(!this.checkLineHasImage(y)){
                           if(DEBUG) console.log("MARK-LAYOUT-16");
-                          this.keysRelocation(x,y);
+                          //this.keysRelocation(x,y);
+                          this.keysRelocation2(x,y);
                         }     
                       }      
                       
@@ -3795,7 +3787,8 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
                       if(inputCount >= this.choppedNumber || buttonCount >= this.choppedNumber){
                         if(!this.checkLineHasImage(y)){
                           if(DEBUG) console.log("MARK-LAYOUT-16");
-                          this.keysRelocation(x,y);
+                          //this.keysRelocation(x,y);
+                          this.keysRelocation2(x,y);
                         }        
                       }    
                       if(DEBUG) console.log(el);
@@ -3991,7 +3984,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         if(DEBUG) console.log(JSON.stringify(this.tecladoReplicant.text))
         
       
-        console.log('this.tecladoReplicant.teclas', JSON.stringify(this.tecladoReplicant.teclas) );
+        if( DEBUG ) console.log('this.tecladoReplicant.teclas', JSON.stringify(this.tecladoReplicant.teclas) );
 
 
         
@@ -4001,193 +3994,247 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
       
       
     }
+   
     
-    
-    /**
-    * This method relocates all dragula's units surrounding the (x,y) position of the input image, to fill available spaces or discard elements in excess.
-    *
-    * @method  keysRelocation
-    * @param x {number} x position of the input image
-    * @param y {number} y position of the input image
-    * @returns void {void} 
-    * @public
-    */
-    public keysRelocation(x: number, y: number){
-      
-      let DEBUG = false;
-      
-      if(DEBUG) console.log("--------------RELOCATION-ACTIVATED!!!--------")
-      
-      if(DEBUG) console.log("RELOCATION ACTIVATED!");
-      if(DEBUG) console.log("CHOPPED NUMBER:")
-      if(DEBUG) console.log(this.choppedNumber)
-      let sElContent = $('[id=content]');
+
+    keysRelocation2(x, y){
+      let isImage = true;
+      let checagem = false;
       
       
-      let numberOfElements = 1;
-      for(let unit = 0; unit < this.choppedNumber; unit++){
-        if(DEBUG) console.log("loop1")
-        if(this.tecladoReplicant.teclas[y][unit] !== ''){
-          numberOfElements += 1;
+      let imageTransfer = true;
+
+          checagem = true; 
+          isImage = true;
+          imageTransfer = true;
+
+      
+      let ignoreTransfer = false;
+      if(imageTransfer && y === x) ignoreTransfer = true;
+      
+      
+      
+      //if(!this.checkLineHasImage(drainY) && isImage){
+      let self = this;
+      if(imageTransfer && isImage && !ignoreTransfer){
+        
+        
+        /////////////////////////////////////////////
+        /////// REMOVE EXTRA KEYS
+        //////////////////////////////////////////////////////////////
+        
+        let line = y;
+        for(let col = 0; col < this.tecladoReplicant.teclas[line].length; col++){
+          
+          
+          if(col >= this.choppedNumber && this.tecladoReplicant.teclas[line][col] !== ''){
+          
+            let newformula = this.globColumnQnty*Number(line)+Number(col);
+            if($($('[id=content]')[newformula]).find('input')[0]){
+              $($('[id=content]')[newformula]).find('input')[0].remove();
+            }
+            if($($('[id=content]')[newformula]).find('button')[0]){
+              $($('[id=content]')[newformula]).find('button')[0].remove();
+            }
+            this.tecladoReplicant.teclas[line][col] = '';
+            this.tecladoReplicant.action[line][col] = '';
+            this.tecladoReplicant.text[line][col] = '';
+            this.tecladoReplicant.image[line][col] = '';
+            
+          }
         }
-      }
-      
-      for(let uCol = 0; uCol < this.tecladoReplicant.teclas[y].length; uCol++){
-        
-        let rearrangedFormula = this.globColumnQnty*Number(y)+Number(uCol);
         
         
         
-        if($(sElContent[rearrangedFormula]).find('input')[0]){
-          if(DEBUG) console.log("-----------------------------")
-          if(DEBUG) console.log("NO CASO INPUT:")
-          
-          let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
-          $(sElContent[rearrangedFormula]).find('input')[0].remove();
-          let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
-          if(newUnit === x && newUnit !== 0){
-            if(DEBUG) console.log("ELEMENTOS EM POSIÇÕES IGUAIS NO REALOCATION")
-            if(DEBUG) console.log("IGUAIS: newUnit --> " + newUnit + ' x --> ' + x );
-            newUnit = newUnit - 1;
-          }
-          rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
-          
-          while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 ){
-            if(DEBUG) console.log( 'A[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
-            newUnit = newUnit - 1;
-          }
-          
-          if(newUnit < 0 ) {
-            if(DEBUG) console.log("MENOR QUE ZERO!")
-            newUnit = newUnit + 1;
-            while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 && newUnit < this.choppedNumber){
-              if(DEBUG) console.log( 'B[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
-              newUnit = newUnit + 1;
-            }
-            if(newUnit > this.choppedNumber) {
-              if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER1")
-              return;
-            }  
-          }    
-          if(newUnit > this.choppedNumber) {
-            if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER2")
-            return;
-          } 
-          
-          
-          if(newUnit === x) {
-            let foundBlank = false;
-            for(let unit = 0 ; unit < this.choppedNumber; unit++){
-              if(this.tecladoReplicant.teclas[y][unit] === "" && unit !== x){
-                foundBlank = true;
-                newUnit = unit;
-                break;
-              }
-            }
-            
-            if(!foundBlank && numberOfElements !== this.choppedNumber) {
-              if(DEBUG) console.log('nElements: ' + numberOfElements);
-              if(DEBUG)  console.log("!foundBlank");
-              return;
-            } 
-            
-          } 
-          
-          
-          if(DEBUG) console.log("FINAL NEWUNIT: " + newUnit);
-          rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
-          
-          if(DEBUG) console.log("LOCUS: ");
-          if(DEBUG) console.log(sElContent[rearrangedFormula]);
-          
-          sElContent[rearrangedFormula].appendChild(copy);
-          
-          this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
-          this.tecladoReplicant.teclas[y][uCol] = "";
-          this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
-          this.tecladoReplicant.action[y][uCol] = "";
-          this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
-          this.tecladoReplicant.text[y][uCol] = "";
-          this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
-          this.tecladoReplicant.image[y][uCol] = "";
-          
-          
-        } else if($(sElContent[rearrangedFormula]).find('button')[0]){
-          
-          if(DEBUG) console.log("-----------------------------")
-          if(DEBUG) console.log("NO CASO BUTTON:")
-          
-          let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
-          $(sElContent[rearrangedFormula]).find('button')[0].remove();
-          let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
-          if(newUnit === x && newUnit !== 0){
-            if(DEBUG) console.log("ELEMENTOS EM POSIÇÕES IGUAIS NO REALOCATION")
-            if(DEBUG) console.log("IGUAIS: newUnit --> " + newUnit + ' x --> ' + x );
-            newUnit = newUnit - 1;
-          }
-          rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
-          
-          while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 ){
-            if(DEBUG) console.log( 'A[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
-            newUnit = newUnit - 1;
-          }
-          
-          if(newUnit < 0 ) {
-            if(DEBUG) console.log("MENOR QUE ZERO!")
-            newUnit = newUnit + 1;
-            while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 && newUnit < this.choppedNumber){
-              if(DEBUG) console.log( 'B[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
-              newUnit = newUnit + 1;
-            }
-            if(newUnit > this.choppedNumber) {
-              if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER1")
-              return;
-            }  
-          }    
-          if(newUnit > this.choppedNumber) {
-            if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER2")
-            return;
-          } 
-          
-          
-          if(newUnit === x) {
-            let foundBlank = false;
-            for(let unit = 0 ; unit < this.choppedNumber; unit++){
-              if(this.tecladoReplicant.teclas[y][unit] === "" && unit !== x){
-                foundBlank = true;
-                newUnit = unit;
-                break;
-              }
-            }
-            
-            if(!foundBlank && numberOfElements !== this.choppedNumber) {
-              if(DEBUG) console.log('nElements: ' + numberOfElements);
-              if(DEBUG)  console.log("!foundBlank");
-              return;
-            } 
-            
-          } 
-          
-          
-          rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
-          
-          if(DEBUG) console.log("LOCUS: ");
-          if(DEBUG) console.log(sElContent[rearrangedFormula]);
-          
-          sElContent[rearrangedFormula].appendChild(copy);
-          
-          this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
-          this.tecladoReplicant.teclas[y][uCol] = "";
-          this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
-          this.tecladoReplicant.action[y][uCol] = "";
-          this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
-          this.tecladoReplicant.text[y][uCol] = "";
-          this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
-          this.tecladoReplicant.image[y][uCol] = "";
-          
-        }
+        
       }
     }
+    
+    // /**
+    // * This method relocates all dragula's units surrounding the (x,y) position of the input image, to fill available spaces or discard elements in excess.
+    // *
+    // * @method  keysRelocation
+    // * @param x {number} x position of the input image
+    // * @param y {number} y position of the input image
+    // * @returns void {void} 
+    // * @public
+    // */
+    // public keysRelocation(x: number, y: number){
+      
+    //   let DEBUG = false;
+      
+    //   if(DEBUG) console.log("--------------RELOCATION-ACTIVATED!!!--------")
+      
+    //   if(DEBUG) console.log("RELOCATION ACTIVATED!");
+    //   if(DEBUG) console.log("CHOPPED NUMBER:")
+    //   if(DEBUG) console.log(this.choppedNumber)
+    //   let sElContent = $('[id=content]');
+      
+      
+  //    let numberOfElements = 1;
+   //   for(let unit = 0; unit < this.choppedNumber; unit++){
+  //      if(DEBUG) console.log("loop1")
+   //     if(this.tecladoReplicant.teclas[y][unit] !== ''){
+    //      numberOfElements += 1;
+    //    }
+   //   }
+      
+   //   for(let uCol = 0; uCol < this.tecladoReplicant.teclas[y].length; uCol++){
+        
+   //     let rearrangedFormula = this.globColumnQnty*Number(y)+Number(uCol);
+        
+        
+        
+    //    if($(sElContent[rearrangedFormula]).find('input')[0]){
+     //     if(DEBUG) console.log("-----------------------------")
+     //     if(DEBUG) console.log("NO CASO INPUT:")
+          
+    //     let copy = $(sElContent[rearrangedFormula]).find('input')[0].cloneNode(true);
+    //      $(sElContent[rearrangedFormula]).find('input')[0].remove();
+    //     let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+    //      if(newUnit === x && newUnit !== 0){
+     //       if(DEBUG) console.log("ELEMENTOS EM POSIÇÕES IGUAIS NO REALOCATION")
+     //       if(DEBUG) console.log("IGUAIS: newUnit --> " + newUnit + ' x --> ' + x );
+     //       newUnit = newUnit - 1;
+     //     }
+     //     rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+          
+     //     while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 ){
+     //       if(DEBUG) console.log( 'A[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
+     //       newUnit = newUnit - 1;
+     //     }
+          
+     //     if(newUnit < 0 ) {
+     //       if(DEBUG) console.log("MENOR QUE ZERO!")
+     //       newUnit = newUnit + 1;
+     //       while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 && newUnit < this.choppedNumber){
+      //        if(DEBUG) console.log( 'B[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
+     ////         newUnit = newUnit + 1;
+    //        }
+    //        if(newUnit > this.choppedNumber) {
+     //         if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER1")
+    //          return;
+    //        }  
+    //      }    
+    //      if(newUnit > this.choppedNumber) {
+    //        if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER2")
+    //        return;
+   //       } 
+          
+          
+    //      if(newUnit === x) {
+   //         let foundBlank = false;
+    //        for(let unit = 0 ; unit < this.choppedNumber; unit++){
+     //         if(this.tecladoReplicant.teclas[y][unit] === "" && unit !== x){
+    //            foundBlank = true;
+    //            newUnit = unit;
+    //            break;
+    //          }
+    //        }
+            
+    //        if(!foundBlank && numberOfElements !== this.choppedNumber) {
+   //           if(DEBUG) console.log('nElements: ' + numberOfElements);
+    //          if(DEBUG)  console.log("!foundBlank");
+    //          return;
+   //         } 
+            
+    //      } 
+          
+          
+   //       if(DEBUG) console.log("FINAL NEWUNIT: " + newUnit);
+   //       rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+          
+   //       if(DEBUG) console.log("LOCUS: ");
+   //       if(DEBUG) console.log(sElContent[rearrangedFormula]);
+          
+   //       sElContent[rearrangedFormula].appendChild(copy);
+          
+   //       this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+   //       this.tecladoReplicant.teclas[y][uCol] = "";
+   //       this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+   //       this.tecladoReplicant.action[y][uCol] = "";
+   //       this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+   //       this.tecladoReplicant.text[y][uCol] = "";
+   //       this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+   //       this.tecladoReplicant.image[y][uCol] = "";
+          
+          
+    //    } else if($(sElContent[rearrangedFormula]).find('button')[0]){
+          
+  //        if(DEBUG) console.log("-----------------------------")
+   //       if(DEBUG) console.log("NO CASO BUTTON:")
+          
+   //       let copy = $(sElContent[rearrangedFormula]).find('button')[0].cloneNode(true);
+   //       $(sElContent[rearrangedFormula]).find('button')[0].remove();
+   //       let newUnit = this.mapToNewFormula(uCol, y, this.choppedNumber, false);
+  //        if(newUnit === x && newUnit !== 0){
+   //         if(DEBUG) console.log("ELEMENTOS EM POSIÇÕES IGUAIS NO REALOCATION")
+   //         if(DEBUG) console.log("IGUAIS: newUnit --> " + newUnit + ' x --> ' + x );
+    //        newUnit = newUnit - 1;
+    //      }
+    //      rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+          
+   //       while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 ){
+   //         if(DEBUG) console.log( 'A[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
+   //         newUnit = newUnit - 1;
+   //       }
+          
+    //      if(newUnit < 0 ) {
+     //       if(DEBUG) console.log("MENOR QUE ZERO!")
+     //       newUnit = newUnit + 1;
+     //       while(this.tecladoReplicant.teclas[y][newUnit] !== '' && newUnit >= 0 && newUnit < this.choppedNumber){
+    //          if(DEBUG) console.log( 'B[' + this.tecladoReplicant.teclas[y][newUnit] + ' ' +  newUnit + ']');
+     //         newUnit = newUnit + 1;
+      //      }
+     //       if(newUnit > this.choppedNumber) {
+     //         if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER1")
+     //         return;
+     //       }  
+     //     }    
+    //      if(newUnit > this.choppedNumber) {
+     //       if(DEBUG) console.log("MAIOR QUE CHOPPEDNUMBER2")
+     //       return;
+     //     } 
+          
+          
+      //    if(newUnit === x) {
+      //      let foundBlank = false;
+     //       for(let unit = 0 ; unit < this.choppedNumber; unit++){
+     //         if(this.tecladoReplicant.teclas[y][unit] === "" && unit !== x){
+     //           foundBlank = true;
+     //           newUnit = unit;
+     //           break;
+      //        }
+       //     }
+            
+     //       if(!foundBlank && numberOfElements !== this.choppedNumber) {
+     //         if(DEBUG) console.log('nElements: ' + numberOfElements);
+      //        if(DEBUG)  console.log("!foundBlank");
+     //         return;
+     //       } 
+            
+     //     } 
+          
+          
+     //     rearrangedFormula = this.globColumnQnty*Number(y)+Number(newUnit);
+          
+     //     if(DEBUG) console.log("LOCUS: ");
+     //     if(DEBUG) console.log(sElContent[rearrangedFormula]);
+          
+     //     sElContent[rearrangedFormula].appendChild(copy);
+    //      
+    //      this.tecladoReplicant.teclas[y][newUnit] = this.tecladoReplicant.teclas[y][uCol];
+    //      this.tecladoReplicant.teclas[y][uCol] = "";
+    //      this.tecladoReplicant.action[y][newUnit] = this.tecladoReplicant.action[y][uCol];
+    //      this.tecladoReplicant.action[y][uCol] = "";
+    //      this.tecladoReplicant.text[y][newUnit] = this.tecladoReplicant.text[y][uCol];
+    //      this.tecladoReplicant.text[y][uCol] = "";
+    //      this.tecladoReplicant.image[y][newUnit] = this.tecladoReplicant.image[y][uCol];
+    //      this.tecladoReplicant.image[y][uCol] = "";
+          
+    //    }
+    //  }
+    //}
     
     
     /**
