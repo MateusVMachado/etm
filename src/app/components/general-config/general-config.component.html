@@ -1,19 +1,17 @@
-
-
 <div class="modal-header">
   <span>{{ messageService.getTranslation('CONFIGURACAO_GERAL_TITULO') }}</span>
 </div>
 
 <form (ngSubmit)="setConfiguration()" #form="ngForm" autocomplete="off"> 
-    <div class="form-group">
-        <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('INPUT_LAYOUT') }}</label>
+    <div class="form-group" *ngIf="false"> <!-- desabilitado pois não há efeito nenhum atualmente -->        
+         <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('INPUT_LAYOUT') }}</label>
         <select class="form-control input" name="layout" [(ngModel)]="config.layout" id="layout" #layout="ngModel" [required]="true">
             <option value="QWERTY">QWERTY</option>
         </select>
         <small class="form-text error" *ngIf="layout.invalid && layout.touched && layout.errors?.required">
             {{ messageService.getTranslation('LAYOUT_OBRIGATORIO') }}
-        </small>
-    </div>
+        </small> 
+    </div> 
     <div class="form-group">
         <label class="label-margin-bottom label-margin-top">{{ messageService.getTranslation('INPUT_SENSOR') }}</label>
         <select class="form-control input" name="sensor" [(ngModel)]="config.sensor" id="sensor" #sensor="ngModel" [required]="true">
@@ -25,7 +23,8 @@
             {{ messageService.getTranslation('SENSOR_OBRIGATORIO') }}
         </small>
     </div>
-    <div class="form-group">
+     
+    <div class="form-group" *ngIf="false">
         <label for="tipoVarredura" class="label-margin-bottom label-margin-top">{{ messageService.getTranslation('INPUT_TIPO_VARREDURA') }}</label>
         <select class="form-control input" name="tipoVarredura" [(ngModel)]="config.tipoVarredura" id="tipoVarredura" #tipoVarredura="ngModel" [required]="true">
             <option value="manual">{{ messageService.getTranslation('TIPO_VARREDURA_ITEM_MANUAL') }}</option>
@@ -34,8 +33,8 @@
         <small class="form-text error" *ngIf="tipoVarredura.invalid && tipoVarredura.touched && tipoVarredura.errors?.required">
             {{ messageService.getTranslation('TIPO_VARREDURA_OBRIGATORIO') }}
         </small>
-    </div>
-    <div class="form-group" *ngIf="tipoVarredura.valid && tipoVarredura.value === 'automatico'">
+    </div> 
+    <div class="form-group">
         <label for="tmpVarreduraLns" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TEMPO_VARREDURA_LINHAS') }}</label>
         <input step="0.1" type="number" class="form-control input" name="tmpVarreduraLns" [(ngModel)]="config.tmpVarreduraLns" id="tmpVarreduraLns" #tmpVarreduraLns="ngModel" [required]="true">
         <small class="form-text error" *ngIf="tmpVarreduraLns.invalid && tmpVarreduraLns.touched && tmpVarreduraLns.errors?.required">
@@ -43,7 +42,7 @@
         </small>
     </div>
 
-                <div class="form-group" *ngIf="tipoVarredura.valid && tipoVarredura.value === 'automatico'">
+                <div class="form-group">
                   <label for="tmpVarreduraCls" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TEMPO_VARREDURA_COLUNAS') }}</label>
                   <input step="0.1" type="number" class="form-control input" name="tmpVarreduraCls" [(ngModel)]="config.tmpVarreduraCls" id="tmpVarreduraCls" #tmpVarreduraCls="ngModel" [required]="true">
                   <small class="form-text error" *ngIf="tmpVarreduraCls.invalid && tmpVarreduraCls.touched && tmpVarreduraCls.errors?.required">
