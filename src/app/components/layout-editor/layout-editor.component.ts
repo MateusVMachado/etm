@@ -48,6 +48,7 @@ import { SaveModalComponent } from './save-layout/save-modal.component';
 **/
 export class LayoutEditorComponent extends AppBaseComponent implements OnInit, OnDestroy {
   
+  loaded = false;
   private isKeyboardEmpty = true;
   public masterKeys: TecladoModel = new TecladoModel(); 
   public teclado: TecladoModel = new TecladoModel();
@@ -288,9 +289,11 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
         self.imgLinesArray = [];
         self.newKeyboard = true;
         self.editMode = false;
-        self.tecladoShare =false;
+        self.tecladoShare = false;
         self.nomeTeclado = undefined;
         
+        self.loaded = false;
+
         for(let line = 0; line < self.teclado.teclas.length; line++){
           for(let col = 0; col < self.teclado.teclas[line].length; col ++){
             if(self.tecladoReplicant.teclas[line][col].split('$')[0] === '*img'){
@@ -426,6 +429,10 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     * @public
     */
     public updateReplicant(nameString: string){
+
+      this.loaded = true;
+
+
       this.newKeyboard = false;
       this.editMode = true;
       let replicantFromDatabase = new TecladoModel();
@@ -2803,7 +2810,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
     public saveKeyboardLayout(saveAs?: boolean, share? : boolean){
       
       if(!saveAs){
-        if(this.keyboardToEdit === 'pt-br'){
+        if(this.keyboardToEdit === 'pt-br' && this.loaded){
           let message = this.messageService.getTranslation('MENSAGEM_SOBRESCREVER_TECLADO_SISTEMA');
           this.messageService.error(message);
           return;
