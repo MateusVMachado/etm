@@ -26,6 +26,9 @@
     }
   }
 }
+/deep/ nb-layout .layout .layout-container .content .columns .main-content{
+  background-color: #ffffff;
+}
 @include nb-install-component() {
   nb-layout-column.small {
     flex: 0.15 !important;
@@ -125,10 +128,6 @@
   }
 
   @include media-breakpoint-down(xs) {
-    .main-content {
-      padding: 0.75rem !important;
-
-    }
   }
 
   @include media-breakpoint-down(sm) {

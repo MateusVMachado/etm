@@ -9,7 +9,8 @@ import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-editor-component',
-    templateUrl: './editor-teclado.component.html'
+    templateUrl: './editor-teclado.component.html',
+    styleUrls: ['./editor-teclado.component.scss']
 })
 export class EditorTecladoComponent implements OnInit, AfterViewInit, OnDestroy { 
     public tamanho: number;
