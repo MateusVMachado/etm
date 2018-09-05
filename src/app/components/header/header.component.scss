@@ -27,6 +27,10 @@
   .control-item {
     display: block;
   }
+  /deep/ .user-picture{
+    height: 1.75rem;
+    width: 1.75rem;
+  }
 
   .header-container {
     display: flex;
