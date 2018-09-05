@@ -1,11 +1,13 @@
 .teclado-container{
     max-width: 100%;
-    padding: 1% 2%;
+    margin: 0;
+    padding: 0 0.5%;
 }
 .tabela{
     display: table;
     z-index: 0;
     max-width: 100%;
+    width: auto;
 }
 .tabela.expand{
     width: 100%;
@@ -36,8 +38,7 @@
 }
 
 .button-keyboard{
-    background-color: white;
-    color: grey;
+    color: #000000;
     max-height: 100%;
     width: 100%;
 }
@@ -45,7 +46,13 @@
 .icon-keyboard{
     max-height: 48px; 
 }
-
+.button-keyboard:hover{
+    color: #000000;
+    background-color: #b2b2b2 !important;
+}
+.button-keyboard .mat-icon{
+    background-color: transparent !important;
+}
 .btn_com_img{
     position: relative;
     background-size: 100% 100% !important;
