@@ -80,6 +80,10 @@ export class SidebarComponent extends AppBaseComponent implements AfterViewInit,
 
   private loadSidebarKeyboardNames(){
     let user = this.authService.getLocalUser();
+    if(!user.email){
+      user.email = window.localStorage.getItem('User');
+      this.authService.setUser(user, user.jwt);
+    }
     if(this.loadKeyboardsNamesSubscription) this.loadKeyboardsNamesSubscription.unsubscribe();
     this.loadKeyboardsNamesSubscription = this.sideBarService.loadKeyboardsNames(user.email).subscribe((result) => {
         this.menu = this.generateMenuItem(result);
