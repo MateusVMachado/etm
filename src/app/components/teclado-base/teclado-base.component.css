@@ -7,9 +7,6 @@
     z-index: 0;
     max-width: 100%;
 }
-.tabela.expand{
-    width: 100%;
-}
 .tabela tr{
     display: table-row;
     text-align: left;
