@@ -9,9 +9,6 @@
     max-width: 100%;
     width: auto;
 }
-.tabela.expand{
-    width: 100%;
-}
 .tabela tr{
     display: table-row;
     text-align: left;

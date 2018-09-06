@@ -97,7 +97,6 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
             for(let x = 0; x < this.teclado.teclas.length; x ++ ){
                 if(this.teclado.teclas[x].length > tecladoCols ) tecladoCols = this.teclado.teclas[x].length;
             }
-            if(tecladoCols > 5) $('#'+this.idTeclado).addClass('expand');
             return;
         }
         
@@ -148,7 +147,6 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
                     }
                 }
             }
-            if(tecladoCols > 5) $('#'+this.idTeclado).addClass('expand');
         }
     }
 }
