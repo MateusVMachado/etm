@@ -40,6 +40,7 @@
       height: 2rem;
       padding: 0 1.25rem 0 1.25rem;
     }
+    
     nb-layout .layout {
       // Sidebar Adjustment large
       nb-layout-header.fixed ~ .layout-container{
@@ -48,6 +49,13 @@
       // Sidebar Adjustment compact
       .layout-container nb-sidebar.fixed{
         top: 2rem;
+      }
+    }
+    nb-sidebar .scrollable{
+      padding: 0;
+      nb-menu{
+        font-size: 12px;
+        margin: 0;
       }
     }
     nb-sidebar.menu-sidebar .main-container, .nb-theme-default nb-sidebar.menu-sidebar .main-container{
