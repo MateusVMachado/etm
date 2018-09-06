@@ -33,6 +33,27 @@
   nb-layout-column.small {
     flex: 0.15 !important;
   }
+  
+  /deep/{
+    // Navbar Height
+    nb-layout-header nav.fixed{
+      height: 2rem;
+      padding: 0 1.25rem 0 1.25rem;
+    }
+    nb-layout .layout {
+      // Sidebar Adjustment large
+      nb-layout-header.fixed ~ .layout-container{
+        padding-top: 2rem;
+      }
+      // Sidebar Adjustment compact
+      .layout-container nb-sidebar.fixed{
+        top: 2rem;
+      }
+    }
+    nb-sidebar.menu-sidebar .main-container, .nb-theme-default nb-sidebar.menu-sidebar .main-container{
+      min-height: 100%;
+    }
+  }
 
   nb-sidebar.settings-sidebar {
     $sidebar-width: 7.5rem;
