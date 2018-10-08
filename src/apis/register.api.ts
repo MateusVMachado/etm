@@ -34,13 +34,13 @@ export class Register extends BaseRoute {
               mongoSanitize.sanitize(user.email);
               mongoSanitize.sanitize(user.password);
 
-              res.locals.mongoAccess.coll[0].insert(user, (err, result) => {
-                // console.log("Usuário inserido na database!");
+              userCollection.insert(user, (err, result) => {
+                  if(result){
+                    res.status(200).json({ message: "Registro feito com sucesso." });
+                  }else{
+                      res.status(500).json({message: "Houve um problema ao realizar o registro"});
+                  }
               });
-
-              // console.log("Usuário cadastrado com sucesso!");
-              res.status(200).json({ message: "Registro feito com sucesso." });
-              return false;
             }
           });
       });
