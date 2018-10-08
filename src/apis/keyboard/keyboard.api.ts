@@ -66,7 +66,6 @@ export class Keyboard extends BaseRoute {
             if(keyboard_list.length !== 0){
                 res.send(keyboard_list);
             } else {
-                //instance.insertBasicIntoDatabase(teclado, res);
             }         
         })
     }
@@ -131,7 +130,6 @@ export class Keyboard extends BaseRoute {
                 return;
             } else {
                 res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
-                    // console.log("Keyboard atualizado");
                     res.send('updated');
                 })
                 
@@ -144,7 +142,6 @@ export class Keyboard extends BaseRoute {
         
         res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
-                // console.log("Keyboard atualizado");
                 res.send('updated');
             })
         })
@@ -152,25 +149,13 @@ export class Keyboard extends BaseRoute {
     
     public insertBasicAtRegister(req: Request,  res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br', req.body.email), (err, result) => {
-            // console.log("Keyboard inserido")
         })
     }    
     
     
     public insertBasicIntoDatabase(req: Request,  res: Response, next: NextFunction){
         res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
-            // console.log("Keyboard inserido");
-            
         })
-        //res.locals.mongoAccess.coll[1].insert(this.populateLayout('caps'), (err, result) => {
-        //    console.log("Keyboard inserido")
-        //})
-        //res.locals.mongoAccess.coll[1].insert(this.populateLayout('user'), (err, result) => {
-        //    console.log("Keyboard inserido")
-        //})
-        //res.locals.mongoAccess.coll[1].insert(this.populateLayout('exp'), (err, result) => {
-        //    console.log("Keyboard inserido")
-        //})
     } 
     
     public populateLayout(type: string, email?:string): OpenFACLayout{
