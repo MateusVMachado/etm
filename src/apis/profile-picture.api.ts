@@ -4,7 +4,11 @@ import { NextFunction, Request, Response } from "express";
 
 export class ProfilePicture extends BaseRoute{
     public getUserProfilePicture(req: Request, res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[0].find({"email": req.query.email}).toArray(function(err, user_list) {
+
+        this.getMongoAccess(res)
+      .users()
+      .subscribe(userCollection => {
+        userCollection.find({"email": req.query.email}).toArray(function(err, user_list) {
             if(user_list){
                 let user: UserModel = new UserModel();
                 user = user_list[0];
@@ -20,5 +24,9 @@ export class ProfilePicture extends BaseRoute{
                 }
             }
         });
+
+      });
+
+      
     }
 }
