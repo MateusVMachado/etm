@@ -136,8 +136,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      //res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
+      //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
 
       // Request methods you wish to allow
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
