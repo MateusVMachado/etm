@@ -45,16 +45,22 @@ export class Logger extends BaseRoute{
         userSession.layoutEditorUsage = "notSet";  
         userSession.latitude = latitude;
         userSession.longitude = longitude;
-        
-        if(res.locals.mongoAccess.coll[3] !== undefined){
-            res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
+
+        this.getMongoAccess(res)
+        .configurations()
+        .subscribe(logsCollection => {
+
+            logsCollection.find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
                 if(userSessionList.length ===0){
-                    res.locals.mongoAccess.coll[3].insert(userSession, (err, result) => {
-                        // console.log(err || result)
+                    logsCollection.insert(userSession, (err, result) => {
                     })
                 }   
             });
-        }
+
+        });
+        
+    
+       
         if(!isNullOrUndefined(options) && options=='false'){
             res.status(200).send();
         } 
@@ -66,8 +72,11 @@ export class Logger extends BaseRoute{
         userSession.sessDate = moment().format('L');
         userSession.user = req.body['user'];
         
-        if(res.locals.mongoAccess.coll[3] !== undefined){
-            res.locals.mongoAccess.coll[3].find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
+        this.getMongoAccess(res)
+        .configurations()
+        .subscribe(logsCollection => {
+
+            logsCollection.find( { $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}] }).toArray(function(err, userSessionList) {
                 
                 if(userSessionList.length !== 0){
                     
@@ -103,17 +112,20 @@ export class Logger extends BaseRoute{
                     let sessDuration = hDiffStr + ':' + mDiffStr + ':' + sDiffStr;
                     userSession.sessDuration = sessDuration;
                     
-                    res.locals.mongoAccess.coll[3].update({ $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}]}, 
+                    logsCollection.update({ $and: [{ "sessDate": userSession.sessDate}, {"user": userSession.user}, {"logout": "notSet"}]}, 
                     {  $set: {"logout" : userSession.logout, "sessDuration" : userSession.sessDuration} }, (err, result) => {
                         res.send();
                     })
                     
                     return;
-                } else {
-                    // console.log("THERE IS NO UNCLOSED ENTRY");
                 }
             })
-        }        
+
+        });
+
+        
+        
+                
     }  
     
     
@@ -149,13 +161,15 @@ export class Logger extends BaseRoute{
         let userSession = new UserSessionModel();
         userSession = req.body;
         
-        if(res.locals.mongoAccess.coll[3] !== undefined){
-            res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
+        this.getMongoAccess(res)
+        .configurations()
+        .subscribe(logsCollection => {
+            logsCollection.find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
                 logger.sumTimeIntervals(userSessionList, userSession, 'layoutEditorIntervals', 'layoutEditorUsage');
-                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                logsCollection.update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
                 {  $push: {"layoutEditorIntervals" : userSession.layoutEditorIntervals} }, (err, result) => {
                     if(result) {   
-                        res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                        logsCollection.update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
                         {  $set: {"layoutEditorUsage" : userSession.layoutEditorUsage } }, (err, result) => {
                             if(result) {   res.send();   }
                         }); 
@@ -163,20 +177,25 @@ export class Logger extends BaseRoute{
                 });    
                 
             });
-        }             
+        });
+            
+                     
     }
     
     public logKeyboardIntervals(req: Request, res: Response, next: NextFunction, options?: string){
         let logger = new Logger();
         let userSession = new UserSessionModel();
         userSession = req.body;
-        if(res.locals.mongoAccess.coll[3] !== undefined){
-            res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
+        this.getMongoAccess(res)
+        .configurations()
+        .subscribe(logsCollection => {
+
+            logsCollection.find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
                 logger.sumTimeIntervals(userSessionList, userSession, 'keyboardIntervals', 'keyboardUsage');
-                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                logsCollection.update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
                 {  $push: {"keyboardIntervals" : userSession.keyboardIntervals} }, (err, result) => {
                     if(result) {   
-                        res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                        logsCollection.update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
                         {  $set: {"keyboardUsage" : userSession.keyboardUsage } }, (err, result) => {
                             if(result) {   res.send();   }
                         }); 
@@ -184,7 +203,10 @@ export class Logger extends BaseRoute{
                 });    
                 
             });
-        }             
+
+        });
+            
+                     
     }
     
     public logConfigIntervals(req: Request, res: Response, next: NextFunction, options?: string){
@@ -192,21 +214,26 @@ export class Logger extends BaseRoute{
         let userSession = new UserSessionModel();
         userSession = req.body;
         
-        if(res.locals.mongoAccess.coll[3] !== undefined){
-            res.locals.mongoAccess.coll[3].find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
+        this.getMongoAccess(res)
+        .configurations()
+        .subscribe(logsCollection => {
+            logsCollection.find( { $and: [{"user": req.body['user'] }, {"logout": "notSet"} ] } ).toArray(function(err, userSessionList) {
                 logger.sumTimeIntervals(userSessionList, userSession, 'configIntervals', 'configUsage');
-                res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                logsCollection.update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
                 {  $push: {"configIntervals" : userSession.configIntervals} }, (err, result) => {
                     if(result) {   
-                        res.locals.mongoAccess.coll[3].update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
+                        logsCollection.update({ $and: [ {"user": req.body['user']}, {"logout": "notSet"}]}, 
                         {  $set: {"configUsage" : userSession.configUsage } }, (err, result) => {
                             if(result) {   res.send();   }
                         }); 
                     }
                 });    
                 
-            });         
-        }    
+            });  
+        });
+
+                   
+           
     }
     
     
@@ -273,10 +300,6 @@ export class Logger extends BaseRoute{
         
         let totalDuration = finalHours + ':' + finalMinutes + ':' + finalSeconds;
         userSession[usage] = totalDuration;
-    }
-    
-    public generateReport(req: Request, res: Response, next: NextFunction, options?: string){
-        
     }
     
 } 
