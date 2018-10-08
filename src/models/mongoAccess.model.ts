@@ -1,5 +1,6 @@
 import { Observable, bindCallback, of,  } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Collection } from 'mongodb';
 
 export class MongoAccessModel {
 
@@ -31,7 +32,7 @@ export class MongoAccessModel {
         }
     }
 
-    users(): Observable<any> {
+    users(): Observable<Collection> {
         return this.getCollection("users");
     }
 
