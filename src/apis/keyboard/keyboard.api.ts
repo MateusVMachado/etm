@@ -14,36 +14,54 @@ export class Keyboard extends BaseRoute {
     
     
     public getSingleKeyboardByName(req: Request, res: Response, next: NextFunction){
-        let instance = this;
+        
+        
+            this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
         if(req.query.nameLayout === "pt-br"){
-            res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": "system"} ] } ).toArray(function(err, keyboard) {
+            keyboardCollection.find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": "system"} ] } ).toArray(function(err, keyboard) {
                 res.send(keyboard);
-            })    
-        } else {
-            res.locals.mongoAccess.coll[1].find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": req.query.email} ] } ).toArray(function(err, keyboard) {
+            });
+        }else {
+            keyboardCollection.find({ $and: [{"nameLayout": req.query.nameLayout}, {"email": req.query.email} ] } ).toArray(function(err, keyboard) {
                 res.send(keyboard);
             })
         }    
+
+        
+      });
+      
+      
     }
     
     public getSingleKeyboardByEmail(req: Request, res: Response, next: NextFunction){
-        let instance = this;
-        res.locals.mongoAccess.coll[1].find({ $and: [{"email": req.query.email} ] } ).toArray(function(err, keyboard) {
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.find({ $and: [{"email": req.query.email} ] } ).toArray(function(err, keyboard) {
             res.send(keyboard);
         })
+      });
+        
     }
     public getMultipleKeyboard(req: Request, res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[1].find({ $and: [{"shared": "true"} ] } ).toArray(function(err, keyboard_list) {
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.find({ $and: [{"shared": "true"} ] } ).toArray(function(err, keyboard_list) {
             res.send(keyboard_list);
         })
+      });
     }
     
     public getKeyboardNames(req: Request, res: Response, next: NextFunction){
-        let teclado: KeyboardModel = new KeyboardModel();
-        let instance = this;
         let keyboardNames = new KeyboardNamesList();
-        
-        res.locals.mongoAccess.coll[1].find({ $or: [{"email": req.query.email}, {"email": "system"}] }).toArray(function(err, keyboard_list) {
+
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.find({ $or: [{"email": req.query.email}, {"email": "system"}] }).toArray(function(err, keyboard_list) {
             if(keyboard_list.length !== 0){
                 for(let i = 0; i < keyboard_list.length; i++){
                     keyboardNames.KeyboardsNames.push(keyboard_list[i].nameLayout);
@@ -51,6 +69,9 @@ export class Keyboard extends BaseRoute {
                 res.send(keyboardNames);
             }     
         })
+      });
+        
+      
     }
     
     public keyboard_api(req: Request, res: Response, next: NextFunction) {    
@@ -59,53 +80,73 @@ export class Keyboard extends BaseRoute {
     }
     
     
-    public getInDatabase(teclado: KeyboardModel, res: Response){    
-        let instance = this;
-        
-        res.locals.mongoAccess.coll[1].find().toArray(function(err, keyboard_list) {
-            if(keyboard_list.length !== 0){
+    public getInDatabase(teclado: KeyboardModel, res: Response){  
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.find().toArray(function(err, keyboard_list) {
+            
                 res.send(keyboard_list);
-            } else {
-            }         
+                   
         })
+      });
+        
+      
     }
     
     public getKeyboardByUser(req: Request, res: Response, next: NextFunction){
-        let instance = this;
-        
         if(req.query.email){
-            res.locals.mongoAccess.coll[1].find( { $or: [{ "email": req.query.email }, { "email": "system" }]}).toArray(function(err, keyboard_list) {
-                if(keyboard_list.length !== 0){
-                    res.send(keyboard_list);
-                }  
-            })
+            
+            this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.find( { $or: [{ "email": req.query.email }, { "email": "system" }]}).toArray(function(err, keyboard_list) {
+            
+                res.send(keyboard_list);
+             
+        })
+      });
+      
         }    
     }
     
     public deleteKeyboard(req: Request, res: Response, next: NextFunction){
         if(req.query.email){
+
+            this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+
+        keyboardCollection.find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
+            if(keyboard_list){
+                keyboardCollection.remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
+                res.send('removed');
+            } else {
+                res.send('notFound');   
+            }
             
-            res.locals.mongoAccess.coll[1].find({ "nameLayout": req.query.nameLayout,  "email": req.query.email }).toArray(function(err, keyboard_list) { 
-                if(keyboard_list){
-                    res.locals.mongoAccess.coll[1].remove({ nameLayout: req.query.nameLayout,  email: req.query.email }, true);
-                    res.send('removed');
-                } else {
-                    res.send('notFound');   
-                }
-                
-            });           
+        }); 
+
+      });
+            
+                      
         }
     }     
     
     public insertNewKeyboard(req: Request, res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
+
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+
+        keyboardCollection.find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             if(keyboard_list.length >= 7){
                 res.send("maxNumber");
             } else {
-                res.locals.mongoAccess.coll[1].find( { $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email}] }).toArray(function(err, keyboard_list) {
+                keyboardCollection.find( { $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email}] }).toArray(function(err, keyboard_list) {
                     if(keyboard_list.length !== 0){
                     } else {
-                        res.locals.mongoAccess.coll[1].insert(req.body, (err, result) => {
+                        keyboardCollection.insert(req.body, (err, result) => {
                             if(isNull(err)){
                                 res.send("saved");
                             }
@@ -117,45 +158,71 @@ export class Keyboard extends BaseRoute {
                 })
             }
         })
-        
-        
+
+      });
     }
     
     public insertUpdateKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
-        
-        res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
+
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+
+        keyboardCollection.find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
             if(keyboard_list.length >= 8){
                 res.send('maxNumber');
                 return;
             } else {
-                res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
+                keyboardCollection.update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
                     res.send('updated');
                 })
                 
             }
         })
+
+      });
+        
+        
     }
     
     public insertUpdateOnlyKeyboard(req: Request, res: Response, next: NextFunction){
         let newKeyboard = req.body;
-        
-        res.locals.mongoAccess.coll[1].find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
-            res.locals.mongoAccess.coll[1].update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
+
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+
+        keyboardCollection.find({ "email": req.query.email }).toArray(function(err, keyboard_list) { 
+            keyboardCollection.update({ $and: [{ "nameLayout": req.query.nameLayout }, {"email": req.query.email} ]}, newKeyboard, (err, result) => {
                 res.send('updated');
             })
         })
+
+      });
+        
+        
     }
     
     public insertBasicAtRegister(req: Request,  res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br', req.body.email), (err, result) => {
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.insert(this.populateLayout('pt-br', req.body.email), (err, result) => {
         })
+      });
+        
     }    
     
     
     public insertBasicIntoDatabase(req: Request,  res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[1].insert(this.populateLayout('pt-br'), (err, result) => {
+        this.getMongoAccess(res)
+      .keyboards()
+      .subscribe(keyboardCollection => {
+        keyboardCollection.insert(this.populateLayout('pt-br'), (err, result) => {
         })
+      });
+        
     } 
     
     public populateLayout(type: string, email?:string): OpenFACLayout{
