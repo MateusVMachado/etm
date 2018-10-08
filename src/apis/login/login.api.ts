@@ -3,9 +3,6 @@ import * as jwt from 'jsonwebtoken';
 import { backendConfig, emailConfig } from '../../backend.config';
 import { BaseRoute } from "../../routes/route";
 import { LoginAuthenticate } from './login-authenticate.model';
-
-//var jwt = require('jsonwebtoken');
-
 export class Login extends BaseRoute{
     
     public title: string;
@@ -46,40 +43,47 @@ export class Login extends BaseRoute{
     }
     
     public isAccountBlocked(req: Request, res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[6].find({"email": req.query.email}).toArray(function(err, listaBloqueados) {
-            if(listaBloqueados.length !== 0){
-                if(listaBloqueados.length == 1){
-                    if( new Date(listaBloqueados[0].desbloqueio) > new Date() ){
-                        res.json({status : 'true'})
+        this.getMongoAccess(res).password_log().subscribe( (passLogCollection) => {
+            passLogCollection.find({"email": req.query.email}).toArray(function(err, listaBloqueados) {
+                if(listaBloqueados.length !== 0){
+                    if(listaBloqueados.length == 1){
+                        if( new Date(listaBloqueados[0].desbloqueio) > new Date() ){
+                            res.json({status : 'true'})
+                        }
+                        else{
+                            res.json({status : listaBloqueados.length})
+                        }
                     }
                     else{
-                        res.json({status : listaBloqueados.length})
+                        let bloqueado = false
+                        listaBloqueados.forEach(element => {
+                            if( new Date(element.desbloqueio) > new Date() ){
+                                bloqueado = true;
+                            }
+                        });
+                        if(bloqueado){
+                            res.json({status : 'true'})
+                        }
+                        else{
+                            res.json({status : listaBloqueados.length})
+                        }
                     }
                 }
                 else{
-                    let bloqueado = false
-                    listaBloqueados.forEach(element => {
-                        if( new Date(element.desbloqueio) > new Date() ){
-                            bloqueado = true;
-                        }
-                    });
-                    if(bloqueado){
-                        res.json({status : 'true'})
-                    }
-                    else{
-                        res.json({status : listaBloqueados.length})
-                    }
+                    res.json({status : 'false'})
                 }
+            });  
+
             }
-            else{
-                res.json({status : 'false'})
-            }
-        });        
+        )
+              
     }
-    public blockAccount(req: Request, res: Response, next: NextFunction){
-        res.locals.mongoAccess.coll[6].insert({"email": req.query.email, "desbloqueio": req.query.desbloqueio}, (err, result) => {
-            res.status(200).send();
-        });  
+    public blockAccount(req: Request, res: Response, next: NextFunction) {
+        this.getMongoAccess(res).password_log().subscribe( (passLogCollection) => { 
+            passLogCollection.insert({"email": req.query.email, "desbloqueio": req.query.desbloqueio}, (err, result) => {
+                res.status(200).send();
+            });  
+        });
     }
     
     public sendEmail(req: Request, res: Response, next: NextFunction){

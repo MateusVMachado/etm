@@ -32,10 +32,6 @@ export class MongoAccessModel {
         }
     }
 
-    users(): Observable<Collection> {
-        return this.getCollection("users");
-    }
-
     private mongoConnect(mongoClient: any, mongoUrl: string, poolSize: number, callback: Function){
         let options = {poolSize: poolSize}
         mongoClient.connect(mongoUrl, options, callback);
@@ -53,5 +49,34 @@ export class MongoAccessModel {
         this.connected = false;
         this.collectionsMap = new Map<string, any>();
     }
+
+    users(): Observable<any> {
+        return this.getCollection("users");
+    }
+
+    keyboards(): Observable<any> {
+        return this.getCollection("keyboards");
+    }
+
+    configurations(): Observable<any> {
+        return this.getCollection("configurations");
+    }
+
+    logs(): Observable<any> {
+        return this.getCollection("logs");
+    }
+    
+    tec_compart(): Observable<any> {
+        return this.getCollection("tec_compart");
+    }
+
+    tec_compart_notas(): Observable<any> {
+        return this.getCollection("tec_compart_notas");
+    }
+
+    password_log(): Observable<any> {
+        return this.getCollection("password_log");
+    }
+
 }
 
