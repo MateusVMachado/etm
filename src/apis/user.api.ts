@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import * as mongoose from "mongoose";
 import { UserModel } from "../models/user.model";
 import { BaseRoute } from "../routes/route";
-import { isNullOrUndefined } from "util";
 
 export class User extends BaseRoute {
   public getUser(req: Request, res: Response, next: NextFunction) {
