@@ -2,8 +2,6 @@ import { NextFunction, Request, Response, Router } from "express";
 import { BaseRoute } from "../routes/route";
 import * as mongoSanitize from 'express-mongo-sanitize';
 import { UserModel } from '../models/user.model';
-import { Keyboard } from '../apis/keyboard/keyboard.api';
-
 
 export class Register extends BaseRoute {
 
@@ -12,9 +10,11 @@ export class Register extends BaseRoute {
     }
 
     public registerUser(req: Request, res: Response, next: NextFunction){
-        // console.log("REGISTRO");
-        
-        res.locals.mongoAccess.coll[0].find({"email": req.body['email']}).toArray(function(err, user_list) {         
+        this.getMongoAccess(res)
+      .users()
+      .subscribe(userCollection => {
+
+        userCollection.find({"email": req.body['email']}).toArray(function(err, user_list) {         
             if(user_list.length !== 0){
                 // console.log("Esse email já foi cadastrado!");
                 res.status(400).json({message: 'Esse email já foi cadastrado!'});
@@ -42,5 +42,9 @@ export class Register extends BaseRoute {
                 return false;
             }
     })
+
+      });
+        
+        
     }
 }
