@@ -23,7 +23,6 @@ export class Logger extends BaseRoute{
     
     
     public logSessionStart(req: Request, res: Response, next: NextFunction, options?: string){
-        // console.log(options);
         let userSession = new UserSessionModel();
         let email = req.body['email'];
         let latitude = req.body['latitude'];

@@ -18,33 +18,32 @@ export class Login extends BaseRoute{
     public authenticateUser(req: Request, res: Response, next: NextFunction){
         let email = req.body['email'];
         let password = req.body['password'];
-        
-        if(res.locals.mongoAccess.coll[0]){
-            res.locals.mongoAccess.coll[0].find({"email": email}).toArray(function(err, user_list) {         
-                if(user_list.length !== 0){
-                    if (email === user_list[0]['email'] && 
-                    password === user_list[0]['password']) {
-                        let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app' }, 
-                        backendConfig.secret, {expiresIn: 86400}); //1 dia
-                        
-                        let response = new LoginAuthenticate();
-                        response.name = user_list[0]['fullName'];
-                        response.email = user_list[0]['email'];
-                        response.accessToken = token;
-                        res.json(response);
+        this.getMongoAccess(res).users().subscribe(
+            (userCollection) => {
+
+                userCollection.find({"email": email}).toArray(function(err, user_list) {         
+                    if(user_list.length !== 0){
+                        if (email === user_list[0]['email'] && 
+                        password === user_list[0]['password']) {
+                            let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app' }, 
+                            backendConfig.secret, {expiresIn: 86400}); //1 dia
+                            
+                            let response = new LoginAuthenticate();
+                            response.name = user_list[0]['fullName'];
+                            response.email = user_list[0]['email'];
+                            response.accessToken = token;
+                            res.json(response);
+                            
+                        } else {
+                            res.status(403).json({ message: 'Dados inválidos.' });
+                        }
                         
                     } else {
-                        // console.log("NÃO AUTENTICADO");
-                        //res.send('Dados inválidos');
-                        res.status(403).json({ message: 'Dados inválidos.' });
-                    }
-                    
-                } else {
-                    // console.log("USER NOT FOUND!");
-                    res.status(400).json({message: 'Dados inválidos!'});
-                } 
-            });     
-        }        
+                        res.status(400).json({message: 'Dados inválidos!'});
+                    } 
+                });
+            }
+        );
     }
     
     public isAccountBlocked(req: Request, res: Response, next: NextFunction){

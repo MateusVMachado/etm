@@ -80,7 +80,6 @@ export class IndexRoute extends BaseRoute {
     });
     router.post("/keyboard/insertNewKeyboard", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
-      // console.log('entrou no post')
       keyboard.insertNewKeyboard(req,res,next);  
     });
     

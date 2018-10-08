@@ -1,4 +1,5 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
+import { MongoAccessModel } from "../models/mongoAccess.model";
 
 export class BaseRoute {
 
@@ -11,6 +12,10 @@ export class BaseRoute {
     this.title = "ETM - BackEnd";
     this.scripts = [];
   }
+
+  protected getMongoAccess(res: Response): MongoAccessModel {
+    return res.locals.mongoAccess;
+  } 
 
   public addScript(src: string): BaseRoute {
     this.scripts.push(src);

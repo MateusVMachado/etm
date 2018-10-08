@@ -9,10 +9,9 @@ import * as jwt from 'express-jwt';
 
 import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
-import * as promise from 'promise';
-import { promisify } from "util";
 import { Login } from './apis/login/login.api';
 import { backendConfig } from  './backend.config';
+var MongoClient = require('mongodb').MongoClient;
 
 /**
  * The server.
@@ -21,10 +20,9 @@ import { backendConfig } from  './backend.config';
  */
 export class Server {
 
+  private mongoAccess: MongoAccessModel;
   public app: express.Application;
 
-  public mongoAccess: MongoAccessModel = new MongoAccessModel();
-  public poolSize: number = 100;
   public guard: Login = new Login();
 
   /**
@@ -61,7 +59,7 @@ export class Server {
     this.api();
 
     // Cria pool de conexões e configura acesso
-    this.createDatabaseAccess(this.mongoAccess, this.app);
+    this.createDatabaseAccess(this.app);
   }
 
 
@@ -71,37 +69,10 @@ export class Server {
    * @class Server
    * @method connectDatabase
    */
-  public createDatabaseAccess(mongoAccess: MongoAccessModel, app: express.Application){
-      // cria conexão e popula objeto de acesso
-      this.connectDatabase(mongoAccess, app);
-      // configura variaveis
-      this.app.locals.mongoAccess = this.mongoAccess;
-  }
-
-  /**
-   * Popula objeto de acesso à Database
-   *
-   * @class Server
-   * @method connectDatabase
-   */
-  public connectDatabase(mongoAccess: MongoAccessModel, app: express.Application){
-    var mongodb = require('mongodb') , MongoClient = mongodb.MongoClient
-
-    MongoClient.connect(process.env.MONGOHQ_URL|| 'mongodb://localhost:27017', {poolSize: this.poolSize},
-         function(err, database) {
-  
-             mongoAccess.database = database.db('etm-database');
-             /* 0 */ mongoAccess.coll.push(mongoAccess.database.collection('users'));
-             /* 1 */ mongoAccess.coll.push(mongoAccess.database.collection('keyboards'));
-             /* 2 */ mongoAccess.coll.push(mongoAccess.database.collection('configurations'));
-             /* 3 */ mongoAccess.coll.push(mongoAccess.database.collection('logs'));
-             /* 4 */ mongoAccess.coll.push(mongoAccess.database.collection('tec_compart'));
-             /* 5 */ mongoAccess.coll.push(mongoAccess.database.collection('tec_compart_notas'));
-             /* 6 */ mongoAccess.coll.push(mongoAccess.database.collection('password_log'));
-             /* 7 */ //mongoAccess.coll.push(mongoAccess.database.collection('favorites'));
-             /* 8 */ //mongoAccess.coll.push(mongoAccess.database.collection('passwords'));
-             
-        }) 
+  public createDatabaseAccess(app: express.Application){
+    this.mongoAccess = new MongoAccessModel(MongoClient)
+    // configura variaveis
+    this.app.locals.mongoAccess = this.mongoAccess;
   }
 
   /**
@@ -165,8 +136,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-      // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
+       res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      //res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
 
       // Request methods you wish to allow
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
