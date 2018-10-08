@@ -14,7 +14,6 @@ export class Logger extends BaseRoute{
     
     public logRequests(req: Request, options?: string){
         moment.locale('pt-br');
-        // console.log("\'" + req.method + " " + req.originalUrl + "\'"  + " from [client] " + req.ip + " --> to [server] " + "em " + moment().format('LLLL') );
     }
     
     public logActions(req: Request, res: Response, next: NextFunction, options?: string){
