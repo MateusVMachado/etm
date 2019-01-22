@@ -21,7 +21,8 @@
                     <div>
                         <span>{{ messageService.getTranslation('STORE_FILTROS_ESTRELAS') }}</span>
                         <select formControlName="selectEstrelas">
-                            <option [selected]="selected" value="0">0+</option>
+                            <!-- <option [selected]="selected" value="0">0+</option> -->
+                            <option value="0">0+</option>
                             <option value="1">1+</option>
                             <option value="2">2+</option>
                             <option value="3">3+</option>
@@ -33,7 +34,8 @@
                     <div>
                         <span>{{ messageService.getTranslation('STORE_FILTROS_PUBLICADO') }}</span>
                         <select formControlName="selectData">
-                            <option [selected]="selected" value="1">{{ messageService.getTranslation('STORE_FILTROS_DATA_QUALQUER') }}</option>
+                            <!-- <option [selected]="selected" value="1">{{ messageService.getTranslation('STORE_FILTROS_DATA_QUALQUER') }}</option> -->
+                            <option value="1">{{ messageService.getTranslation('STORE_FILTROS_DATA_QUALQUER') }}</option>
                             <option value="2">{{ messageService.getTranslation('STORE_FILTROS_DATA_SEMANA') }}</option>
                             <option value="3">{{ messageService.getTranslation('STORE_FILTROS_DATA_MES') }}                        </option>
                             <option value="4">{{ messageService.getTranslation('STORE_FILTROS_DATA_ANO') }}</option>
