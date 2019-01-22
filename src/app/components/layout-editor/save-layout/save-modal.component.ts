@@ -14,7 +14,7 @@ import * as $ from 'jquery';
 export class SaveModalComponent implements OnInit {
     constructor(private activeModal: NgbActiveModal,
         private layoutEditorService: LayoutEditorService,
-        private messageService : MessageService,
+        public messageService : MessageService,
         private authService: AuthService,
         private tecladoCompartilhadoService : TecladoCompartilhadoService) { }
         

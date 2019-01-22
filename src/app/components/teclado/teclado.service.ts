@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
-import { Subject } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import { AppServiceBase } from '../shared/services/app-service-base.service';

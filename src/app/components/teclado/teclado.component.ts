@@ -4,7 +4,7 @@ import { NbMenuItem } from '@nebular/theme';
 import * as $ from 'jquery';
 import * as moment from 'moment';
 import { OpenFACLayout } from 'openfac/OpenFac.ConfigContract';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { isUndefined } from 'util';
 import { OpenFacActionFactory } from '../../../../node_modules/openfac/OpenFac.ActionFactory';
 import { OpenFacActionKeyboardAndTTS } from '../../../../node_modules/openfac/OpenFac.ActionKeyboardAndTTS';
@@ -274,8 +274,44 @@ export class TecladoComponent implements OnInit, OnDestroy {
             }
             if (!found) this.openFacLayout = (data[0]);
             
+            console.log(this.openFacLayout.Lines);
+            this.openFacLayout.Lines.unshift({
+              Buttons: [
+                {
+                  Action: "",
+                  Caption: "current word",
+                  Image: "",
+                  Text: ""
+                },
+                {
+                  Action: "",
+                  Caption: "suggestion 1",
+                  Image: "",
+                  Text: "",
+                },
+                {
+                  Action: "",
+                  Caption: "suggestion 2",
+                  Image: "",
+                  Text: "",
+                },
+                {
+                  Action: "",
+                  Caption: "suggestion 3",
+                  Image: "",
+                  Text: "",
+                },
+                {
+                  Action: "",
+                  Caption: "undo",
+                  Image: "",
+                  Text: "",
+                }
+              ]
+            })
+
             this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
-            
+
             this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) => {
               this.split = $('[id=split]');
               this.flexSup = result.flexSup;

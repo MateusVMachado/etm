@@ -17,7 +17,7 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
     @Input() layout: OpenFACLayout;
     @Input() teclado: TecladoModel
     private activeLine: ActiveLineCol;
-    private idTeclado : string;
+    public idTeclado : string;
     private possuiImagem = false;
     
     ngOnInit() {

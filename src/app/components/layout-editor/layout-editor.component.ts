@@ -134,7 +134,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
   public choppedMap = new Map<number,number>();
   
   private growthFactor = 1.5;
-  private growthTextFactor = 1.0;
+  public growthTextFactor = 1.0;
   private ENABLE_TEXT_MODE: boolean = false;
   private textModeFactor: number = 23;
   private textModeMarginFactor: number = 3;
@@ -152,7 +152,7 @@ export class LayoutEditorComponent extends AppBaseComponent implements OnInit, O
   
   private thisKeyboardHasImage = false;
   private thisKeyboardHasVoice = false;
-  private tecladoShare : boolean;
+  public tecladoShare : boolean;
   public nomeTeclado : string;
   
   constructor(private router: Router, 
