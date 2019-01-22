@@ -38,6 +38,10 @@ export const routes: Routes = [{
     {
       path: 'store/:id',
       loadChildren: 'app/components/store/store.module#StoreModule'
+    },
+    {
+      path: 'predictor-test',
+      loadChildren: '../predictor-wip/predictor-wip.module#PredictorWipModule'
     }
   ],
 }];
