@@ -5,6 +5,7 @@ import { AngularSplitModule } from 'angular-split';
 import { TecladoBaseModule } from '../teclado-base/teclado-base.module';
 import { TecladoComponent } from './teclado.component';
 import { TecladoService } from './teclado.service';
+import { PredictorWipService } from '../predictor-wip/predictor-wip.service';
 
 
 
@@ -25,7 +26,8 @@ import { TecladoService } from './teclado.service';
         CUSTOM_ELEMENTS_SCHEMA
     ],
     providers: [
-        TecladoService
+        TecladoService,
+        PredictorWipService
     ]
 })
 export class TecladoModule { }

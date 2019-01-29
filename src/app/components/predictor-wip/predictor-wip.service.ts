@@ -1,78 +1,108 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class PredictorWipService {
 
-  constructor() { }
+  public currentWord: string = '';
+  public wordsSubject = new ReplaySubject<Array<string>>();
+  public words$ = this.wordsSubject.asObservable();
 
-  predict(metaWord: string) {
-    //check cache first
-    this.displayWords(this.getWords(metaWord));
+
+  constructor(
+    public http: HttpClient,
+  ) { }
+
+  public addCharacterAndPredict(newChar: string) {
+    this.currentWord = this.currentWord + newChar;
+    this.predict(this.currentWord);
   }
 
-  getWords(metaWord: string): Word[] {
-    //search backend for words
-    //
-    // SELECT TOP 3 
-    // FROM Words
-    // WHERE word LIKE %metaWord%
-    // ORDER BY probability
-    //
-    //or something like that
-    return [
-      new Word("brother"),
-      new Word("brush"),
-      new Word("brie")
-    ]
+  public wordPicked(word: string) {
+    this.submitWord(word);
+    this.clear();
   }
 
-  displayWords(words: Word[]) {
-    //display the words
+  public clear() {
+    this.currentWord = ''; 
+    this.wordsSubject.next(['','','']);
   }
 
-  ///////////////////////
+  public predict(text: string) {
 
-  wordPicked(word: Word) {
-    this.inputWord(word)
-    word.probability = word.probability + 1
-    this.saveWord(word);
-  }
+    if (text !== '') {
+      this.http.post(
+        'http://localhost:8080/predict',
+        {
+          text: text,
+        },
+      ).subscribe(data => {
 
-  inputWord(word: Word) {
-    //code that inputs word into the editor
-  }
+        let response = [];
+        for (let i = 0; i < 3; i++) {
+          if (data[i]) {
+            response.push(data[i].word)
+          } else {
+            response.push('');
+          }
+        }
 
-  removeWord(word: Word) {
-    //code that removes word from the editor
-  }
+        this.wordsSubject.next(response);
 
-  saveWord(word: Word) {
-    //code that saves word to backend
-    //
-    //can also be used to let user add their own words
-    //or "learn" from user input automatically
-  }
-
-  wordUnpicked(word: Word) {
-    this.removeWord(word);
-    word.probability = word.probability - 1;
-    this.saveWord(word);
-  }
-
-}
-
-class Word {
-
-  constructor(word: string, probability?: number){
-    this.word = word;
-    if (probability) {
-      this.probability = probability;
-    } else {
-      this.probability = 0;
+      })
     }
+  
   }
 
-  word: string;
-  probability: number;
+  public submitWord(word: string) {
+
+    if(word !== '') {
+      this.http.post(
+        'http://localhost:8080/addOrUpdateWord',
+        {
+          text: word,
+        },
+      ).subscribe(()=>{})
+    }
+
+  }
+
+  public removeWord(word: string) {
+
+    if(word !== '') {
+      this.http.post(
+        'http://localhost:8080/removeOrUpdateWord',
+        {
+          text: word,
+        },
+      ).subscribe(()=>{})
+    }
+
+    //this.clearAll();
+
+  }
+
+  public getInitialWords() {
+
+    this.http.post(
+      'http://localhost:8080/getInitialWords',
+      {}
+    ).subscribe(data => {
+
+      let response = [];
+      for (let i = 0; i < 3; i++) {
+        if (data[i]) {
+          response.push(data[i].word)
+        } else {
+          response.push('');
+        }
+      }
+
+      this.wordsSubject.next(response);
+
+    })
+
+  }
 
 }

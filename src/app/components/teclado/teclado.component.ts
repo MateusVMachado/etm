@@ -29,6 +29,7 @@ import { TecladoBaseComponent } from '../teclado-base/teclado-base.component';
 import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
+import { PredictorWipService } from '../predictor-wip/predictor-wip.service';
 
 
 
@@ -110,7 +111,8 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private scale: number;
   
   @ViewChild(TecladoBaseComponent) tecladoBaseComponent;
-  
+
+  public predictorSubscription: Subscription;
   
   constructor(private tecladoService: TecladoService,
     private editorTecladoService: EditorTecladoService,
@@ -121,7 +123,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private backLoggerService: BackLoggerService,
-    private generalConfigService: GeneralConfigService) {
+    private generalConfigService: GeneralConfigService,
+    private predictor: PredictorWipService
+    ) {
       
       
       this.availHeight = window.screen.availHeight;
@@ -237,6 +241,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
     ngOnInit() {
       // this.editor.resize(this.newEditorWidth, this.newEditorHeight);
 
+      this.predictorSubscription = this.predictor.words$.subscribe( words => 
+                                      this.updateSuggestionsAndCurrentWord(words)
+                                    );
+
       this.teclado.teclas = [];
       // CHECA SE USUÁRIO ACIONOU O CAPSLOCK
       this.keyCommandServiceSubscribe = this.keyCommandService.subscribeToKeyCommandSubject().subscribe((result) => {
@@ -251,7 +259,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
         
         if (data) {
           this.KeyboardData = data;
-          
+
           let lastUsed: number = 0;
           this.configServiceSubscribe =
           this.configService.returnLastUsed(lastUsed, this.openFacLayout, data)
@@ -274,39 +282,32 @@ export class TecladoComponent implements OnInit, OnDestroy {
             }
             if (!found) this.openFacLayout = (data[0]);
             
-            console.log(this.openFacLayout.Lines);
             this.openFacLayout.Lines.unshift({
               Buttons: [
                 {
-                  Action: "",
-                  Caption: "current word",
+                  Action: "Keyboard",
+                  Caption: "",
                   Image: "",
-                  Text: ""
+                  Text: "*SUGGESTION",
                 },
                 {
-                  Action: "",
-                  Caption: "suggestion 1",
+                  Action: "Keyboard",
+                  Caption: "",
                   Image: "",
-                  Text: "",
+                  Text: "*SUGGESTION",
                 },
                 {
-                  Action: "",
-                  Caption: "suggestion 2",
+                  Action: "Keyboard",
+                  Caption: "",
                   Image: "",
-                  Text: "",
+                  Text: "*SUGGESTION",
                 },
                 {
-                  Action: "",
-                  Caption: "suggestion 3",
+                  Action: "Keyboard",
+                  Caption: "LIMPAR",
                   Image: "",
-                  Text: "",
+                  Text: "*CLEAR_SUGGESTIONS",
                 },
-                {
-                  Action: "",
-                  Caption: "undo",
-                  Image: "",
-                  Text: "",
-                }
               ]
             })
 
@@ -376,8 +377,17 @@ export class TecladoComponent implements OnInit, OnDestroy {
       //this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty*3.7) )/this.globColumnQnty;
       this.keysWidthSize = (this.keyboardContainerSize - (this.globColumnQnty * 5.5)) / this.globColumnQnty;
       
+      this.predictor.getInitialWords();
+
     }
 
+    private updateSuggestionsAndCurrentWord(words: Array<string>) {
+      for (let i=0; i < 3; i++) {
+        this.openFacLayout.Lines[0].Buttons[i].Caption = words[i];
+        this.teclado.teclas[0][i] = words[i];
+      }
+      this.engine.UpdateCurrentKeyboard();
+    }
 
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout) {
       this.openFacLayout = layout;
@@ -490,7 +500,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
     private configureAll(editorInstance?: any) {
       if (editorInstance) {
         let configArray = [editorInstance, this.keyCommandService, this.zone];
-        let configArrayWriters = [editorInstance, this.keyCommandService, this.zone, this.cursorPosition, this.maxLength];
+        let configArrayWriters = [editorInstance, this.keyCommandService, this.zone, this.cursorPosition, this.maxLength, this.predictor];
         OpenFacActionFactory.Register('TTS', OpenFacActionTTS, configArray);
         OpenFacActionFactory.Register('Keyboard', OpenFacActionKeyboardWriter, configArrayWriters);
         OpenFacActionFactory.Register('KeyboardAndTTS', OpenFacActionKeyboardAndTTS, configArrayWriters);
