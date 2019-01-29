@@ -186,6 +186,11 @@ export class OpenFacEngine implements IOpenFacEngine {
         this.activeSensor.Stop();         
     }
 
+    public UpdateCurrentKeyboard() {
+      // updates keyboard without resetting the entire engine
+      this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
+    }
+
     public Start(): void {
         this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? 
                     this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
