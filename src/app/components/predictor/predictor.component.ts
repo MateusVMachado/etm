@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'predictor-wip',
-  templateUrl: './predictor-wip.component.html',
-  styleUrls: ['./predictor-wip.component.scss']
+  selector: 'predictor',
+  templateUrl: './predictor.component.html',
+  styleUrls: ['./predictor.component.scss']
 })
-export class PredictorWipComponent implements OnInit {
+export class PredictorComponent implements OnInit {
 
   public words: Array<any>;
   public currentText: string;

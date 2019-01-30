@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PredictorWipComponent } from './predictor-wip.component';
+import { PredictorComponent } from './predictor.component';
 import { RouterModule } from '@angular/router';
-import { predictorWipRoute } from './predictor-wip.routing';
+import { predictorRoute } from './predictor.routing';
 import { FormsModule } from '@angular/forms';
 import { TecladoModule } from '../teclado/teclado.module';
 
@@ -10,9 +10,9 @@ import { TecladoModule } from '../teclado/teclado.module';
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(predictorWipRoute),
+    RouterModule.forChild(predictorRoute),
     TecladoModule
   ],
-  declarations: [PredictorWipComponent]
+  declarations: [PredictorComponent]
 })
-export class PredictorWipModule { }
+export class PredictorModule { }

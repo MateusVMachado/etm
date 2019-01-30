@@ -29,7 +29,7 @@ import { TecladoBaseComponent } from '../teclado-base/teclado-base.component';
 import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
-import { PredictorWipService } from '../predictor-wip/predictor-wip.service';
+import { PredictorService } from '../predictor/predictor.service';
 
 
 
@@ -124,7 +124,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private backLoggerService: BackLoggerService,
     private generalConfigService: GeneralConfigService,
-    private predictor: PredictorWipService
+    private predictor: PredictorService
     ) {
       
       

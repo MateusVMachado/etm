@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ReplaySubject } from 'rxjs';
 
 @Injectable()
-export class PredictorWipService {
+export class PredictorService {
 
   public currentWord: string = '';
   public wordsSubject = new ReplaySubject<Array<string>>();
@@ -78,8 +78,6 @@ export class PredictorWipService {
         },
       ).subscribe(()=>{})
     }
-
-    //this.clearAll();
 
   }
 

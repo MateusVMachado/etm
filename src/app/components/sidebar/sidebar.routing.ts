@@ -41,7 +41,7 @@ export const routes: Routes = [{
     },
     {
       path: 'predictor-test',
-      loadChildren: '../predictor-wip/predictor-wip.module#PredictorWipModule'
+      loadChildren: '../predictor/predictor.module#PredictorModule'
     }
   ],
 }];
