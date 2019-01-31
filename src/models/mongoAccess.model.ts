@@ -65,7 +65,7 @@ export class MongoAccessModel {
     logs(): Observable<any> {
         return this.getCollection("logs");
     }
-    
+
     tec_compart(): Observable<any> {
         return this.getCollection("tec_compart");
     }
@@ -83,4 +83,3 @@ export class MongoAccessModel {
     }
 
 }
-
