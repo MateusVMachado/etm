@@ -22,11 +22,12 @@ export class PredictorService {
   public wordPicked(word: string) {
     this.submitWord(word);
     this.clear();
+    this.getInitialWords();
   }
 
   public clear() {
-    this.currentWord = ''; 
-    this.wordsSubject.next(['','','']);
+    this.currentWord = '';
+    this.wordsSubject.next(['','','','','']);
   }
 
   public predict(text: string) {
@@ -40,7 +41,7 @@ export class PredictorService {
       ).subscribe(data => {
 
         let response = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 5; i++) {
           if (data[i]) {
             response.push(data[i].word)
           } else {
@@ -52,7 +53,7 @@ export class PredictorService {
 
       })
     }
-  
+
   }
 
   public submitWord(word: string) {
@@ -89,7 +90,7 @@ export class PredictorService {
     ).subscribe(data => {
 
       let response = [];
-      for (let i = 0; i < 3; i++) {
+      for (let i = 0; i < 5; i++) {
         if (data[i]) {
           response.push(data[i].word)
         } else {
