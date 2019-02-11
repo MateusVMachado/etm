@@ -128,6 +128,24 @@ export class Server {
       }
     );
 
+    this.app.locals.mongoAccess.mongoClient.connect(
+      'mongodb://localhost:27017/etm-database',
+      { useNewUrlParser: true },
+      (err, client) => {
+        if (err) throw err;
+        client.db().collections(
+          (err, colls) => {
+            if (err) throw err;
+            let colf = colls.filter(col => {return col.s.name === 'predictor_local_pt_br'})
+            if(colf.length === 0) {
+              client.db().createCollection('predictor_local_pt_br');
+              console.log('Created predictor_local_pt_br collection');
+            }
+          }
+        )
+      }
+    );
+
   }
 
 

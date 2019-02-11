@@ -4,7 +4,7 @@ import { Collection } from 'mongodb';
 
 export class MongoAccessModel {
 
-    private collections: Array<string> = ["users", "keyboards", "configurations", "logs", "tec_compart", "tec_compart_notas", "password_log", "predictor_pt_br"];
+    private collections: Array<string> = ["users", "keyboards", "configurations", "logs", "tec_compart", "tec_compart_notas", "password_log", "predictor_pt_br", "predictor_local_pt_br"];
     private collectionsMap: Map<string, any>;
     private mongoClient: any;
     private poolSize: number;
@@ -80,6 +80,10 @@ export class MongoAccessModel {
 
     predictor_pt_br(): Observable<any> {
         return this.getCollection("predictor_pt_br");
+    }
+
+    predictor_local_pt_br(): Observable<any> {
+        return this.getCollection("predictor_local_pt_br");
     }
 
 }
