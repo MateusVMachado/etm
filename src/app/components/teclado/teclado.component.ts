@@ -401,13 +401,15 @@ export class TecladoComponent implements OnInit, OnDestroy {
     }
 
     private updateSuggestionsAndCurrentWord(words: Array<string>) {
-      for (let i=0; i <  this.openFacLayout.Lines.length - 1; i++) {
-        if (this.openFacLayout.Lines[0].Buttons[i]) {
-          this.openFacLayout.Lines[0].Buttons[i].Caption = words[i];
-          this.teclado.teclas[0][i] = words[i];
+      if(this.openFacLayout){
+        for (let i=0; i <  this.openFacLayout.Lines.length - 1; i++) {
+          if (this.openFacLayout.Lines[0].Buttons[i]) {
+            this.openFacLayout.Lines[0].Buttons[i].Caption = words[i];
+            this.teclado.teclas[0][i] = words[i];
+          }
         }
-      }
       this.configureSome();
+      }
     }
 
     private convertLayoutToKeyboard(keyboard: TecladoModel, layout: OpenFACLayout) {
