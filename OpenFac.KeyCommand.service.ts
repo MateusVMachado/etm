@@ -1,4 +1,4 @@
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from '../rxjs';
 import { Observable } from 'rxjs/Observable';
 
 
