@@ -46,7 +46,6 @@ export class Predictor extends BaseRoute {
         }
 
       }
-
       res.send(wordsFinal);
 
     }
@@ -67,7 +66,7 @@ export class Predictor extends BaseRoute {
 
     return new Promise( resolve => {
       this.getMongoAccess(res)
-      .predictor_local_pt_br()
+      .predictor_user(req['user'].userId)
       .subscribe( col => {
 
         col
@@ -171,7 +170,7 @@ export class Predictor extends BaseRoute {
     let word = req.body.text;
 
     this.getMongoAccess(res)
-      .predictor_local_pt_br()
+      .predictor_user(req['user'].userId)
       .subscribe( col => {
 
         col
@@ -181,9 +180,9 @@ export class Predictor extends BaseRoute {
           .toArray( (err: any, result: any) => {
 
             if (result.length === 0) {
-              this.addNewWord(word, res);
+              this.addNewWord(word, res, req);
             } else {
-              this.incrementWordRank(word, res);
+              this.incrementWordRank(word, res, req);
             }
 
           });
@@ -245,10 +244,10 @@ export class Predictor extends BaseRoute {
   // addNewWord
   // Adds a given word to the local database. "rank" is set to 1 and a flag indicating
   // the word was added by a user is added.
-  addNewWord(word: string, res: Response) {
+  addNewWord(word: string, res: Response, req: Request) {
 
     this.getMongoAccess(res)
-      .predictor_local_pt_br()
+      .predictor_user(req['user'].userId)
       .subscribe( col => {
 
         col
@@ -286,10 +285,9 @@ export class Predictor extends BaseRoute {
 
   // incrementWordRank
   // Increments a given word's rank by one.
-  incrementWordRank(word: string, res: Response) {
-
+  incrementWordRank(word: string, res: Response, req: Request) {
     this.getMongoAccess(res)
-      .predictor_local_pt_br()
+      .predictor_user(req['user'].userId)
       .subscribe( col => {
 
         col
@@ -388,7 +386,7 @@ export class Predictor extends BaseRoute {
 
     return new Promise( resolve => {
     this.getMongoAccess(res)
-      .predictor_local_pt_br()
+      .predictor_user(req['user'].userId)
       .subscribe( col => {
 
         col
