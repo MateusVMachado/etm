@@ -1,94 +1,95 @@
-
 <div class="container-fluid teclado-container" id="teclado-container" onload="getGPS()">
+    <div id="sElRows sElLines" class="col-md-12 row line" class="suggestionRow" *ngFor="let actionRow of teclado.text; index as iR">	
+      <div class="tamanho-button" *ngFor="let actionKey of actionRow; index as i">
+          <input [style.background-color]="setBackground(iR,i)"
+          *ngIf="actionKey === '*SUGGESTION' || actionKey === '*CLEAR_SUGGESTIONS'"
+          type="button" 
+          class="btn button-keyboard notImage notImage{{iR}}x{{i}}"
+          value="{{ teclado.teclas[iR][i] }}" id="notImage{{iR}}x{{i}}"/> 
+      </div>
+    </div>
   <table class="tabela" id="{{idTeclado}}">
     <tr id="sElRows sElLines" class="col-md-12 row line" *ngFor="let row of teclado.teclas; index as iR">
+      <ng-container *ngIf="iR !== 0">
       <td class="tamanho-button" *ngFor="let key of row; index as i">
         <div *ngIf="i <= 14" class="outerbox">
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'" *ngIf="key == '*tab'"
-          class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-          <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'" class="mat-icon material-icons"
-          
-          role="img" aria-hidden="true" id="element">keyboard_tab</mat-icon>
+          <!-- TAB Key -->
+          <button *ngIf="key == '*tab'"
+          class="btn button-keyboard icon-keyboard" value="{{ key }}"
+          [style.background-color]="setBackground(iR,i)">
+            <mat-icon [style.background-color]="setBackground(iR,i)" class="mat-icon material-icons"
+            role="img" aria-hidden="true" id="element">keyboard_tab</mat-icon>
           </button>
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          *ngIf="key == '*cpslck'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-          <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_capslock</mat-icon>
+          <!-- CAPSLOCK Key -->
+          <button *ngIf="key == '*cpslck'"
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_capslock</mat-icon>
           </button>
-          <input [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+          <!-- BACKSPACE Key -->
+          <button *ngIf="key == '*bckspc'"
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_backspace</mat-icon>
+          </button>
+          <!-- UP ARROW Key -->
+          <button *ngIf="key == '*arrowup'" 
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_upward</mat-icon>
+          </button>
+          <!-- DOWN ARROW Key -->
+          <button *ngIf="key == '*arrowdown'"
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_downward</mat-icon>
+          </button>
+          <!-- LEFT ARROW Key -->
+          <button *ngIf="key == '*arrowleft'" 
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_back</mat-icon>
+          </button>
+          <!-- RIGHT ARROW Key -->
+          <button *ngIf="key == '*arrowright'"
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_forward</mat-icon>
+          </button>
+          <!-- KEYBOARD RETURN Key -->
+          <button *ngIf="key == '*kbdrtrn'" 
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_return</mat-icon>
+          </button>
+          <!-- MIC Key -->
+          <button *ngIf="key == '*mic'" 
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon [style.background-color]="setBackground(iR,i)"
+            class="mat-icon material-icons" role="img" aria-hidden="true" id="element">volume_up</mat-icon>
+          </button>
+          <!-- SPACE Key -->
+          <button *ngIf="key == '*space'"
+          [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard tamanho-button3" value="SPACE" id="element">espaço
+          </button>
+          <!-- NOT OTHER KEYS AND IMAGE -->
+          <input [style.background-color]="setBackground(iR,i)"
           *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
           && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
           && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] === '*img'" 
           type="button" class="btn button-keyboard btn_com_img images{{iR}}x{{i}}"  id="images{{iR}}x{{i}}"  /> 
-          <input [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
+          <!-- NOT OTHER KEYS AND !!!NOT!!! IMAGE -->
+		  <!-- ADDED IF ACTION === 'SUGGESTION' -->
+          <input [style.background-color]="setBackground(iR,i)"
           *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
           && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-          && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] !== '*img'" 
+          && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] !== '*img' && teclado.action[iR][i] !== 'suggestion'" 
           type="button" 
           class="btn button-keyboard notImage notImage{{iR}}x{{i}}"
           value="{{ key }}" id="notImage{{iR}}x{{i}}"/> 
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          *ngIf="key == '*bckspc'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-          <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_backspace</mat-icon>
-          </button>
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-        *ngIf="key == '*arrowup'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-        <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-        class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_upward</mat-icon>
-          </button>                 
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-        *ngIf="key == '*arrowdown'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-        <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-        (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-        class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_downward</mat-icon>
-          </button>              
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-      (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-      *ngIf="key == '*arrowleft'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-      <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-      (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-      class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_back</mat-icon>
-          </button>   
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          *ngIf="key == '*arrowright'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-          <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_forward</mat-icon>
-          </button>                 
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          *ngIf="key == '*kbdrtrn'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-          <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_return</mat-icon>
-          </button>
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          *ngIf="key == '*mic'" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
-          <mat-icon [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          class="mat-icon material-icons" role="img" aria-hidden="true" id="element">volume_up</mat-icon>
-          </button>
-          <button [style.background-color]="(iR === activeLine.line && i !== activeLine.col) ? 'yellow': (iR !== activeLine.line) ? '#f4f5f7': 
-          (activeLine.type !== 'col' && i === activeLine.col) ? 'yellow' : 'red'"
-          *ngIf="key == '*space'" class="btn button-keyboard icon-keyboard tamanho-button3" 
-          value="SPACE" id="element">espaço
-          </button>
         </div>
       </td>
+    </ng-container>
     </tr>
   </table>
 </div>

@@ -137,7 +137,7 @@ export class StoreComponent extends AppBaseComponent implements OnInit, AfterVie
             if(this.setTecladoUsadoSubscription) this.getListaTecladosCompartilhadosSubscription.unsubscribe();
         }
         // FILTROS
-        pesquisar(pesq : string, isFiltering? : boolean){
+        pesquisar(pesq? : string, isFiltering? : boolean){
             this.filtrosInicial = false;
             if(pesq === undefined){
                 pesq = this.formPesquisa.controls["cPesquisa"].value;

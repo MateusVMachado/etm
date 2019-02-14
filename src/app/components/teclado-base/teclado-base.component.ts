@@ -17,7 +17,7 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
     @Input() layout: OpenFACLayout;
     @Input() teclado: TecladoModel
     private activeLine: ActiveLineCol;
-    private idTeclado : string;
+    public idTeclado : string;
     private possuiImagem = false;
     
     ngOnInit() {
@@ -149,4 +149,16 @@ export class TecladoBaseComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
+    public setBackground(row: number, col: number): string{
+      if (row !== this.activeLine.line){
+        return '#f4f5f7';
+      }
+      else if((row === this.activeLine.line && col !== this.activeLine.col)
+      || (this.activeLine.type !== 'col' && col === this.activeLine.col)){
+        return 'yellow';
+      }
+      return 'red';
+    }
+
 }

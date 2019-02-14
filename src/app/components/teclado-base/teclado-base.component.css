@@ -64,3 +64,11 @@
         margin-right: 6px; 
     }
 }
+
+.suggestionRow{
+  display: flex;
+}
+.suggestionRow .tamanho-button{
+  display: flex;
+  flex: 1 1 100%;
+}
