@@ -15,6 +15,7 @@ import { User } from "../apis/user.api";
 import { ProfilePicture } from "../apis/profile-picture.api";
 import { TecladoCompartihadoNota } from "../apis/tec_compart_nota";
 import { TecladoCompartihado } from "../apis/tec_compart";
+import { Predictor } from "../apis/predictor/predictor.api";
 
 /**
 * / route
@@ -39,6 +40,7 @@ export class IndexRoute extends BaseRoute {
     let user = new User();  let profilePic = new ProfilePicture();
     let tec_compart_nota = new TecladoCompartihadoNota();
     let tec_compart = new TecladoCompartihado();
+    let predictor = new Predictor();
     
     console.log("[Server is UP and listening]\n");
     
@@ -161,6 +163,29 @@ export class IndexRoute extends BaseRoute {
       
       logger.logConfigIntervals(req,res,next);
     });
+
+    // PREDICTOR
+    // Descrições para cada função estão no arquivo de API.
+    router.post("/predict", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      predictor.predict(req,res,next);  
+    });
+
+    router.post("/addOrUpdateWord", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      predictor.addOrUpdateWord(req,res,next);  
+    });
+
+    router.post("/removeOrUpdateWord", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      predictor.removeOrUpdateWord(req,res,next);  
+    });
+
+    router.post("/getInitialWords", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      predictor.getInitialWords(req,res,next);  
+    });
+
     
     
     

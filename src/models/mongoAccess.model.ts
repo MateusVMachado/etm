@@ -1,12 +1,13 @@
 import { Observable, bindCallback, of,  } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map , tap} from 'rxjs/operators';
 import { Collection } from 'mongodb';
 
 export class MongoAccessModel {
 
-    private collections: Array<string> = ["users", "keyboards", "configurations", "logs", "tec_compart", "tec_compart_notas", "password_log"];
+    private collections: Array<string> = ["users", "keyboards", "configurations", "logs", "tec_compart", "tec_compart_notas", "password_log", "predictor_pt_br", "predictor_local_pt_br"];
     private collectionsMap: Map<string, any>;
     private mongoClient: any;
+    private etmDb: any;
     private poolSize: number;
     private connected: boolean;
 
@@ -14,21 +15,15 @@ export class MongoAccessModel {
         if(this.connected){
             return of(this.collectionsMap.get(collectionKey));
         }else{
-            return this.doConnect().pipe(
-                map( (values) => {
-                    let database = values[1];
-                    let etmDb = database.db('etm-database');
-                    for (let index = 0; index < this.collections.length; index++) {
-                        let collectionName = this.collections[index];
-                        this.collectionsMap.set(collectionName, etmDb.collection(collectionName))
-                    }
-                    return etmDb;
-                }),
-                map( (etmDb) => {
-                    this.connected = true;
-                    return this.collectionsMap.get(collectionKey);
-                })
-            )
+            return this.doConnect().pipe( map(() => {
+                for (let index = 0; index < this.collections.length; index++) {
+                    let collectionName = this.collections[index];
+                    this.collectionsMap.set(collectionName, this.etmDb.collection(collectionName))
+                }
+                this.connected = true;
+                return this.collectionsMap.get(collectionKey);
+            }
+            ))
         }
     }
 
@@ -40,7 +35,13 @@ export class MongoAccessModel {
     private doConnect(){
         let doConnectObservable = bindCallback<any, string, number, any>(this.mongoConnect);
         let mongoUrl = process.env.MONGOHQ_URL|| 'mongodb://localhost:27017';
-        return doConnectObservable(this.mongoClient, mongoUrl, this.poolSize);
+        return doConnectObservable(this.mongoClient, mongoUrl, this.poolSize).pipe(
+            map( (values) => {
+                let database = values[1];
+                this.etmDb = database.db('etm-database');
+                return this.etmDb;
+            })
+        );
     }
 
     constructor(mongoClient: any) {
@@ -65,7 +66,7 @@ export class MongoAccessModel {
     logs(): Observable<any> {
         return this.getCollection("logs");
     }
-    
+
     tec_compart(): Observable<any> {
         return this.getCollection("tec_compart");
     }
@@ -78,5 +79,23 @@ export class MongoAccessModel {
         return this.getCollection("password_log");
     }
 
-}
+    predictor_pt_br(): Observable<any> {
+        return this.getCollection("predictor_pt_br");
+    }
 
+    predictor_local_pt_br(): Observable<any> {
+        return this.getCollection("predictor_local_pt_br");
+    }
+
+    predictor_user(id: string): Observable<any> {
+        const dbName = 'predictor_user_' + id;
+        if(this.connected){
+            return of(this.etmDb.collection(dbName));
+        } else {
+            return this.doConnect().pipe(map( () => {
+                return this.etmDb.collection(dbName);
+            }));
+        }
+    }
+
+}

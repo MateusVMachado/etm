@@ -4,44 +4,44 @@ import { backendConfig, emailConfig } from '../../backend.config';
 import { BaseRoute } from "../../routes/route";
 import { LoginAuthenticate } from './login-authenticate.model';
 export class Login extends BaseRoute{
-    
+
     public title: string;
     public user: any = {};
-    
+
     constructor() {
         super();
     }
-    
+
     public authenticateUser(req: Request, res: Response, next: NextFunction){
         this.getMongoAccess(res).users().subscribe(
             (userCollection) => {
                 let email = req.body['email'];
                 let password = req.body['password'];
-                userCollection.find({"email": email}).toArray(function(err, user_list) {         
+                userCollection.find({"email": email}).toArray(function(err, user_list) {
                     if(user_list.length !== 0){
-                        if (email === user_list[0]['email'] && 
+                        if (email === user_list[0]['email'] &&
                         password === user_list[0]['password']) {
-                            let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app' }, 
+                            let token = jwt.sign({ sub: user_list[0]['email'], iss: 'etm-app', userId: user_list[0]['userId'] },
                             backendConfig.secret, {expiresIn: 86400}); //1 dia
-                            
+
                             let response = new LoginAuthenticate();
                             response.name = user_list[0]['fullName'];
                             response.email = user_list[0]['email'];
                             response.accessToken = token;
                             res.json(response);
-                            
+
                         } else {
                             res.status(403).json({ message: 'Dados inválidos.' });
                         }
-                        
+
                     } else {
                         res.status(400).json({message: 'Dados inválidos!'});
-                    } 
+                    }
                 });
             }
         );
     }
-    
+
     public isAccountBlocked(req: Request, res: Response, next: NextFunction){
         this.getMongoAccess(res).password_log().subscribe( (passLogCollection) => {
             passLogCollection.find({"email": req.query.email}).toArray(function(err, listaBloqueados) {
@@ -72,25 +72,25 @@ export class Login extends BaseRoute{
                 else{
                     res.json({status : 'false'})
                 }
-            });  
+            });
 
             }
         )
-              
+
     }
     public blockAccount(req: Request, res: Response, next: NextFunction) {
-        this.getMongoAccess(res).password_log().subscribe( (passLogCollection) => { 
+        this.getMongoAccess(res).password_log().subscribe( (passLogCollection) => {
             passLogCollection.insert({"email": req.query.email, "desbloqueio": req.query.desbloqueio}, (err, result) => {
                 res.status(200).send();
-            });  
+            });
         });
     }
-    
+
     public sendEmail(req: Request, res: Response, next: NextFunction){
         if(!req.body["email"]){
             res.status(200).send();
             return;
-        } 
+        }
         let email = req.body["email"];
         let emailHostName = req.body["emailHostName"];
         let emailTitulo = req.body["emailTitulo"];
@@ -104,9 +104,9 @@ export class Login extends BaseRoute{
             return;
         }
         let server = emailServer.server.connect({
-            user: emailConfig.user, 
-            password:emailConfig.password, 
-            host: emailConfig.host, 
+            user: emailConfig.user,
+            password:emailConfig.password,
+            host: emailConfig.host,
             ssl: true
         });
         let emailReal = {
@@ -114,7 +114,7 @@ export class Login extends BaseRoute{
             from: emailHostName + '<' + emailConfig.hostEmail + '>',
             to: '<' + email + '>' ,
             subject: emailAssunto,
-            attachment: 
+            attachment:
             [
                 {data: emailBody, alternative:true}
             ]
@@ -123,4 +123,4 @@ export class Login extends BaseRoute{
         });
         res.status(200).send();
     }
-}        
+}
