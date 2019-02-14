@@ -116,6 +116,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   windowWidth: number;
   words: string[];
+  readyToConfig: boolean = false;
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.configureSuggestionsLayout();
@@ -408,7 +409,13 @@ export class TecladoComponent implements OnInit, OnDestroy {
             this.teclado.teclas[0][i] = words[i];
           }
         }
-      this.configureSome();
+
+        if(this.readyToConfig) {
+          this.configureSome();
+        } else {
+          this.readyToConfig = true;
+        }
+
       }
     }
 
