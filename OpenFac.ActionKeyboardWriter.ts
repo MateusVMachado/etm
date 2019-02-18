@@ -53,7 +53,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.insertHtml('<br>');
                 this.maxLength += 1;
                 this.doGetCaretPosition();
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
 
             case '*bckspc':
@@ -70,7 +70,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                     //this.maxLength -= 1;
                     this.doGetCaretPosition();
                 }
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*tab':
                 this.editor.focus();
@@ -82,20 +82,20 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 }
                 this.tabs.set(this.cursorPosition, true);
                 this.tabs.set(this.cursorPosition-3, true);
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*cpslck':
                 this.editor.focus();
                 this.keyCommandService.emitKeyCommand('caps');
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowup':
                 // do something
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowdown':
                 // do something
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowleft':
             if ( this.tabs.get(this.cursorPosition) ){
@@ -116,7 +116,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
             }
                 // do something
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowright':
             if ( this.tabs.get(this.cursorPosition) ){
@@ -132,7 +132,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 if(toGoForward < this.maxLength) this.setCaretPosition(toGoForward);
                 this.doGetCaretPosition();
             }
-            this.clearWordAndPredictor();
+            this.predictor.clearCurrentWordOnly();
                 // do something
                 break;
             case '*space':
@@ -140,14 +140,14 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.insertHtml('&nbsp;');
                 this.maxLength += 1;
                 this.doGetCaretPosition(false,' ');
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case 'SPACE':
                 this.editor.focus();
                 this.editor.insertHtml('&nbsp;');
                 this.maxLength += 1;
                 this.doGetCaretPosition(false,' ');
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case 'PULA':
                 this.editor.focus();
