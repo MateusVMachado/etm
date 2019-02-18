@@ -35,6 +35,10 @@ export class PredictorService extends AppServiceBase{
     this.getInitialWords();
   }
 
+  public clearCurrentWordOnly() {
+    this.currentWord = '';
+  }
+
   public getWordsArray() {
     return this.currentValue;
   }
