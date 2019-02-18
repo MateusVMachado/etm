@@ -1,9 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ReplaySubject } from 'rxjs';
+import { AppServiceBase } from '../shared/services/app-service-base.service';
 
 @Injectable()
-export class PredictorService {
+export class PredictorService extends AppServiceBase{
 
   public currentWord: string = '';
   public wordsSubject = new ReplaySubject<Array<string>>();
@@ -11,8 +12,11 @@ export class PredictorService {
 
 
   constructor(
+    protected injector: Injector,
     public http: HttpClient,
-  ) { }
+  ) {
+    super(injector);
+  }
 
   public addCharacterAndPredict(newChar: string) {
     this.currentWord = this.currentWord + newChar;
@@ -34,7 +38,7 @@ export class PredictorService {
 
     if (text !== '') {
       this.http.post(
-        'http://localhost:8080/predict',
+        this.backendAddress + '/predict',
         {
           text: text,
         },
@@ -60,7 +64,7 @@ export class PredictorService {
 
     if(word !== '') {
       this.http.post(
-        'http://localhost:8080/addOrUpdateWord',
+        this.backendAddress + '/addOrUpdateWord',
         {
           text: word,
         },
@@ -73,7 +77,7 @@ export class PredictorService {
 
     if(word !== '') {
       this.http.post(
-        'http://localhost:8080/removeOrUpdateWord',
+        this.backendAddress + '/removeOrUpdateWord',
         {
           text: word,
         },
@@ -85,7 +89,7 @@ export class PredictorService {
   public getInitialWords() {
 
     this.http.post(
-      'http://localhost:8080/getInitialWords',
+      this.backendAddress + '/getInitialWords',
       {}
     ).subscribe(data => {
 
