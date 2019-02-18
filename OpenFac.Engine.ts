@@ -79,10 +79,10 @@ export class OpenFacEngine implements IOpenFacEngine {
     };
 
     public GetCurrentRowNumber(): number {
-        return this.currentRowNumber;        
+        return this.currentRowNumber;
     };
 
-    
+
     public GetPriorRowNumber(): number {
         return this.priorRowNumber;
     };
@@ -176,32 +176,27 @@ export class OpenFacEngine implements IOpenFacEngine {
         return this.currentKeyboard.Lines.Items[this.currentRowNumber]
                     .Buttons.Items[this.currentColumnNumber] as OpenFacKeyboardButton;
     };
-    
+
     public CurrentLine(): OpenFacKeyboardLine {
         return this.currentLine;
     };
 
 
     public Stop(): void {
-        this.activeSensor.Stop();         
-    }
-
-    public UpdateCurrentKeyboard() {
-      // updates keyboard without resetting the entire engine
-      this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
+        this.activeSensor.Stop();
     }
 
     public Start(): void {
-        this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ? 
+        this.openFacConfig.GetScanType() == EngineScanType.ScanAuto ?
                     this.scanType = EngineScanType.ScanAuto : this.scanType = EngineScanType.ScanManual;
-        
+
         this.currentKeyboard = this.openFacConfig.GetCurrentKeyboard();
-        
+
         this.activeSensor = this.sensorManager.Find(this.openFacConfig.GetActiveSensor());
         this.activeSensor.DoCallBack(this, this.CallSensorAction.bind(this));
         if (this.activeSensor != null)
         {
-                this.activeSensor.Start();           
+                this.activeSensor.Start();
         }
     };
 }
