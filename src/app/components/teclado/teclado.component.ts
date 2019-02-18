@@ -289,7 +289,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
             if (!found) this.openFacLayout = (data[0]);
 
             this.openFacLayout.Lines.unshift({Buttons: []});
-            console.log(this.openFacLayout.Lines);
             this.configureSuggestionsLayout();
 
             this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
@@ -385,12 +384,13 @@ export class TecladoComponent implements OnInit, OnDestroy {
       this.openFacLayout.Lines[0].Buttons = [];
 
       for (let i = 0; i < suggestionsQty; i++) {
+        let text = '*SUGGESTION' + (4 - i).toString();
         this.openFacLayout.Lines[0].Buttons.unshift(
           {
             Action: "Keyboard",
             Caption: "",
             Image: "",
-            Text: "*SUGGESTION",
+            Text: text,
           },
         )
       }
@@ -410,11 +410,6 @@ export class TecladoComponent implements OnInit, OnDestroy {
           }
         }
 
-        if(this.readyToConfig) {
-          this.configureSome();
-        } else {
-          this.readyToConfig = true;
-        }
 
       }
     }
