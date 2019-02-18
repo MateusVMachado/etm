@@ -259,6 +259,8 @@ export class Predictor extends BaseRoute {
             }
           );
 
+          res.send();
+
       });
 
   }
@@ -278,6 +280,8 @@ export class Predictor extends BaseRoute {
               "word" : word
             }
           );
+
+          res.send();
 
       });
 
@@ -301,6 +305,8 @@ export class Predictor extends BaseRoute {
               }
             }
           );
+
+          res.send();
 
       });
 
@@ -326,6 +332,8 @@ export class Predictor extends BaseRoute {
             }
           }
         );
+
+        res.send();
 
     });
 
