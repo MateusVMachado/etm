@@ -26,12 +26,11 @@ export class PredictorService extends AppServiceBase{
   public wordPicked(word: string) {
     this.submitWord(word);
     this.clear();
-    this.getInitialWords();
   }
 
   public clear() {
     this.currentWord = '';
-    this.wordsSubject.next(['','','','','']);
+    this.getInitialWords();
   }
 
   public predict(text: string) {
