@@ -9,6 +9,7 @@ export class PredictorService extends AppServiceBase{
   public currentWord: string = '';
   public wordsSubject = new ReplaySubject<Array<string>>();
   public words$ = this.wordsSubject.asObservable();
+  public currentValue: string[];
 
 
   constructor(
@@ -16,6 +17,7 @@ export class PredictorService extends AppServiceBase{
     public http: HttpClient,
   ) {
     super(injector);
+    this.words$.subscribe(value => this.currentValue = value)
   }
 
   public addCharacterAndPredict(newChar: string) {
@@ -31,6 +33,14 @@ export class PredictorService extends AppServiceBase{
   public clear() {
     this.currentWord = '';
     this.getInitialWords();
+  }
+
+  public clearCurrentWordOnly() {
+    this.currentWord = '';
+  }
+
+  public getWordsArray() {
+    return this.currentValue;
   }
 
   public predict(text: string) {

@@ -1,11 +1,16 @@
 <div class="container-fluid teclado-container" id="teclado-container" onload="getGPS()">
-    <div id="sElRows sElLines" class="col-md-12 row line" class="suggestionRow" *ngFor="let actionRow of teclado.text; index as iR">	
+    <div id="sElRows sElLines" class="col-md-12 row line" class="suggestionRow" *ngFor="let actionRow of teclado.text; index as iR">
       <div class="tamanho-button" *ngFor="let actionKey of actionRow; index as i">
           <input [style.background-color]="setBackground(iR,i)"
-          *ngIf="actionKey === '*SUGGESTION' || actionKey === '*CLEAR_SUGGESTIONS'"
-          type="button" 
+          *ngIf=" actionKey === '*CLEAR_SUGGESTIONS' ||
+                  actionKey === '*SUGGESTION0' ||
+                  actionKey === '*SUGGESTION1' ||
+                  actionKey === '*SUGGESTION2' ||
+                  actionKey === '*SUGGESTION3' ||
+                  actionKey === '*SUGGESTION4'"
+          type="button"
           class="btn button-keyboard notImage notImage{{iR}}x{{i}}"
-          value="{{ teclado.teclas[iR][i] }}" id="notImage{{iR}}x{{i}}"/> 
+          value="{{ teclado.teclas[iR][i] }}" id="notImage{{iR}}x{{i}}"/>
       </div>
     </div>
   <table class="tabela" id="{{idTeclado}}">
@@ -33,7 +38,7 @@
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_backspace</mat-icon>
           </button>
           <!-- UP ARROW Key -->
-          <button *ngIf="key == '*arrowup'" 
+          <button *ngIf="key == '*arrowup'"
           [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
             <mat-icon [style.background-color]="setBackground(iR,i)"
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_upward</mat-icon>
@@ -45,7 +50,7 @@
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_downward</mat-icon>
           </button>
           <!-- LEFT ARROW Key -->
-          <button *ngIf="key == '*arrowleft'" 
+          <button *ngIf="key == '*arrowleft'"
           [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
             <mat-icon [style.background-color]="setBackground(iR,i)"
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_back</mat-icon>
@@ -57,13 +62,13 @@
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">arrow_forward</mat-icon>
           </button>
           <!-- KEYBOARD RETURN Key -->
-          <button *ngIf="key == '*kbdrtrn'" 
+          <button *ngIf="key == '*kbdrtrn'"
           [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
             <mat-icon [style.background-color]="setBackground(iR,i)"
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">keyboard_return</mat-icon>
           </button>
           <!-- MIC Key -->
-          <button *ngIf="key == '*mic'" 
+          <button *ngIf="key == '*mic'"
           [style.background-color]="setBackground(iR,i)" class="btn button-keyboard icon-keyboard" value="{{ key }}" >
             <mat-icon [style.background-color]="setBackground(iR,i)"
             class="mat-icon material-icons" role="img" aria-hidden="true" id="element">volume_up</mat-icon>
@@ -74,19 +79,19 @@
           </button>
           <!-- NOT OTHER KEYS AND IMAGE -->
           <input [style.background-color]="setBackground(iR,i)"
-          *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
-          && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-          && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] === '*img'" 
-          type="button" class="btn button-keyboard btn_com_img images{{iR}}x{{i}}"  id="images{{iR}}x{{i}}"  /> 
+          *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic'
+          && key != '*arrowup' && key != '*arrowleft' && key != '*space'
+          && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] === '*img'"
+          type="button" class="btn button-keyboard btn_com_img images{{iR}}x{{i}}"  id="images{{iR}}x{{i}}"  />
           <!-- NOT OTHER KEYS AND !!!NOT!!! IMAGE -->
 		  <!-- ADDED IF ACTION === 'SUGGESTION' -->
           <input [style.background-color]="setBackground(iR,i)"
-          *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
-          && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
-          && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] !== '*img' && teclado.action[iR][i] !== 'suggestion'" 
-          type="button" 
+          *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic'
+          && key != '*arrowup' && key != '*arrowleft' && key != '*space'
+          && key != '*arrowdown' && key != '*arrowright' && key.split('$')[0] !== '*img' && teclado.action[iR][i] !== 'suggestion'"
+          type="button"
           class="btn button-keyboard notImage notImage{{iR}}x{{i}}"
-          value="{{ key }}" id="notImage{{iR}}x{{i}}"/> 
+          value="{{ key }}" id="notImage{{iR}}x{{i}}"/>
         </div>
       </td>
     </ng-container>
