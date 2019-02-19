@@ -3,7 +3,7 @@ import { OpenFacEngine } from './OpenFac.Engine';
 import { IOpenFacEngine } from './OpenFac.Engine.Interface';
 import { KeyboardWriterService } from './OpenFAc.KeyboardWriterService';
 
-export class OpenFacActionKeyboardWriter implements IOpenFacAction {    
+export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     //public cursorPosition: number = 0;
     public cursorPosition: number;
     public maxLength: number;
@@ -25,7 +25,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ç',
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ç'
     ]
-      
+
     constructor(private args: any){
         this.editor = this.args[0];
         this.keyCommandService = this.args[1];
@@ -53,9 +53,9 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.editor.insertHtml('<br>');
                 this.maxLength += 1;
                 this.doGetCaretPosition();
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
-                
+
             case '*bckspc':
                 this.editor.focus();
                 if ( this.tabs.get(this.cursorPosition) ){
@@ -70,32 +70,32 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                     //this.maxLength -= 1;
                     this.doGetCaretPosition();
                 }
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*tab':
                 this.editor.focus();
                 for(let i = 0; i < 4; i++) {
-                    this.editor.insertHtml('&nbsp;');                    
+                    this.editor.insertHtml('&nbsp;');
                     this.maxLength += 1;
                     this.doGetCaretPosition();
-                    
-                } 
+
+                }
                 this.tabs.set(this.cursorPosition, true);
                 this.tabs.set(this.cursorPosition-3, true);
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*cpslck':
                 this.editor.focus();
                 this.keyCommandService.emitKeyCommand('caps');
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowup':
                 // do something
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowdown':
                 // do something
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowleft':
             if ( this.tabs.get(this.cursorPosition) ){
@@ -116,7 +116,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
             }
                 // do something
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowright':
             if ( this.tabs.get(this.cursorPosition) ){
@@ -131,40 +131,49 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 let toGoForward = this.doGetCaretPosition(true);
                 if(toGoForward < this.maxLength) this.setCaretPosition(toGoForward);
                 this.doGetCaretPosition();
-            }    
-            this.clearWordAndPredictor();
+            }
+            this.predictor.clearCurrentWordOnly();
                 // do something
                 break;
             case '*space':
                 this.editor.focus();
-                this.editor.insertHtml('&nbsp;');      
-                this.maxLength += 1;  
+                this.editor.insertHtml('&nbsp;');
+                this.maxLength += 1;
                 this.doGetCaretPosition(false,' ');
-                this.clearWordAndPredictor();
+                this.predictor.clearCurrentWordOnly();
                 break;
             case 'SPACE':
                 this.editor.focus();
-                this.editor.insertHtml('&nbsp;');      
+                this.editor.insertHtml('&nbsp;');
                 this.maxLength += 1;
                 this.doGetCaretPosition(false,' ');
-                this.clearWordAndPredictor();
-                break;                     
+                this.predictor.clearCurrentWordOnly();
+                break;
             case 'PULA':
                 this.editor.focus();
-                this.editor.insertText('');    
+                this.editor.insertText('');
                 this.doGetCaretPosition();
-                break;    
-            case '*SUGGESTION' :
-              if(bt.Caption !== '') {
+                break;
+            case '*SUGGESTION0' :
+            case '*SUGGESTION1' :
+            case '*SUGGESTION2' :
+            case '*SUGGESTION3' :
+            case '*SUGGESTION4' :
 
-                let toInsert = bt.Caption.replace(this.predictor.currentWord, '');
+              let index = Number(bt.Text.substring(11));
+              let wordsArray = this.predictor.getWordsArray();
+              let realText = wordsArray[index];
+
+              if(realText !== '') {
+
+                let toInsert = realText.replace(this.predictor.currentWord, '');
 
                 this.editor.focus();
                 this.editor.insertText(toInsert);
                 this.editor.insertHtml('&nbsp;');
                 this.maxLength = this.maxLength + toInsert.length + 1;
                 this.doGetCaretPosition(false, toInsert);
-                this.predictor.wordPicked(bt.Caption);
+                this.predictor.wordPicked(realText);
 
               }
             break;
@@ -200,7 +209,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         if(sel){
             let element = sel.getStartElement();
             if(element){
-                sel.selectElement(element);  
+                sel.selectElement(element);
             } else {
                 return
             }
@@ -210,7 +219,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
             if(ranges){
                 ranges[0].setStart(element, this.cursorPosition-2);
                 ranges[0].setEnd(element, this.cursorPosition-1); //cursor
-                
+
                 if([ranges[0]]){
                     sel.selectRanges([ranges[0]]);
                 } else {
@@ -224,7 +233,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public doGetCaretPosition(toReturn?:boolean, bt?:string) {
         this.editor.focus();
         let selection = this.editor.getSelection();
-        if(selection !== null) { 
+        if(selection !== null) {
             let range = selection.getRanges()[0];
             //this.cursorPosition = range.startOffset + 1;
             if(bt){
@@ -234,8 +243,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.cursorPosition += 1;
                 //this.cursorPosition = range.startOffset + 1;
             }
-            
-        }    
+
+        }
 
         if(toReturn) return this.cursorPosition;
     }
@@ -247,11 +256,11 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
         if(sel){
             let element = sel.getStartElement();
             if(element){
-                sel.selectElement(element);  
+                sel.selectElement(element);
             } else {
                 return
             }
-            
+
             let ranges = this.editor.getSelection().getRanges();
             if(ranges){
                 ranges[0].setStart(element, pos);
@@ -260,10 +269,10 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                     sel.selectRanges([ranges[0]]);
                 } else {
                     return;
-                } 
+                }
             }
         }
         this.editor.focus();
     }
-    
+
 }
