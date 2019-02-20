@@ -50,6 +50,43 @@ export class Configuration extends BaseRoute {
     }
   }
 
+  public defaultConfig(res: Response, userEmail: string) {
+
+    let config = new ConfigurationModel();
+    config.openFacConfig.ActiveSensor = "joy";
+    config.openFacConfig.ScanTimeLines = 1;
+    config.openFacConfig.ScanTimeColumns = 1;
+    config.user = userEmail;
+    config.lastKeyboard = "pt-br";
+    config.level = 0;
+
+    this.getMongoAccess(res)
+      .configurations()
+      .subscribe(configCollection => {
+        configCollection
+          .find({ user: config.user })
+          .toArray(function(err, config_list) {
+            if (config_list.length === 0) {
+              configCollection.insert(config, (err, result) => {
+                res.status(200).send();
+              });
+            } else {
+              configCollection.update(
+                { user: config.user },
+                {
+                  openFacConfig: config.openFacConfig,
+                  user: config.user,
+                  lastKeyboard: config.lastKeyboard,
+                  level: config.level
+                }
+              );
+            }
+          });
+      });
+
+  }
+
+
   public userConfigureUpdate(req: Request, res: Response, next: NextFunction) {
     let parts = req.body;
 
