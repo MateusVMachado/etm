@@ -51,18 +51,21 @@ export class PredictorService extends AppServiceBase{
         {
           text: text,
         },
-      ).subscribe(data => {
+      ).subscribe((data: Array<any>) => {
 
-        let response = [];
-        for (let i = 0; i < 5; i++) {
-          if (data[i]) {
-            response.push(data[i].word)
-          } else {
-            response.push('');
+        if (data.length > 0) {
+          let response = [];
+          for (let i = 0; i < 5; i++) {
+            if (data[i]) {
+              response.push(data[i].word)
+            } else {
+              response.push('');
+            }
           }
+            this.wordsSubject.next(response);
+        } else {
+          this.clearCurrentWordOnly();
         }
-
-        this.wordsSubject.next(response);
 
       })
     }
