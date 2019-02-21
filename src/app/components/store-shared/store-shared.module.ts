@@ -6,7 +6,7 @@ import { TecladoBaseModule } from '../teclado-base/teclado-base.module';
 
 @NgModule({
   declarations: [ StoreItemComponent ],
-  imports: [AppModule, CommonModule, TecladoBaseModule],
+  imports: [CommonModule, TecladoBaseModule],
   exports: [ StoreItemComponent ],
 })
 export class StoreSharedModule { }

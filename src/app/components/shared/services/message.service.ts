@@ -1,9 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TranslateService } from "@ngx-translate/core";
 import { Subscription } from 'rxjs';
-import swal from 'sweetalert';
 import { HeaderService } from '../../header/header.service';
 import { SideBarService } from "../../sidebar/sidebar.service";
+
+import * as _swal from 'sweetalert';
+import { SweetAlert } from 'sweetalert/typings/core';
+const swal: SweetAlert = _swal as any;
 
 @Injectable()
 export class MessageService implements OnDestroy{
@@ -11,7 +14,7 @@ export class MessageService implements OnDestroy{
     private setLanguageSubscription: Subscription;
     private getTranslationSubscription: Subscription;
 
-    constructor(private translateService: TranslateService, private sidebarService: SideBarService, 
+    constructor(private translateService: TranslateService, private sidebarService: SideBarService,
         private headerService: HeaderService) {
         translateService.setDefaultLang('pt-br');
     }
@@ -30,7 +33,7 @@ export class MessageService implements OnDestroy{
         });
     }
 
-    info(message: string, title?: string): any { 
+    info(message: string, title?: string): any {
         swal({
             title: title,
             text: message,
@@ -38,7 +41,7 @@ export class MessageService implements OnDestroy{
         })
     }
 
-    success(title: string, message?: string): Promise<any> { 
+    success(title: string, message?: string): Promise<any> {
         return swal({
             title: title,
             text: message,
@@ -46,7 +49,7 @@ export class MessageService implements OnDestroy{
         })
     }
 
-    warn(message: string, title?: string): any { 
+    warn(message: string, title?: string): any {
         swal({
             title: title,
             text: message,
@@ -59,7 +62,7 @@ export class MessageService implements OnDestroy{
             title: title,
             text: message,
             icon: "error",
-        })    
+        })
     }
 
     confirm(message: string, titleOrCallBack?: string | ((result: boolean) => void), callback?: (result: boolean) => void): any { }
