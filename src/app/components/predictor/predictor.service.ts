@@ -27,7 +27,7 @@ export class PredictorService extends AppServiceBase{
 
   public wordPicked(word: string) {
     this.submitWord(word);
-    this.clear();
+    this.clearCurrentWordOnly();
   }
 
   public clear() {

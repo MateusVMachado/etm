@@ -331,6 +331,10 @@ export class TecladoComponent implements OnInit, OnDestroy {
                   }
                 }
                 if (!found) this.openFacLayout = (data[0]);
+
+                this.openFacLayout.Lines.unshift({Buttons: []});
+                this.configureSuggestionsLayout();
+
                 this.convertLayoutToKeyboard(this.teclado, this.openFacLayout);
 
                 this.generalConfigService.getConfiguration(this.userSession.user).subscribe((result) => {
@@ -342,6 +346,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
                 //this.configureSome();
                 this.tecladoService.emitTecladoReady(true);
 
+                setTimeout(()=>{
+                  this.configureSuggestionsLayout();
+                },500)
 
               });
             });
