@@ -13,6 +13,7 @@ import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
 import { Login } from './apis/login/login.api';
 import { backendConfig } from  './backend.config';
+import { Keyboard } from "./apis/keyboard/keyboard.api";
 var MongoClient = require('mongodb').MongoClient;
 
 /**
@@ -24,6 +25,9 @@ export class Server {
 
   private mongoAccess: MongoAccessModel;
   public app: express.Application;
+  public req: express.Request;
+  public res: express.Response;
+  public next: express.NextFunction;
 
   public guard: Login = new Login();
 
@@ -62,6 +66,7 @@ export class Server {
 
     // Cria pool de conexões e configura acesso
     this.createDatabaseAccess(this.app);
+    
 
     // Automatically create predictor_pt_br collection and insert documents
     // into it if it doesn't exist
@@ -156,7 +161,15 @@ export class Server {
    * @method connectDatabase
    */
   public createDatabaseAccess(app: express.Application){
+    let keyboard = new Keyboard();
     this.mongoAccess = new MongoAccessModel(MongoClient)
+    this.mongoAccess.keyboards()
+    .subscribe(keyboardCollection => {
+      keyboardCollection.insert(
+        keyboard.populateLayout("pt-br"),
+        (err, result) => {}
+      );
+    });
     // configura variaveis
     this.app.locals.mongoAccess = this.mongoAccess;
   }
@@ -168,7 +181,6 @@ export class Server {
    * @method api
    */
   public api() {
-    //empty for now
   }
 
   /**
@@ -222,8 +234,8 @@ export class Server {
     this.app.use(function (req, res, next) {
 
       // Website you wish to allow to connect
-      //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
-      res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
+      res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
+      //res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
 
       // Request methods you wish to allow
       res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -257,6 +269,9 @@ export class Server {
     IndexRoute.create(router, this.app);
 
     this.app.use(router);
+    
+    
+
 
   }
 }

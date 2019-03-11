@@ -34,7 +34,7 @@ export class MongoAccessModel {
 
     private doConnect(){
         let doConnectObservable = bindCallback<any, string, number, any>(this.mongoConnect);
-        let mongoUrl = process.env.MONGOHQ_URL|| 'mongodb://localhost:27017';
+        let mongoUrl = process.env.MONGOHQ_URL|| 'mongodb://172.17.0.1:27017';
         return doConnectObservable(this.mongoClient, mongoUrl, this.poolSize).pipe(
             map( (values) => {
                 let database = values[1];
