@@ -43,6 +43,8 @@ export class IndexRoute extends BaseRoute {
     let predictor = new Predictor();
     
     console.log("[Server is UP and listening]\n");
+    console.log("Link Front: ", process.env.FRONT);
+    console.log("Link MongoDB: ", process.env.MONGODB);
     
     // HOME
     //add home page route

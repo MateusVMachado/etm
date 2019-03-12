@@ -2,6 +2,9 @@ FROM node
 
 WORKDIR /usr/src/app
 
+ENV FRONT=http://localhost:4200/
+ENV MONGODB=mongodb://172.17.0.1:27017
+
 # Update Packages and install common deps
 RUN apt-get update
 RUN apt-get upgrade -y
