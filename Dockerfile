@@ -20,4 +20,4 @@ EXPOSE 8080
 CMD ["npm", "start"]
 
 ### To build an image use: docker build -t korp/etm-backend . ###
-### To create a container use: docker run -e FRONT='link' -e MONGODB='link' --name etm-backend korp/etm-backend ###
+### To create a container use: docker run -e FRONTURL='link' -e MONGOURL='link' --name etm-backend korp/etm-backend ###

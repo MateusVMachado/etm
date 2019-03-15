@@ -47,8 +47,8 @@ export class IndexRoute extends BaseRoute {
     console.log("[Server is UP and listening]\n");
 
     if (enviroments.isDebug === "true") {
-      console.log("Link Front: ", process.env.FRONT);
-      console.log("Link MongoDB: ", process.env.MONGODB);
+      console.log("Link Front: ", enviroments.FrontEndUrl);
+      console.log("Link MongoDB: ", enviroments.MongoDbUrl);
     }
     
     // HOME
