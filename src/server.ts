@@ -13,6 +13,7 @@ import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
 import { Login } from './apis/login/login.api';
 import { backendConfig } from  './backend.config';
+import { DockerEnviroments } from "./enviroment/enviroments";
 var MongoClient = require('mongodb').MongoClient;
 
 /**
@@ -220,8 +221,9 @@ export class Server {
     // Add headers
     this.app.use(function (req, res, next) {
 
+      let enviroments = new DockerEnviroments();
       // Website you wish to allow to connect
-      res.setHeader('Access-Control-Allow-Origin', process.env.FRONT);
+      res.setHeader('Access-Control-Allow-Origin', enviroments.FrontEndUrl);
       //res.setHeader('Access-Control-Allow-Origin', 'https://etm.korp.com.br');
 
       // Request methods you wish to allow

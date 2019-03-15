@@ -3,8 +3,9 @@ FROM node:10
 WORKDIR /usr/src/app
 
 # Set the front and mongodb IP
-ENV FRONT=http://localhost:4200/
-ENV MONGODB=mongodb://172.17.0.1:27017
+ENV FRONTURL=http://localhost:4200/
+ENV MONGOURL=mongodb://172.17.0.1:27017
+ENV ISDEBUG=false
 
 # Update Packages and install common deps
 RUN apt-get update
