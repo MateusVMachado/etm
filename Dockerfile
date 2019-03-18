@@ -14,8 +14,6 @@ RUN apt-get upgrade -y
 # Copy all files to the image
 COPY . .
 
-EXPOSE 8080
-
 # Run backend when a container is created
 CMD ["npm", "start"]
 
