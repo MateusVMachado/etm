@@ -16,6 +16,7 @@ import { ProfilePicture } from "../apis/profile-picture.api";
 import { TecladoCompartihadoNota } from "../apis/tec_compart_nota";
 import { TecladoCompartihado } from "../apis/tec_compart";
 import { Predictor } from "../apis/predictor/predictor.api";
+import { DockerEnviroments } from "../enviroment/enviroments";
 
 /**
 * / route
@@ -41,8 +42,14 @@ export class IndexRoute extends BaseRoute {
     let tec_compart_nota = new TecladoCompartihadoNota();
     let tec_compart = new TecladoCompartihado();
     let predictor = new Predictor();
+    let enviroments = new DockerEnviroments();
     
     console.log("[Server is UP and listening]\n");
+
+    if (enviroments.isDebug === "true") {
+      console.log("Link Front: ", enviroments.FrontEndUrl);
+      console.log("Link MongoDB: ", enviroments.MongoDbUrl);
+    }
     
     // HOME
     //add home page route

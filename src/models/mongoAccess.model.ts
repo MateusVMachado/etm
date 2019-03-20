@@ -1,6 +1,7 @@
 import { Observable, bindCallback, of,  } from 'rxjs';
 import { map , tap} from 'rxjs/operators';
 import { Collection } from 'mongodb';
+import { DockerEnviroments } from '../enviroment/enviroments';
 
 export class MongoAccessModel {
 
@@ -33,8 +34,9 @@ export class MongoAccessModel {
     }
 
     private doConnect(){
+        let enviroments = new DockerEnviroments();
         let doConnectObservable = bindCallback<any, string, number, any>(this.mongoConnect);
-        let mongoUrl = process.env.MONGOHQ_URL|| 'mongodb://localhost:27017';
+        let mongoUrl = process.env.MONGOHQ_URL|| enviroments.MongoDbUrl; //'mongodb://172.17.0.1:27017'
         return doConnectObservable(this.mongoClient, mongoUrl, this.poolSize).pipe(
             map( (values) => {
                 let database = values[1];

@@ -2,3 +2,4 @@
 /node_modules
 /.tscache
 /dist
+.vscode/
