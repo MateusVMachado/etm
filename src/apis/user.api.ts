@@ -56,9 +56,11 @@ export class User extends BaseRoute {
             if (user_list) {
               userCollection.update(
                 { email: userEmail },
-                { $set: { password: newPassword } }
+                { $set: { password: newPassword } },
+                function() {
+                  res.status(200).json({ message: "updated" });
+                }
               );
-              res.status(200).json({ message: "updated" });
             } else {
               res.status(200).json({ message: "not_updated" });
             }

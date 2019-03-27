@@ -14,9 +14,11 @@ export class Configuration extends BaseRoute {
         .subscribe(configCollection => {
           configCollection.update(
             { user: req.query.email },
-            { $set: { lastKeyboard: req.query.onlyKeyboard } }
+            { $set: { lastKeyboard: req.query.onlyKeyboard } },
+            function() {
+              res.status(200).send();
+            }
           );
-          res.status(200).send();
         });
     } else {
       let config = req.body as ConfigurationModel;
@@ -40,9 +42,11 @@ export class Configuration extends BaseRoute {
                     user: config.user,
                     lastKeyboard: config.lastKeyboard,
                     level: config.level
+                  },
+                  function() {
+                    res.status(200).send();
                   }
                 );
-                res.status(200).send();
               }
             });
         });
@@ -100,9 +104,11 @@ export class Configuration extends BaseRoute {
           .toArray(function(err, config_list) {
             configCollection.update(
               { user: parts[2] },
-              { $set: { flexSup: parts[0], flexUnd: parts[1] } }
+              { $set: { flexSup: parts[0], flexUnd: parts[1] } },
+              function() {
+                res.status(200).send();
+              }
             );
-            res.status(200).send();
           });
       });
   }
