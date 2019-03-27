@@ -7,8 +7,6 @@ import * as errorHandler from "errorhandler"; // Para modo desenvolvimento apena
 import * as helmet from 'helmet';
 import * as jwt from 'express-jwt';
 
-import { words_pt_br } from './default_configs/predictor_pt_br_data'
-
 import { IndexRoute } from "./routes/index";
 import { MongoAccessModel } from "./models/mongoAccess.model";
 import { Login } from './apis/login/login.api';
@@ -63,90 +61,6 @@ export class Server {
 
     // Cria pool de conexões e configura acesso
     this.createDatabaseAccess(this.app);
-
-    // Automatically create predictor_pt_br collection and insert documents
-    // into it if it doesn't exist
-    // this.app.locals.mongoAccess.mongoClient.connect(
-    //   'mongodb://localhost:27017/etm-database',
-    //   // { useNewUrlParser: true },
-    //   (err, client) => {
-
-    //     if (err) throw err;
-
-    //     client.db().collections(
-    //       (err, colls) => {
-
-    //         if (err) throw err;
-
-    //         let colf = colls.filter(col => {return col.s.name === 'predictor_pt_br'})
-
-    //         if(colf.length === 0) { // 'predictor_pt_br' collection doesn't exist
-
-    //           console.log("Creating predictor_pt_br collection");
-
-    //           //client.db().createCollection('testing_name');
-    //           // apparently the line below already creates it automatically
-    //           // so adding this makes things worse
-
-    //           // bulk insertion is a lot faster than individually inserting documents
-    //           let bulk = client.db().collection('predictor_pt_br').initializeUnorderedBulkOp();
-
-    //           let count = 0;
-    //           let total = words_pt_br.length;
-
-    //           console.time('Time elapsed');
-
-    //           words_pt_br.forEach( word => {
-    //             bulk.insert({
-    //               rank: 0,
-    //               word: word,
-    //               addedByUser: false,
-    //             })
-
-    //             // fancy shmancy progress thing
-    //             count++;
-    //             process.stdout.write(((count / total) * 100).toFixed(1) +'% | ' + count + ' documents inserted' +'\r');
-
-    //           })
-
-    //           process.stdout.write('\n'); // newline when it's done inserting
-
-    //           // another fancy console log
-    //           process.stdout.write("Executing bulk...");
-    //           bulk.execute();
-    //           process.stdout.write(" Done!" + '\n');
-
-    //           console.timeEnd('Time elapsed');
-
-    //         } else { // 'predictor_pt_br' collection exists
-
-    //           // do nothing
-
-    //         }
-
-    //       }
-    //     )
-    //   }
-    // );
-
-    // this.app.locals.mongoAccess.mongoClient.connect(
-    //   'mongodb://localhost:27017/etm-database',
-    //   { useNewUrlParser: true },
-    //   (err, client) => {
-    //     if (err) throw err;
-    //     client.db().collections(
-    //       (err, colls) => {
-    //         if (err) throw err;
-    //         let colf = colls.filter(col => {return col.s.name === 'predictor_local_pt_br'})
-    //         if(colf.length === 0) {
-    //           client.db().createCollection('predictor_local_pt_br');
-    //           console.log('Created predictor_local_pt_br collection');
-    //         }
-    //       }
-    //     )
-    //   }
-    // );
-
   }
 
 

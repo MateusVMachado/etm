@@ -1,7 +1,6 @@
 import { ConfigurationModel } from "../models/configuration.model";
 import { BaseRoute } from "../routes/route";
 import { NextFunction, Request, Response } from "express";
-import { config } from "rxjs";
 
 export class Configuration extends BaseRoute {
   constructor() {
@@ -50,7 +49,7 @@ export class Configuration extends BaseRoute {
     }
   }
 
-  public defaultConfig(res: Response, userEmail: string, callback: Function) {
+  public defaultConfig(res: Response, userEmail: string, callBack: Function) {
 
     let config = new ConfigurationModel();
     config.openFacConfig.ActiveSensor = "joy";
@@ -68,7 +67,7 @@ export class Configuration extends BaseRoute {
           .toArray(function(err, config_list) {
             if (config_list.length === 0) {
               configCollection.insert(config, (err, result) => {
-                callback();
+                callBack();
               });
             } else {
               configCollection.update(
@@ -80,7 +79,7 @@ export class Configuration extends BaseRoute {
                   level: config.level
                 },
                 function() {
-                  callback();
+                  callBack();
                 }
               );
             }
