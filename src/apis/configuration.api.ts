@@ -50,7 +50,7 @@ export class Configuration extends BaseRoute {
     }
   }
 
-  public defaultConfig(res: Response, userEmail: string) {
+  public defaultConfig(res: Response, userEmail: string, callback: Function) {
 
     let config = new ConfigurationModel();
     config.openFacConfig.ActiveSensor = "joy";
@@ -68,7 +68,7 @@ export class Configuration extends BaseRoute {
           .toArray(function(err, config_list) {
             if (config_list.length === 0) {
               configCollection.insert(config, (err, result) => {
-                res.status(200).send();
+                callback();
               });
             } else {
               configCollection.update(
@@ -78,6 +78,9 @@ export class Configuration extends BaseRoute {
                   user: config.user,
                   lastKeyboard: config.lastKeyboard,
                   level: config.level
+                },
+                function() {
+                  callback();
                 }
               );
             }
