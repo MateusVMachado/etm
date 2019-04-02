@@ -1,7 +1,6 @@
 import { ConfigurationModel } from "../models/configuration.model";
 import { BaseRoute } from "../routes/route";
 import { NextFunction, Request, Response } from "express";
-import { config } from "rxjs";
 
 export class Configuration extends BaseRoute {
   constructor() {
@@ -15,9 +14,11 @@ export class Configuration extends BaseRoute {
         .subscribe(configCollection => {
           configCollection.update(
             { user: req.query.email },
-            { $set: { lastKeyboard: req.query.onlyKeyboard } }
+            { $set: { lastKeyboard: req.query.onlyKeyboard } },
+            function() {
+              res.status(200).send();
+            }
           );
-          res.status(200).send();
         });
     } else {
       let config = req.body as ConfigurationModel;
@@ -41,16 +42,18 @@ export class Configuration extends BaseRoute {
                     user: config.user,
                     lastKeyboard: config.lastKeyboard,
                     level: config.level
+                  },
+                  function() {
+                    res.status(200).send();
                   }
                 );
-                res.status(200).send();
               }
             });
         });
     }
   }
 
-  public defaultConfig(res: Response, userEmail: string) {
+  public defaultConfig(res: Response, userEmail: string, callBack: Function) {
 
     let config = new ConfigurationModel();
     config.openFacConfig.ActiveSensor = "joy";
@@ -68,7 +71,7 @@ export class Configuration extends BaseRoute {
           .toArray(function(err, config_list) {
             if (config_list.length === 0) {
               configCollection.insert(config, (err, result) => {
-                res.status(200).send();
+                callBack();
               });
             } else {
               configCollection.update(
@@ -78,6 +81,9 @@ export class Configuration extends BaseRoute {
                   user: config.user,
                   lastKeyboard: config.lastKeyboard,
                   level: config.level
+                },
+                function() {
+                  callBack();
                 }
               );
             }
@@ -98,9 +104,11 @@ export class Configuration extends BaseRoute {
           .toArray(function(err, config_list) {
             configCollection.update(
               { user: parts[2] },
-              { $set: { flexSup: parts[0], flexUnd: parts[1] } }
+              { $set: { flexSup: parts[0], flexUnd: parts[1] } },
+              function() {
+                res.status(200).send();
+              }
             );
-            res.status(200).send();
           });
       });
   }

@@ -33,7 +33,7 @@ export class TecladoCompartihado extends BaseRoute {
                 tec.numVisualizacao = 0;
               }
               tec.numVisualizacao = Number(Number(tec.numVisualizacao) + 1);
-              tecCompartCollection.update({ $and: [{ id: tec.id }] }, tec);
+              tecCompartCollection.update({ $and: [{ id: tec.id }] }, tec, function() {res.status(200).send()});
             }
           });
       });
@@ -52,7 +52,7 @@ export class TecladoCompartihado extends BaseRoute {
                 tec.numUsado = 0;
               }
               tec.numUsado = Number(Number(tec.numUsado) + 1);
-              tecCompartCollection.update({ $and: [{ id: tec.id }] }, tec);
+              tecCompartCollection.update({ $and: [{ id: tec.id }] }, tec, function() {res.status(200).send()});
             }
           });
       });
@@ -70,9 +70,11 @@ export class TecladoCompartihado extends BaseRoute {
             if (tec_compart_list.length !== 0) {
               tecCompartCollection.update(
                 { $and: [{ id: req.body["id"] }] },
-                req.body
+                req.body,
+                function() {
+                  res.send(JSON.stringify("updated"));
+                }
               );
-              res.send(JSON.stringify("updated"));
             } else {
               tecCompartCollection.insert(req.body, (err, result) => {});
               res.send(JSON.stringify("saved"));
@@ -105,9 +107,11 @@ export class TecladoCompartihado extends BaseRoute {
                 .subscribe(tecCompartCollection => {
                   tecCompartCollection.remove(
                     { teclado: req.query.nameLayout + req.query.usuarioEmail },
-                    true
+                    true,
+                    function(){
+                      res.status(200).send();
+                    }
                   );
-                  res.send();
                 });
             }
           });

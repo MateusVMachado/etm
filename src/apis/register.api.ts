@@ -4,15 +4,14 @@ import * as mongoSanitize from "express-mongo-sanitize";
 import { UserModel } from "../models/user.model";
 import { Configuration } from "./configuration.api";
 
-export class Register extends BaseRoute {
-
-  private configuration = new Configuration();
+export class Register extends BaseRoute {  
 
   constructor() {
     super();
   }
 
   public registerUser(req: Request, res: Response, next: NextFunction) {
+
     this.getMongoAccess(res)
       .users()
       .subscribe(userCollection => {
@@ -24,7 +23,6 @@ export class Register extends BaseRoute {
               res
                 .status(400)
                 .json({ message: "Esse email já foi cadastrado!" });
-              return true;
             } else {
               // console.log("USER NOT FOUND!");
 
@@ -37,10 +35,14 @@ export class Register extends BaseRoute {
               mongoSanitize.sanitize(user.fullName);
               mongoSanitize.sanitize(user.email);
               mongoSanitize.sanitize(user.password);
-
+              
               userCollection.insert(user, (err, result) => {
                   if(result){
-                    res.status(200).json({ message: "Registro feito com sucesso." });
+                    const configuration = new Configuration();
+                    configuration.defaultConfig(res, req.body["email"], function() {                   
+                      res.status(200).json({ message: "Registro feito com sucesso." });
+                      }
+                    );
                   }else{
                       res.status(500).json({message: "Houve um problema ao realizar o registro"});
                   }
@@ -48,8 +50,5 @@ export class Register extends BaseRoute {
             }
           });
       });
-
-    this.configuration.defaultConfig(res, req.body["email"]);
-
   }
 }
