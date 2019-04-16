@@ -2,28 +2,27 @@
   <span>{{ messageService.getTranslation('CONFIGURACAO_GERAL_TITULO') }}</span>
 </div>
 
-<form (ngSubmit)="setConfiguration()" #form="ngForm" autocomplete="off"> 
-    <div class="form-group" *ngIf="false"> <!-- desabilitado pois não há efeito nenhum atualmente -->        
+<form (ngSubmit)="setConfiguration()" #form="ngForm" autocomplete="off">
+    <div class="form-group" *ngIf="false"> <!-- desabilitado pois não há efeito nenhum atualmente -->
          <label for="linguagem" class="label-margin-bottom">{{ messageService.getTranslation('INPUT_LAYOUT') }}</label>
         <select class="form-control input" name="layout" [(ngModel)]="config.layout" id="layout" #layout="ngModel" [required]="true">
             <option value="QWERTY">QWERTY</option>
         </select>
         <small class="form-text error" *ngIf="layout.invalid && layout.touched && layout.errors?.required">
             {{ messageService.getTranslation('LAYOUT_OBRIGATORIO') }}
-        </small> 
-    </div> 
+        </small>
+    </div>
     <div class="form-group">
         <label class="label-margin-bottom label-margin-top">{{ messageService.getTranslation('INPUT_SENSOR') }}</label>
         <select class="form-control input" name="sensor" [(ngModel)]="config.sensor" id="sensor" #sensor="ngModel" [required]="true">
             <option value="mic">{{ messageService.getTranslation('SENSOR_ITEM_MIC') }}</option>
             <option value="joy">{{ messageService.getTranslation('SENSOR_ITEM_JOY') }}</option>
-            <option value="tec">{{ messageService.getTranslation('SENSOR_ITEM_TEC') }}</option>
         </select>
         <small class="form-text error" *ngIf="sensor.invalid && sensor.touched && sensor.errors?.required">
             {{ messageService.getTranslation('SENSOR_OBRIGATORIO') }}
         </small>
     </div>
-     
+
     <div class="form-group" *ngIf="false">
         <label for="tipoVarredura" class="label-margin-bottom label-margin-top">{{ messageService.getTranslation('INPUT_TIPO_VARREDURA') }}</label>
         <select class="form-control input" name="tipoVarredura" [(ngModel)]="config.tipoVarredura" id="tipoVarredura" #tipoVarredura="ngModel" [required]="true">
@@ -33,7 +32,7 @@
         <small class="form-text error" *ngIf="tipoVarredura.invalid && tipoVarredura.touched && tipoVarredura.errors?.required">
             {{ messageService.getTranslation('TIPO_VARREDURA_OBRIGATORIO') }}
         </small>
-    </div> 
+    </div>
     <div class="form-group">
         <label for="tmpVarreduraLns" class="label-margin-bottom label-margin-top" style="display: block;">{{ messageService.getTranslation('INPUT_TEMPO_VARREDURA_LINHAS') }}</label>
         <input step="0.1" type="number" class="form-control input" name="tmpVarreduraLns" [(ngModel)]="config.tmpVarreduraLns" id="tmpVarreduraLns" #tmpVarreduraLns="ngModel" [required]="true">
@@ -56,7 +55,7 @@
                          [ngModelOptions]="{standalone: true}"></mat-slider>
                     <label for="linguagem" class="label-margin-bottom">{{level.toFixed(2)}}</label>
                     <br>
-                    
+
                     <!-- PARA FUTURAS IMPLEMENTAÇÕES -->
                     <!--
                     <mat-slide-toggle color="primary" [(ngModel)]="micOptOn2" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
@@ -67,7 +66,7 @@
                     -->
               </div>
 
-         
+
   <div class="modal-footer">
     <button [disabled]=" !form.valid " style="cursor: pointer;" class="btn btn-md btn-primary">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
   </div>
