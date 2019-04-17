@@ -21,7 +21,7 @@ import { OpenFacSensorMicrophone } from '../../../../node_modules/openfac/OpenFa
 import { EditorTecladoService } from '../editor-teclado/editor-teclado.service';
 import { ConfigModel } from '../general-config/config.model';
 import { GeneralConfigService } from '../general-config/general-config.service';
-import { TimeIntervalUnit, UserSessionModel } from '../shared/models/userSession.model';
+import { TimeIntervalUnit, UserSessionModel, KeyPressedAt } from '../shared/models/userSession.model';
 import { AuthService } from '../shared/services/auth.services';
 import { BackLoggerService } from '../shared/services/backLogger.service';
 import { SideBarService } from '../sidebar/sidebar.service';
@@ -30,6 +30,8 @@ import { ActiveLineCol } from './activeLine.model';
 import { TecladoModel } from './teclado.model';
 import { TecladoService } from './teclado.service';
 import { PredictorService } from '../predictor/predictor.service';
+import { isEmpty } from 'rxjs/operator/isEmpty';
+import { empty } from 'rxjs/observable/empty';
 
 
 
@@ -73,6 +75,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
   private userSession: UserSessionModel;
   private timeInterval: TimeIntervalUnit;
+  private keyPressedAt: KeyPressedAt;
 
   public once: number = 0;
   public level: number;
@@ -109,6 +112,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
   private availHeight: number;
   private availWidth: number;
   private scale: number;
+
+  private teste: KeyPressedAt[] = [];
+  private lastKey: boolean;
 
   @ViewChild(TecladoBaseComponent) tecladoBaseComponent;
 
@@ -149,7 +155,9 @@ export class TecladoComponent implements OnInit, OnDestroy {
 
       this.userSession = new UserSessionModel();
       this.userSession.keyboardIntervals = new Array();
+      this.userSession.keyPressedAt = new Array();
       this.timeInterval = new TimeIntervalUnit();
+      this.keyPressedAt = new KeyPressedAt();
 
       this.timeInterval.inTime = moment().format("HH:mm:ss");
 
@@ -178,6 +186,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
       this.keyCommandService = new OpenFacKeyCommandService();
 
       this.tecladoServiceSubscription = this.tecladoService.subscribeToTecladoSubject().subscribe((result) => {
+        this.lastKey = true;
         if (result === "pressed") {
           this.ledOn = true;
           clearInterval(this.timeoutId);
@@ -239,6 +248,7 @@ export class TecladoComponent implements OnInit, OnDestroy {
       this.timeInterval.outTime = moment().format('HH:mm:ss');
       this.userSession.keyboardIntervals.push(this.timeInterval);
       this.backLoggerService.sendKeyboardIntervalNow(this.userSession).subscribe(() => { });
+      //this.backLoggerService.sendKeyPressedAt(this.userSession).subscribe(() => { });
 
       this.newInstanceSizeSubscription.unsubscribe();
 
@@ -473,24 +483,43 @@ export class TecladoComponent implements OnInit, OnDestroy {
       this.activeLine.cor = cor;
     }
 
+    private getKey(engine: OpenFacEngine) {
+
+      let t = engine.GetCurrentButton();
+      if(t != undefined && t != null) {
+        if(this.lastKey){
+          this.userSession.keyPressedAt[this.userSession.keyPressedAt.length -1] && this.teste.push(this.userSession.keyPressedAt[this.userSession.keyPressedAt.length -1]);
+          this.userSession.keyPressedAt = this.teste;
+          this.backLoggerService.sendKeyPressedAt(this.userSession).subscribe(() => { this.teste = []; });
+          this.lastKey = false;
+        }
+        this.userSession.keyPressedAt.push({key: t.Text, time: moment().format('HH:mm:ss'), scanTimeOfLines: this.scanTimeLines.toString(), scanTimeOfColumns: this.scanTimeColumns.toString()});
+      }
+    }
+
     private DoLineUp(engine: OpenFacEngine): void {
+      this.getKey(engine);
       this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
       this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
     }
 
     private DoLineDown(engine: OpenFacEngine): void {
+      this.getKey(engine);
       this.ChangeLineColor(engine, engine.GetPriorRowNumber(), 'white');
       this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'yellow');
     }
     private DoColumnRight(engine: OpenFacEngine): void {
+      this.getKey(engine);
       this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
       this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
     }
     private DoColumnLeft(engine: OpenFacEngine): void {
+      this.getKey(engine);
       this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
       this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'red');
     }
     private DoAction(engine: OpenFacEngine): void {
+      this.getKey(engine);
       this.ChangeLineColor(engine, engine.GetCurrentRowNumber(), 'white');
       this.ChangeButtonColor(engine, engine.GetCurrentColumnNumber(), 'yellow');
     }
