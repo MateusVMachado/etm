@@ -11,6 +11,13 @@ export class TimeIntervalUnit {
     outTime: string;
 }
 
+export class KeyPressedAt {
+  key: string;
+  time: string;
+  scanTimeOfLines: string;
+  scanTimeOfColumns: string;
+}
+
 export class UserSessionModel {
     ip: string;
     user: string;
@@ -20,11 +27,12 @@ export class UserSessionModel {
     sessDuration: string;
     configIntervals: Array<TimeIntervalUnit>;
     configUsage: string;
+    keyPressedAt: Array<KeyPressedAt>;
     keyboardIntervals: Array<TimeIntervalUnit>;
     keyboardUsage: string;
     layoutEditorIntervals: Array<TimeIntervalUnit>;
-    layoutEditorUsage: string;  
+    layoutEditorUsage: string;
     latitude: string;
     longitude: string;
-    
+
 }
