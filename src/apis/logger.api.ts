@@ -3,6 +3,7 @@ import * as moment from "moment";
 import { UserSessionModel } from "../models/userSession.model";
 import { BaseRoute } from "../routes/route";
 import { isNullOrUndefined } from "util";
+import { ConfigurationModel } from "../models/configuration.model";
 
 export class Logger extends BaseRoute {
   constructor() {
@@ -20,6 +21,8 @@ export class Logger extends BaseRoute {
     options?: string
   ) {}
 
+  private configurationModel = new ConfigurationModel();
+
   public logSessionStart(
     req: Request,
     res: Response,
@@ -33,6 +36,7 @@ export class Logger extends BaseRoute {
 
     userSession.ip = req.ip;
     userSession.user = email;
+    userSession.lastKeyboard = "pt-br";
     userSession.access = moment().format("HH:mm:ss");
     userSession.logout = "notSet";
     userSession.sessDate = moment().format("L");
@@ -44,6 +48,7 @@ export class Logger extends BaseRoute {
     userSession.configIntervals = new Array();
     userSession.configUsage = "notSet";
     userSession.keyboardIntervals = new Array();
+    userSession.keyPressedAt = new Array();
     userSession.keyboardUsage = "notSet";
     userSession.layoutEditorIntervals = new Array();
     userSession.layoutEditorUsage = "notSet";
@@ -273,6 +278,44 @@ export class Logger extends BaseRoute {
                       $and: [{ user: req.body["user"] }, { logout: "notSet" }]
                     },
                     { $set: { keyboardUsage: userSession.keyboardUsage } },
+                    (err, result) => {
+                      if (result) {
+                        res.send();
+                      }
+                    }
+                  );
+                }
+              }
+            );
+          });
+      });
+  }
+
+  public logKeyPressedAt(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    options?: string
+  ) {
+    let logger = new Logger();
+    let userSession = new UserSessionModel();
+    userSession = req.body;
+    this.getMongoAccess(res)
+      .configurations()
+      .subscribe(logsCollection => {
+        logsCollection
+          .find({ $and: [{ user: req.body["user"] }, { logout: "notSet" }] })
+          .toArray(function(err, userSessionList) {
+            logsCollection.update(
+              { $and: [{ user: req.body["user"] }, { logout: "notSet" }] },
+              { $push: { keyPressedAt: userSession.keyPressedAt } },
+              (err, result) => {
+                if (result) {
+                  logsCollection.update(
+                    {
+                      $and: [{ user: req.body["user"] }, { logout: "notSet" }]
+                    },
+                    { $addToSet: { keyPressedAt: userSession.keyPressedAt } },
                     (err, result) => {
                       if (result) {
                         res.send();

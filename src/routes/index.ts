@@ -161,6 +161,12 @@ export class IndexRoute extends BaseRoute {
       
       logger.logKeyboardIntervals(req,res,next);
     });
+
+    router.post("/setKeyPressedAt", (req: Request, res: Response, next: NextFunction) => {
+      res.locals.mongoAccess = app.locals.mongoAccess;
+      
+      logger.logKeyPressedAt(req,res,next);
+    });
     
     router.post("/setConfigIntervals", (req: Request, res: Response, next: NextFunction) => {
       res.locals.mongoAccess = app.locals.mongoAccess;
