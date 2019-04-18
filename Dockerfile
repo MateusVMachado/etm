@@ -1,12 +1,12 @@
 #Seleciona qual imagem usará como base para construir o docker;
 FROM nginx:1.15.8
 #Checa os Repositórios para saber novas atualizações;
-RUN apt-get update 
+RUN apt-get update
 #Intala o manipulador de json;
 RUN apt-get install -y jq
 #Copia o build do front para imagem;
 COPY /dist /usr/share/nginx/html
-# Copia o arquivo de entrypoint e dá permissão para ele, 
+# Copia o arquivo de entrypoint e dá permissão para ele,
 # o arquivo entrypoint.sh manipula o arquivo json "assets/app-settings/appsettings.json"
 # de configuração de servidor do backend passando uma variavel de ambiente que pode ser configurada via prompt no comando run;
 COPY entrypoint.sh /

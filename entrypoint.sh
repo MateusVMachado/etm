@@ -5,3 +5,5 @@ cat /tmp/appsettings.json > /usr/share/nginx/html/assets/app-settings/appsetting
 
 nginx -g 'daemon off;'
 
+  
+  
