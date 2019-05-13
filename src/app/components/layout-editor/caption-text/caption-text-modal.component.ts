@@ -17,13 +17,13 @@ import { DomSanitizer,  SafeHtml,  SafeUrl, SafeStyle } from '@angular/platform-
 })
 export class CaptionTextModalComponent extends AppBaseComponent implements OnInit, OnDestroy, AfterContentInit {
 
-    
+
     public falar: boolean = false;
     public escrever: boolean = true;
     public imagem: boolean = false;
     public keyboardName: string = "";
 
-    
+
     public bsImg: number;
     public sysImg: boolean = true;
     public sysImgPath: string;
@@ -46,7 +46,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public height: number = 0;
     public width: number = 0;
 
-    private timer: any; 
+    private timer: any;
     private counter: number;
 
     constructor(private activeModal: NgbActiveModal,
@@ -56,37 +56,37 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                 private cdr: ChangeDetectorRef,
                 private sanitizer: DomSanitizer) {
                     super(injector)
-                    
+
                     this.bsImg = 1;
-                    this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';    
+                    this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';
                     this.timer = setInterval(this.newCheckRound.bind(this), 100);
 
                     this.captionSubscribe = this.captionTextService.subscribeToCaptionTextSubject().subscribe((result)=>{
-                    
+
                         // result[0] (event); // 0
                         // result[1] (text); // 1
                         // result[2] (action); // 2
                         // result[3] (image); // 3
-                        // result[4] h(teclas); // 4    
+                        // result[4] h(teclas); // 4
 
                         // Se o texto indicativo nao for de imagem ou tecla especial
                         if(result[1].substring(0,1) === '*' && result[1] !== '*img'){
                             this.buttonCaption = "";
                             this.buttonText = "";
-                            this.buttonAction = result[2]; 
+                            this.buttonAction = result[2];
                             // Caso contratior eh imagem
                         } else {
                             this.buttonCaption = result[0].target.value;
                             this.buttonText = result[1];
                             this.buttonAction = result[2];
                             this.buttonImage = result[3];
-                            
+
 
                             if(this.buttonImage) {
                                 this.imagem = true;
-                            
+
                                 this.imgUrl = this.buttonImage;
-                            }    
+                            }
                             if(result[4].split('$')[0] === '*img'){
                                 this.imagem = true;
                             } else {
@@ -94,7 +94,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             }
 
                         }
-             
+
 
                         if(this.buttonAction === "Keyboard"){
                             this.escrever = true;
@@ -109,7 +109,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                             this.escrever = true;
                         }
 
-                    
+
                     })
 
                  }
@@ -118,11 +118,11 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
     }
 
-    ngOnInit() { 
-        
+    ngOnInit() {
+
 
         if(this.sysImg && !this.imgUrl) this.readLocalImg();
-        
+
 
     }
 
@@ -140,7 +140,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     public onChangeToggle(event){
         if(event['source'].id === 'escrever' && event['source'].checked === false && !this.falar){
             event['source'].checked = true;
-            this.escrever = true;     
+            this.escrever = true;
         }
         if(!this.falar && !this.escrever){
             this.escrever = true;
@@ -148,24 +148,24 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
     }
 
     public saveButtonConfiguration(stat?){
-        
 
-        if ( stat ) 
+
+        if ( stat )
         {
             this.activeModal.close();
             this.layoutEditorService.emitLayoutEditorPayload('exit');
             return;
         }
         if(this.sysImg) this.readLocalImg();
-        
-        let payload = new Array();    
-        
+
+        let payload = new Array();
+
         if(this.buttonImage && this.imagem)this.buttonCaption = "*img";
 
         payload.push(this.buttonText);
         payload.push(this.buttonCaption);
-        
-    
+
+
         if(this.falar && !this.escrever) this.buttonAction = 'TTS'; // falar activated
         if(!this.falar && this.escrever) this.buttonAction = 'Keyboard'; // escrever activated
         if(this.falar && this.escrever) this.buttonAction = 'KeyboardAndTTS'; // both
@@ -175,9 +175,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         payload.push(this.buttonImage);
 
 
-        
+
         payload.push(this.imgUrl);
-        
+
         payload.push(this.height);
         payload.push(this.width);
 
@@ -186,8 +186,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
         payload.push(this.imagem);
 
 
-        
-        this.layoutEditorService.emitLayoutEditorPayload(payload);  
+
+        this.layoutEditorService.emitLayoutEditorPayload(payload);
         console.log('ENTROU NO SAVE E FEZ EMIT');
 
         payload = undefined;
@@ -199,7 +199,7 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             this.activeModal.close();
             //this.closeModal();
         }
-        
+
     }
 
     public saveKeyboardName(){
@@ -218,16 +218,16 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
         if(direction === 'up'){
             if(this.bsImg === 1){
-                this.bsImg = 14;
+                this.bsImg = 2017;
             }else{
                 this.bsImg = this.bsImg - 1;
             }
 
             this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';
             if(this.sysImg) this.readLocalImg();
-            
+
         }else if(direction === 'down'){
-            if(this.bsImg === 14){
+            if(this.bsImg === 2017){
                 this.bsImg = 1;
             }else{
                 this.bsImg = this.bsImg + 1;
@@ -236,9 +236,9 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             this.sysImgPath = '../../../assets/images/' + this.bsImg.toString() + '.png';
 
             if(this.sysImg) this.readLocalImg();
-            
+
         }
-        
+
     }
 
 
@@ -249,19 +249,19 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
             this.bigImage = false;
             var reader = new FileReader();
             let self = this;
-            
-            reader.onload = () => {    
+
+            reader.onload = () => {
                 var img = new Image();
-                img.src = reader.result;           
-                
+                img.src = reader.result;
+
                 this.imageFile.content = reader.result.substring((reader.result.indexOf(this.base64Token) + this.base64Token.length));
-            
+
                 self.height = img.height;
                 self.width = img.width;
-                
+
                 this.imageFile.name = fileInput.target.files[0].name;
                 this.fileLoaded = true;
-            
+
                 this.imgUrl = this.imageFile.content;
                 this.buttonImage = 'data:image/png;base64,'+ this.imageFile.content;
 
@@ -272,8 +272,8 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
                  img.src = reader.result;
             };
 
-            reader.readAsDataURL(fileInput.target.files[0]);  
-            
+            reader.readAsDataURL(fileInput.target.files[0]);
+
         } else {
             this.bigImage = true;
         }
@@ -290,14 +290,14 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
     public readLocalImg()  {
             this.imageFile = new Picture();
-            let xhr = new XMLHttpRequest();       
-            xhr.open("GET", this.sysImgPath, true); 
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", this.sysImgPath, true);
             xhr.responseType = "blob";
             let self = this;
             xhr.onload = function (e) {
                     let img = new Image();
-   
-                    
+
+
                     let reader = new FileReader();
                     reader.onload = function(event) {
                         let res = reader.result;
@@ -311,13 +311,13 @@ export class CaptionTextModalComponent extends AppBaseComponent implements OnIni
 
                          };
                          img.src = reader.result;
-                        
+
                     }
                     let file = xhr.response;
-                    
+
                     reader.readAsDataURL(file)
             };
             xhr.send();
-    }        
-    
+    }
+
 }
