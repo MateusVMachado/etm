@@ -1,10 +1,8 @@
 import { IOpenFacAction } from './OpenFac.Action.Interface';
 import { OpenFacEngine } from './OpenFac.Engine';
 import { IOpenFacEngine } from './OpenFac.Engine.Interface';
-import { KeyboardWriterService } from './OpenFAc.KeyboardWriterService';
 
 export class OpenFacActionKeyboardWriter implements IOpenFacAction {
-    //public cursorPosition: number = 0;
     public cursorPosition: number;
     public maxLength: number;
 
@@ -13,8 +11,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     public editor: any;
     public keyCommandService: any;
     public zone: any;
-    //private maxLength: number = 1;
-    private keyboardWriterService: KeyboardWriterService = new KeyboardWriterService();
 
     private predictor: any;
 
@@ -24,7 +20,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
     private alpha = [
       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'Ç',
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'ç'
-    ]
+    ];
 
     constructor(private args: any){
         this.editor = this.args[0];
@@ -75,7 +71,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
             case '*tab':
                 this.editor.focus();
                 for(let i = 0; i < 4; i++) {
-                    this.editor.insertHtml('&nbsp;');
+                    this.editor.insertHtml(' ');
                     this.maxLength += 1;
                     this.doGetCaretPosition();
 
@@ -90,11 +86,9 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowup':
-                // do something
                 this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowdown':
-                // do something
                 this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowleft':
@@ -115,7 +109,6 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 }
                 this.doGetCaretPosition();
             }
-                // do something
                 this.predictor.clearCurrentWordOnly();
                 break;
             case '*arrowright':
@@ -133,18 +126,17 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
                 this.doGetCaretPosition();
             }
             this.predictor.clearCurrentWordOnly();
-                // do something
                 break;
             case '*space':
                 this.editor.focus();
-                this.editor.insertHtml('&nbsp;');
+                this.editor.insertHtml(' ');
                 this.maxLength += 1;
                 this.doGetCaretPosition(false,1);
                 this.predictor.clearCurrentWordOnly();
                 break;
             case 'SPACE':
                 this.editor.focus();
-                this.editor.insertHtml('&nbsp;');
+                this.editor.insertHtml(' ');
                 this.maxLength += 1;
                 this.doGetCaretPosition(false,1);
                 this.predictor.clearCurrentWordOnly();
@@ -173,7 +165,7 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
 
                 this.editor.focus();
                 this.editor.insertText(toInsert);
-                this.editor.insertHtml('    ');
+                this.editor.insertHtml(' ');
                 this.maxLength = this.maxLength + toInsert.length + 1;
                 this.doGetCaretPosition(false, toInsert.length + 1);
                 this.predictor.wordPicked(realText);
@@ -229,8 +221,8 @@ export class OpenFacActionKeyboardWriter implements IOpenFacAction {
             
 
             if(ranges){
-                ranges[0].setStart(element, this.cursorPosition-1); // issue here (no child at offset x)
-                ranges[0].setEnd(element, this.cursorPosition); //cursor
+                ranges[0].setStart(element, this.cursorPosition-1);
+                ranges[0].setEnd(element, this.cursorPosition);
 
                 if([ranges[0]]){
                     sel.selectRanges([ranges[0]]);
