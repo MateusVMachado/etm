@@ -1,0 +1,37 @@
+#### Instalação e uso do ETM-Backend em Docker ####
+
+OS PASSOS ABAIXO SÃO PARA SISTEMA OPERACIONAL WINDOWS
+Pré-requisitos: Ter o docker já instalado na máquina.
+
+Para utilizar o ETM-Backend é necessário o MongoDB, a configuração dele será realizada antes do back.
+
+Configuração do MongoDB:
+
+    - Primeiro será necessário fazer o download e criando um container da imagem do Mongo, usando o comando abaixo:
+        - docker run --name etm-mongo -d -v /tmp/mongodb:/data/db -p 27017:27017 mongo
+    
+    - Com isso temos o MongoDB já rodando em um container com o nome etm-mongo.
+
+    - Caso deseje testar os dados no banco, é possível utilizar uma interface no navegador com uma outra imagem. Para isso
+    utilize o comando abaixo:
+        - docker run --link etm-mongo:mongo -p 8081:8081 mongo-express
+    - Para visualizar no navegador use o comando abaixo para capturar o IP que o container está utilizando:
+        - docker-machine ip
+    - Terá retornado o ip. Com isso adicione este ip ao navegador junto da porta 8081.
+    - Agora você tem um acesso visual ao seu MongoDB, podendo fazer as alterações por ele também.
+
+Iniciando o ETM-Backend:
+
+    - Para baixar a imagem do ETM-Backend, antes terá de realizar o login com o usuário da korp no Docker Hub, com o comando abaixo:
+        - docker login
+        - User: korp
+        - Password: korp!4518
+
+    - Com o usuário logado, rode o comando abaixo para baixar e criar um novo container da imagem do back.
+        - docker run -e FRONTURL='link' -e MONGOURL='link' -p 8080:8080 --name etm-backend korp/etm-backend
+    - Os campos que estão com 'link' devem ser preenchidos com os IPs do Frontend e do MongoDB. Como já iniciamos o Mongo,
+    basta utilizar o comando abaixo e no campo "Gateway" verá o IP a ser utilizado, junto da porta 27017, e substituindo o "http://"
+    por "mongodb://". (Ex.: mongodb://172.17.0.1:27017)
+        - docker network inspect bridge
+
+Seguindo este tutorial o Backend do ETM estará pronto para conectar com o Frontend.
