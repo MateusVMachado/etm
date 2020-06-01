@@ -1,0 +1,19 @@
+<h5>
+  predictor testing page
+</h5>
+
+<button (click)="check()">log ngmodel</button>
+<button (click)="clearAll()">clear all</button><br>
+
+<input type="text" [(ngModel)]="currentText" (input)="onTextChange($event.target.value)">
+
+<button (click)="submitCurrentText()">submit</button>
+<button (click)="removeWord()">remove</button>
+
+
+<h5 *ngFor="let word of words">
+
+  <button (click)="pickWord(word)">pick</button>
+  rank {{word.rank}} | {{word.word}}
+
+</h5>

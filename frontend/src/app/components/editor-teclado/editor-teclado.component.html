@@ -1,0 +1,21 @@
+<div class="container-fluid" id="EditorTecladoContainer">
+        <!--(mousedown)="startDragging($event, index*2+1, index+1)"
+        (touchstart)="startDragging($event, index*2+1, index+1)">-->
+    <split id="split_geral" direction="vertical" gutterSize="20" (mouseup)="callEvent($event)" id='split'>
+            <!--0 0 calc(24.1758% - 2.9011px) flexUnd: 0 0 calc(75.8242% - 9.0989px)-->
+       <split-area id="split1" size='100%' >
+                <div id="editor">
+                        <div class="col-md-12" id='elEditorCol'>
+                            <app-editor [tamanho]='tamanho' *ngIf="initEditor" id='elEditor'></app-editor>
+                        </div>
+                    </div>
+       </split-area>
+       <split-area id="split2" style="overflow: hidden;" >
+                    <div id="teclado">
+                        <div class="col-md-12" style="padding: 0">
+                            <app-teclado style="height: 100%; width: 100%; display: inline-block;"></app-teclado>
+                        </div>
+                    </div>
+        </split-area>                          
+    </split>
+ </div>

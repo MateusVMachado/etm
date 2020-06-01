@@ -1,0 +1,74 @@
+.teclado-container{
+    max-width: 100%;
+    margin: 0;
+    padding: 0 0.5%;
+}
+.tabela{
+    display: table;
+    z-index: 0;
+    max-width: 100%;
+    width: auto;
+}
+.tabela tr{
+    display: table-row;
+    text-align: left;
+    padding: 0; 
+    margin: 0 0 7px 0;
+}
+.tabela td{
+    display: table-cell;
+    padding: 3px;
+}
+.tabela td .notImage {
+    min-height: 45px;
+}
+.outerbox {
+    text-align: center;
+}
+.tamanho-button{
+    position: relative;
+}
+
+.tamanho-button3{
+    padding: 12px 1px;
+    position: relative;
+}
+
+.button-keyboard{
+    color: #000000;
+    max-height: 100%;
+    width: 100%;
+}
+
+.icon-keyboard{
+    max-height: 48px; 
+}
+.button-keyboard:hover{
+    color: #000000;
+    background-color: #b2b2b2 !important;
+}
+.button-keyboard .mat-icon{
+    background-color: transparent !important;
+}
+.btn_com_img{
+    position: relative;
+    background-size: 100% 100% !important;
+}
+
+
+
+@media all and (min-width:800px){
+    .tamanho-button{
+        /* width: calc((100% / 14) - 6px); */
+        width: auto;
+        margin-right: 6px; 
+    }
+}
+
+.suggestionRow{
+  display: flex;
+}
+.suggestionRow .tamanho-button{
+  display: flex;
+  flex: 1 1 100%;
+}

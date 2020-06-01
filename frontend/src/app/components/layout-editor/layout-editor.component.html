@@ -1,0 +1,154 @@
+<div id="mainPage" style="overflow-x: hidden; overflow-y: hidden;">
+    <div class="col-md-12 teclado-container-menu">
+        <div class="row">
+            <div>
+                <button class="button-keyboard-menu" id="newKeyboard"><i class="ion-document-text" style="font-size: 17px; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_NOVO') }}</button>
+            </div> 
+            <div>
+                <button class="button-keyboard-menu" (click)="saveKeyboardLayout()"><img src="../../assets/images/save.png" style="width: 16px; height:16px; margin-right:3px;"/>{{ messageService.getTranslation('BTN_SALVAR') }}</button>
+            </div>
+            <div>
+                <button class="button-keyboard-menu" (click)="saveKeyboardLayout(true)"><img src="../../assets/images/folder.png" style="width: 16px; height:16px; margin-right:6px;"/>{{ messageService.getTranslation('BTN_SALVAR_COMO') }}</button>
+            </div>
+            <div>
+                <button class="button-keyboard-menu" (click)="deleteKeyboardLayout()"><i class="ion-trash-a" style="font-size: 16px; font-weight: 600; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_DEL_TEC') }}</button>
+            </div>
+            <div>
+                <button class="button-keyboard-menu" (click)="addLine()"><i class="ion-plus-round" style="font-size: 16px; font-weight: 600; margin-right:6px;"></i>{{ messageService.getTranslation('BTN_ADD_LINHA') }}</button>
+            </div>    
+            <div>
+                <button class="button-keyboard-menu" (click)="removeLine()"><i class="ion-close-round" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_DEL_LINHA')}}</button>
+            </div>
+            <div>
+                <button [hidden]="tecladoShare" id="btn_compartilhar_teclado" class="button-keyboard-menu" (click)="compartilhaTeclado()"><i class="ion-share" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_COMPARTILHAR_SIM') }}&nbsp;({{nomeTeclado || messageService.getTranslation('BTN_COMPARTILHAR_TECLADO_NOVO') }})</button>
+                <button [hidden]="!tecladoShare" id="btn_descompartilhar_teclado" class="button-keyboard-menu" (click)="descompartilhaTeclado()"><i class="ion-share" style="font-size: 16px; margin-right:6px; font-weight: 600;"></i>{{ messageService.getTranslation('BTN_COMPARTILHAR_NAO') }}&nbsp;({{nomeTeclado || messageService.getTranslation('BTN_COMPARTILHAR_TECLADO_NOVO') }}) </button>
+            </div>
+            <div style="width: 100%;">
+                <div style="float: left;">                   
+                    <select id="loadKeyboard" style="width: 200px; height: 30px; margin: 5px 10px;float: left;" [(ngModel)]="keyboardToEdit"  (click)="reloadList()">
+                        <option selected disabled>{{ messageService.getTranslation('DROPDOWN_TECLADOS') }}</option>
+                        <option *ngFor="let keyboard of keyboardItems.KeyboardsNames" value={{keyboard}}>
+                            {{keyboard}}
+                        </option>
+                    </select>
+                    <div style="float: left;">
+                        <button class="button-keyboard-menu" (click)="updateReplicant(keyboardToEdit)">
+                            {{ messageService.getTranslation('BTN_LOAD')}}</button>
+                        </div>  
+                    </div>
+                    <div style="float: right; margin-right: 2%;">
+                        <div>
+                            <label for="linguagem" class="label-margin-bottom">{{messageService.getTranslation('AMPLIAR_TEXTO')}} &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                            <mat-slider color="primary" class="rzslider" min="1.00" max="2.00" step="0.01" value="{{growthTextFactor}}" style="width: 200px; padding-top: 0;" [(ngModel)]="growthTextFactor"
+                            [ngModelOptions]="{standalone: true}" (change)="alterFontSize()"></mat-slider>
+                            <label for="linguagem" class="label-margin-bottom">{{growthTextFactor.toFixed(2)}}</label>
+                        </div>
+                        <!-- <div style="float: right; margin-top: 13px;" *ngIf="tecladoShare" class="tecladoShare">
+                            <span>{{messageService.getTranslation('MENSAGEM_SHARING_KEYBOARD')}}</span>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box-teclado" style="height: 30%; clear: both;">
+            <div class="teclado-container-editor" >
+                <div style="z-index: 0" >
+                    <div class="row" *ngFor="let row of masterKeys.teclas; index as iR" style="padding-left:15px;">
+                        <div class="col-md-12 line">
+                            <div class="tamanho-button" *ngFor="let key of row; index as i" style="display: inline-block;">
+                                <div *ngIf="i <= 14" [dragula]='"master-bag"' (drag)="setCopyMode()" id="copy" [attr.tooltip]="messageService.getTranslation('TOOLTIP_ARRASTE_PARA_ADICIONAR')" class="{{'@' + 'copyArea' + '$' + i.toString() + '#' + iR.toString()}}" >
+                                    <button *ngIf="key == '*tab'"
+                                    class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                    <mat-icon  class="mat-icon material-icons"
+                                    role="img" aria-hidden="true">keyboard_tab</mat-icon>
+                                </button>
+                                
+                                <button 
+                                *ngIf="key == '*cpslck'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                                <mat-icon 
+                                class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_capslock</mat-icon>
+                            </button>
+                            
+                            <input
+                            *ngIf="key != '*bckspc' && key != '*tab' && key != '*cpslck' && key != '*kbdrtrn' && key != '*mic' 
+                            && key != '*arrowup' && key != '*arrowleft' && key != '*space' 
+                            && key != '*arrowdown' && key != '*arrowright'" 
+                            type="button" class="{{i.toString() + '#' + iR.toString()}} button-keyboard-down" value="{{ key }}" />
+                            
+                            <button 
+                            *ngIf="key == '*bckspc'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                            <mat-icon class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_backspace</mat-icon>
+                        </button>
+                        
+                        <button 
+                        *ngIf="key == '*arrowup'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                        <mat-icon 
+                        class="mat-icon material-icons" role="img" aria-hidden="true">arrow_upward</mat-icon>
+                    </button>                 
+                    
+                    <button 
+                    *ngIf="key == '*arrowdown'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                    <mat-icon 
+                    class="mat-icon material-icons" role="img" aria-hidden="true">arrow_downward</mat-icon>
+                </button>              
+                
+                <button 
+                *ngIf="key == '*arrowleft'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+                <mat-icon 
+                class="mat-icon material-icons" role="img" aria-hidden="true">arrow_back</mat-icon>
+            </button>   
+            
+            <button 
+            *ngIf="key == '*arrowright'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+            <mat-icon 
+            class="mat-icon material-icons" role="img" aria-hidden="true">arrow_forward</mat-icon>
+        </button>                 
+        
+        <button 
+        *ngIf="key == '*kbdrtrn'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+        <mat-icon 
+        class="mat-icon material-icons" role="img" aria-hidden="true">keyboard_return</mat-icon>
+    </button>
+    
+    
+    <button 
+    *ngIf="key == '*mic'" class="{{i.toString() + '#' + iR.toString()}} btn button-keyboard icon-keyboard" value="{{ key }}" >
+    <mat-icon 
+    class="mat-icon material-icons" role="img" aria-hidden="true">volume_up</mat-icon>
+</button>
+
+
+
+<button 
+*ngIf="key == '*space'" class="{{i.toString() + '#' + iR.toString()}} button-keyboard icon-keyboard tamanho-button3" 
+value="{{key}}" >SPACE
+
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outerBox" class="box-teclado-bottom" style="height: 30%; ">
+    <div class="teclado-container " style="height: 100%">
+        <div id="blankRows" class="row" *ngFor="let row of teclado.teclas; index as iR" style="padding-left:15px;"> 
+            
+            <div id="blankLines" class="col-md-12 lineBlanks" >
+                <!--*ngIf="choppedLines.includes(iR.toString()) ? (i < choppedNumber) : true"-->
+                <!--*ngIf="(i < choppedNumber)"-->
+                <ng-container *ngFor="let key of row; index as i">
+                    <div [attr.tooltip]="messageService.getTranslation('TOOLTIP_DUPLO_CLIQUE')"  class="{{i.toString() + '#' + iR.toString()}} tamanho-button-especial" [dragula]='"master-bag"' id="content" (dblclick)="editCaptionNText($event)" >
+                        <ng-container *ngIf="ENABLE_TEXT_MODE && key.split('$')[0] === '*img'" >
+                            <p style=" margin-top: 20px">{{iR}}:{{i}} </p>
+                        </ng-container>
+                        <div id="none" class="none" ></div>
+                    </div>
+                </ng-container>     
+            </div>
+        </div>
+    </div>
+</div>
+</div>        

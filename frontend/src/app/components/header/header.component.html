@@ -1,0 +1,18 @@
+<div class="header-container"
+     [class.left]="position === 'normal'"
+     [class.right]="position === 'inverse'">
+  <div class="logo-containter">
+    <a (click)="toggleSidebar()" href="#" class="navigation"><i class="nb-menu" style="color: white;"></i></a>
+    <div class="logo" (click)="goToHome()"><span style="cursor: context-menu;">ETM</span></div>
+  </div>
+</div>
+
+<nb-actions
+  size="medium"
+  class="header-container"
+  [class.right]="position === 'normal'"
+  [class.left]="position === 'inverse'">
+  <nb-action>
+    <nb-user [menu]="userMenu" [name]="usuario.fullName" [picture]='imgUrl' (menuClick)="menuItem($event)" style="color: white;"></nb-user>
+  </nb-action>
+</nb-actions>

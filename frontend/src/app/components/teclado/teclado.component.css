@@ -1,0 +1,42 @@
+.teclado-container{
+    max-width: 100%;
+    min-height: 100%;
+    background-color: #eeeeee;
+    padding: 14px 24px;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
+    0 2px 2px 0 rgba(0,0,0,.14), 
+    0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.tamanho-button{
+    width: calc((100% / 14) - 6px);
+    position: relative;
+    display: inline-block !important; 
+    top: 0;
+    margin-right: 6px; 
+}
+
+.tamanho-button3{
+    padding: 12px 1px;
+    position: relative;
+	display: inline-block !important;
+}
+
+.button-keyboard{
+    background-color: white;
+    color: grey;
+    max-height: 100%;
+    width: 100%;
+}
+
+.icon-keyboard{
+    max-height: 48px; 
+}
+
+.line{
+    margin-bottom: 7px;
+    padding: 0; 
+    height: 45px;
+}
+

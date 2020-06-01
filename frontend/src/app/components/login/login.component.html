@@ -1,0 +1,51 @@
+
+<nb-auth-block>
+    <h2 class="title">{{ messageService.getTranslation('LOGIN_TITULO') }}</h2>
+    <small class="form-text sub-title" style="margin-top: 8px;">{{ messageService.getTranslation('LOGIN_SUBTITULO')}}</small>
+    <form (ngSubmit)="login()" #form="ngForm" autocomplete="nope" style="margin-top: 8px;">
+        <div class="form-group">
+            <label for="input-email" class="sr-only">{{ messageService.getTranslation('INPUT_EMAIL')}}</label>
+            <input name="email" [(ngModel)]="user.email" id="input-email" pattern=".+@.+\..+" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_EMAIL')}}"
+                #email="ngModel" [class.form-control-danger]="email.invalid && email.touched" autofocus [required]="true"  autocomplete="email">
+            <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
+            {{ messageService.getTranslation('EMAIL_OBRIGATORIO') }}
+          </small>
+            <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.pattern">
+            {{ messageService.getTranslation('EMAIL_REAL') }}
+          </small>
+        </div>
+        <div class="form-group">
+            <label for="input-password" class="sr-only">{{ messageService.getTranslation('INPUT_SENHA')}}</label>
+            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_SENHA')}}"
+                #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="true" [minlength]="4"
+                [maxlength]="20" autocomplete="current-password">
+            <small class="form-text error" *ngIf="password.invalid && password.touched && password.errors?.required">
+                {{ messageService.getTranslation('SENHA_OBRIGATORIA')}}            
+            </small>
+            <small class="form-text error" *ngIf="password.invalid && password.touched && (password.errors?.minlength || password.errors?.maxlength)">
+                {{ messageService.getTranslation('SENHA_TAMANHO')}}
+            </small>
+        </div>
+        <div class="form-group accept-group col-sm-12">
+            <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe">{{ messageService.getTranslation('REMEMBER_ME')}}</nb-checkbox>
+            <a style="cursor:pointer; color:#4799eb" class="forgot-password" (click)="navigateTo('./auth/request-password')">{{ messageService.getTranslation('FORGOT_PASSWORD')}}</a>
+        </div>
+        <button style="cursor:pointer;" class="btn btn-block btn-hero-success" [disabled]="(email.invalid && email.dirty) || (password.invalid && password.dirty) || isLogingIn">
+          {{ messageService.getTranslation('BTN_ENTRAR')}}
+        </button>
+    </form>
+    <div class="row">
+        <div class="col-md-3" style="margin: auto;">
+            <img id="pt-br" alt="Português" src="../../assets/images/br.png" width="16" height="11" style="display: inline-block;cursor: pointer;" (click)="changeLanguage($event)">
+            <img id="en" alt="English" src="../../assets/images/gb.png" width="16" height="11" style="display: inline-block;cursor: pointer;" (click)="changeLanguage($event)">
+            <img id="es" alt="Español" src="../../assets/images/es.png" width="16" height="11" style="display: inline-block;cursor: pointer;" (click)="changeLanguage($event)">
+        </div>
+    </div>
+    <div class="links" style="margin-top: 16px; text-align: center;">
+        <small class="form-text">
+          {{ messageService.getTranslation('LOGIN_TEXTO_CRIAR_CONTA')}} <a (click)="navigateTo('./auth/register')"><label style="cursor:pointer; color:#4799eb">{{ messageService.getTranslation('LOGIN_LINK_CRIAR_CONTA')}}</label></a>
+        </small>
+    </div>
+</nb-auth-block>
+
+

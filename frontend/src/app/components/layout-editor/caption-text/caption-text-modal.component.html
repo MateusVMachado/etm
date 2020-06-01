@@ -1,0 +1,85 @@
+<div class="constainer-fluid" style="background-color: white; padding: 0;">
+    <div class="modal-header">
+        <span>{{messageService.getTranslation('MODAL_KEY_TITULO')}}</span>
+        <button class="close" style="cursor: pointer;" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form autocomplete="off">
+        <div class="modal-body">
+
+            <div *ngIf="!imagem" class="from-group line">
+
+                <label *ngIf="!imagem" for="name">{{messageService.getTranslation('MODAL_KEY_DESC_NOME')}}</label>
+                   <input *ngIf="!imagem" type="text" id="name1" name1="name1" [(ngModel)]="buttonCaption" #name1="ngModel" class="form-control" [placeholder]="messageService.getTranslation('MODAL_KEY_NOME')"
+                        [class.form-control-danger]="name1.invalid && name1.touched" [ngModelOptions]="{standalone: true}"/>
+
+            </div>
+            <div class="from-group line">
+                <label for="name">{{messageService.getTranslation('MODAL_KEY_DESC_TEXTO')}}</label>
+                    <input  type="text" id="name2" name2="name2" [(ngModel)]="buttonText" #name2="ngModel" class="form-control" [placeholder]="messageService.getTranslation('MODAL_KEY_TEXTO')"
+                    [class.form-control-danger]="name2.invalid && name2.touched" [ngModelOptions]="{standalone: true}"/>
+
+            </div>
+            <div class="from-group">
+                <mat-slide-toggle id="escrever" color="primary" [(ngModel)]="escrever" [ngModelOptions]="{standalone: true}" (change)="onChangeToggle($event)"></mat-slide-toggle>
+                <label for="escrever" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_ESCREVER') }}</label>
+            </div>
+            <div class="from-group">
+                <mat-slide-toggle id="falar" color="primary" [(ngModel)]="falar" [ngModelOptions]="{standalone: true}" (change)="onChangeToggle($event)"></mat-slide-toggle>
+                <label for="falar" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_FALAR') }}</label>
+            </div>
+
+            <div class="from-group line">
+                <mat-slide-toggle id="imagem" color="primary" [(ngModel)]="imagem" [ngModelOptions]="{standalone: true}"></mat-slide-toggle>
+                <label for="imagem" class="label-margin-bottom">{{ messageService.getTranslation('OP_BOTAO_IMAGEM') }}</label>
+            </div>
+
+            <div *ngIf="imagem" class="line">
+                <div  class="row line">
+                    <div class="col-md-5">
+                        <div class="row">
+                            <div class="col-md-6" style="padding-right: 0">
+                                <img *ngIf="!imgUrl" class="image-button" src="../../../assets/images/{{bsImg}}.png"/>
+                                
+
+                                <!--<img *ngIf="imgUrl"  class="image-button" src='data:image/png;base64,{{imgUrl}}'/>-->
+                                <img *ngIf="imgUrl"  class="image-button" src='{{buttonImage}}'/>
+
+                            </div>
+                            
+                            <div *ngIf="imgUrl" class="col-md-1">
+                                <button *ngIf="imgUrl"  class="close" aria-label="Close" (click)="closePicture()" >
+                                        <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>    
+
+                            <div *ngIf="!imgUrl" class="col-md-1 slide-bar">
+                                <div class="row button-top">
+                                    <div class="col-md-12" style="padding:0">
+                                        <button class="button-slide-bar" (click)="slideImage('up');"><i class="nb-arrow-dropup"></i></button>
+                                    </div>
+                                </div>
+                                <div class="row button-bottom">
+                                    <div class="col-md-12" style="padding:0">
+                                        <button class="button-slide-bar" (click)="slideImage('down');"><i class="nb-arrow-dropdown"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-image">{{messageService.getTranslation('IMAGEM_PERSONALIZADA')}}</label>
+                    <input class="form-control" type="file" accept=".jpg, .png, .jpeg" id="input-image" (change)="onAddPicture($event)"/>
+                    <small class="form-text error" *ngIf="bigImage">
+                        {{ messageService.getTranslation('IMAGEM_TAMANHO_ULTRAPASSADO') }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer">
+        <button (click)="saveButtonConfiguration()" class="btn btn-primary" [disabled]="false">{{messageService.getTranslation('BTN_SALVAR')}}</button>
+    </div>
+</div>

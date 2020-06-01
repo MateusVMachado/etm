@@ -1,0 +1,67 @@
+
+div[tooltip]:not([tooltip-persistent]):before {
+    pointer-events: none;
+    opacity: 0;
+}
+
+div[tooltip]:before {            
+     position : relative;
+     padding: 3px;
+     white-space:nowrap;
+     transition: 100ms;
+     word-wrap: none;
+     top: -60%;
+     background-color: rgb(26, 86, 216);
+     color: white;
+     content : attr(tooltip);
+     opacity : 0;
+}
+
+div[tooltip]:hover:before {  
+    transition: opacity 2.5s;      
+    opacity : 1;
+
+}
+
+.line{
+    margin-bottom: 15px;
+}
+
+.image-button{
+    width: 100%;
+    height: 140px;
+}
+
+.col-image-button{
+    width: 160px;
+}
+
+.slide-bar{
+    position: relative;
+    background-color: rgb(248, 248, 248);
+}
+
+
+.button-bottom{
+    position: absolute;
+    bottom: 0;
+}
+
+.button-top{
+    position: absolute;
+    top: 0;
+}
+
+.button-bottom:hover{
+    background-color: #bbb;
+}
+
+.button-top:hover{
+    background-color: #bbb;
+}
+
+.button-slide-bar{
+    border: transparent;
+    width: 100%;
+}
+

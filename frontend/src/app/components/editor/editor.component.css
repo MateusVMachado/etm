@@ -1,0 +1,6 @@
+.editorBody{
+    color: #000000;
+}
+#ckEditor .cke_chrome {
+    min-width: 100% !important;
+}

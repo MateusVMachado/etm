@@ -1,0 +1,58 @@
+<nb-auth-block>
+    <h2 class="title">{{ messageService.getTranslation('REGISTRO_TITULO') }}</h2>
+    <form (ngSubmit)="register()" #form="ngForm">
+        <div class="form-group">
+            <label for="input-name" class="sr-only">{{ messageService.getTranslation('INPUT_NOME') }}</label>
+            <input name="fullName" [(ngModel)]="user.fullName" id="input-name" #fullName="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_NOME') }}"
+                [class.form-control-danger]="fullName.invalid && fullName.touched" [required]="true"
+                autofocus autocomplete="name">
+            <small class="form-text error" *ngIf="fullName.invalid && fullName.touched && fullName.errors?.required">
+                {{ messageService.getTranslation('NOME_OBRIGATORIO') }}
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="input-email" class="sr-only">{{ messageService.getTranslation('INPUT_EMAIL') }}</label>
+            <input name="email" [(ngModel)]="user.email" id="input-email" #email="ngModel" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_EMAIL') }}"
+                pattern=".+@.+\..+" [class.form-control-danger]="email.invalid && email.touched" [required]="true"  autocomplete="email">
+            <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.required">
+                    {{ messageService.getTranslation('EMAIL_OBRIGATORIO') }}
+            </small>
+            <small class="form-text error" *ngIf="email.invalid && email.touched && email.errors?.pattern">
+                    {{ messageService.getTranslation('EMAIL_REAL') }}
+            </small>
+        </div>
+        <div class="form-group">
+            <label for="input-password" class="sr-only">{{ messageService.getTranslation('INPUT_SENHA') }}</label>
+            <input name="password" [(ngModel)]="user.password" type="password" id="input-password" class="form-control" minlength="4" maxlength="20" placeholder="{{ messageService.getTranslation('INPUT_SENHA') }}"
+                #password="ngModel" [class.form-control-danger]="password.invalid && password.touched" [required]="passwordRequired"  autocomplete="new-password">
+            <small class="form-text error" *ngIf="password.invalid && password.touched && password.errors?.required">
+                   {{ messageService.getTranslation('SENHA_OBRIGATORIA') }}
+          </small>
+        </div>
+        <div class="form-group">
+            <label for="input-re-password" class="sr-only">{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}</label>
+            <input name="rePass" [(ngModel)]="user.confirmPassword" type="password" id="input-re-password"  minlength="4" maxlength="20" class="form-control" placeholder="{{ messageService.getTranslation('INPUT_CONFIRMA_SENHA') }}"   autocomplete="new-password"
+                #rePass="ngModel" [class.form-control-danger]="(rePass.invalid || password.value != rePass.value) && rePass.touched"
+                [required]="passwordConfRequired">
+            <small class="form-text error" *ngIf="rePass.invalid && rePass.touched && rePass.errors?.required">
+                {{ messageService.getTranslation('CONFIRMA_SENHA_OBRIGATORIO') }}
+            </small>
+            <small class="form-text error" *ngIf="rePass.touched && password.value != rePass.value && !rePass.errors?.required">
+                {{ messageService.getTranslation('SENHAS_NAO_BATEM') }}
+            </small>
+        </div>
+        <div class="form-group accept-group col-sm-12">
+            <nb-checkbox #terms="ngModel" name="terms" [(ngModel)]="termsCheckbox" [required]="true">
+                {{ messageService.getTranslation('TERMO_DE_USO_TEXTO') }} <a href="#" target="_blank"><strong>{{ messageService.getTranslation('TERMO_DE_USO_LINK') }}</strong></a>
+            </nb-checkbox>
+        </div>
+        <button style="cursor: pointer;" class="btn btn-block btn-hero-success" [disabled]="form.invalid || terms.value != true || password.value != rePass.value || password.value.length < 4">
+          {{ messageService.getTranslation('BTN_REGISTRAR') }}
+        </button>
+    </form>
+    <div class="links">
+        <small class="form-text">
+          {{ messageService.getTranslation('TEXTO_JA_TENHO_UMA_CONTA') }} <a (click)="navigateTo('./auth/login')"><label style="cursor:pointer; color:#4799eb" >{{ messageService.getTranslation('LINK_JA_TENHO_UMA_CONTA') }}</label></a>
+        </small>
+    </div>
+</nb-auth-block>

@@ -1,0 +1,19 @@
+<div style="background-color: white;">
+    <div class="modal-header">
+        <label>{{ messageService.getTranslation('PERFIL_MODAL_TITULO') }}</label>
+        <button class="close" style="cursor: pointer;" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form (ngSubmit)="save()" #form="ngForm" autocomplete="off">
+        <div class="from-group line">
+            <input type="file" accept=".jpg, .png, .jpeg" (change)="onAddPicture($event)" id="picture" class="form-control"/>
+            <small class="form-text error" *ngIf="bigImage">
+                {{ messageService.getTranslation('IMAGEM_TAMANHO_ULTRAPASSADO') }}
+            </small>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" [disabled]="saved || bigImage">{{ messageService.getTranslation('BTN_SALVAR') }}</button>
+        </div>
+    </form>
+</div>

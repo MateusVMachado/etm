@@ -1,0 +1,134 @@
+
+<section id="filter">
+    <form [formGroup]="formPesquisa"> 
+        <div class="input_pesquisa">
+            <input formControlName="cPesquisa" name="cPesquisa" id="cPesquisa"  ng-keydown="pesquisar()" class="form-control" placeholder="{{ messageService.getTranslation('STORE_PESQUISE_AQUI') }}">
+            <div class="pesquisar_btn" (tap)="pesquisar()" style="cursor: pointer;">
+                <img width="25px" height="25px" src="../../../assets/images/pesquisar.png">
+            </div>
+        </div>
+        <div style="display: grid;">
+            <div id="filtros_menu">
+                <div (tap)="mostraFiltros=!mostraFiltros" id="btn_filtros_menu">
+                    <img width="25px" height="25px" src="../../../assets/images/filtros.png">
+                    <span style="color: #000;">{{mostraFiltros ? messageService.getTranslation('STORE_FECHAR_FILTROS') : messageService.getTranslation('STORE_ABRIR_FILTROS') }}</span>
+                </div>
+                <div [hidden]="filtrosInicial" >
+                    <a href="#" onclick="return false" class="redefinirFiltros" (tap)="filtrar(true)">{{messageService.getTranslation('STORE_REDEFINIR_FILTROS')}}</a>
+                </div>
+                <div id="filtros_gaveta" [class.filtrosMostrar]="mostraFiltros">
+                    <h4>{{ messageService.getTranslation('STORE_FILTROS_FILTRAR_POR') }}</h4>
+                    <div>
+                        <span>{{ messageService.getTranslation('STORE_FILTROS_ESTRELAS') }}</span>
+                        <select formControlName="selectEstrelas">
+                            <!-- <option [selected]="selected" value="0">0+</option> -->
+                            <option value="0">0+</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <hr/>
+                    <div>
+                        <span>{{ messageService.getTranslation('STORE_FILTROS_PUBLICADO') }}</span>
+                        <select formControlName="selectData">
+                            <!-- <option [selected]="selected" value="1">{{ messageService.getTranslation('STORE_FILTROS_DATA_QUALQUER') }}</option> -->
+                            <option value="1">{{ messageService.getTranslation('STORE_FILTROS_DATA_QUALQUER') }}</option>
+                            <option value="2">{{ messageService.getTranslation('STORE_FILTROS_DATA_SEMANA') }}</option>
+                            <option value="3">{{ messageService.getTranslation('STORE_FILTROS_DATA_MES') }}                        </option>
+                            <option value="4">{{ messageService.getTranslation('STORE_FILTROS_DATA_ANO') }}</option>
+                        </select>
+                    </div>
+                    <hr/>
+                    <div>
+                        <label for="hasImageFiltro">{{ messageService.getTranslation('STORE_FILTROS_FILTRAR_IMAGEM') }}</label>
+                        <input type="checkbox" formControlName="hasImageFiltro" name="hasImageFiltro" id="hasImageFiltro"
+                        (tap)="desmarcarCheckbox(true)">
+                        <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="hasImage">{{ messageService.getTranslation('STORE_FILTROS_CONTEM_IMAGEM') }}</label>
+                        <input type="checkbox" formControlName="hasImage" name="hasImage" id="hasImage">
+                    </div>
+                    <hr/>
+                    <div>
+                        <label for="hasVoiceFiltro">{{ messageService.getTranslation('STORE_FILTROS_FILTRAR_VOZ') }}</label>
+                        <input type="checkbox" formControlName="hasVoiceFiltro" name="hasVoiceFiltro" id="hasVoiceFiltro"
+                        (tap)="desmarcarCheckbox(false)">
+                        <br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="hasVoice">{{ messageService.getTranslation('STORE_FILTROS_CONTEM_VOZ') }}</label>
+                        <input type="checkbox" formControlName="hasVoice" name="hasVoice" id="hasVoice">
+                    </div>
+                    <div class="text-center" id="div_btn_filtrar">
+                        <button id="btn_filtrar" class="btn btn-primary" (tap)="filtrar()" type="button">{{ messageService.getTranslation('STORE_FILTROS_FILTRAR') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+<section id="lista_teclados">
+    <div *ngIf="listaTeclados">
+        <app-store-item *ngFor="let tecItem of listaTeclados | paginate: { itemsPerPage: 10, currentPage: selectedPage, totalItems: listaTeclados.length }" [tecCompart]="tecItem"
+        (modalUsar)="showModalUse($event)" (modalCompartilhar)="showModalCompartilhe($event)">
+    </app-store-item>
+    <pagination-controls *ngIf="listaTeclados && listaTeclados.length !== 0" class="paginator" (pageChange)="pageChange($event)"
+    maxSize="9"
+    directionLinks="true"
+    previousLabel="{{messageService.getTranslation('STORE_ANTERIOR_PAGINA')}}"
+    nextLabel="{{messageService.getTranslation('STORE_PROXIMA_PAGINA')}}">
+</pagination-controls>
+</div>
+<div *ngIf="listaTeclados && listaTeclados.length === 0" class="text-center">
+    <h3>{{ messageService.getTranslation('STORE_SEM_RESULTADOS') }}</h3>
+    <button class="btn btn-primary" (tap)="filtrar(true);" style="cursor: pointer;">{{ messageService.getTranslation('STORE_MOSTRAR_RESULTADOS') }}</button>
+</div>
+</section>
+
+
+<section class="modal_background" [hidden]="!mostraModalUse"  (keydown.esc)="mostraModalUse = false;" >
+    <div class="modal_teclado modal_usar_teclado">
+        <div class="btn_fechar_modal right">
+            <div (tap)="mostraModalUse= false;">
+                <img height="25px" width="25px" src="../../../assets/images/fechar.svg">
+            </div>
+        </div>
+        <h1 class="text-center">{{ messageService.getTranslation('STORE_ITEM_USE_TECLADO') }}</h1>
+        <form [formGroup]="formUsar"> 
+            <label>{{ messageService.getTranslation('STORE_ITEM_NOME_TECLADO') }}</label>
+            <input type="text" formControlName="tecladoNome" class="form-control" placeholder="Digite o nome do teclado...">
+            <div class="div_teclado center">
+                <app-teclado-base *ngIf="mostraModalUse" [layout]="teclado"></app-teclado-base>
+            </div>
+            <div>
+                <hr>
+                <button id="btn_usarTeclado" class="btn btn-primary right btn_usar" (tap)="usarTeclado()" type="button">{{ messageService.getTranslation('STORE_ITEM_USAR_TECLADO') }}</button>
+            </div>
+        </form>
+    </div>
+</section>
+<section class="modal_background" [hidden]="!mostraModalCompartilhar" (keydown.esc)="mostraModalCompartilhar = false;" >
+    <div class="modal_teclado modal_compartilhar_teclado">
+        <div class="btn_fechar_modal right">
+            <div (tap)="mostraModalCompartilhar = false;">
+                <img height="25px" width="25px" src="../../../assets/images/fechar.svg">
+            </div>
+        </div>
+        <h1 class="text-center">{{ messageService.getTranslation('STORE_ITEM_COMPARTILHE_TECLADO') }}</h1>
+        <form [formGroup]="formCompartilhe"> 
+            <div class="input_url">
+                <input formControlName="tecladoUrl" id="tecladoUrl" class="form-control" placeholder="Digite o nome do teclado..." autofocus>
+                <div class="copiar_btn" (tap)="copiarUrl()">
+                    <img width="25px" height="25px" src="../../../assets/images/btn_copiar.svg" />
+                </div>
+            </div>
+        </form>
+        <div class="div_teclado center">
+            <app-teclado-base *ngIf="mostraModalCompartilhar" [layout]="teclado"></app-teclado-base>
+        </div>
+        <div class="msg_copiado" [class.mostrar]="modalCompartilheMsg">
+            <hr>
+            <button class="btn btn-primary btn_usar" type="button">{{ messageService.getTranslation('STORE_ITEM_COPIADO_TECLADO') }}</button>
+        </div>
+    </div>
+</section>

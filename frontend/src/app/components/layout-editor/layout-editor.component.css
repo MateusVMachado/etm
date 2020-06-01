@@ -1,0 +1,297 @@
+.rzslider {
+    
+    transition: left linear 0.4s;
+}
+.rzslider:hover{
+    transition: none; 
+}
+
+.rzslider:noanimate{
+    transition: none; 
+    
+}   
+
+.upper {
+    height: 100%;
+    width: 100%;
+    background-color: #fdd;
+}
+
+.lower {
+    height: 100%;
+    width: 100%;
+    background-color: #bbb;
+}
+
+.left {
+    height: 100%;
+    background-color: #ddf;
+}
+
+.box-teclado{
+    position: relative;
+    margin: auto;
+    max-height: 40%;
+}
+.button-keyboard-menu:hover{
+    padding: 10px !important;
+}
+.box-teclado-bottom{
+    height: 100%;
+    padding-top: 12px;
+    margin: auto;
+    max-height: 40%;
+    background-color: #eeeeee;
+}
+
+.teclado-container-menu{
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
+    0 2px 2px 0 rgba(0,0,0,.14), 
+    0 1px 5px 0 rgba(0,0,0,.12);
+    background-color:  rgb(248, 248, 248);
+}
+
+.teclado-container{
+    height: 320px;
+    overflow-y:scroll;
+    overflow-x: hidden;
+    padding: 4px 17px 4px 8px;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
+    0 2px 2px 0 rgba(0,0,0,.14),
+    0 1px 5px 0 rgba(0,0,0,.12);
+    background-color:  #E8E8E8;
+}
+
+.teclado-container-editor{
+    height: 30%;
+    padding: 4px 14px 4px 8px;
+    border-radius: 2px;
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 
+    0 2px 2px 0 rgba(0,0,0,.14), 
+    0 1px 5px 0 rgba(0,0,0,.12);
+    background-color:  #eeeeee;
+}
+
+.tamanho-button-especial{
+    background-color: white; 
+    color:black;
+    height:48px;
+    width: calc((100% / 14) - 6px);
+    position: relative;
+    top: 0;
+    margin-right: 2px; 
+    border-radius:  8px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1 solid transparent;
+}
+
+
+.tamanho-button-especial-big{
+    display: none;
+    visibility: hidden;
+    background-color: white; 
+    color:black;
+    height:150px;
+    width: 150px;
+    position: relative;
+    top: 0;
+    margin-right: 6px; 
+    border-radius:  8px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: 1 solid transparent;
+}
+
+div[tooltip]:not([tooltip-persistent]):before {
+    pointer-events: none;
+    opacity: 0;
+}
+
+div[tooltip]:before {            
+    position : absolute;
+    top: 102%;
+    right: -200%;
+    left: -200%;
+    overflow: visible;
+    padding: 2% 1%;
+    z-index: 1;
+    background-color: rgba(26, 86, 216,.9);
+    color: white;
+    content : attr(tooltip);
+    opacity : 0;
+    font-size: 20px;
+}
+
+div[tooltip]:hover:before {  
+    opacity: 1;
+    text-align: center;
+    transition: opacity 1s;      
+    transition-delay: .5s;
+}
+.tooltipLeft div[tooltip]:before, .tooltipLeft:before{
+    left: 0 !important;
+    right: -400% !important;
+}
+.tooltipRight div[tooltip]:before, .tooltipRight:before{
+    left: -400% !important;
+    right: 0 !important;
+}
+/* SÓ PARA OS DE BAIXO */
+
+.tamanho-button-especial-full{
+    background-color: whitesmoke;
+    color:black;
+    height:48px;
+    
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin-right: 6px; 
+    
+    border-radius:  8px;
+    display: inline-block;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+    border: transparent;
+    font-family: Exo;
+}
+
+.tamanho-button{
+    width: calc((100% / 14) - 6px);
+    position: relative;
+    top: 0;
+    margin-right: 6px; 
+}
+.tamanho-button2{
+    width: calc((100% / 7) - 6px);
+    position: relative;
+    top: -21px;
+    margin-right: 6px; 
+}
+
+.tamanho-button3{
+    position: relative;
+    height: 48px;
+    width: 100%;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border: transparent;
+    font-family: Exo;
+    font-weight: 500;
+}
+
+.button-keyboard-menu{
+    padding: 10px;
+    white-space: normal;
+    color: black;
+    width: 100%;
+    height: 100%;
+    background-color:  rgb(248, 248, 248);
+    border: transparent;
+    font-family: Exo;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.button-keyboard-menu:hover{
+    padding: 0px 10px;
+    white-space: normal;
+    background-color: #D3D3D3;
+    color: black;
+    max-height: 100%;
+    width: 100%;
+}
+
+.button-keyboard{
+    white-space: normal;
+    background-color: whitesmoke;
+    color: black;
+    max-height: 100%;
+    width: 100%;
+}
+
+
+.button-keyboard-down{
+    background-color: whitesmoke;
+    color: black;
+    max-height: 100%;
+    height: 48px;
+    width: 100%;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    border: transparent;
+    font-family: Exo;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.button-keyboard-down:hover{
+    background-color: rgb(26, 86, 216);
+    color: white;
+    max-height: 100%;
+    width: 100%;
+}
+
+.button-keyboard-down:focus{
+    color: black;
+    background-color: rgb(26, 86, 216);
+    max-height: 100%;
+    width: 100%;
+}
+
+.button-keyboard:focus{
+    color: black;
+    background-color:  rgb(26, 86, 216);
+    max-height: 100%;
+    width: 100%;
+}
+
+.button-keyboard:hover{
+    color: black;
+    background-color:  rgb(26, 86, 216);
+    color: grey;
+    width: 100%;
+}
+
+.icon-keyboard{
+    max-height: 48px; 
+}
+
+.line{
+    margin-bottom: 7px;
+    padding: 0; 
+    height: 45px;
+}
+
+.lineBlanks{
+    position: relative;
+    margin-bottom: 7px;
+    padding: 0; 
+    height: 45px;
+}
+
+.row {
+    
+    position: relative;
+    
+}
+
+@media all and (max-width: 800px){
+    .tecladoShare{
+        text-align: left;
+    }
+}
