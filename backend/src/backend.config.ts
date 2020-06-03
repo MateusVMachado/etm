@@ -1,5 +1,5 @@
 export const backendConfig = {
-    secret: 'korp!4518'
+    secret: ''
 }
 export const emailConfig = {
         hostEmail: "",
